@@ -89,6 +89,8 @@
   const THEME_KEY = 'jis-calc-theme';
   const LANG_KEY = 'jis-calc-lang';
   const HISTORY_LIMIT = 10;
+  /** 외경 역산 검색 시 표시할 최대 허용 오차 (mm). 이 범위 내 후보를 모두 표시하고, 없으면 가장 가까운 5개를 표시한다. */
+  const OD_SEARCH_RANGE = 20;
 
   /* =====================================================================
      §1.5 I18N — Korean / Vietnamese / Indonesian
@@ -1456,9 +1458,8 @@
 
     res.classList.add('show');
 
-    // ±20mm 이내 후보, 없으면 가장 가까운 5개
-    const SEARCH_RANGE = 20;
-    const within = sorted.filter(f => f.diff <= SEARCH_RANGE);
+    // ±OD_SEARCH_RANGE mm 이내 후보, 없으면 가장 가까운 5개
+    const within = sorted.filter(f => f.diff <= OD_SEARCH_RANGE);
     const toShow = within.length > 0 ? within : sorted.slice(0, 5);
 
     if (within.length > 0) {
