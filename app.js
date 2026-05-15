@@ -244,6 +244,14 @@
       'install.btn':          '설치',
       'install.dismiss':      '닫기',
       'install.aria':         '홈 화면에 추가',
+      // Bottom install CTA
+      'cta.install_t':        '📱 내 폰에 설치하기',
+      'cta.install_d':        '홈 화면에 추가하면 앱처럼 빠르게, 오프라인에서도 바로 쓸 수 있어요.',
+      'cta.install_btn':      '＋ 홈 화면에 설치',
+      'cta.install_done':     '✓ 이미 설치되어 있어요',
+      'cta.install_aria':     '내 폰에 설치하기',
+      'cta.install_hint_ios': '📱 iPhone · iPad: 공유 버튼 → "홈 화면에 추가"',
+      'cta.install_hint_and': '📱 Android Chrome: 메뉴(⋮) → "앱 설치" / "홈 화면에 추가"',
       // Edit modal
       'edit.title':           '✏️ 항목 편집',
       'edit.save':            '저장',
@@ -461,6 +469,13 @@
       'install.btn':          'Cài đặt',
       'install.dismiss':      'Đóng',
       'install.aria':         'Thêm vào màn hình chính',
+      'cta.install_t':        '📱 Cài lên điện thoại của bạn',
+      'cta.install_d':        'Thêm vào màn hình chính để dùng nhanh như một ứng dụng, ngay cả khi ngoại tuyến.',
+      'cta.install_btn':      '＋ Thêm vào màn hình chính',
+      'cta.install_done':     '✓ Đã được cài đặt',
+      'cta.install_aria':     'Cài lên điện thoại',
+      'cta.install_hint_ios': '📱 iPhone · iPad: nhấn nút Chia sẻ → "Thêm vào MH chính"',
+      'cta.install_hint_and': '📱 Android Chrome: Menu (⋮) → "Cài đặt ứng dụng"',
       'edit.title':           '✏️ Sửa mục',
       'edit.save':            'Lưu',
       'edit.cancel':          'Hủy',
@@ -672,6 +687,13 @@
       'install.btn':          'Pasang',
       'install.dismiss':      'Tutup',
       'install.aria':         'Tambah ke Layar Utama',
+      'cta.install_t':        '📱 Pasang di ponsel Anda',
+      'cta.install_d':        'Tambahkan ke Layar Utama agar bisa dipakai cepat seperti aplikasi, bahkan saat offline.',
+      'cta.install_btn':      '＋ Tambah ke Layar Utama',
+      'cta.install_done':     '✓ Sudah terpasang',
+      'cta.install_aria':     'Pasang di ponsel',
+      'cta.install_hint_ios': '📱 iPhone · iPad: tombol Bagikan → "Tambah ke Layar Utama"',
+      'cta.install_hint_and': '📱 Android Chrome: Menu (⋮) → "Pasang aplikasi"',
       'edit.title':           '✏️ Edit item',
       'edit.save':            'Simpan',
       'edit.cancel':          'Batal',
@@ -1979,6 +2001,8 @@
       b.classList.toggle('active', b.dataset.lang === lang);
       b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
     });
+    // Re-localize bottom install CTA button label (depends on installed state)
+    if (typeof reflectInstalledState === 'function') reflectInstalledState();
     // Update theme button title (uses i18n)
     let savedTh = 'auto';
     try { savedTh = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
@@ -2133,6 +2157,7 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredInstallPrompt = e;
+      // Bottom CTA button is enabled by default; nothing extra needed there.
       try {
         if (localStorage.getItem('jis-install-dismissed') === '1') return;
       } catch (err) {}
@@ -2140,8 +2165,45 @@
     });
     window.addEventListener('appinstalled', () => {
       $('#installBanner').classList.remove('show');
+      reflectInstalledState(true);
       toast(t('t.installed'));
     });
+  }
+
+  /** Detects standalone (PWA-installed) mode and updates the bottom CTA UI. */
+  function isAppInstalled() {
+    try {
+      if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+      if (window.matchMedia && window.matchMedia('(display-mode: window-controls-overlay)').matches) return true;
+    } catch (e) {}
+    if (window.navigator && window.navigator.standalone === true) return true;
+    return false;
+  }
+
+  function reflectInstalledState(forceInstalled) {
+    const cta = $('#installCta');
+    if (!cta) return;
+    const installed = forceInstalled === true || isAppInstalled();
+    cta.classList.toggle('installed', installed);
+    const btn = $('#installCtaBtn');
+    if (!btn) return;
+    if (installed) {
+      btn.disabled = true;
+      btn.setAttribute('aria-disabled', 'true');
+      const label = btn.querySelector('.install-cta-btn-label');
+      if (label) {
+        label.setAttribute('data-i18n', 'cta.install_done');
+        label.textContent = t('cta.install_done');
+      }
+    } else {
+      btn.disabled = false;
+      btn.removeAttribute('aria-disabled');
+      const label = btn.querySelector('.install-cta-btn-label');
+      if (label) {
+        label.setAttribute('data-i18n', 'cta.install_btn');
+        label.textContent = t('cta.install_btn');
+      }
+    }
   }
 
   async function triggerInstall() {
@@ -2201,6 +2263,7 @@
     // PWA
     registerSW();
     bindInstallBanner();
+    reflectInstalledState();
 
     // Visitor counter
     initVisitorCounter();
