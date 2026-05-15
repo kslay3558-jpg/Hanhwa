@@ -2204,8 +2204,13 @@
   function initVisitorCounter() {
     const today = new Date().toISOString().slice(0, 10);
     const key = 'visitor_' + today;
-    const count = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
-    localStorage.setItem(key, String(count));
+    // Count once per session (not on every page refresh)
+    if (!sessionStorage.getItem('jis-visited-' + today)) {
+      sessionStorage.setItem('jis-visited-' + today, '1');
+      const count = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+      localStorage.setItem(key, String(count));
+    }
+    const count = parseInt(localStorage.getItem(key) || '0', 10) || 0;
     $('#visitorCount').textContent = count;
 
     const btn = $('#btnVisitor');
