@@ -157,7 +157,9 @@
     border: 1px solid var(--c-border); background: var(--c-surface-2);
     color: var(--c-text-sub); display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer; font-size: 1rem; transition: background var(--m-fast), color var(--m-fast), transform var(--m-fast);
+    touch-action: manipulation; white-space: nowrap;
   }
+  .icon-btn[data-action="open-tutorial"] { width: auto; padding: 0 10px; font-size: 0.8rem; font-weight: 600; }
   .icon-btn:hover { background: var(--c-primary-weak); color: var(--c-primary); }
   .icon-btn:active { transform: scale(.94); }
   .icon-btn[aria-pressed="true"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
@@ -325,7 +327,7 @@
     border: 1px solid transparent; border-radius: var(--r-md);
     background: var(--c-surface-2); color: var(--c-text);
     font-family: inherit; font-size: .9rem; font-weight: 700;
-    cursor: pointer; user-select: none;
+    cursor: pointer; user-select: none; touch-action: manipulation;
     transition: transform var(--m-fast), background var(--m-fast), box-shadow var(--m-fast), color var(--m-fast);
   }
   .btn:disabled { opacity: .5; cursor: not-allowed; }

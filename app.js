@@ -1879,7 +1879,9 @@
 
   /** ----- Tutorial ----- */
   function maybeShowTutorial() {
-    if (localStorage.getItem(TUTORIAL_KEY) !== 'true') {
+    let seen = false;
+    try { seen = localStorage.getItem(TUTORIAL_KEY) === 'true'; } catch (e) {}
+    if (!seen) {
       ModalCtl.open($('#tutorialModal'));
     }
   }
@@ -1975,7 +1977,9 @@
       b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
     });
     // Update theme button title (uses i18n)
-    applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+    let savedTh = 'auto';
+    try { savedTh = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
+    applyTheme(savedTh);
     // Toast in new language
     const meta = SUPPORTED_LANGS.find(l => l.code === lang);
     toast(t('t.lang_changed', { name: (meta ? meta.flag + ' ' + meta.native : lang) }));
@@ -2204,13 +2208,16 @@
   function initVisitorCounter() {
     const today = new Date().toISOString().slice(0, 10);
     const key = 'visitor_' + today;
-    // Count once per session (not on every page refresh)
-    if (!sessionStorage.getItem('jis-visited-' + today)) {
-      sessionStorage.setItem('jis-visited-' + today, '1');
-      const count = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
-      localStorage.setItem(key, String(count));
-    }
-    const count = parseInt(localStorage.getItem(key) || '0', 10) || 0;
+    let count = 0;
+    try {
+      if (!sessionStorage.getItem('jis-visited-' + today)) {
+        sessionStorage.setItem('jis-visited-' + today, '1');
+        count = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+        localStorage.setItem(key, String(count));
+      } else {
+        count = parseInt(localStorage.getItem(key) || '0', 10) || 0;
+      }
+    } catch (e) { /* storage unavailable (e.g. in-app browser) */ }
     $('#visitorCount').textContent = count;
 
     const btn = $('#btnVisitor');
@@ -2224,6 +2231,49 @@
       }
     });
   }
+
+  /* =====================================================================
+     §9. KAKAOTALK BROWSER COMPATIBILITY
+     카카오톡 인앱 브라우저에서 기능이 제한되므로 외부 브라우저로 유도.
+     ===================================================================== */
+
+  function handleKakaoTalkBrowser() {
+    if (!/KAKAOTALK/i.test(navigator.userAgent)) return;
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
+    const showBanner = () => {
+      if (document.getElementById('kakaoBanner')) return;
+      const b = document.createElement('div');
+      b.id = 'kakaoBanner';
+      b.setAttribute('role', 'alert');
+      b.style.cssText = [
+        'position:fixed;top:0;left:0;right:0;z-index:9999',
+        'background:#fef3c7;border-bottom:2px solid #f59e0b',
+        'padding:10px 14px;text-align:center',
+        'font-size:13px;color:#78350f;line-height:1.7;font-family:inherit'
+      ].join(';');
+
+      let html = '⚠️ 카카오톡 브라우저에서는 일부 기능이 제한됩니다.<br>';
+      if (isAndroid) {
+        const intentUrl = 'intent://' + location.host + location.pathname + location.search
+          + '#Intent;scheme=' + location.protocol.replace(':', '')
+          + ';package=com.android.chrome'
+          + ';S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end';
+        html += '<a href="' + intentUrl + '" style="font-weight:700;color:#92400e;text-decoration:underline">📱 크롬으로 열기</a>'
+          + ' &nbsp;또는 우측 상단 <b>···</b> → <b>다른 브라우저로 열기</b>';
+      } else {
+        html += '우측 상단 <b>···</b> → <b>다른 브라우저로 열기</b>를 눌러 사파리/크롬으로 여세요.';
+      }
+      b.innerHTML = html;
+
+      if (document.body) document.body.insertBefore(b, document.body.firstChild);
+    };
+
+    if (document.body) showBanner();
+    else document.addEventListener('DOMContentLoaded', showBanner);
+  }
+
+  handleKakaoTalkBrowser();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
