@@ -1267,7 +1267,7 @@
       }
 
       const titleNode = el('div', { class: 'q-title' },
-        document.createTextNode(title + ' '),
+        el('span', { class: 'q-title-text' }, title),
         el('span', { class: 'q-qty' }, '× ' + q.qty)
       );
 
@@ -1297,8 +1297,10 @@
         { class: 'q-item', draggable: 'true', 'data-index': i, tabindex: '0',
           'aria-label': t('q.aria_label', { title, n: q.qty }),
           'aria-keyshortcuts': 'Delete' },
-        el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
-        el('div', { class: 'q-info' }, titleNode, descRow),
+        el('div', { class: 'q-item-main' },
+          el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
+          el('div', { class: 'q-info' }, titleNode, descRow)
+        ),
         actions
       );
       return item;
