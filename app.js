@@ -2157,7 +2157,6 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredInstallPrompt = e;
-      // Bottom CTA button is enabled by default; nothing extra needed there.
       try {
         if (localStorage.getItem('jis-install-dismissed') === '1') return;
       } catch (err) {}

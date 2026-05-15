@@ -775,9 +775,9 @@
     .install-cta-hints { text-align: left; }
   }
 
-  /* Hide CTA when running standalone (already installed) — only on desktop;
-     on mobile we still show a "Already installed" reassurance card.
-     Handled via JS adding .installed class. */
+  /* When the app is launched in standalone (PWA-installed) mode, JS adds the
+     .installed class which softens the button styling and labels it as
+     "already installed" — a reassurance state, kept visible on all platforms. */
 
   /* SR-only */
   .sr-only {
@@ -1097,7 +1097,7 @@
       <button type="button" class="btn install-cta-btn" id="installCtaBtn" data-action="install-app" aria-describedby="installCtaTitle">
         <span class="install-cta-btn-label" data-i18n="cta.install_btn">＋ 홈 화면에 설치</span>
       </button>
-      <ul class="install-cta-hints" aria-hidden="false">
+      <ul class="install-cta-hints">
         <li data-i18n="cta.install_hint_ios">📱 iPhone · iPad: 공유 버튼 → "홈 화면에 추가"</li>
         <li data-i18n="cta.install_hint_and">📱 Android Chrome: 메뉴(⋮) → "앱 설치" / "홈 화면에 추가"</li>
       </ul>
