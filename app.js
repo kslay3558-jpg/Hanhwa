@@ -1971,8 +1971,13 @@
       if (!body) return;
       const willOpen = el2.getAttribute('aria-expanded') !== 'true';
       el2.setAttribute('aria-expanded', String(willOpen));
-      body.setAttribute('aria-hidden', String(!willOpen));
-      body.toggleAttribute('inert', !willOpen);
+      if (willOpen) {
+        body.removeAttribute('aria-hidden');
+        body.removeAttribute('inert');
+      } else {
+        body.setAttribute('aria-hidden', 'true');
+        body.setAttribute('inert', '');
+      }
       // Focus the first input when opening for accessibility
       if (willOpen) {
         const first = body.querySelector('input, select, textarea');
