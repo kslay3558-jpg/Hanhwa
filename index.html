@@ -222,9 +222,13 @@
   }
   @media (min-width: 760px) {
     .main-grid { grid-template-columns: 1fr 1fr; }
+    /* 결과 섹션이 두 번째 행에 홀로 뜨지 않도록 전체 너비로 표시 */
+    .main-grid > section:nth-child(3) { grid-column: 1 / -1; }
   }
   @media (min-width: 1200px) {
     .main-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr); }
+    /* 데스크탑 3열에서는 결과 섹션이 3번째 열에 자연스럽게 위치 */
+    .main-grid > section:nth-child(3) { grid-column: auto; }
   }
   .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
@@ -394,13 +398,6 @@
   }
   .search-res .badge-pill:hover { background: var(--c-primary-weak); border-color: var(--c-primary); color: var(--c-primary); }
   .search-res .err { color: var(--c-danger); font-weight: 700; }
-  .tolerance-row {
-    display: flex; align-items: center; gap: 10px; margin-top: 8px;
-    font-size: .8rem; color: var(--c-text-sub);
-  }
-  .tolerance-row input[type=range] { flex: 1; height: 6px; padding: 0; background: transparent; }
-  .tolerance-row output { font-weight: 800; color: var(--c-primary); min-width: 40px; text-align: right; }
-
   /* Pitch info */
   .pitch-info {
     font-size: .72rem; color: var(--c-primary); font-weight: 700;
@@ -661,7 +658,7 @@
       <!-- 1. 플랜지 외경 역산 -->
       <div class="card">
         <div class="card-head"><h2><span data-i18n="card.find">🔍 플랜지 찾기</span> <small style="font-weight:600;color:var(--c-text-mute)" data-i18n="card.find_sub">(외경 역산)</small></h2></div>
-        <div class="form-grid col-auto" style="margin-bottom:0;">
+        <div class="form-grid col-auto" style="margin-bottom:8px;">
           <div class="field">
             <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
             <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
@@ -670,11 +667,6 @@
             <label aria-hidden="true">&nbsp;</label>
             <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
           </div>
-        </div>
-        <div class="tolerance-row">
-          <label for="tolerance" data-i18n="form.tolerance">허용 오차</label>
-          <input type="range" id="tolerance" min="0" max="10" step="1" value="2" aria-describedby="toleranceVal">
-          <output id="toleranceVal" for="tolerance">±2mm</output>
         </div>
         <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
       </div>

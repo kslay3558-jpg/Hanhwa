@@ -135,7 +135,6 @@
       'form.od':              '플랜지 외경 (OD, mm)',
       'form.od_ph':           '예: 155',
       'btn.find':             '찾기',
-      'form.tolerance':       '허용 오차',
       // Card 2: flange point
       'card.flange':          '🔩 플랜지 포인트',
       'form.rating':          '압력등급',
@@ -300,7 +299,7 @@
       'p.proj_del_q':         '\'{name}\' 현장을 삭제할까요?',
       // Find flange
       'f.invalid':            '⚠️ 유효한 외경 값(>0)을 입력해주세요.',
-      'f.candidates':         '🎯 OD {target}mm · 허용 오차 ±{tol}mm 이내 ',
+      'f.candidates':         '🎯 OD {target}mm 근처 후보 ',
       'f.candidates_n':       '{n}개 후보',
       'f.no_match':           '⚠️ 허용 오차 내 일치 규격 없음 (최소 오차 {d}mm)',
       'f.apply_aria':         '{r} {s}A 적용',
@@ -358,7 +357,6 @@
       'form.od':              'Đường kính ngoài mặt bích (OD, mm)',
       'form.od_ph':           'VD: 155',
       'btn.find':             'Tìm',
-      'form.tolerance':       'Dung sai',
       'card.flange':          '🔩 Điểm Mặt bích',
       'form.rating':          'Cấp áp suất',
       'form.size':            'Đường kính danh nghĩa (A)',
@@ -510,7 +508,7 @@
       'p.proj_rename_q':      'Đổi tên dự án:',
       'p.proj_del_q':         'Xóa dự án \'{name}\'?',
       'f.invalid':            '⚠️ Hãy nhập giá trị OD hợp lệ (>0).',
-      'f.candidates':         '🎯 OD {target}mm · trong dung sai ±{tol}mm ',
+      'f.candidates':         '🎯 OD {target}mm gần nhất ',
       'f.candidates_n':       '{n} ứng viên',
       'f.no_match':           '⚠️ Không có quy cách trong dung sai (sai lệch nhỏ nhất {d}mm)',
       'f.apply_aria':         'Áp dụng {r} {s}A',
@@ -567,7 +565,6 @@
       'form.od':              'Diameter luar flensa (OD, mm)',
       'form.od_ph':           'cth: 155',
       'btn.find':             'Cari',
-      'form.tolerance':       'Toleransi',
       'card.flange':          '🔩 Titik Flensa',
       'form.rating':          'Kelas tekanan',
       'form.size':            'Diameter nominal (A)',
@@ -719,7 +716,7 @@
       'p.proj_rename_q':      'Ubah nama proyek:',
       'p.proj_del_q':         'Hapus proyek \'{name}\'?',
       'f.invalid':            '⚠️ Masukkan nilai OD valid (>0).',
-      'f.candidates':         '🎯 OD {target}mm · dalam toleransi ±{tol}mm ',
+      'f.candidates':         '🎯 OD {target}mm terdekat ',
       'f.candidates_n':       '{n} kandidat',
       'f.no_match':           '⚠️ Tidak ada spesifikasi dalam toleransi (selisih min {d}mm)',
       'f.apply_aria':         'Terapkan {r} {s}A',
@@ -1439,15 +1436,14 @@
     }
   };
 
-  /** ----- Search (외경 역산) with tolerance & debounce ----- */
+  /** ----- Search (외경 역산) with debounce — tolerance 없이 가장 가까운 후보 표시 ----- */
   function findFlange() {
     const raw = $('#searchOD').value.trim();
     const target = parseFloat(raw);
-    const tol = parseInt($('#tolerance').value, 10) || 0;
     const res = $('#searchResult');
     res.textContent = '';
     res.classList.remove('show');
-    if (raw === '') return;                                  // empty: hide silently
+    if (raw === '') return;                                   // empty: hide silently
     if (!Number.isFinite(target) || target <= 0) {           // invalid: feedback
       res.classList.add('show');
       res.appendChild(el('div', { class: 'err' }, t('f.invalid')));
@@ -1460,40 +1456,33 @@
 
     res.classList.add('show');
 
-    // Within tolerance candidates
-    const within = sorted.filter(f => f.diff <= tol);
-    if (within.length) {
+    // ±20mm 이내 후보, 없으면 가장 가까운 5개
+    const SEARCH_RANGE = 20;
+    const within = sorted.filter(f => f.diff <= SEARCH_RANGE);
+    const toShow = within.length > 0 ? within : sorted.slice(0, 5);
+
+    if (within.length > 0) {
       res.appendChild(el('div', null,
-        document.createTextNode(t('f.candidates', { target, tol })),
+        document.createTextNode(t('f.candidates', { target })),
         el('b', null, t('f.candidates_n', { n: within.length }))
       ));
-      const list = el('div', { style: 'margin-top:6px;' });
-      for (const m of within) {
-        const sign = m.od === target ? '' : (m.od > target ? '+' : '');
-        list.appendChild(el('button', {
-          class: 'badge-pill',
-          type: 'button',
-          'data-action': 'search-pick',
-          'data-rating': m.r,
-          'data-size': m.s,
-          'aria-label': t('f.apply_aria', { r: m.r, s: m.s })
-        }, `${m.r} ${m.s}A · ${m.od}mm (${sign}${(m.od - target).toFixed(0)})`));
-      }
-      res.appendChild(list);
-      return;
+    } else {
+      res.appendChild(el('div', { class: 'err' },
+        t('f.no_match', { d: sorted[0].diff })));
     }
 
-    // No within-tolerance: show closest ±5
-    const closest = sorted[0];
-    res.appendChild(el('div', { class: 'err' },
-      t('f.no_match', { d: closest.diff })));
-    const top = sorted.slice(0, 5);
     const list = el('div', { style: 'margin-top:6px;' });
-    for (const m of top) {
+    for (const m of toShow) {
+      const diffSign = m.od > target ? '+' : '';
+      const diffLabel = m.diff === 0 ? ' ✓' : ` (${diffSign}${(m.od - target).toFixed(0)}mm)`;
       list.appendChild(el('button', {
-        class: 'badge-pill', type: 'button',
-        'data-action': 'search-pick', 'data-rating': m.r, 'data-size': m.s
-      }, `${m.r} ${m.s}A · ${m.od}mm (Δ${m.diff})`));
+        class: 'badge-pill',
+        type: 'button',
+        'data-action': 'search-pick',
+        'data-rating': m.r,
+        'data-size': m.s,
+        'aria-label': t('f.apply_aria', { r: m.r, s: m.s })
+      }, `${m.r} ${m.s}A · ${m.od}mm${diffLabel}`));
     }
     res.appendChild(list);
   }
@@ -2018,10 +2007,6 @@
 
     // Search debounced
     $('#searchOD').addEventListener('input', debouncedFindFlange);
-    $('#tolerance').addEventListener('input', () => {
-      $('#toleranceVal').value = `±${$('#tolerance').value}mm`;
-      debouncedFindFlange();
-    });
 
     // Memo autosave
     $('#memoInput').addEventListener('input', debounce(() => {
@@ -2196,7 +2181,6 @@
 
     // Sync form values from store
     $('#memoInput').value = Store.memo || '';
-    $('#toleranceVal').value = `±${$('#tolerance').value}mm`;
 
     // Render
     View.renderQueue();
