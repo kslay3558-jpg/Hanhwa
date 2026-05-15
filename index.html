@@ -491,12 +491,12 @@
   }
   .result-box.show { display: block; animation: springIn .4s var(--m-spring); }
   .result-box .res-head {
-    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    display: flex; align-items: center; gap: 8px;
     border-bottom: 2px dashed color-mix(in srgb, var(--c-success) 40%, transparent);
     padding-bottom: 12px; margin-bottom: 14px;
   }
   .result-box .res-head h2 { color: var(--c-success); flex: 1; min-width: 0; }
-  .result-box .res-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .result-box .res-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
   .res-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 600px) { .res-tables { grid-template-columns: 1fr; } }
@@ -530,10 +530,18 @@
 
   /* Visitor counter footer */
   #visitorFooter {
-    text-align: center; padding: 14px 16px 20px;
-    font-size: .8rem; color: var(--c-text-mute);
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 16px 18px; font-size: .8rem; color: var(--c-text-mute);
   }
-  #visitorFooter span { vertical-align: middle; margin: 0 2px; }
+  #visitorToggle {
+    background: none; border: 1px solid var(--c-border); border-radius: 99px;
+    padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
+    transition: background var(--m-fast), border-color var(--m-fast);
+    line-height: 1.4;
+  }
+  #visitorToggle:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
+  #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
 
   /* Floating bar */
   .floating-bar {
@@ -918,11 +926,15 @@
       </div>
     </div>
   </div>
-  <!-- 당일 방문자 수 (페이지 하단 고정 표시) -->
+  <!-- 당일 방문자 수 (클릭 시 표시) -->
   <div id="visitorFooter">
-    <span aria-hidden="true">👤</span>
-    <span data-i18n="vis.today">오늘 방문자:</span>
-    <strong id="visitorCount">0</strong><span data-i18n="vis.unit">명</span>
+    <button id="visitorToggle" type="button" aria-expanded="false">
+      <span aria-hidden="true">👤</span>
+    </button>
+    <span id="visitorCountWrap" hidden>
+      <span data-i18n="vis.today">오늘 방문자:</span>
+      <strong id="visitorCount">0</strong><span data-i18n="vis.unit">명</span>
+    </span>
   </div>
 
 </div>

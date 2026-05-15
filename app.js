@@ -1322,10 +1322,7 @@
       const head = el('div', { class: 'res-head' },
         el('h2', null, t('r.title')),
         el('div', { class: 'res-actions' },
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'export-csv' }, '⬇ CSV'),
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'share-result' }, t('r.share')),
-          el('button', { class: 'btn btn-sm btn-ghost',     'data-action': 'print-result' }, t('r.print'))
+          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy'))
         )
       );
       card.appendChild(head);
@@ -2230,6 +2227,16 @@
       }
     } catch (e) { /* storage unavailable (e.g. in-app browser) */ }
     $('#visitorCount').textContent = count;
+
+    const btn  = $('#visitorToggle');
+    const wrap = $('#visitorCountWrap');
+    if (btn && wrap) {
+      btn.addEventListener('click', () => {
+        const shown = !wrap.hidden;
+        wrap.hidden = shown;
+        btn.setAttribute('aria-expanded', String(!shown));
+      });
+    }
   }
 
   /* =====================================================================
