@@ -1995,8 +1995,8 @@
       b.classList.toggle('active', b.dataset.lang === lang);
       b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
     });
-    // Re-localize bottom install CTA button label (depends on installed state)
-    if (typeof reflectInstalledState === 'function') reflectInstalledState();
+    // Re-localize bottom install CTA button label & per-platform hint
+    reflectInstalledState();
     // Update theme button title (uses i18n)
     let savedTh = 'auto';
     try { savedTh = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
