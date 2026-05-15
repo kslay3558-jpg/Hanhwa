@@ -87,7 +87,738 @@
   const STORAGE_KEY = 'jis-calc-state-v2';
   const TUTORIAL_KEY = 'jis-calc-hide-tutorial';
   const THEME_KEY = 'jis-calc-theme';
+  const LANG_KEY = 'jis-calc-lang';
   const HISTORY_LIMIT = 10;
+
+  /* =====================================================================
+     §1.5 I18N — Korean / Vietnamese / Indonesian
+     외국인 노동자(외노자)를 위한 다국어 지원.
+     숫자/단위/규격(M12, 100A, 5K 등)은 보편 표기로 유지.
+     ===================================================================== */
+
+  const SUPPORTED_LANGS = [
+    { code: 'ko', native: '한국어',           flag: '🇰🇷' },
+    { code: 'vi', native: 'Tiếng Việt',       flag: '🇻🇳' },
+    { code: 'id', native: 'Bahasa Indonesia', flag: '🇮🇩' }
+  ];
+
+  const I18N = {
+    ko: {
+      // App
+      'app.title':            '설비/배관 자재 계산기',
+      'app.subtitle':         'JIS 규격 기반 · 오프라인 PWA',
+      'app.toolbar':          '앱 도구',
+      // Toolbar / projects
+      'tb.proj_group':        '프로젝트 선택',
+      'tb.proj_label':        '현장(프로젝트)',
+      'tb.proj_select':       '현장(프로젝트) 선택',
+      'tb.proj_new':          '새 현장 추가',
+      'tb.proj_rename':       '현장 이름 변경',
+      'tb.proj_delete':       '현장 삭제',
+      'tb.undo':              '되돌리기',
+      'tb.undo_title':        '되돌리기 (Ctrl+Z)',
+      'tb.redo':              '다시 실행',
+      'tb.redo_title':        '다시 실행 (Ctrl+Y)',
+      'tb.theme':             '테마 전환',
+      'tb.help':              '사용 가이드 열기',
+      'tb.lang':              '언어 변경',
+      'tb.lang_select':       '언어 선택',
+      'proj.default':         '기본 현장',
+      // Section labels
+      'sec.input':            '자재 입력',
+      'sec.queue':            '등록 대기열',
+      'sec.result':           '집계 결과',
+      'sec.result_aria':      '최종 집계 결과',
+      // Card 1: find flange
+      'card.find':            '🔍 플랜지 찾기',
+      'card.find_sub':        '(외경 역산)',
+      'form.od':              '플랜지 외경 (OD, mm)',
+      'form.od_ph':           '예: 155',
+      'btn.find':             '찾기',
+      'form.tolerance':       '허용 오차',
+      // Card 2: flange point
+      'card.flange':          '🔩 플랜지 포인트',
+      'form.rating':          '압력등급',
+      'form.size':            '호칭경 (A)',
+      'form.qty_pt':          '포인트 개소',
+      'form.qty_dec':         '감소',
+      'form.qty_inc':         '증가',
+      'aria.qty_pt':          '포인트 개소 조절',
+      'opt.ext':              '볼트 5mm 더 길게',
+      'opt.dn':               '더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)',
+      'opt.gsk':              '가스켓 포함',
+      'aria.gsk_type':        '가스켓 종류',
+      'aria.gsk_type_in':     '포함될 가스켓 종류',
+      'gsk.normal':           '일반(RF)',
+      'gsk.nl':               '논레이어',
+      'gsk.gr':               '그라파이트',
+      'gsk.metal':            '메탈',
+      'gsk.full':             '풀페이스',
+      'btn.add_pt':           '＋ 포인트 추가',
+      'kbd.enter':            '(Enter)',
+      // Card 3: extra gasket
+      'card.gasket':          '⭕ 추가 가스켓',
+      'form.gtype':           '재질/타입',
+      'form.qty_sht':         '수량 (장)',
+      'aria.qty_gsk':         '가스켓 수량 조절',
+      'aria.qty_gsk_in':      '가스켓 수량',
+      'btn.add_gsk':          '＋ 가스켓 추가',
+      // Card 4: U-bolt
+      'card.ubolt':           '⚓ U-볼트 추가',
+      'form.qty_set':         '수량 (Set)',
+      'aria.qty_ub':          'U-볼트 수량 조절',
+      'aria.qty_ub_in':       'U-볼트 수량',
+      'btn.add_ub':           '＋ U-볼트 추가',
+      'pitch.label':          '홀 간격',
+      'pitch.none':           '홀 간격 데이터 없음 (수동 확인 필요)',
+      // Card 5: memo
+      'card.memo':            '📝 추가 메모',
+      'form.memo_label':      '자유 메모',
+      'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
+      // Queue
+      'card.queue':           '📋 등록 대기열',
+      'btn.calc':             '🧮 최종 집계',
+      'kbd.ctrl_enter':       '(Ctrl+Enter)',
+      'btn.clear':            '초기화',
+      'q.empty_t':            '대기열이 비어 있어요',
+      'q.empty_d':            '좌측 양식에서 자재를 추가하면 여기에 쌓입니다.',
+      'q.flange':             '플랜지',
+      'q.gasket':             '가스켓',
+      'q.ubolt':              'U-볼트',
+      'q.qty_aria':           '수량 조절',
+      'q.qty_dec':            '수량 감소',
+      'q.qty_inc':            '수량 증가',
+      'q.qty_in_aria':        '항목 수량',
+      'q.edit':               '편집',
+      'q.dup':                '복제',
+      'q.del':                '삭제',
+      'q.del_title':          '삭제 (Delete)',
+      'q.tag_5mm':            '+5mm',
+      'q.tag_dn':             '더블너트',
+      'q.tag_auto':           '자동 추가',
+      'q.tag_pitch_unknown':  '핏치 미상',
+      'q.pitch_known':        '홀 간격 {p}mm',
+      'q.pitch_unknown':      '홀 간격 정보 없음',
+      'q.aria_label':         '{title} {n}개 — Delete 키로 삭제 가능',
+      'q.bolt_desc':          '{bS} × {bL}L · {bC}공/pt',
+      'unit.count':           '{n}건',
+      // Result panel
+      'r.empty_t':            '아직 집계 결과가 없습니다',
+      'r.empty_d':            '대기열에 자재를 추가한 뒤 [최종 집계] 버튼을 누르세요.',
+      'r.shortcuts':          '단축키: {kbd1} 추가 · {kbd2} 삭제 · {kbd3} 집계 · {kbd4} 복사',
+      'r.sc_label':           '단축키',
+      'r.sc_add':             '추가',
+      'r.sc_del':             '삭제',
+      'r.sc_agg':             '집계',
+      'r.sc_copy':            '복사',
+      'r.title':              '✅ 최종 집계',
+      'r.copy':               '📋 복사',
+      'r.csv':                '⬇ CSV',
+      'r.share':              '🔗 공유',
+      'r.print':              '🖨 인쇄',
+      'r.bolt':               '🔩 볼트 (Bolt)',
+      'r.nut':                '🔩 너트 (Nut)',
+      'r.gsk':                '⭕ 가스켓',
+      'r.ub':                 '⚓ U-볼트',
+      'r.col_bolt_spec':      '규격 (S × L)',
+      'r.col_nut_spec':       '규격 (M)',
+      'r.col_gsk_spec':       '규격 및 재질',
+      'r.col_ub_spec':        '규격 (호칭경)',
+      'r.col_qty_ea':         '수량(EA)',
+      'r.col_qty_sheet':      '수량(장)',
+      'r.col_qty_set':        '수량(Set)',
+      'r.no_rows':            '내역 없음',
+      'r.cc_pitch':           '(C-C: {p}mm)',
+      'r.cc_unknown':         '(핏치 미상)',
+      'r.memo_title':         '📝 추가 메모',
+      'r.notice_pre':         '※ 자동 합산됨',
+      'r.notice_total':       ' · 총 {n} 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2',
+      // Floating bar
+      'fb.queue':             '🛒 대기열',
+      'fb.show_result':       '🧮 결과보기',
+      // Install banner
+      'install.title':        '홈 화면에 추가',
+      'install.desc':         '오프라인에서도 빠르게 사용할 수 있어요.',
+      'install.btn':          '설치',
+      'install.dismiss':      '닫기',
+      'install.aria':         '홈 화면에 추가',
+      // Edit modal
+      'edit.title':           '✏️ 항목 편집',
+      'edit.save':            '저장',
+      'edit.cancel':          '취소',
+      'edit.dn':              '더블 너트',
+      // Tutorial
+      'tut.title':            '🎉 사용 가이드',
+      'tut.lang_label':       '🌐 언어 / Language / Ngôn ngữ / Bahasa',
+      'tut.intro_pre':        '도면의 배관 자재를 ',
+      'tut.intro_em':         '장바구니처럼 추가',
+      'tut.intro_post':       '하면, 전체 필요 수량을 자동으로 합산하는 스마트 계산기입니다.',
+      'tut.s1_t':             '1. 자재 담기',
+      'tut.s1_d_pre':         '규격을 선택하고 ',
+      'tut.s1_d_em':          '[＋ 추가]',
+      'tut.s1_d_post':        ' 또는 Enter 키로 대기열에 담아주세요.',
+      'tut.s2_t':             '2. JIS 자동 산출',
+      'tut.s2_d':             '플랜지 규격만 넣으면 볼트 굵기·길이·수량이 자동 계산됩니다 (더블너트 시 너트 두께가 볼트 길이에 자동 합산).',
+      'tut.s3_t':             '3. 합산 집계',
+      'tut.s3_d_pre':         '',
+      'tut.s3_d_em':          '[최종 집계]',
+      'tut.s3_d_post':        ' 또는 Ctrl+Enter 로 동일 규격을 자동 병합합니다.',
+      'tut.s4_t':             '4. 공유/저장',
+      'tut.s4_d':             '복사·CSV 내보내기·공유·인쇄가 모두 가능합니다. 모든 작업은 자동 저장됩니다.',
+      'tut.confirm':          '확인했어요, 시작할게요!',
+      'tut.hide':             '다시 보지 않기',
+      // Toasts
+      't.added':              '✅ 추가됨 · 대기열 {n}건',
+      't.added_g':            '✅ 가스켓 추가 · {n}건',
+      't.added_u':            '✅ U-볼트 추가 · {n}건',
+      't.no_data_bolt':       '⚠️ {r} {s}A 데이터가 없습니다. 다른 사이즈를 선택해주세요.',
+      't.no_data_gsk':        '⚠️ {r} {s}A 가스켓 데이터 없음',
+      't.no_items':           '⚠️ 등록된 자재가 없습니다.',
+      't.copy_ok':            '✨ 복사 완료!',
+      't.copy_fail':          '⚠️ 복사 실패',
+      't.csv_dl':             '⬇ CSV 다운로드',
+      't.share_unsupported':  '🔗 공유 미지원: 복사로 대체',
+      't.dup':                '⎘ 항목 복제됨',
+      't.saved':              '💾 저장됨',
+      't.applied':            '✓ {r} {s}A 적용됨',
+      't.installed':          '🎉 설치되었습니다!',
+      't.install_ios':        'iOS는 공유 → "홈 화면에 추가"를 사용하세요.',
+      't.theme_auto':         '자동',
+      't.theme_dark':         '다크',
+      't.theme_light':        '라이트',
+      't.theme_changed':      '🎨 {mode} 테마',
+      't.undo':               '↶ 되돌리기',
+      't.redo':               '↷ 다시 실행',
+      't.last_proj':          '⚠️ 마지막 현장은 삭제할 수 없습니다.',
+      't.proj_deleted':       '🗑 현장 삭제됨',
+      't.lang_changed':       '🌐 {name}',
+      // Prompts
+      'p.clear_confirm':      '대기열을 모두 비울까요?',
+      'p.proj_new_q':         '새 현장 이름?',
+      'p.proj_new_def':       '새 현장',
+      'p.proj_rename_q':      '현장 이름 변경:',
+      'p.proj_del_q':         '\'{name}\' 현장을 삭제할까요?',
+      // Find flange
+      'f.invalid':            '⚠️ 유효한 외경 값(>0)을 입력해주세요.',
+      'f.candidates':         '🎯 OD {target}mm · 허용 오차 ±{tol}mm 이내 ',
+      'f.candidates_n':       '{n}개 후보',
+      'f.no_match':           '⚠️ 허용 오차 내 일치 규격 없음 (최소 오차 {d}mm)',
+      'f.apply_aria':         '{r} {s}A 적용',
+      'pick.theme_title':     '테마: {mode} (클릭하여 전환)',
+      // Export
+      'x.title':              '[자재 집계 내역]',
+      'x.bolt':               '[볼트]',
+      'x.nut':                '[너트]',
+      'x.gasket':             '[가스켓]',
+      'x.ubolt':              '[U-볼트]',
+      'x.unit_ea':            '개',
+      'x.unit_sheet':         '장',
+      'x.unit_set':           'set',
+      'x.cc':                 '(C-C: {p}mm)',
+      'x.cc_none':            '(핏치 정보 없음)',
+      'x.memo':               '[추가 메모]',
+      'x.csv_cat':            '카테고리',
+      'x.csv_spec':           '규격',
+      'x.csv_qty':            '수량',
+      'x.csv_unit':           '단위',
+      'x.cat_bolt':           '볼트',
+      'x.cat_nut':            '너트',
+      'x.cat_gsk':            '가스켓',
+      'x.cat_ub':             'U-볼트',
+      'x.cat_memo':           '메모',
+      'x.fname_suffix':       '_자재집계',
+      'x.share_title':        'JIS 자재 집계'
+    },
+
+    vi: {
+      'app.title':            'Máy tính Vật tư Đường ống',
+      'app.subtitle':         'Tiêu chuẩn JIS · PWA Ngoại tuyến',
+      'app.toolbar':          'Công cụ ứng dụng',
+      'tb.proj_group':        'Chọn dự án',
+      'tb.proj_label':        'Dự án (công trường)',
+      'tb.proj_select':       'Chọn dự án (công trường)',
+      'tb.proj_new':          'Thêm dự án mới',
+      'tb.proj_rename':       'Đổi tên dự án',
+      'tb.proj_delete':       'Xóa dự án',
+      'tb.undo':              'Hoàn tác',
+      'tb.undo_title':        'Hoàn tác (Ctrl+Z)',
+      'tb.redo':              'Làm lại',
+      'tb.redo_title':        'Làm lại (Ctrl+Y)',
+      'tb.theme':             'Đổi giao diện',
+      'tb.help':              'Mở hướng dẫn sử dụng',
+      'tb.lang':              'Đổi ngôn ngữ',
+      'tb.lang_select':       'Chọn ngôn ngữ',
+      'proj.default':         'Dự án mặc định',
+      'sec.input':            'Nhập vật tư',
+      'sec.queue':            'Hàng chờ đăng ký',
+      'sec.result':           'Kết quả tổng hợp',
+      'sec.result_aria':      'Kết quả tổng hợp cuối cùng',
+      'card.find':            '🔍 Tìm Mặt bích',
+      'card.find_sub':        '(theo đường kính ngoài)',
+      'form.od':              'Đường kính ngoài mặt bích (OD, mm)',
+      'form.od_ph':           'VD: 155',
+      'btn.find':             'Tìm',
+      'form.tolerance':       'Dung sai',
+      'card.flange':          '🔩 Điểm Mặt bích',
+      'form.rating':          'Cấp áp suất',
+      'form.size':            'Đường kính danh nghĩa (A)',
+      'form.qty_pt':          'Số điểm',
+      'form.qty_dec':         'Giảm',
+      'form.qty_inc':         'Tăng',
+      'aria.qty_pt':          'Điều chỉnh số điểm',
+      'opt.ext':              'Bu lông dài thêm 5mm',
+      'opt.dn':               'Dùng đai ốc đôi (tự động cộng độ dày đai ốc vào chiều dài bu lông)',
+      'opt.gsk':              'Bao gồm gioăng',
+      'aria.gsk_type':        'Loại gioăng',
+      'aria.gsk_type_in':     'Loại gioăng kèm theo',
+      'gsk.normal':           'Thường (RF)',
+      'gsk.nl':               'Non-layer',
+      'gsk.gr':               'Graphite',
+      'gsk.metal':            'Kim loại',
+      'gsk.full':             'Full Face',
+      'btn.add_pt':           '＋ Thêm điểm',
+      'kbd.enter':            '(Enter)',
+      'card.gasket':          '⭕ Thêm Gioăng',
+      'form.gtype':           'Vật liệu / Loại',
+      'form.qty_sht':         'Số lượng (tấm)',
+      'aria.qty_gsk':         'Điều chỉnh số gioăng',
+      'aria.qty_gsk_in':      'Số gioăng',
+      'btn.add_gsk':          '＋ Thêm gioăng',
+      'card.ubolt':           '⚓ Thêm Bu lông U',
+      'form.qty_set':         'Số lượng (bộ)',
+      'aria.qty_ub':          'Điều chỉnh số bu lông U',
+      'aria.qty_ub_in':       'Số bu lông U',
+      'btn.add_ub':           '＋ Thêm bu lông U',
+      'pitch.label':          'Khoảng cách lỗ',
+      'pitch.none':           'Không có dữ liệu khoảng cách lỗ (cần kiểm tra thủ công)',
+      'card.memo':            '📝 Ghi chú thêm',
+      'form.memo_label':      'Ghi chú tự do',
+      'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
+      'card.queue':           '📋 Hàng chờ đăng ký',
+      'btn.calc':             '🧮 Tổng hợp cuối',
+      'kbd.ctrl_enter':       '(Ctrl+Enter)',
+      'btn.clear':            'Xóa hết',
+      'q.empty_t':            'Hàng chờ đang trống',
+      'q.empty_d':            'Thêm vật tư từ form bên trái — chúng sẽ xuất hiện ở đây.',
+      'q.flange':             'Mặt bích',
+      'q.gasket':             'Gioăng',
+      'q.ubolt':              'Bu lông U',
+      'q.qty_aria':           'Điều chỉnh số lượng',
+      'q.qty_dec':            'Giảm số lượng',
+      'q.qty_inc':            'Tăng số lượng',
+      'q.qty_in_aria':        'Số lượng mục',
+      'q.edit':               'Sửa',
+      'q.dup':                'Nhân đôi',
+      'q.del':                'Xóa',
+      'q.del_title':          'Xóa (Delete)',
+      'q.tag_5mm':            '+5mm',
+      'q.tag_dn':             'Đai ốc đôi',
+      'q.tag_auto':           'Tự động thêm',
+      'q.tag_pitch_unknown':  'Không có pitch',
+      'q.pitch_known':        'Khoảng cách lỗ {p}mm',
+      'q.pitch_unknown':      'Không có thông tin khoảng cách lỗ',
+      'q.aria_label':         '{title} {n} — nhấn Delete để xóa',
+      'q.bolt_desc':          '{bS} × {bL}L · {bC} lỗ/điểm',
+      'unit.count':           '{n}',
+      'r.empty_t':            'Chưa có kết quả tổng hợp',
+      'r.empty_d':            'Hãy thêm vật tư vào hàng chờ rồi nhấn nút [Tổng hợp cuối].',
+      'r.shortcuts':          'Phím tắt: {kbd1} Thêm · {kbd2} Xóa · {kbd3} Tổng hợp · {kbd4} Sao chép',
+      'r.sc_label':           'Phím tắt',
+      'r.sc_add':             'Thêm',
+      'r.sc_del':             'Xóa',
+      'r.sc_agg':             'Tổng hợp',
+      'r.sc_copy':            'Sao chép',
+      'r.title':              '✅ Tổng hợp cuối',
+      'r.copy':               '📋 Sao chép',
+      'r.csv':                '⬇ CSV',
+      'r.share':              '🔗 Chia sẻ',
+      'r.print':              '🖨 In',
+      'r.bolt':               '🔩 Bu lông (Bolt)',
+      'r.nut':                '🔩 Đai ốc (Nut)',
+      'r.gsk':                '⭕ Gioăng',
+      'r.ub':                 '⚓ Bu lông U',
+      'r.col_bolt_spec':      'Quy cách (S × L)',
+      'r.col_nut_spec':       'Quy cách (M)',
+      'r.col_gsk_spec':       'Quy cách & Vật liệu',
+      'r.col_ub_spec':        'Quy cách (DN)',
+      'r.col_qty_ea':         'SL (cái)',
+      'r.col_qty_sheet':      'SL (tấm)',
+      'r.col_qty_set':        'SL (bộ)',
+      'r.no_rows':            'Không có dữ liệu',
+      'r.cc_pitch':           '(C-C: {p}mm)',
+      'r.cc_unknown':         '(không có pitch)',
+      'r.memo_title':         '📝 Ghi chú thêm',
+      'r.notice_pre':         '※ Đã tự động cộng dồn',
+      'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
+      'fb.queue':             '🛒 Hàng chờ',
+      'fb.show_result':       '🧮 Xem kết quả',
+      'install.title':        'Thêm vào màn hình chính',
+      'install.desc':         'Có thể dùng nhanh ngay cả khi ngoại tuyến.',
+      'install.btn':          'Cài đặt',
+      'install.dismiss':      'Đóng',
+      'install.aria':         'Thêm vào màn hình chính',
+      'edit.title':           '✏️ Sửa mục',
+      'edit.save':            'Lưu',
+      'edit.cancel':          'Hủy',
+      'edit.dn':              'Đai ốc đôi',
+      'tut.title':            '🎉 Hướng dẫn sử dụng',
+      'tut.lang_label':       '🌐 Ngôn ngữ / Language / 언어 / Bahasa',
+      'tut.intro_pre':        'Hãy ',
+      'tut.intro_em':         'thêm vật tư đường ống như bỏ vào giỏ hàng',
+      'tut.intro_post':       ', máy sẽ tự động cộng dồn tổng số lượng cần thiết.',
+      'tut.s1_t':             '1. Thêm vật tư',
+      'tut.s1_d_pre':         'Chọn quy cách rồi nhấn ',
+      'tut.s1_d_em':          '[＋ Thêm]',
+      'tut.s1_d_post':        ' hoặc phím Enter để bỏ vào hàng chờ.',
+      'tut.s2_t':             '2. Tự động tính theo JIS',
+      'tut.s2_d':             'Chỉ cần nhập quy cách mặt bích, đường kính·chiều dài·số lượng bu lông sẽ tự tính (đai ốc đôi sẽ tự cộng độ dày đai ốc vào chiều dài).',
+      'tut.s3_t':             '3. Tổng hợp',
+      'tut.s3_d_pre':         'Nhấn ',
+      'tut.s3_d_em':          '[Tổng hợp cuối]',
+      'tut.s3_d_post':        ' hoặc Ctrl+Enter để gộp các quy cách giống nhau.',
+      'tut.s4_t':             '4. Chia sẻ/Lưu',
+      'tut.s4_d':             'Có thể sao chép, xuất CSV, chia sẻ và in. Mọi thao tác đều tự động lưu.',
+      'tut.confirm':          'Đã hiểu, bắt đầu!',
+      'tut.hide':             'Không hiển thị lại',
+      't.added':              '✅ Đã thêm · Hàng chờ {n}',
+      't.added_g':            '✅ Đã thêm gioăng · {n}',
+      't.added_u':            '✅ Đã thêm bu lông U · {n}',
+      't.no_data_bolt':       '⚠️ Không có dữ liệu cho {r} {s}A. Hãy chọn cỡ khác.',
+      't.no_data_gsk':        '⚠️ Không có dữ liệu gioăng {r} {s}A',
+      't.no_items':           '⚠️ Chưa có vật tư nào.',
+      't.copy_ok':            '✨ Đã sao chép!',
+      't.copy_fail':          '⚠️ Sao chép thất bại',
+      't.csv_dl':             '⬇ Đang tải CSV',
+      't.share_unsupported':  '🔗 Không hỗ trợ chia sẻ: đã sao chép thay thế',
+      't.dup':                '⎘ Đã nhân đôi mục',
+      't.saved':              '💾 Đã lưu',
+      't.applied':            '✓ Đã áp dụng {r} {s}A',
+      't.installed':          '🎉 Đã cài đặt!',
+      't.install_ios':        'iOS: dùng Chia sẻ → "Thêm vào màn hình chính".',
+      't.theme_auto':         'Tự động',
+      't.theme_dark':         'Tối',
+      't.theme_light':        'Sáng',
+      't.theme_changed':      '🎨 Giao diện {mode}',
+      't.undo':               '↶ Hoàn tác',
+      't.redo':               '↷ Làm lại',
+      't.last_proj':          '⚠️ Không thể xóa dự án cuối cùng.',
+      't.proj_deleted':       '🗑 Đã xóa dự án',
+      't.lang_changed':       '🌐 {name}',
+      'p.clear_confirm':      'Xóa toàn bộ hàng chờ?',
+      'p.proj_new_q':         'Tên dự án mới?',
+      'p.proj_new_def':       'Dự án mới',
+      'p.proj_rename_q':      'Đổi tên dự án:',
+      'p.proj_del_q':         'Xóa dự án \'{name}\'?',
+      'f.invalid':            '⚠️ Hãy nhập giá trị OD hợp lệ (>0).',
+      'f.candidates':         '🎯 OD {target}mm · trong dung sai ±{tol}mm ',
+      'f.candidates_n':       '{n} ứng viên',
+      'f.no_match':           '⚠️ Không có quy cách trong dung sai (sai lệch nhỏ nhất {d}mm)',
+      'f.apply_aria':         'Áp dụng {r} {s}A',
+      'pick.theme_title':     'Giao diện: {mode} (nhấn để đổi)',
+      'x.title':              '[Tổng hợp Vật tư]',
+      'x.bolt':               '[Bu lông]',
+      'x.nut':                '[Đai ốc]',
+      'x.gasket':             '[Gioăng]',
+      'x.ubolt':              '[Bu lông U]',
+      'x.unit_ea':            'cái',
+      'x.unit_sheet':         'tấm',
+      'x.unit_set':           'bộ',
+      'x.cc':                 '(C-C: {p}mm)',
+      'x.cc_none':            '(không có pitch)',
+      'x.memo':               '[Ghi chú thêm]',
+      'x.csv_cat':            'Danh mục',
+      'x.csv_spec':           'Quy cách',
+      'x.csv_qty':            'Số lượng',
+      'x.csv_unit':           'Đơn vị',
+      'x.cat_bolt':           'Bu lông',
+      'x.cat_nut':            'Đai ốc',
+      'x.cat_gsk':            'Gioăng',
+      'x.cat_ub':             'Bu lông U',
+      'x.cat_memo':           'Ghi chú',
+      'x.fname_suffix':       '_tonghop_vattu',
+      'x.share_title':        'Tổng hợp Vật tư JIS'
+    },
+
+    id: {
+      'app.title':            'Kalkulator Material Pipa',
+      'app.subtitle':         'Standar JIS · PWA Offline',
+      'app.toolbar':          'Alat aplikasi',
+      'tb.proj_group':        'Pilih proyek',
+      'tb.proj_label':        'Proyek (lokasi)',
+      'tb.proj_select':       'Pilih proyek (lokasi)',
+      'tb.proj_new':          'Tambah proyek baru',
+      'tb.proj_rename':       'Ubah nama proyek',
+      'tb.proj_delete':       'Hapus proyek',
+      'tb.undo':              'Urungkan',
+      'tb.undo_title':        'Urungkan (Ctrl+Z)',
+      'tb.redo':              'Ulangi',
+      'tb.redo_title':        'Ulangi (Ctrl+Y)',
+      'tb.theme':             'Ganti tema',
+      'tb.help':              'Buka panduan penggunaan',
+      'tb.lang':              'Ganti bahasa',
+      'tb.lang_select':       'Pilih bahasa',
+      'proj.default':         'Proyek default',
+      'sec.input':            'Input material',
+      'sec.queue':            'Antrean pendaftaran',
+      'sec.result':           'Hasil rekap',
+      'sec.result_aria':      'Hasil rekap akhir',
+      'card.find':            '🔍 Cari Flensa',
+      'card.find_sub':        '(dari diameter luar)',
+      'form.od':              'Diameter luar flensa (OD, mm)',
+      'form.od_ph':           'cth: 155',
+      'btn.find':             'Cari',
+      'form.tolerance':       'Toleransi',
+      'card.flange':          '🔩 Titik Flensa',
+      'form.rating':          'Kelas tekanan',
+      'form.size':            'Diameter nominal (A)',
+      'form.qty_pt':          'Jumlah titik',
+      'form.qty_dec':         'Kurang',
+      'form.qty_inc':         'Tambah',
+      'aria.qty_pt':          'Atur jumlah titik',
+      'opt.ext':              'Baut 5mm lebih panjang',
+      'opt.dn':               'Pakai mur ganda (tebal mur otomatis ditambahkan ke panjang baut)',
+      'opt.gsk':              'Termasuk gasket',
+      'aria.gsk_type':        'Jenis gasket',
+      'aria.gsk_type_in':     'Jenis gasket yang disertakan',
+      'gsk.normal':           'Biasa (RF)',
+      'gsk.nl':               'Non-layer',
+      'gsk.gr':               'Grafit',
+      'gsk.metal':            'Logam',
+      'gsk.full':             'Full Face',
+      'btn.add_pt':           '＋ Tambah titik',
+      'kbd.enter':            '(Enter)',
+      'card.gasket':          '⭕ Tambah Gasket',
+      'form.gtype':           'Material / Tipe',
+      'form.qty_sht':         'Jumlah (lembar)',
+      'aria.qty_gsk':         'Atur jumlah gasket',
+      'aria.qty_gsk_in':      'Jumlah gasket',
+      'btn.add_gsk':          '＋ Tambah gasket',
+      'card.ubolt':           '⚓ Tambah Baut U',
+      'form.qty_set':         'Jumlah (set)',
+      'aria.qty_ub':          'Atur jumlah baut U',
+      'aria.qty_ub_in':       'Jumlah baut U',
+      'btn.add_ub':           '＋ Tambah baut U',
+      'pitch.label':          'Jarak lubang',
+      'pitch.none':           'Data jarak lubang tidak tersedia (perlu cek manual)',
+      'card.memo':            '📝 Catatan tambahan',
+      'form.memo_label':      'Catatan bebas',
+      'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
+      'card.queue':           '📋 Antrean pendaftaran',
+      'btn.calc':             '🧮 Rekap akhir',
+      'kbd.ctrl_enter':       '(Ctrl+Enter)',
+      'btn.clear':            'Reset',
+      'q.empty_t':            'Antrean kosong',
+      'q.empty_d':            'Tambahkan material dari form di kiri — akan muncul di sini.',
+      'q.flange':             'Flensa',
+      'q.gasket':             'Gasket',
+      'q.ubolt':              'Baut U',
+      'q.qty_aria':           'Atur jumlah',
+      'q.qty_dec':            'Kurangi jumlah',
+      'q.qty_inc':            'Tambah jumlah',
+      'q.qty_in_aria':        'Jumlah item',
+      'q.edit':               'Edit',
+      'q.dup':                'Gandakan',
+      'q.del':                'Hapus',
+      'q.del_title':          'Hapus (Delete)',
+      'q.tag_5mm':            '+5mm',
+      'q.tag_dn':             'Mur ganda',
+      'q.tag_auto':           'Auto',
+      'q.tag_pitch_unknown':  'Pitch tidak diketahui',
+      'q.pitch_known':        'Jarak lubang {p}mm',
+      'q.pitch_unknown':      'Info jarak lubang tidak tersedia',
+      'q.aria_label':         '{title} {n} — tekan Delete untuk hapus',
+      'q.bolt_desc':          '{bS} × {bL}L · {bC} lubang/titik',
+      'unit.count':           '{n}',
+      'r.empty_t':            'Belum ada hasil rekap',
+      'r.empty_d':            'Tambahkan material ke antrean lalu tekan tombol [Rekap akhir].',
+      'r.shortcuts':          'Pintasan: {kbd1} tambah · {kbd2} hapus · {kbd3} rekap · {kbd4} salin',
+      'r.sc_label':           'Pintasan',
+      'r.sc_add':             'Tambah',
+      'r.sc_del':             'Hapus',
+      'r.sc_agg':             'Rekap',
+      'r.sc_copy':            'Salin',
+      'r.title':              '✅ Rekap akhir',
+      'r.copy':               '📋 Salin',
+      'r.csv':                '⬇ CSV',
+      'r.share':              '🔗 Bagikan',
+      'r.print':              '🖨 Cetak',
+      'r.bolt':               '🔩 Baut (Bolt)',
+      'r.nut':                '🔩 Mur (Nut)',
+      'r.gsk':                '⭕ Gasket',
+      'r.ub':                 '⚓ Baut U',
+      'r.col_bolt_spec':      'Spesifikasi (S × L)',
+      'r.col_nut_spec':       'Spesifikasi (M)',
+      'r.col_gsk_spec':       'Spesifikasi & Material',
+      'r.col_ub_spec':        'Spesifikasi (DN)',
+      'r.col_qty_ea':         'Jml (pcs)',
+      'r.col_qty_sheet':      'Jml (lbr)',
+      'r.col_qty_set':        'Jml (set)',
+      'r.no_rows':            'Tidak ada data',
+      'r.cc_pitch':           '(C-C: {p}mm)',
+      'r.cc_unknown':         '(pitch tdk diketahui)',
+      'r.memo_title':         '📝 Catatan tambahan',
+      'r.notice_pre':         '※ Otomatis dijumlah',
+      'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
+      'fb.queue':             '🛒 Antrean',
+      'fb.show_result':       '🧮 Lihat hasil',
+      'install.title':        'Tambah ke Layar Utama',
+      'install.desc':         'Bisa dipakai cepat bahkan saat offline.',
+      'install.btn':          'Pasang',
+      'install.dismiss':      'Tutup',
+      'install.aria':         'Tambah ke Layar Utama',
+      'edit.title':           '✏️ Edit item',
+      'edit.save':            'Simpan',
+      'edit.cancel':          'Batal',
+      'edit.dn':              'Mur ganda',
+      'tut.title':            '🎉 Panduan Penggunaan',
+      'tut.lang_label':       '🌐 Bahasa / Language / 언어 / Ngôn ngữ',
+      'tut.intro_pre':        'Cukup ',
+      'tut.intro_em':         'tambahkan material pipa seperti memasukkan ke keranjang',
+      'tut.intro_post':       ', kalkulator akan otomatis menjumlahkan total kebutuhan.',
+      'tut.s1_t':             '1. Tambah material',
+      'tut.s1_d_pre':         'Pilih spesifikasi lalu tekan ',
+      'tut.s1_d_em':          '[＋ Tambah]',
+      'tut.s1_d_post':        ' atau tekan Enter untuk masukkan ke antrean.',
+      'tut.s2_t':             '2. Hitung otomatis JIS',
+      'tut.s2_d':             'Cukup masukkan spesifikasi flensa, ukuran·panjang·jumlah baut akan otomatis dihitung (mur ganda otomatis menambah ketebalan mur ke panjang baut).',
+      'tut.s3_t':             '3. Rekap',
+      'tut.s3_d_pre':         'Tekan ',
+      'tut.s3_d_em':          '[Rekap akhir]',
+      'tut.s3_d_post':        ' atau Ctrl+Enter untuk menggabungkan spesifikasi yang sama.',
+      'tut.s4_t':             '4. Bagikan/Simpan',
+      'tut.s4_d':             'Bisa salin, ekspor CSV, bagikan, dan cetak. Semua aksi otomatis tersimpan.',
+      'tut.confirm':          'Mengerti, mulai sekarang!',
+      'tut.hide':             'Jangan tampilkan lagi',
+      't.added':              '✅ Ditambahkan · Antrean {n}',
+      't.added_g':            '✅ Gasket ditambahkan · {n}',
+      't.added_u':            '✅ Baut U ditambahkan · {n}',
+      't.no_data_bolt':       '⚠️ Tidak ada data {r} {s}A. Pilih ukuran lain.',
+      't.no_data_gsk':        '⚠️ Tidak ada data gasket {r} {s}A',
+      't.no_items':           '⚠️ Belum ada material terdaftar.',
+      't.copy_ok':            '✨ Tersalin!',
+      't.copy_fail':          '⚠️ Gagal menyalin',
+      't.csv_dl':             '⬇ Mengunduh CSV',
+      't.share_unsupported':  '🔗 Berbagi tidak didukung: disalin sebagai gantinya',
+      't.dup':                '⎘ Item digandakan',
+      't.saved':              '💾 Tersimpan',
+      't.applied':            '✓ {r} {s}A diterapkan',
+      't.installed':          '🎉 Terpasang!',
+      't.install_ios':        'iOS: gunakan Bagikan → "Tambah ke Layar Utama".',
+      't.theme_auto':         'Otomatis',
+      't.theme_dark':         'Gelap',
+      't.theme_light':        'Terang',
+      't.theme_changed':      '🎨 Tema {mode}',
+      't.undo':               '↶ Urungkan',
+      't.redo':               '↷ Ulangi',
+      't.last_proj':          '⚠️ Tidak bisa menghapus proyek terakhir.',
+      't.proj_deleted':       '🗑 Proyek dihapus',
+      't.lang_changed':       '🌐 {name}',
+      'p.clear_confirm':      'Kosongkan seluruh antrean?',
+      'p.proj_new_q':         'Nama proyek baru?',
+      'p.proj_new_def':       'Proyek baru',
+      'p.proj_rename_q':      'Ubah nama proyek:',
+      'p.proj_del_q':         'Hapus proyek \'{name}\'?',
+      'f.invalid':            '⚠️ Masukkan nilai OD valid (>0).',
+      'f.candidates':         '🎯 OD {target}mm · dalam toleransi ±{tol}mm ',
+      'f.candidates_n':       '{n} kandidat',
+      'f.no_match':           '⚠️ Tidak ada spesifikasi dalam toleransi (selisih min {d}mm)',
+      'f.apply_aria':         'Terapkan {r} {s}A',
+      'pick.theme_title':     'Tema: {mode} (klik untuk ganti)',
+      'x.title':              '[Rekap Material]',
+      'x.bolt':               '[Baut]',
+      'x.nut':                '[Mur]',
+      'x.gasket':             '[Gasket]',
+      'x.ubolt':              '[Baut U]',
+      'x.unit_ea':            'pcs',
+      'x.unit_sheet':         'lbr',
+      'x.unit_set':           'set',
+      'x.cc':                 '(C-C: {p}mm)',
+      'x.cc_none':            '(pitch tidak diketahui)',
+      'x.memo':               '[Catatan tambahan]',
+      'x.csv_cat':            'Kategori',
+      'x.csv_spec':           'Spesifikasi',
+      'x.csv_qty':            'Jumlah',
+      'x.csv_unit':           'Satuan',
+      'x.cat_bolt':           'Baut',
+      'x.cat_nut':            'Mur',
+      'x.cat_gsk':            'Gasket',
+      'x.cat_ub':             'Baut U',
+      'x.cat_memo':           'Catatan',
+      'x.fname_suffix':       '_rekap_material',
+      'x.share_title':        'Rekap Material JIS'
+    }
+  };
+
+  /** Map gasket type stored value (always Korean key) to translation key. */
+  const GTYPE_TO_KEY = {
+    '일반': 'gsk.normal', '논레이어': 'gsk.nl',
+    '그라파이트': 'gsk.gr', '메탈': 'gsk.metal', '풀페이스': 'gsk.full'
+  };
+
+  const Lang = {
+    /** @type {string} */ current: 'ko',
+    detect() {
+      try {
+        const saved = localStorage.getItem(LANG_KEY);
+        if (saved && I18N[saved]) return saved;
+      } catch (e) {}
+      const nav = (navigator.language || 'ko').toLowerCase();
+      if (nav.startsWith('vi')) return 'vi';
+      if (nav.startsWith('id') || nav.startsWith('in')) return 'id'; // 'in' = legacy Indonesian code
+      return 'ko';
+    },
+    set(lang) {
+      if (!I18N[lang]) lang = 'ko';
+      this.current = lang;
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      document.documentElement.lang = lang;
+    },
+    /**
+     * Translate a key with optional {placeholders}.
+     * @param {string} key
+     * @param {Object<string,string|number>} [params]
+     * @returns {string}
+     */
+    t(key, params) {
+      const dict = I18N[this.current] || I18N.ko;
+      let s = dict[key];
+      if (s == null) s = (I18N.ko[key] != null ? I18N.ko[key] : key);
+      if (params) {
+        s = s.replace(/\{(\w+)\}/g, (_, k) => params[k] != null ? String(params[k]) : '{' + k + '}');
+      }
+      return s;
+    },
+    /** Translate gasket type string (stored as Korean key). */
+    tGType(g) {
+      const k = GTYPE_TO_KEY[g];
+      return k ? this.t(k) : g;
+    }
+  };
+  /** Shorthand. */
+  const t = (k, p) => Lang.t(k, p);
+
+  /**
+   * Walk the DOM and apply translations to elements with data-i18n
+   * (textContent) and data-i18n-attr="attr1:key1,attr2:key2" (attributes).
+   */
+  function applyI18n(root = document) {
+    root.querySelectorAll('[data-i18n]').forEach(node => {
+      const key = node.getAttribute('data-i18n');
+      if (key) node.textContent = t(key);
+    });
+    root.querySelectorAll('[data-i18n-attr]').forEach(node => {
+      const spec = node.getAttribute('data-i18n-attr');
+      if (!spec) return;
+      for (const pair of spec.split(',')) {
+        const [attr, key] = pair.split(':').map(s => s && s.trim());
+        if (attr && key) node.setAttribute(attr, t(key));
+      }
+    });
+    // Update <html lang>
+    document.documentElement.lang = Lang.current;
+    // Update document title
+    document.title = t('app.title');
+  }
 
   /* =====================================================================
      §2. UTILITIES
@@ -216,7 +947,7 @@
     /** @type {Item[][]} */ future: [],
     listeners: new Set(),
 
-    get current() { return this.projects[this.currentProject] || (this.projects[this.currentProject] = { name: '기본 현장', queue: [], memo: '' }); },
+    get current() { return this.projects[this.currentProject] || (this.projects[this.currentProject] = { name: t('proj.default'), queue: [], memo: '' }); },
     get queue() { return this.current.queue; },
     set queue(v) { this.current.queue = v; },
     get memo() { return this.current.memo; },
@@ -267,7 +998,7 @@
           for (const p of Object.values(this.projects)) {
             if (!Array.isArray(p.queue)) p.queue = [];
             if (typeof p.memo !== 'string') p.memo = '';
-            if (typeof p.name !== 'string') p.name = '현장';
+            if (typeof p.name !== 'string') p.name = t('proj.default');
           }
         }
       } catch (e) { /* corrupted */ }
@@ -275,7 +1006,7 @@
 
     addProject(name) {
       const id = 'p_' + Date.now().toString(36);
-      this.projects[id] = { name: String(name || '새 현장').slice(0, 40), queue: [], memo: '' };
+      this.projects[id] = { name: String(name || t('p.proj_new_def')).slice(0, 40), queue: [], memo: '' };
       this.currentProject = id;
       this.history.length = 0; this.future.length = 0;
       this.save();
@@ -283,7 +1014,7 @@
     },
     renameProject(id, name) {
       if (this.projects[id]) {
-        this.projects[id].name = String(name || '현장').slice(0, 40);
+        this.projects[id].name = String(name || t('proj.default')).slice(0, 40);
         this.save();
       }
     },
@@ -345,7 +1076,7 @@
         bM[bK] = (bM[bK] || 0) + bolts;
         nM[nK] = (nM[nK] || 0) + nuts;
       } else if (q.type === 'gasket') {
-        const k = `${q.r} ${q.s}A (${q.gtype})`;
+        const k = `${q.r} ${q.s}A (${Lang.tGType(q.gtype)})`;
         gM[k] = (gM[k] || 0) + q.qty;
       } else if (q.type === 'ubolt') {
         const k = `${q.s}A`;
@@ -372,32 +1103,32 @@
 
   /** Build plaintext export. */
   function buildExportText(agg, memo) {
-    let t = '[자재 집계 내역]\n\n';
-    for (const [k, v] of agg.sB) t += `[볼트] ${k} : ${v}개\n`;
-    if (agg.sN.length) t += '\n';
-    for (const [k, v] of agg.sN) t += `[너트] ${k} : ${v}개\n`;
-    if (agg.sG.length) t += '\n';
-    for (const [k, v] of agg.sG) t += `[가스켓] ${k} : ${v}장\n`;
-    if (agg.sU.length) t += '\n';
+    let out = t('x.title') + '\n\n';
+    for (const [k, v] of agg.sB) out += `${t('x.bolt')} ${k} : ${v}${t('x.unit_ea')}\n`;
+    if (agg.sN.length) out += '\n';
+    for (const [k, v] of agg.sN) out += `${t('x.nut')} ${k} : ${v}${t('x.unit_ea')}\n`;
+    if (agg.sG.length) out += '\n';
+    for (const [k, v] of agg.sG) out += `${t('x.gasket')} ${k} : ${v}${t('x.unit_sheet')}\n`;
+    if (agg.sU.length) out += '\n';
     for (const [k, v] of agg.sU) {
       const p = UBOLT_PITCH[parseInt(k, 10)];
-      t += `[U-볼트] ${k}${p ? ` (C-C: ${p}mm)` : ' (핏치 정보 없음)'} : ${v}set\n`;
+      out += `${t('x.ubolt')} ${k}${p ? ' ' + t('x.cc', { p }) : ' ' + t('x.cc_none')} : ${v}${t('x.unit_set')}\n`;
     }
-    if (memo && memo.trim()) t += `\n[추가 메모]\n${memo.trim()}\n`;
-    return t;
+    if (memo && memo.trim()) out += `\n${t('x.memo')}\n${memo.trim()}\n`;
+    return out;
   }
 
   /** Build CSV export. */
   function buildExportCSV(agg, memo) {
-    const rows = [['카테고리', '규격', '수량', '단위']];
-    for (const [k, v] of agg.sB) rows.push(['볼트', k, v, '개']);
-    for (const [k, v] of agg.sN) rows.push(['너트', k, v, '개']);
-    for (const [k, v] of agg.sG) rows.push(['가스켓', k, v, '장']);
+    const rows = [[t('x.csv_cat'), t('x.csv_spec'), t('x.csv_qty'), t('x.csv_unit')]];
+    for (const [k, v] of agg.sB) rows.push([t('x.cat_bolt'), k, v, t('x.unit_ea')]);
+    for (const [k, v] of agg.sN) rows.push([t('x.cat_nut'),  k, v, t('x.unit_ea')]);
+    for (const [k, v] of agg.sG) rows.push([t('x.cat_gsk'),  k, v, t('x.unit_sheet')]);
     for (const [k, v] of agg.sU) {
       const p = UBOLT_PITCH[parseInt(k, 10)];
-      rows.push(['U-볼트', `${k}${p ? ` (C-C ${p}mm)` : ''}`, v, 'set']);
+      rows.push([t('x.cat_ub'), `${k}${p ? ` (C-C ${p}mm)` : ''}`, v, t('x.unit_set')]);
     }
-    if (memo && memo.trim()) rows.push(['메모', memo.trim().replace(/\n/g, ' '), '', '']);
+    if (memo && memo.trim()) rows.push([t('x.cat_memo'), memo.trim().replace(/\n/g, ' '), '', '']);
     const esc = (s) => {
       const str = String(s);
       return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
@@ -440,11 +1171,11 @@
       node.textContent = '';
       node.classList.toggle('missing', !p);
       if (p) {
-        node.appendChild(document.createTextNode('홀 간격: '));
+        node.appendChild(document.createTextNode(t('pitch.label') + ': '));
         node.appendChild(el('b', null, String(p)));
         node.appendChild(document.createTextNode(' mm'));
       } else {
-        node.appendChild(document.createTextNode('홀 간격 데이터 없음 (수동 확인 필요)'));
+        node.appendChild(document.createTextNode(t('pitch.none')));
       }
     },
 
@@ -458,7 +1189,7 @@
       const fbBadge = $('#floatCount');
       const queue = Store.queue;
 
-      qCount.textContent = `${queue.length}건`;
+      qCount.textContent = t('unit.count', { n: queue.length });
 
       // Floating bar (mobile)
       if (queue.length > 0) {
@@ -494,8 +1225,8 @@
         }
         const empty = el('div', { class: 'empty-state' });
         empty.appendChild(svg);
-        empty.appendChild(el('strong', null, '대기열이 비어 있어요'));
-        empty.appendChild(el('span', null, '좌측 양식에서 자재를 추가하면 여기에 쌓입니다.'));
+        empty.appendChild(el('strong', null, t('q.empty_t')));
+        empty.appendChild(el('span', null, t('q.empty_d')));
         tb.appendChild(empty);
         this.updateUndoRedoButtons();
         return;
@@ -512,18 +1243,18 @@
       const tags = [];
 
       if (q.type === 'bolt') {
-        title = `${q.r} ${q.s}A 플랜지`;
-        desc  = `${q.bS} × ${q.bL}L · ${q.bC}공/pt`;
+        title = `${q.r} ${q.s}A ${t('q.flange')}`;
+        desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
         if (q.ext) tags.push({ label: '+5mm', kind: 'blue' });
-        if (q.doubleNut) tags.push({ label: '더블너트', kind: 'blue' });
+        if (q.doubleNut) tags.push({ label: t('q.tag_dn'), kind: 'blue' });
       } else if (q.type === 'gasket') {
-        title = `${q.r} ${q.s}A 가스켓`;
-        desc  = q.gtype + (q.auto ? ' · 자동 추가' : '');
+        title = `${q.r} ${q.s}A ${t('q.gasket')}`;
+        desc  = Lang.tGType(q.gtype) + (q.auto ? ' · ' + t('q.tag_auto') : '');
       } else if (q.type === 'ubolt') {
-        title = `U-볼트 ${q.s}A`;
+        title = `${t('q.ubolt')} ${q.s}A`;
         const p = UBOLT_PITCH[q.s];
-        desc  = p ? `홀 간격 ${p}mm` : '홀 간격 정보 없음';
-        if (!p) tags.push({ label: '핏치 미상', kind: 'warn' });
+        desc  = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
+        if (!p) tags.push({ label: t('q.tag_pitch_unknown'), kind: 'warn' });
       }
 
       const titleNode = el('div', { class: 'q-title' },
@@ -538,24 +1269,24 @@
           : null
       );
 
-      const stepper = el('div', { class: 'q-mini-stepper', role: 'group', 'aria-label': '수량 조절' },
-        el('button', { type: 'button', 'data-action': 'q-qty-dec', 'data-index': i, 'aria-label': '수량 감소' }, '−'),
-        el('input', { type: 'number', value: q.qty, min: '1', inputmode: 'numeric', 'data-action': 'q-qty-set', 'data-index': i, 'aria-label': '항목 수량' }),
-        el('button', { type: 'button', 'data-action': 'q-qty-inc', 'data-index': i, 'aria-label': '수량 증가' }, '+')
+      const stepper = el('div', { class: 'q-mini-stepper', role: 'group', 'aria-label': t('q.qty_aria') },
+        el('button', { type: 'button', 'data-action': 'q-qty-dec', 'data-index': i, 'aria-label': t('q.qty_dec') }, '−'),
+        el('input', { type: 'number', value: q.qty, min: '1', inputmode: 'numeric', 'data-action': 'q-qty-set', 'data-index': i, 'aria-label': t('q.qty_in_aria') }),
+        el('button', { type: 'button', 'data-action': 'q-qty-inc', 'data-index': i, 'aria-label': t('q.qty_inc') }, '+')
       );
 
       const actions = el('div', { class: 'q-actions' },
         stepper,
         (q.type === 'bolt' || q.type === 'gasket')
-          ? el('button', { class: 'icon-btn', 'data-action': 'q-edit', 'data-index': i, title: '편집', 'aria-label': '항목 편집' }, '✎')
+          ? el('button', { class: 'icon-btn', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, '✎')
           : null,
-        el('button', { class: 'icon-btn', 'data-action': 'q-dup', 'data-index': i, title: '복제', 'aria-label': '항목 복제' }, '⎘'),
-        el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: '삭제 (Delete)', 'aria-label': '항목 삭제' }, '✕')
+        el('button', { class: 'icon-btn', 'data-action': 'q-dup', 'data-index': i, title: t('q.dup'), 'aria-label': t('q.dup') }, '⎘'),
+        el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
       );
 
       const item = el('div',
         { class: 'q-item', draggable: 'true', 'data-index': i, tabindex: '0',
-          'aria-label': `${title} ${q.qty}개 — Delete 키로 삭제 가능`,
+          'aria-label': t('q.aria_label', { title, n: q.qty }),
           'aria-keyshortcuts': 'Delete' },
         el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
         el('div', { class: 'q-info' }, titleNode, descRow),
@@ -578,27 +1309,27 @@
       card.classList.add('show');
 
       const head = el('div', { class: 'res-head' },
-        el('h2', null, '✅ 최종 집계'),
+        el('h2', null, t('r.title')),
         el('div', { class: 'res-actions' },
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, '📋 복사'),
+          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
           el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'export-csv' }, '⬇ CSV'),
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'share-result' }, '🔗 공유'),
-          el('button', { class: 'btn btn-sm btn-ghost',     'data-action': 'print-result' }, '🖨 인쇄')
+          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'share-result' }, t('r.share')),
+          el('button', { class: 'btn btn-sm btn-ghost',     'data-action': 'print-result' }, t('r.print'))
         )
       );
       card.appendChild(head);
 
       const tables = el('div', { class: 'res-tables' },
-        this._tableSection('🔩 볼트 (Bolt)',  ['규격 (S × L)', '수량(EA)'], agg.sB),
-        this._tableSection('🔩 너트 (Nut)',   ['규격 (M)',     '수량(EA)'], agg.sN),
-        this._tableSection('⭕ 가스켓',       ['규격 및 재질', '수량(장)'], agg.sG, true),
-        this._tableSection('⚓ U-볼트',       ['규격 (호칭경)', '수량(Set)'], agg.sU, false, true)
+        this._tableSection(t('r.bolt'), [t('r.col_bolt_spec'), t('r.col_qty_ea')],    agg.sB),
+        this._tableSection(t('r.nut'),  [t('r.col_nut_spec'),  t('r.col_qty_ea')],    agg.sN),
+        this._tableSection(t('r.gsk'),  [t('r.col_gsk_spec'),  t('r.col_qty_sheet')], agg.sG, true),
+        this._tableSection(t('r.ub'),   [t('r.col_ub_spec'),   t('r.col_qty_set')],   agg.sU, false, true)
       );
       card.appendChild(tables);
 
       if (memo && memo.trim()) {
         const memoBox = el('div', { class: 'table-sec', style: 'margin-top:12px;' },
-          el('h3', null, '📝 추가 메모'),
+          el('h3', null, t('r.memo_title')),
           el('div', { style: 'background:var(--c-surface-2);padding:12px;border:1px solid var(--c-border);border-radius:var(--r-md);white-space:pre-wrap;font-size:.85rem;line-height:1.55;' }, memo.trim())
         );
         card.appendChild(memoBox);
@@ -609,9 +1340,11 @@
                        + agg.sG.reduce((s, [, v]) => s + v, 0)
                        + agg.sU.reduce((s, [, v]) => s + v, 0);
       const totalNode = el('span', null, '0');
+      const noticeParts = t('r.notice_total', { n: '\u0001' }).split('\u0001');
       const notice = el('div', { class: 'notice' },
-        el('b', null, '※ 자동 합산됨'),
-        document.createTextNode(' · 총 '), totalNode, document.createTextNode(' 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2')
+        el('b', null, t('r.notice_pre')),
+        document.createTextNode(noticeParts[0] || ''), totalNode,
+        document.createTextNode(noticeParts[1] || '')
       );
       card.appendChild(notice);
       countUp(totalNode, totalCount, 700);
@@ -626,7 +1359,7 @@
       const thead = el('thead', null, el('tr', null, ...headers.map(h => el('th', null, h))));
       const tbody = el('tbody');
       if (!rows.length) {
-        tbody.appendChild(el('tr', null, el('td', { colspan: headers.length, class: 'muted' }, '내역 없음')));
+        tbody.appendChild(el('tr', null, el('td', { colspan: headers.length, class: 'muted' }, t('r.no_rows'))));
       } else {
         for (const [k, v] of rows) {
           let firstCell;
@@ -636,7 +1369,7 @@
             firstCell = el('td', null,
               k,
               el('span', { style: 'display:block;font-size:.7rem;color:var(--c-text-mute);margin-top:2px;' },
-                p ? `(C-C: ${p}mm)` : '(핏치 미상)')
+                p ? t('r.cc_pitch', { p }) : t('r.cc_unknown'))
             );
           } else {
             firstCell = el('td', leftAlign ? { style: 'text-align:left;' } : null, k);
@@ -717,7 +1450,7 @@
     if (raw === '') return;                                  // empty: hide silently
     if (!Number.isFinite(target) || target <= 0) {           // invalid: feedback
       res.classList.add('show');
-      res.appendChild(el('div', { class: 'err' }, '⚠️ 유효한 외경 값(>0)을 입력해주세요.'));
+      res.appendChild(el('div', { class: 'err' }, t('f.invalid')));
       return;
     }
 
@@ -731,8 +1464,8 @@
     const within = sorted.filter(f => f.diff <= tol);
     if (within.length) {
       res.appendChild(el('div', null,
-        document.createTextNode(`🎯 OD ${target}mm · 허용 오차 ±${tol}mm 이내 `),
-        el('b', null, `${within.length}개 후보`)
+        document.createTextNode(t('f.candidates', { target, tol })),
+        el('b', null, t('f.candidates_n', { n: within.length }))
       ));
       const list = el('div', { style: 'margin-top:6px;' });
       for (const m of within) {
@@ -743,7 +1476,7 @@
           'data-action': 'search-pick',
           'data-rating': m.r,
           'data-size': m.s,
-          'aria-label': `${m.r} ${m.s}A 적용`
+          'aria-label': t('f.apply_aria', { r: m.r, s: m.s })
         }, `${m.r} ${m.s}A · ${m.od}mm (${sign}${(m.od - target).toFixed(0)})`));
       }
       res.appendChild(list);
@@ -753,7 +1486,7 @@
     // No within-tolerance: show closest ±5
     const closest = sorted[0];
     res.appendChild(el('div', { class: 'err' },
-      `⚠️ 허용 오차 내 일치 규격 없음 (최소 오차 ${closest.diff}mm)`));
+      t('f.no_match', { d: closest.diff })));
     const top = sorted.slice(0, 5);
     const list = el('div', { style: 'margin-top:6px;' });
     for (const m of top) {
@@ -778,7 +1511,7 @@
 
     const item = buildBoltItem(r, s, qty, { ext, doubleNut });
     if (!item) {
-      showDataWarn(`⚠️ ${r} ${s}A 데이터가 없습니다. 다른 사이즈를 선택해주세요.`);
+      showDataWarn(t('t.no_data_bolt', { r, s }));
       return;
     }
     Store.snapshot();
@@ -790,7 +1523,7 @@
     $('#qty').value = 1;
     Store.save();
     View.renderQueue();
-    toast(`✅ 추가됨 · 대기열 ${Store.queue.length}건`);
+    toast(t('t.added', { n: Store.queue.length }));
   }
 
   function actionAddGasket() {
@@ -799,13 +1532,13 @@
     const qty = toPosInt($('#gqty').value);
     const type = $('#gtype').value;
     const item = buildGasketItem(r, s, qty, type, false);
-    if (!item) { toast(`⚠️ ${r} ${s}A 가스켓 데이터 없음`); return; }
+    if (!item) { toast(t('t.no_data_gsk', { r, s })); return; }
     Store.snapshot();
     Store.queue.push(item);
     $('#gqty').value = 1;
     Store.save();
     View.renderQueue();
-    toast(`✅ 가스켓 추가 · ${Store.queue.length}건`);
+    toast(t('t.added_g', { n: Store.queue.length }));
   }
 
   function actionAddUbolt() {
@@ -818,7 +1551,7 @@
     $('#uqty').value = 1;
     Store.save();
     View.renderQueue();
-    toast(`✅ U-볼트 추가 · ${Store.queue.length}건`);
+    toast(t('t.added_u', { n: Store.queue.length }));
   }
 
   function showDataWarn(msg) {
@@ -832,7 +1565,7 @@
   function actionCalculate() {
     const memoContent = $('#memoInput').value.trim();
     if (!Store.queue.length && !memoContent) {
-      toast('⚠️ 등록된 자재가 없습니다.');
+      toast(t('t.no_items'));
       return;
     }
     Store.memo = memoContent;
@@ -862,16 +1595,16 @@
         document.execCommand('copy');
         ta.remove();
       }
-      toast('✨ 복사 완료!');
+      toast(t('t.copy_ok'));
     } catch (e) {
-      toast('⚠️ 복사 실패');
+      toast(t('t.copy_fail'));
     }
   }
 
   function actionExportCSV() {
     if (!lastExportCSV) { actionCalculate(); if (!lastExportCSV) return; }
     const projName = (Store.projects[Store.currentProject] || {}).name || 'export';
-    const fname = `${sanitizeFilename(projName)}_자재집계.csv`;
+    const fname = `${sanitizeFilename(projName)}${t('x.fname_suffix')}.csv`;
     const blob = new Blob([lastExportCSV], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = el('a', { href: url, download: fname });
@@ -879,7 +1612,7 @@
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1500);
-    toast('⬇ CSV 다운로드');
+    toast(t('t.csv_dl'));
   }
 
   async function actionShareResult() {
@@ -887,13 +1620,13 @@
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'JIS 자재 집계',
+          title: t('x.share_title'),
           text: lastExportText
         });
       } catch (e) { /* user cancelled */ }
     } else {
       actionCopyResult();
-      toast('🔗 공유 미지원: 복사로 대체');
+      toast(t('t.share_unsupported'));
     }
   }
 
@@ -928,7 +1661,7 @@
     Store.queue.splice(i + 1, 0, clone(item));
     Store.save();
     View.renderQueue();
-    toast('⎘ 항목 복제됨');
+    toast(t('t.dup'));
   }
 
   function actionUpdateQty(i, delta, absolute) {
@@ -952,7 +1685,7 @@
     if (item.type === 'bolt') {
       body.appendChild(el('div', { class: 'form-grid col-2' },
         el('div', { class: 'field' },
-          el('label', { for: 'editRating' }, '압력등급'),
+          el('label', { for: 'editRating' }, t('form.rating')),
           (() => {
             const sel = el('select', { id: 'editRating' });
             ['5K', '10K', '16K', '30K'].forEach(r => sel.appendChild(el('option', { value: r, selected: r === item.r ? true : null }, r)));
@@ -960,7 +1693,7 @@
           })()
         ),
         el('div', { class: 'field' },
-          el('label', { for: 'editSize' }, '호칭경 (A)'),
+          el('label', { for: 'editSize' }, t('form.size')),
           (() => {
             const sel = el('select', { id: 'editSize' });
             for (const s of SIZES) {
@@ -974,14 +1707,14 @@
       ));
       body.appendChild(el('div', { class: 'option-box', style: 'margin-top:10px;' },
         el('div', { class: 'toggle-row' },
-          el('span', { class: 'toggle-title' }, '볼트 5mm 더 길게'),
+          el('span', { class: 'toggle-title' }, t('opt.ext')),
           el('label', { class: 'switch' },
             el('input', { type: 'checkbox', id: 'editExt', checked: item.ext ? true : null }),
             el('span', { class: 'slider' })
           )
         ),
         el('div', { class: 'toggle-row' },
-          el('span', { class: 'toggle-title' }, '더블 너트'),
+          el('span', { class: 'toggle-title' }, t('edit.dn')),
           el('label', { class: 'switch' },
             el('input', { type: 'checkbox', id: 'editDN', checked: item.doubleNut ? true : null }),
             el('span', { class: 'slider' })
@@ -1001,7 +1734,7 @@
     } else if (item.type === 'gasket') {
       body.appendChild(el('div', { class: 'form-grid col-2' },
         el('div', { class: 'field' },
-          el('label', { for: 'editGRating' }, '압력등급'),
+          el('label', { for: 'editGRating' }, t('form.rating')),
           (() => {
             const sel = el('select', { id: 'editGRating' });
             ['5K','10K','16K','30K'].forEach(r => sel.appendChild(el('option', { value: r, selected: r === item.r ? true : null }, r)));
@@ -1009,7 +1742,7 @@
           })()
         ),
         el('div', { class: 'field' },
-          el('label', { for: 'editGSize' }, '호칭경 (A)'),
+          el('label', { for: 'editGSize' }, t('form.size')),
           (() => {
             const sel = el('select', { id: 'editGSize' });
             for (const s of SIZES) {
@@ -1021,11 +1754,11 @@
           })()
         ),
         el('div', { class: 'field full-on-mobile', style: 'grid-column:1/-1;' },
-          el('label', { for: 'editGType' }, '재질/타입'),
+          el('label', { for: 'editGType' }, t('form.gtype')),
           (() => {
             const sel = el('select', { id: 'editGType' });
-            ['일반','논레이어','그라파이트','메탈','풀페이스'].forEach(t =>
-              sel.appendChild(el('option', { value: t, selected: t === item.gtype ? true : null }, t === '일반' ? '일반(RF)' : t)));
+            ['일반','논레이어','그라파이트','메탈','풀페이스'].forEach(g =>
+              sel.appendChild(el('option', { value: g, selected: g === item.gtype ? true : null }, Lang.tGType(g))));
             return sel;
           })()
         )
@@ -1056,7 +1789,7 @@
     Store.save();
     View.renderQueue();
     ModalCtl.close($('#editModal'));
-    toast('💾 저장됨');
+    toast(t('t.saved'));
   }
 
   /** ----- Drag & drop reorder ----- */
@@ -1107,7 +1840,7 @@
   }
 
   function actionProjectNew() {
-    const name = window.prompt('새 현장 이름?', '새 현장');
+    const name = window.prompt(t('p.proj_new_q'), t('p.proj_new_def'));
     if (!name) return;
     Store.addProject(name.trim());
     View.syncForm();
@@ -1117,7 +1850,7 @@
 
   function actionProjectRename() {
     const cur = Store.current;
-    const name = window.prompt('현장 이름 변경:', cur.name);
+    const name = window.prompt(t('p.proj_rename_q'), cur.name);
     if (!name) return;
     Store.renameProject(Store.currentProject, name.trim());
     View.populateProjectSelect($('#projectSelect'));
@@ -1125,15 +1858,15 @@
 
   function actionProjectDelete() {
     if (Object.keys(Store.projects).length <= 1) {
-      toast('⚠️ 마지막 현장은 삭제할 수 없습니다.');
+      toast(t('t.last_proj'));
       return;
     }
-    if (!window.confirm(`'${Store.current.name}' 현장을 삭제할까요?`)) return;
+    if (!window.confirm(t('p.proj_del_q', { name: Store.current.name }))) return;
     Store.deleteProject(Store.currentProject);
     View.syncForm();
     View.resetResult();
     View.renderQueue();
-    toast('🗑 현장 삭제됨');
+    toast(t('t.proj_deleted'));
   }
 
   /** ----- Theme ----- */
@@ -1142,13 +1875,15 @@
     try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
     const btn = $('#btnTheme');
     btn.textContent = mode === 'dark' ? '☀️' : mode === 'light' ? '🌙' : '🌗';
-    btn.title = `테마: ${mode === 'auto' ? '자동' : mode === 'dark' ? '다크' : '라이트'} (클릭하여 전환)`;
+    const modeName = mode === 'auto' ? t('t.theme_auto') : mode === 'dark' ? t('t.theme_dark') : t('t.theme_light');
+    btn.title = t('pick.theme_title', { mode: modeName });
   }
   function actionToggleTheme() {
     const cur = document.documentElement.getAttribute('data-theme') || 'auto';
     const next = cur === 'auto' ? 'light' : cur === 'light' ? 'dark' : 'auto';
     applyTheme(next);
-    toast(`🎨 ${next === 'auto' ? '자동' : next === 'dark' ? '다크' : '라이트'} 테마`);
+    const nextName = next === 'auto' ? t('t.theme_auto') : next === 'dark' ? t('t.theme_dark') : t('t.theme_light');
+    toast(t('t.theme_changed', { mode: nextName }));
   }
 
   /** ----- Tutorial ----- */
@@ -1173,7 +1908,7 @@
       $('#size').value = s;
       $('#size').scrollIntoView({ behavior: 'smooth', block: 'center' });
       $('#size').focus();
-      toast(`✓ ${r} ${s}A 적용됨`);
+      toast(t('t.applied', { r, s }));
     },
     'rating-change':     () => View.populateSizeSelect($('#size'), $('#rating').value),
     'grating-change':    () => View.populateSizeSelect($('#gsize'), $('#grating').value),
@@ -1185,7 +1920,7 @@
     'add-ubolt':         actionAddUbolt,
     'calculate':         actionCalculate,
     'clear-all':         () => {
-      if (Store.queue.length && !window.confirm('대기열을 모두 비울까요?')) return;
+      if (Store.queue.length && !window.confirm(t('p.clear_confirm'))) return;
       Store.snapshot();
       Store.queue = [];
       Store.memo = '';
@@ -1204,8 +1939,8 @@
     'export-csv':        actionExportCSV,
     'share-result':      actionShareResult,
     'print-result':      actionPrintResult,
-    'undo':              () => { if (Store.undo()) { Store.save(); View.renderQueue(); toast('↶ 되돌리기'); } },
-    'redo':              () => { if (Store.redo()) { Store.save(); View.renderQueue(); toast('↷ 다시 실행'); } },
+    'undo':              () => { if (Store.undo()) { Store.save(); View.renderQueue(); toast(t('t.undo')); } },
+    'redo':              () => { if (Store.redo()) { Store.save(); View.renderQueue(); toast(t('t.redo')); } },
     'theme-toggle':      actionToggleTheme,
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
@@ -1216,8 +1951,44 @@
     'edit-save':         actionSaveEdit,
     'edit-cancel':       () => ModalCtl.close($('#editModal')),
     'install-app':       () => triggerInstall(),
-    'install-dismiss':   () => { $('#installBanner').classList.remove('show'); try { localStorage.setItem('jis-install-dismissed','1'); } catch (e) {} }
+    'install-dismiss':   () => { $('#installBanner').classList.remove('show'); try { localStorage.setItem('jis-install-dismissed','1'); } catch (e) {} },
+    'lang-change':       (el2) => actionLangChange(el2.value || el2.dataset.lang),
+    'lang-pick':         (el2) => actionLangChange(el2.dataset.lang)
   };
+
+  /**
+   * Switch UI language.
+   * @param {string} lang
+   */
+  function actionLangChange(lang) {
+    if (!lang || !I18N[lang] || lang === Lang.current) return;
+    Lang.set(lang);
+    applyI18n();
+    // Re-render dynamic UI that uses translations at build-time
+    View.populateSizeSelect($('#size'),  $('#rating').value);
+    View.populateSizeSelect($('#gsize'), $('#grating').value);
+    View.populateUSizeSelect($('#usize'));
+    View.updatePitchInfo(parseInt($('#usize').value, 10));
+    View.populateProjectSelect($('#projectSelect'));
+    View.renderQueue();
+    // Re-render result if currently shown
+    if ($('#resultCard').children.length) {
+      const agg = aggregate(Store.queue);
+      const total = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
+      if (total) View.renderResult(agg, Store.memo);
+    }
+    // Sync language selects (header + tutorial)
+    document.querySelectorAll('select[data-action="lang-change"]').forEach(s => { s.value = lang; });
+    document.querySelectorAll('[data-action="lang-pick"]').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === lang);
+      b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
+    });
+    // Update theme button title (uses i18n)
+    applyTheme(localStorage.getItem(THEME_KEY) || 'auto');
+    // Toast in new language
+    const meta = SUPPORTED_LANGS.find(l => l.code === lang);
+    toast(t('t.lang_changed', { name: (meta ? meta.flag + ' ' + meta.native : lang) }));
+  }
 
   function bindGlobalEvents() {
     // Click delegation
@@ -1237,7 +2008,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change') {
+      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change' || name === 'lang-change') {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -1375,13 +2146,13 @@
     });
     window.addEventListener('appinstalled', () => {
       $('#installBanner').classList.remove('show');
-      toast('🎉 설치되었습니다!');
+      toast(t('t.installed'));
     });
   }
 
   async function triggerInstall() {
     if (!deferredInstallPrompt) {
-      toast('iOS는 공유 → "홈 화면에 추가"를 사용하세요.');
+      toast(t('t.install_ios'));
       return;
     }
     deferredInstallPrompt.prompt();
@@ -1395,6 +2166,11 @@
      ===================================================================== */
 
   function init() {
+    // Language (must run BEFORE any UI text is built, so default project name etc.
+    // are localized correctly).
+    Lang.set(Lang.detect());
+    applyI18n();
+
     // Theme
     let savedTheme = 'auto';
     try { savedTheme = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
@@ -1409,6 +2185,14 @@
     View.populateUSizeSelect($('#usize'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.populateProjectSelect($('#projectSelect'));
+
+    // Sync language UI to current selection
+    document.querySelectorAll('select[data-action="lang-change"]').forEach(s => { s.value = Lang.current; });
+    document.querySelectorAll('[data-action="lang-pick"]').forEach(b => {
+      const active = b.dataset.lang === Lang.current;
+      b.classList.toggle('active', active);
+      b.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
 
     // Sync form values from store
     $('#memoInput').value = Store.memo || '';
