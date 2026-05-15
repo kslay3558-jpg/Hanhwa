@@ -24,7 +24,10 @@
   const SIZES  = [15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,550,600];
   /** U-볼트 호칭경 */
   const USIZES = [15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500];
-  /** U-볼트 핏치 (홀 간격 mm). 누락된 사이즈는 표시 시 안내한다. */
+  /**
+   * U-볼트 핏치 (홀 간격 mm).
+   * 출처: 일반 시판 U-볼트 카탈로그(국내 유통) 표준값. 누락된 사이즈는 표시 시 사용자에게 안내.
+   */
   const UBOLT_PITCH = {
     15: 34, 20: 40, 25: 46, 32: 56, 40: 62, 50: 74,
     65: 90, 80: 104, 100: 130, 125: 156, 150: 182,
@@ -463,14 +466,27 @@
       tb.textContent = '';
 
       if (!queue.length) {
-        const empty = el('div', { class: 'empty-state' },
-          el('svg', { viewBox: '0 0 64 64', fill: 'none', stroke: 'currentColor', 'stroke-width': '2.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }),
-          el('strong', null, '대기열이 비어 있어요'),
-          el('span', null, '좌측 양식에서 자재를 추가하면 여기에 쌓입니다.')
-        );
-        // Add basket icon
-        const svg = empty.querySelector('svg');
-        svg.innerHTML = '<path d="M12 22h40l-4 28a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4l-4-28z"/><path d="M22 22V14a10 10 0 0 1 20 0v8"/>';
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 64 64');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2.5');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.setAttribute('aria-hidden', 'true');
+        for (const d of [
+          'M12 22h40l-4 28a4 4 0 0 1-4 4H20a4 4 0 0 1-4-4l-4-28z',
+          'M22 22V14a10 10 0 0 1 20 0v8'
+        ]) {
+          const p = document.createElementNS(SVG_NS, 'path');
+          p.setAttribute('d', d);
+          svg.appendChild(p);
+        }
+        const empty = el('div', { class: 'empty-state' });
+        empty.appendChild(svg);
+        empty.appendChild(el('strong', null, '대기열이 비어 있어요'));
+        empty.appendChild(el('span', null, '좌측 양식에서 자재를 추가하면 여기에 쌓입니다.'));
         tb.appendChild(empty);
         this.updateUndoRedoButtons();
         return;
@@ -681,12 +697,18 @@
 
   /** ----- Search (외경 역산) with tolerance & debounce ----- */
   function findFlange() {
-    const target = parseFloat($('#searchOD').value);
+    const raw = $('#searchOD').value.trim();
+    const target = parseFloat(raw);
     const tol = parseInt($('#tolerance').value, 10) || 0;
     const res = $('#searchResult');
     res.textContent = '';
     res.classList.remove('show');
-    if (!Number.isFinite(target) || target <= 0) return;
+    if (raw === '') return;                                  // empty: hide silently
+    if (!Number.isFinite(target) || target <= 0) {           // invalid: feedback
+      res.classList.add('show');
+      res.appendChild(el('div', { class: 'err' }, '⚠️ 유효한 외경 값(>0)을 입력해주세요.'));
+      return;
+    }
 
     const sorted = FLANGE_OD_DATA
       .map(f => ({ ...f, diff: Math.abs(f.od - target) }))
@@ -1292,8 +1314,8 @@
         }
       }
 
-      // Delete on focused queue item → delete
-      if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement && document.activeElement.classList.contains('q-item')) {
+      // Delete on focused queue item → delete (Backspace excluded to avoid back-nav conflict)
+      if (e.key === 'Delete' && document.activeElement && document.activeElement.classList.contains('q-item')) {
         const idx = +document.activeElement.dataset.index;
         if (Number.isFinite(idx)) { e.preventDefault(); actionDeleteItem(idx); }
       }
