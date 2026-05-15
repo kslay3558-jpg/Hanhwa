@@ -2,182 +2,283 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>JIS 플랜지·가스켓·U-볼트 계산기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>JIS 배관 자재 계산기</title>
 <style>
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  :root{--card:#fff;--primary:#1e40af;--primary-dark:#1e3a8a;--accent:#0ea5e9;--success:#16a34a;--danger:#ef4444;--gray:#64748b;--line:#e2e8f0;--text:#0f172a;--muted:#64748b;--shadow:0 4px 16px rgba(15,23,42,.08);--radius:12px}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(180deg,#eef2f7 0%,#e2e8f0 100%);min-height:100vh;margin:0;padding:14px;color:var(--text);-webkit-text-size-adjust:100%}
-  .wrap{max-width:1280px;margin:0 auto;position:relative;z-index:1}
-  .header{background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);color:#fff;padding:18px 22px;border-radius:var(--radius);margin-bottom:14px;box-shadow:var(--shadow)}
-  .header h1{margin:0;font-size:18px;font-weight:700}.header .desc{font-size:12px;opacity:.92;margin-top:4px}
-  
-  .main-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:14px}
-  @media(max-width:980px){.main-grid{grid-template-columns:1fr}}
-  
-  .card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--line);position:relative;z-index:2;margin-bottom:14px}
-  .card h2{font-size:15px;margin:0 0 12px;padding-bottom:8px;border-bottom:2px solid var(--primary);color:var(--primary-dark);display:flex;align-items:center;gap:8px}
-  .card h2 .count{margin-left:auto;font-size:12px;color:var(--muted);background:#f1f5f9;padding:2px 10px;border-radius:10px}
-  
-  .form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-  label{font-size:12px;font-weight:600;color:#334155;display:block;margin-bottom:4px}
-  select,input[type=number]{display:block;width:100%;height:46px;padding:0 12px;font-size:16px!important;border:1px solid #cbd5e1;border-radius:8px;font-family:inherit;touch-action:manipulation;position:relative;z-index:3;background:#fff;color:var(--text)}
-  select{-webkit-appearance:menulist!important;cursor:pointer}
-  input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-  
-  /* 간소화된 카드 스타일 (가스켓, U-볼트용) */
-  .compact-card { padding: 12px 14px; }
-  .compact-card h2 { font-size: 14px; margin: 0 0 10px; padding-bottom: 6px; }
-  .compact-card select, .compact-card input[type=number] { height: 38px; font-size: 14px!important; padding: 0 10px; }
-  .compact-card .form-row { margin-bottom: 8px; }
-  .compact-card button { min-height: 38px; padding: 0 12px; font-size: 14px; margin-top: 0; }
-
-  .opt-box{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px;margin:15px 0}
-  .opt-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-  .opt-label{display:flex;align-items:center;gap:8px;cursor:pointer;flex:1}.opt-label input{width:18px;height:18px;margin:0}
-  .opt-text{font-size:13px;font-weight:600;color:#475569}
-  .type-select-inline{width:110px!important;height:34px!important;font-size:12px!important;margin-left:10px}
-  
-  button{border:none;border-radius:8px;cursor:pointer;font-weight:600;padding:12px 14px;font-size:14px;min-height:44px;touch-action:manipulation}
-  .btn-add{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;width:100%;font-size:15px;box-shadow:0 2px 8px rgba(14,165,233,.3);margin-top:10px}
-  .btn-add-gasket{background:linear-gradient(135deg,#64748b,#475569);color:#fff;width:100%;}
-  .btn-add-ubolt{background:linear-gradient(135deg,#475569,#1e293b);color:#fff;width:100%;}
-  .btn-calc{background:linear-gradient(135deg,var(--success),#15803d);color:#fff;flex:1}.btn-clear{background:#fff;color:var(--gray);border:1px solid #cbd5e1;flex:1}
-  .btn-del{background:#fee2e2;color:var(--danger);padding:6px 12px;font-size:12px;min-height:auto}
-  
-  /* 검색 버튼 스타일 */
-  .btn-search {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: #fff;
-    height: 46px;
-    width: 80px;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
-  }
-  .search-res-box {
-    padding: 12px;
-    background: #fef3c7;
-    border-radius: 8px;
-    border: 1px solid #fde68a;
-    color: #92400e;
-    font-size: 13.5px;
-    line-height: 1.5;
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --bg: #f3f4f6; /* 바탕색 */
+    --surface: #ffffff; /* 카드색 */
+    --primary: #2563eb; /* 메인 파랑 */
+    --primary-dark: #1d4ed8;
+    --text-main: #0f172a;
+    --text-sub: #64748b;
+    --border: #e2e8f0;
+    --input-bg: #f8fafc;
+    --danger: #ef4444;
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md: 0 8px 24px rgba(15,23,42,0.06);
   }
 
-  .q-list{display:flex;flex-direction:column;gap:8px}.q-item{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f8fafc;border:1px solid var(--line);border-radius:10px}
-  .q-item .num{flex:0 0 28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
-  .q-item .num.g{background:#64748b}.q-item .num.u{background:#1e293b}.q-item .info{flex:1;min-width:0}.q-item .main{font-size:15px;font-weight:700}.q-item .sub{font-size:11.5px;color:var(--muted)}
-  .q-item .badge-opt{display:inline-block;padding:1px 6px;background:#fef3c7;color:#92400e;border-radius:8px;font-size:10.5px;margin-left:4px}
-  .q-item .badge-g{background:#e2e8f0;color:#475569;border:1px solid #cbd5e1}
-  .q-item .badge-u{background:#e2e8f0;color:#475569;border:1px solid #cbd5e1}
-  .empty{padding:32px 16px;text-align:center;color:#94a3b8;font-size:13px;background:#f8fafc;border-radius:10px;border:1px dashed var(--line)}
-  .actions{display:flex;gap:8px;margin-top:14px}
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif; background: var(--bg); margin: 0; padding: 12px 12px 40px; color: var(--text-main); -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 1000px; margin: 0 auto; }
   
-  .result{margin-top:14px;padding:18px;background:linear-gradient(135deg,#ecfdf5 0%,#eff6ff 100%);border:2px solid var(--success);border-radius:var(--radius)}
-  .result h2{color:#14532d;margin:0 0 14px;font-size:17px;border-bottom:2px dashed #86efac;padding-bottom:8px}
-  .res-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:760px){.res-grid{grid-template-columns:1fr}}
-  .res-section h3{margin:0 0 8px;font-size:14px;color:var(--primary-dark)}
-  .table-wrap{overflow-x:auto;border-radius:8px;border:1px solid var(--line);background:#fff;margin-bottom:14px}
-  table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--line)}
-  th{background:var(--primary);color:#fff;font-weight:600;font-size:12px}
-  th.u{background:#475569}
-  tbody tr:nth-child(even) td{background:#f8fafc}
-  td b{color:var(--primary-dark)}.footnote{margin-top:12px;padding:10px 12px;background:#fff;border-radius:8px;font-size:11.5px;color:var(--muted);line-height:1.6;border-left:3px solid var(--gray)}
+  /* 헤더 */
+  .header { padding: 16px 20px; margin-bottom: 16px; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 4px; }
+  .header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); }
+  .header p { margin: 0; font-size: 13px; color: var(--text-sub); }
+
+  /* 메인 그리드 */
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+
+  /* 카드 공통 */
+  .card { background: var(--surface); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 1px solid rgba(226, 232, 240, 0.8); }
+  .card h2 { font-size: 16px; font-weight: 800; margin: 0 0 16px 0; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
+  .card h2 span.badge { background: #eff6ff; color: #1e40af; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+
+  /* 간소화 카드 전용 스타일 (가스켓, U-볼트용) */
+  .compact-card { padding: 16px 20px; }
+  .compact-card h2 { font-size: 14.5px; margin-bottom: 10px; }
+  .compact-card select, .compact-card input[type=number], .compact-card .stepper { height: 40px; font-size: 14px; }
+  .compact-card .btn { height: 40px; font-size: 14px; }
+  .compact-card .stepper button { font-size: 18px; flex: 0 0 36px; }
+
+  /* 입력 폼 래퍼 */
+  .form-grid { display: grid; gap: 12px; margin-bottom: 16px; }
+  .col-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .col-auto { grid-template-columns: 1fr 80px; }
+  
+  @media (max-width: 480px) {
+    .col-3 { grid-template-columns: 1fr 1fr; }
+    .col-3 > div:last-child { grid-column: 1 / -1; }
+  }
+
+  label { font-size: 12px; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 6px; }
+  
+  /* 입력칸 */
+  select, input[type=number] { width: 100%; height: 48px; padding: 0 14px; font-size: 15px; font-weight: 600; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-main); transition: all 0.2s ease; appearance: none; -webkit-appearance: none; }
+  select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px; }
+  select:focus, input[type=number]:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+  
+  /* 텍스트 에어리어 (메모장) */
+  textarea { width: 100%; padding: 12px 14px; font-size: 14px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-main); transition: all 0.2s ease; resize: vertical; font-family: inherit; line-height: 1.5; }
+  textarea:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+  /* 수량 조절기 */
+  .stepper { display: flex; height: 48px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .stepper button { flex: 0 0 44px; background: transparent; border: none; color: var(--text-sub); font-size: 20px; font-weight: 400; cursor: pointer; transition: background 0.1s; padding: 0; }
+  .stepper button:active { background: #e2e8f0; }
+  .stepper input { flex: 1; height: 100%; border: none; border-radius: 0; background: transparent; text-align: center; font-size: 16px; padding: 0; }
+  .stepper-separator { width: 1px; background: var(--border); height: 60%; margin: auto 0; }
+
+  /* 버튼 */
+  .btn { width: 100%; height: 50px; border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+  .btn-secondary { background: #334155; color: #fff; }
+  .btn-search { background: #d97706; color: #fff; height: 48px; }
+  
+  /* 모바일용 토글 스위치 */
+  .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-title { font-size: 14.5px; font-weight: 700; color: var(--text-main); }
+  
+  .switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 26px; }
+  .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  input:checked + .slider { background-color: var(--primary); }
+  input:checked + .slider:before { transform: translateX(20px); }
+
+  .gasket-select { width: 110px !important; height: 32px !important; font-size: 13px !important; padding: 0 10px !important; border-radius: 6px; }
+
+  /* 검색 결과 박스 */
+  .search-res { margin-top: 12px; padding: 14px; background: #fef3c7; border-radius: var(--radius-md); border: 1px solid #fde68a; font-size: 13.5px; color: #92400e; display: none; line-height: 1.5; }
+  .search-res .badge { display: inline-block; background: #fff; padding: 4px 8px; border-radius: 6px; border: 1px solid #fcd34d; font-weight: 700; margin: 4px 4px 0 0; }
+
+  /* 대기열 리스트 */
+  .queue-list { display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; padding-right: 4px; }
+  .q-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); }
+  .q-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+  .q-title { font-size: 14px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .q-qty { color: var(--primary); font-weight: 800; font-size: 15px; }
+  .q-desc { font-size: 12px; color: var(--text-sub); }
+  .q-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  .q-tag { font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #e2e8f0; color: #475569; }
+  .q-tag.blue { background: #dbeafe; color: #1d4ed8; }
+  .btn-del { width: 36px; height: 36px; border-radius: 8px; border: none; background: #fee2e2; color: #b91c1c; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+
+  .empty-state { padding: 40px 20px; text-align: center; color: var(--text-sub); font-size: 14px; background: var(--input-bg); border-radius: var(--radius-md); border: 1px dashed #cbd5e1; }
+
+  /* 하단 버튼 영역 */
+  .action-row { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-calc { background: #10b981; color: #fff; flex: 2; height: 54px; font-size: 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+  .btn-clear { background: #fff; border: 1px solid var(--border); color: var(--text-sub); flex: 1; height: 54px; }
+
+  /* 결과 섹션 */
+  .result-box { margin-top: 16px; padding: 20px; background: #fff; border: 2px solid #34d399; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); display: none; }
+  .result-box h2 { color: #065f46; border-bottom: 2px dashed #a7f3d0; padding-bottom: 12px; margin-top:0;}
+  .btn-copy { background: #f0fdf4; border: 1px solid #6ee7b7; color: #059669; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  
+  .res-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  @media (max-width: 768px) { .res-tables { grid-template-columns: 1fr; } }
+  
+  .table-sec h3 { font-size: 14px; color: var(--text-main); margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px; }
+  .table-sec h3::before { content: ''; width: 4px; height: 14px; background: var(--primary); border-radius: 2px; }
+  .table-wrapper { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th, td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--border); }
+  th { background: var(--input-bg); color: var(--text-sub); font-weight: 700; font-size: 12px; }
+  tbody tr:last-child td { border-bottom: none; }
+  td b { color: var(--text-main); font-size: 15px; font-weight: 800; }
 </style>
 </head>
 <body onload="init()">
 <div class="wrap">
-  <div class="header"><h1>🔩 JIS 플랜지·가스켓·U-볼트 계산기</h1><div class="desc">포인트 기반 가스켓 포함 / 추가 가스켓 / U-볼트 개수 집계</div></div>
+  
+  <div class="header">
+    <h1>설비/배관 자재 계산기</h1>
+    <p>JIS 규격 기반 · 현장 모바일 최적화</p>
+  </div>
   
   <div class="main-grid">
-    <div class="input-col">
-
-      <!-- 🔍 0. 플랜지 역산 검색 -->
-      <div class="card"><h2>🔍 플랜지 규격 찾기 (외경 기준)</h2>
-        <div class="form-row" style="grid-template-columns: 1fr auto; align-items: end; margin-bottom:0;">
+    
+    <!-- 🟢 왼쪽: 입력 폼 컬럼 -->
+    <div>
+      
+      <!-- 1. 플랜지 역산 검색 -->
+      <div class="card">
+        <h2>🔍 플랜지 찾기 (외경 기준)</h2>
+        <div class="form-grid col-auto" style="margin-bottom:0;">
           <div>
-            <label>플랜지 외경 (mm) 입력</label>
-            <input type="number" id="searchOD" placeholder="예: 180" onkeypress="if(event.keyCode===13) findFlange()">
+            <label>플랜지 외경 (OD, mm)</label>
+            <input type="number" id="searchOD" placeholder="외경 입력 시 즉시 찾기" oninput="findFlange()">
           </div>
-          <button class="btn-search" onclick="findFlange()">찾기</button>
+          <div>
+            <label>&nbsp;</label>
+            <button class="btn btn-search" onclick="findFlange()">찾기</button>
+          </div>
         </div>
-        <div id="searchResult" style="margin-top: 12px; display: none;"></div>
+        <div id="searchResult" class="search-res"></div>
       </div>
 
-      <!-- 1. 플랜지 포인트 -->
-      <div class="card"><h2>📥 플랜지 포인트 추가</h2>
-        <div class="form-row">
-          <div><label>압력등급</label><select id="rating" onchange="refreshSizes()"><option value="5K">5K</option><option value="10K" selected>10K</option><option value="16K">16K</option><option value="30K">30K</option></select></div>
-          <div><label>호칭경(A)</label><select id="size"></select></div>
-          <div><label>포인트 수</label><input type="number" id="qty" value="1" min="1"></div>
-        </div>
-        
-        <div class="opt-box">
-          <div class="opt-row">
-            <label class="opt-label"><input type="checkbox" id="optExtended"><span class="opt-text">볼트 길이 5mm 더 길게</span></label>
-            <div style="flex:0"></div>
-          </div>
-          <div class="opt-row">
-            <label class="opt-label"><input type="checkbox" id="optGasket" checked><span class="opt-text">가스켓 함께 추가</span></label>
-            <select id="gTypeInFlange" class="type-select-inline">
-              <option value="일반" selected>일반</option>
-              <option value="논레이어">논레이어</option>
-              <option value="그라파이트">그라파이트</option>
-              <option value="메탈">메탈</option>
-              <option value="풀페이스">풀페이스</option>
+      <!-- 2. 플랜지 포인트 -->
+      <div class="card">
+        <h2>🔩 플랜지 포인트</h2>
+        <div class="form-grid col-3">
+          <div>
+            <label>압력등급</label>
+            <select id="rating" onchange="refreshSizes()">
+              <option value="5K">5K</option>
+              <option value="10K" selected>10K</option>
+              <option value="16K">16K</option>
+              <option value="30K">30K</option>
             </select>
           </div>
-        </div>
-        <button class="btn-add" onclick="addPoint()">＋ 포인트 등록</button>
-      </div>
-
-      <!-- 2. 추가 가스켓 (간소화) -->
-      <div class="card compact-card"><h2>⭕ 추가 가스켓</h2>
-        <div class="form-row">
-          <div><select id="grating" onchange="refreshGSizes()" title="압력등급"><option value="5K">5K</option><option value="10K" selected>10K</option><option value="16K">16K</option><option value="30K">30K</option></select></div>
-          <div><select id="gsize" title="호칭경"></select></div>
-          <div style="position:relative;">
-            <span style="position:absolute; right:12px; top:11px; font-size:12px; color:#94a3b8; pointer-events:none;">장</span>
-            <input type="number" id="gqty" value="1" min="1" title="수량(장)" style="padding-right:24px;">
+          <div>
+            <label>호칭경(A)</label>
+            <select id="size"></select>
+          </div>
+          <div>
+            <label>포인트 개소</label>
+            <div class="stepper">
+              <button onclick="adjQty('qty', -1)">−</button>
+              <div class="stepper-separator"></div>
+              <input type="number" id="qty" value="1">
+              <div class="stepper-separator"></div>
+              <button onclick="adjQty('qty', 1)">+</button>
+            </div>
           </div>
         </div>
+        
+        <!-- 앱 스타일 토글 옵션 (간소화) -->
+        <div style="background: var(--input-bg); padding: 0 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 16px;">
+          <div class="toggle-row">
+            <div class="toggle-title">볼트 5mm 더 길게</div>
+            <label class="switch"><input type="checkbox" id="optExtended"><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-title">더블 너트 적용</div>
+            <label class="switch"><input type="checkbox" id="optDoubleNut"><span class="slider"></span></label>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-title">가스켓 포함하기</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <select id="gTypeInFlange" class="gasket-select">
+                <option value="일반" selected>일반(RF)</option>
+                <option value="논레이어">논레이어</option>
+                <option value="그라파이트">그라파이트</option>
+                <option value="메탈">메탈</option>
+                <option value="풀페이스">풀페이스</option>
+              </select>
+              <label class="switch"><input type="checkbox" id="optGasket" checked onchange="toggleGasketSelect(this)"><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="addPoint()">+ 플랜지 포인트 추가</button>
+      </div>
+
+      <!-- 3. 가스켓 단독 (초간소화 2줄) -->
+      <div class="card compact-card">
+        <h2>⭕ 추가 가스켓</h2>
+        <div style="display:flex; gap:8px; margin-bottom:8px;">
+          <select id="grating" onchange="refreshGSizes()" style="flex:1;"><option value="5K">5K</option><option value="10K" selected>10K</option><option value="16K">16K</option><option value="30K">30K</option></select>
+          <select id="gsize" style="flex:1;"></select>
+          <div class="stepper" style="flex:1.2;"><button onclick="adjQty('gqty', -1)">−</button><div class="stepper-separator"></div><input type="number" id="gqty" value="1"><div class="stepper-separator"></div><button onclick="adjQty('gqty', 1)">+</button></div>
+        </div>
         <div style="display:flex; gap:8px;">
-          <select id="gtype" style="flex:2" title="가스켓 타입">
-            <option value="일반">일반 가스켓</option>
-            <option value="논레이어">논레이어 (Non-Layer)</option>
-            <option value="그라파이트">그라파이트 (Graphite)</option>
-            <option value="메탈">메탈 (Metal)</option>
-            <option value="풀페이스">풀페이스 (Full Face)</option>
-          </select>
-          <button class="btn-add-gasket" onclick="addGasket()" style="flex:1">＋ 추가</button>
+          <select id="gtype" style="flex:2;"><option value="일반">일반(RF)</option><option value="논레이어">논레이어</option><option value="그라파이트">그라파이트</option><option value="메탈">메탈</option><option value="풀페이스">풀페이스</option></select>
+          <button class="btn btn-secondary" style="flex:1;" onclick="addGasket()">+ 추가</button>
         </div>
       </div>
       
-      <!-- 3. U-볼트 (간소화) -->
-      <div class="card compact-card"><h2>⛓ U-볼트</h2>
+      <!-- 4. U-볼트 (초간소화 1줄) -->
+      <div class="card compact-card">
+        <h2>⚓ U-볼트 추가</h2>
         <div style="display:flex; gap:8px;">
-          <select id="usize" style="flex:2" title="호칭경"></select>
-          <div style="flex:1; position:relative;">
-            <span style="position:absolute; right:10px; top:11px; font-size:12px; color:#94a3b8; pointer-events:none;">set</span>
-            <input type="number" id="uqty" value="1" min="1" title="수량(set)" style="padding-right:28px;">
-          </div>
-          <button class="btn-add-ubolt" onclick="addUbolt()" style="flex:1.5">＋ 추가</button>
+          <select id="usize" style="flex:1.2;"></select>
+          <div class="stepper" style="flex:1.5;"><button onclick="adjQty('uqty', -1)">−</button><div class="stepper-separator"></div><input type="number" id="uqty" value="1"><div class="stepper-separator"></div><button onclick="adjQty('uqty', 1)">+</button></div>
+          <button class="btn btn-secondary" style="flex:1;" onclick="addUbolt()">+ 추가</button>
         </div>
       </div>
+
+      <!-- 5. 자유 입력 메모장 -->
+      <div class="card">
+        <h2>📝 추가 메모 (자유 입력)</h2>
+        <textarea id="memoInput" rows="3" placeholder="예: M20 와셔 10개, 서포트 50A 300mm 추가 등 자유롭게 기입하세요."></textarea>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h2>📋 등록 대기열 <span class="count" id="qCount">0건</span></h2>
-      <div id="qBody"><div class="empty">등록된 항목이 없습니다.</div></div>
-      <div class="actions"><button class="btn-calc" onclick="calculate()">🧮 최종 집계하기</button><button class="btn-clear" onclick="clearAll()">🗑 초기화</button></div>
+    <!-- 🟢 오른쪽: 대기열 및 결과 컬럼 -->
+    <div>
+      <div class="card" style="display:flex; flex-direction:column; padding-bottom:16px;">
+        <h2>📋 등록 대기열 <span class="badge" id="qCount">0건</span></h2>
+        
+        <div id="qBody" class="queue-list"><div class="empty-state">등록된 항목이 없습니다.<br>좌측 양식에서 자재를 추가해주세요.</div></div>
+        
+        <div class="action-row">
+          <button class="btn btn-calc" onclick="calculate()">🧮 최종 집계하기</button>
+          <button class="btn btn-clear" onclick="clearAll()">🗑 초기화</button>
+        </div>
+      </div>
+
+      <!-- 결과 렌더링 영역 -->
+      <div id="result" class="result-box"></div>
     </div>
+
   </div>
-  <div id="result"></div>
+  
+  <textarea id="copyArea" style="position:absolute; left:-9999px;"></textarea>
 </div>
 
 <script>
 const SIZES=[15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,550,600];
-const USIZES=[15,20,25,32,40,50,65,80,100,125,150,200,250,300];
+const USIZES=[15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500];
 
 const DATA={
   "5K":{15:["M10",30,4],20:["M10",35,4],25:["M10",35,4],32:["M12",40,4],40:["M12",40,4],50:["M12",45,4],65:["M12",45,4],80:["M16",45,4],100:["M16",50,8],125:["M16",50,8],150:["M16",55,8],200:["M20",65,8],250:["M20",70,12],300:["M20",70,12],350:["M22",75,12],400:["M22",75,16],450:["M22",75,16],500:["M22",75,20],550:["M24",80,20],600:["M24",80,20]},
@@ -187,104 +288,81 @@ const DATA={
 };
 const RATING_ORDER={"5K":1,"10K":2,"16K":3,"30K":4};
 
-// 제공된 도면 기준 플랜지 외경(OD) 데이터 업데이트
 const FLANGE_OD_DATA = [
-  // 5K
-  { r: "5K", s: 15, od: 80 }, { r: "5K", s: 20, od: 85 }, { r: "5K", s: 25, od: 95 },
-  { r: "5K", s: 32, od: 115 }, { r: "5K", s: 40, od: 120 }, { r: "5K", s: 50, od: 130 },
-  { r: "5K", s: 65, od: 155 }, { r: "5K", s: 80, od: 180 }, { r: "5K", s: 100, od: 200 },
-  { r: "5K", s: 125, od: 235 }, { r: "5K", s: 150, od: 265 }, { r: "5K", s: 200, od: 320 },
-  { r: "5K", s: 250, od: 385 }, { r: "5K", s: 300, od: 430 }, { r: "5K", s: 350, od: 480 },
-  { r: "5K", s: 400, od: 540 }, { r: "5K", s: 450, od: 605 }, { r: "5K", s: 500, od: 655 },
-  { r: "5K", s: 550, od: 720 }, { r: "5K", s: 600, od: 770 },
-  // 10K
-  { r: "10K", s: 15, od: 95 }, { r: "10K", s: 20, od: 100 }, { r: "10K", s: 25, od: 125 },
-  { r: "10K", s: 32, od: 135 }, { r: "10K", s: 40, od: 140 }, { r: "10K", s: 50, od: 155 },
-  { r: "10K", s: 65, od: 175 }, { r: "10K", s: 80, od: 185 }, { r: "10K", s: 100, od: 210 },
-  { r: "10K", s: 125, od: 250 }, { r: "10K", s: 150, od: 280 }, { r: "10K", s: 200, od: 330 },
-  { r: "10K", s: 250, od: 400 }, { r: "10K", s: 300, od: 445 }, { r: "10K", s: 350, od: 490 },
-  { r: "10K", s: 400, od: 560 }, { r: "10K", s: 450, od: 620 }, { r: "10K", s: 500, od: 675 },
-  { r: "10K", s: 550, od: 745 }, { r: "10K", s: 600, od: 795 },
-  // 16K
-  { r: "16K", s: 15, od: 95 }, { r: "16K", s: 20, od: 100 }, { r: "16K", s: 25, od: 125 },
-  { r: "16K", s: 32, od: 135 }, { r: "16K", s: 40, od: 140 }, { r: "16K", s: 50, od: 155 },
-  { r: "16K", s: 65, od: 175 }, { r: "16K", s: 80, od: 200 }, { r: "16K", s: 100, od: 225 },
-  { r: "16K", s: 125, od: 270 }, { r: "16K", s: 150, od: 305 }, { r: "16K", s: 200, od: 350 },
-  { r: "16K", s: 250, od: 430 }, { r: "16K", s: 300, od: 480 }, { r: "16K", s: 350, od: 540 },
-  { r: "16K", s: 400, od: 605 }, { r: "16K", s: 450, od: 675 }, { r: "16K", s: 500, od: 730 },
-  { r: "16K", s: 550, od: 795 }, { r: "16K", s: 600, od: 845 },
-  // 30K
-  { r: "30K", s: 15, od: 115 }, { r: "30K", s: 20, od: 120 }, { r: "30K", s: 25, od: 130 },
-  { r: "30K", s: 32, od: 140 }, { r: "30K", s: 40, od: 160 }, { r: "30K", s: 50, od: 165 },
-  { r: "30K", s: 65, od: 200 }, { r: "30K", s: 80, od: 210 }, { r: "30K", s: 100, od: 240 },
-  { r: "30K", s: 125, od: 275 }, { r: "30K", s: 150, od: 325 }, { r: "30K", s: 200, od: 370 },
-  { r: "30K", s: 250, od: 450 }, { r: "30K", s: 300, od: 515 }, { r: "30K", s: 350, od: 560 }
+  { r: "5K", s: 15, od: 80 }, { r: "5K", s: 20, od: 85 }, { r: "5K", s: 25, od: 95 }, { r: "5K", s: 32, od: 115 }, { r: "5K", s: 40, od: 120 }, { r: "5K", s: 50, od: 130 }, { r: "5K", s: 65, od: 155 }, { r: "5K", s: 80, od: 180 }, { r: "5K", s: 100, od: 200 }, { r: "5K", s: 125, od: 235 }, { r: "5K", s: 150, od: 265 }, { r: "5K", s: 200, od: 320 }, { r: "5K", s: 250, od: 385 }, { r: "5K", s: 300, od: 430 },
+  { r: "10K", s: 15, od: 95 }, { r: "10K", s: 20, od: 100 }, { r: "10K", s: 25, od: 125 }, { r: "10K", s: 32, od: 135 }, { r: "10K", s: 40, od: 140 }, { r: "10K", s: 50, od: 155 }, { r: "10K", s: 65, od: 175 }, { r: "10K", s: 80, od: 185 }, { r: "10K", s: 100, od: 210 }, { r: "10K", s: 125, od: 250 }, { r: "10K", s: 150, od: 280 }, { r: "10K", s: 200, od: 330 }, { r: "10K", s: 250, od: 400 }, { r: "10K", s: 300, od: 445 }
 ];
 
 let queue = [];
+let lastCalculatedString = "";
 
-const sizeSel=document.getElementById('size'),ratingSel=document.getElementById('rating');
-const gsizeSel=document.getElementById('gsize'),gratingSel=document.getElementById('grating');
-const usizeSel=document.getElementById('usize'),uqtyInput=document.getElementById('uqty');
+const sizeSel=document.getElementById('size'), ratingSel=document.getElementById('rating');
+const gsizeSel=document.getElementById('gsize'), gratingSel=document.getElementById('grating');
+const usizeSel=document.getElementById('usize');
 
-// 플랜지 찾기 기능
+function adjQty(id, amount) {
+  const el = document.getElementById(id);
+  let val = parseInt(el.value) || 1;
+  val += amount;
+  if(val < 1) val = 1;
+  el.value = val;
+}
+
+function toggleGasketSelect(checkbox) {
+  document.getElementById('gTypeInFlange').disabled = !checkbox.checked;
+  document.getElementById('gTypeInFlange').style.opacity = checkbox.checked ? '1' : '0.4';
+}
+
 function findFlange() {
   const targetOD = parseFloat(document.getElementById('searchOD').value);
   const resDiv = document.getElementById('searchResult');
   
-  if (!targetOD) {
-    resDiv.style.display = 'none';
-    return;
-  }
+  if (!targetOD) { resDiv.style.display = 'none'; return; }
 
-  const sorted = FLANGE_OD_DATA.map(f => {
-    return { ...f, diff: Math.abs(f.od - targetOD) };
-  }).sort((a, b) => a.diff - b.diff);
-
+  const sorted = FLANGE_OD_DATA.map(f => ({ ...f, diff: Math.abs(f.od - targetOD) })).sort((a, b) => a.diff - b.diff);
   const closestDiff = sorted[0].diff;
   const matches = sorted.filter(f => f.diff === closestDiff);
 
   resDiv.style.display = 'block';
   
   if (closestDiff > 25) {
-    resDiv.innerHTML = `<div class="search-res-box" style="background:#fee2e2; border-color:#fca5a5; color:#991b1b;">⚠️ 오차가 큽니다 (최소 오차: ${closestDiff}mm). 수치를 다시 확인해주세요.</div>`;
+    resDiv.innerHTML = `<span style="color:#b91c1c; font-weight:700;">⚠️ 일치하는 규격이 없습니다. (최소 오차: ${closestDiff}mm)</span>`;
   } else {
-    let html = `<div class="search-res-box">🎯 <b>${targetOD}mm</b> 와 가장 가까운 규격 (오차 ${closestDiff}mm):<br><br>`;
-    matches.forEach(m => {
-      html += `• <b>${m.r} ${m.s}A</b> (실제 외경: ${m.od}mm)<br>`;
-    });
+    let html = `🎯 <b>${targetOD}mm</b> 근접 규격 (오차 ${closestDiff}mm)<br><div style="margin-top:6px;">`;
+    matches.forEach(m => { html += `<span class="badge">${m.r} ${m.s}A (외경:${m.od}mm)</span>`; });
     html += `</div>`;
     resDiv.innerHTML = html;
   }
 }
 
 function refreshSizes(){
-  const r=ratingSel.value,prev=parseInt(sizeSel.value);
+  const r=ratingSel.value, prev=parseInt(sizeSel.value);
   sizeSel.innerHTML='';
   SIZES.forEach(s=>{if(DATA[r][s]){const o=document.createElement('option');o.value=s;o.textContent=s+'A';sizeSel.appendChild(o);}});
-  if([...sizeSel.options].some(o=>+o.value===prev))sizeSel.value=prev;
+  if([...sizeSel.options].some(o=>+o.value===prev)) sizeSel.value=prev;
 }
 
 function refreshGSizes(){
-  const r=gratingSel.value,prev=parseInt(gsizeSel.value);
+  const r=gratingSel.value, prev=parseInt(gsizeSel.value);
   gsizeSel.innerHTML='';
   SIZES.forEach(s=>{if(DATA[r][s]){const o=document.createElement('option');o.value=s;o.textContent=s+'A';gsizeSel.appendChild(o);}});
-  if([...gsizeSel.options].some(o=>+o.value===prev))gsizeSel.value=prev;
+  if([...gsizeSel.options].some(o=>+o.value===prev)) gsizeSel.value=prev;
 }
 
 function addPoint(){
   const r=ratingSel.value, s=parseInt(sizeSel.value), qty=parseInt(document.getElementById('qty').value)||1;
   const ext=document.getElementById('optExtended').checked;
+  const doubleNut=document.getElementById('optDoubleNut').checked;
   const optGasket=document.getElementById('optGasket').checked;
   const gType=document.getElementById('gTypeInFlange').value;
 
   if(!DATA[r][s]) return;
   const [bS,bL,bC]=DATA[r][s];
   
-  queue.push({type:'bolt', r, s, qty, ext, bS, bL:ext?bL+5:bL, bC});
-  if(optGasket){
-    queue.push({type:'gasket', r, s, qty, gtype:gType, auto:true});
-  }
+  queue.push({type:'bolt', r, s, qty, ext, doubleNut, bS, bL:ext?bL+5:bL, bC});
+  if(optGasket){ queue.push({type:'gasket', r, s, qty, gtype:gType, auto:true}); }
+  
+  document.getElementById('qty').value = 1;
   renderQueue();
 }
 
@@ -292,87 +370,195 @@ function addGasket(){
   const r=gratingSel.value, s=parseInt(gsizeSel.value), qty=parseInt(document.getElementById('gqty').value)||1, type=document.getElementById('gtype').value;
   if(!DATA[r][s]) return;
   queue.push({type:'gasket', r, s, qty, gtype:type, auto:false});
+  document.getElementById('gqty').value = 1;
   renderQueue();
 }
 
 function addUbolt(){
-  const s=parseInt(usizeSel.value), qty=parseInt(uqtyInput.value)||1;
+  const s=parseInt(usizeSel.value), qty=parseInt(document.getElementById('uqty').value)||1;
   queue.push({type:'ubolt', s, qty});
+  document.getElementById('uqty').value = 1;
   renderQueue();
 }
 
-function delPoint(i){queue.splice(i,1);renderQueue();}
-function clearAll(){if(queue.length&&!confirm('모두 삭제할까요?'))return;queue=[];renderQueue();document.getElementById('result').innerHTML='';}
+function delPoint(i){ queue.splice(i,1); renderQueue(); }
+function clearAll(){ 
+  if(queue.length && !confirm('등록된 항목을 모두 지우시겠습니까?')) return; 
+  queue=[]; 
+  renderQueue(); 
+  document.getElementById('result').style.display='none'; 
+  document.getElementById('memoInput').value = '';
+}
 
 function renderQueue(){
   const tb=document.getElementById('qBody');
   document.getElementById('qCount').textContent=`${queue.length}건`;
-  if(!queue.length){tb.innerHTML='<div class="empty">항목이 없습니다.</div>';return;}
-  let h='<div class="q-list">';
+  
+  if(!queue.length){
+    tb.innerHTML='<div class="empty-state">등록된 항목이 없습니다.<br>좌측 양식에서 추가해주세요.</div>';
+    return;
+  }
+  
+  let h='';
   queue.forEach((q,i)=>{
-    let mainText='', subText='', numClass='', badge='';
+    let title='', desc='', tags='';
+    
     if(q.type==='bolt'){
-      numClass=''; mainText=`${q.r} ${q.s}A 볼트`;
-      subText=`${q.bS}×${q.bL}L · ${q.bC}개/포인트 × ${q.qty}pt`;
-      if(q.ext) badge=`<span class="badge-opt">+5mm</span>`;
+      title=`${q.r} ${q.s}A 플랜지 포인트`;
+      desc=`${q.bS}×${q.bL}L · ${q.bC}공/pt`;
+      if(q.ext) tags+=`<span class="q-tag blue">+5mm여유</span>`;
+      if(q.doubleNut) tags+=`<span class="q-tag blue">더블너트</span>`;
     }else if(q.type==='gasket'){
-      numClass='g'; mainText=`${q.r} ${q.s}A 가스켓`;
-      subText=`${q.gtype} · ${q.qty}장 ${q.auto ? '(포함)' : '(추가)'}`;
-      badge=`<span class="badge-opt badge-g">${q.gtype}</span>`;
-    }else{
-      numClass='u'; mainText=`U-볼트 ${q.s}A`;
-      subText=`${q.qty}set`;
-      badge=`<span class="badge-opt badge-u">U-Bolt</span>`;
+      title=`${q.r} ${q.s}A 가스켓`;
+      desc=`${q.gtype} ${q.auto ? '(포인트포함)' : ''}`;
+    }else if(q.type==='ubolt'){
+      title=`U-볼트 ${q.s}A`;
     }
-    h+=`<div class="q-item"><div class="num ${numClass}">${i+1}</div><div class="info">
-          <div class="main">${mainText} × ${q.qty}${badge}</div>
-          <div class="sub">${subText}</div>
-          <button class="btn-del" onclick="delPoint(${i})">삭제</button>
-          </div></div>`;
+    
+    h+=`
+      <div class="q-item">
+        <div class="q-info">
+          <div class="q-title">${title} <span class="q-qty">× ${q.qty}</span></div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            ${desc ? `<span class="q-desc">${desc}</span>` : ''}
+            ${tags ? `<div class="q-tags">${tags}</div>` : ''}
+          </div>
+        </div>
+        <button class="btn-del" onclick="delPoint(${i})">✕</button>
+      </div>`;
   });
-  tb.innerHTML=h+'</div>';
+  tb.innerHTML=h;
+  tb.scrollTop = tb.scrollHeight; 
 }
 
 function calculate(){
-  if(!queue.length){alert('항목을 추가하세요.');return;}
+  const memoContent = document.getElementById('memoInput').value.trim();
+  
+  if(!queue.length && !memoContent){
+    alert('등록된 자재나 입력된 메모가 없습니다.');
+    return;
+  }
+  
   const bM={}, gM={}, uM={};
 
   queue.forEach(q=>{
     if(q.type==='bolt'){
-      const bK=`${q.bS}×${q.bL}L`; bM[bK]=(bM[bK]||0)+q.bC*q.qty;
+      const bK=`${q.bS} × ${q.bL}L`;
+      if(!bM[bK]) bM[bK] = { bolts: 0, nuts: 0 };
+      const boltsCount = q.bC * q.qty;
+      bM[bK].bolts += boltsCount;
+      bM[bK].nuts += boltsCount * (q.doubleNut ? 2 : 1); 
     }else if(q.type==='gasket'){
-      const gK=`${q.r} ${q.s}A (${q.gtype})`; gM[gK]=(gM[gK]||0)+q.qty;
-    }else{
-      const uK=`${q.s}A`; uM[uK]=(uM[uK]||0)+q.qty;
+      const gK=`${q.r} ${q.s}A (${q.gtype})`; 
+      gM[gK]=(gM[gK]||0)+q.qty;
+    }else if(q.type==='ubolt'){
+      const uK=`${q.s}A`; 
+      uM[uK]=(uM[uK]||0)+q.qty;
     }
   });
 
   const sB=Object.entries(bM).sort((a,b)=>{
-    const pa=a[0].match(/M(\d+)/),pb=b[0].match(/M(\d+)/);
-    return (+pa[1]-+pb[1]);
-  }), 
-  sG=Object.entries(gM).sort((a,b)=>{
+    const pa=a[0].match(/M(\d+)/), pb=b[0].match(/M(\d+)/);
+    return (+pa[1]-+pb[1]) || (parseInt(a[0].split('×')[1]) - parseInt(b[0].split('×')[1]));
+  });
+  const sG=Object.entries(gM).sort((a,b)=>{
     const [ra,sa]=a[0].split(' '), [rb,sb]=b[0].split(' ');
     return (RATING_ORDER[ra]-RATING_ORDER[rb])||(parseInt(sa)-parseInt(sb));
-  }), 
-  sU=Object.entries(uM).sort((a,b)=>parseInt(a[0])-parseInt(b[0]));
+  });
+  const sU=Object.entries(uM).sort((a,b)=>parseInt(a[0])-parseInt(b[0]));
 
-  const res=`<div class="result"><h2>✅ 최종 집계 결과</h2><div class="res-grid">
-    <div class="res-section"><h3>🔩 볼트/너트 (수량)</h3><div class="table-wrap"><table><thead><tr><th>규격</th><th>볼트</th><th>너트</th></tr></thead><tbody>${sB.map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td><td><b>${v}</b></td></tr>`).join('')||'<tr><td colspan="3">없음</td></tr>'}</tbody></table></div>
-    <div class="res-section"><h3>⭕ 가스켓 (장수)</h3><div class="table-wrap"><table><thead><tr><th>규격/타입</th><th>수량</th></tr></thead><tbody>${sG.map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`).join('')||'<tr><td colspan="2">없음</td></tr>'}</tbody></table></div>
+  let copyText = "[배관 자재 집계 내역]\n\n";
+  
+  let boltRows = sB.length ? sB.map(([k,v]) => {
+    copyText += `[볼트] ${k} : ${v.bolts}개 / 너트: ${v.nuts}개\n`;
+    return `<tr><td>${k}</td><td><b>${v.bolts}</b></td><td><b>${v.nuts}</b></td></tr>`;
+  }).join('') : `<tr><td colspan="3" style="color:#94a3b8;">내역 없음</td></tr>`;
+
+  if(sG.length) copyText += "\n";
+  let gasketRows = sG.length ? sG.map(([k,v]) => {
+    copyText += `[가스켓] ${k} : ${v}장\n`;
+    return `<tr><td style="text-align:left;">${k}</td><td><b>${v}</b></td></tr>`;
+  }).join('') : `<tr><td colspan="2" style="color:#94a3b8;">내역 없음</td></tr>`;
+
+  if(sU.length) copyText += "\n";
+  let uboltRows = sU.length ? sU.map(([k,v]) => {
+    copyText += `[U-볼트] ${k} : ${v}set\n`;
+    return `<tr><td>${k}</td><td><b>${v}</b></td></tr>`;
+  }).join('') : `<tr><td colspan="2" style="color:#94a3b8;">내역 없음</td></tr>`;
+
+  if (memoContent) {
+    copyText += `\n[추가 메모]\n${memoContent}\n`;
+  }
+
+  lastCalculatedString = copyText;
+
+  let memoHtml = '';
+  if (memoContent) {
+    memoHtml = `
+      <div class="table-sec" style="grid-column: 1 / -1; margin-top:8px;">
+        <h3>📝 추가 메모</h3>
+        <div style="background:var(--input-bg); padding:16px; border:1px solid var(--border); border-radius:var(--radius-md); white-space:pre-wrap; font-size:14px; color:var(--text-main); line-height:1.6;">${memoContent}</div>
+      </div>
+    `;
+  }
+
+  const resBox = document.getElementById('result');
+  resBox.style.display = 'block';
+  resBox.innerHTML=`
+    <h2>
+      ✅ 자재 최종 집계
+      <button class="btn-copy" onclick="copyResult()">📋 내역 복사</button>
+    </h2>
+    <div class="res-tables">
+      <div class="table-sec">
+        <h3>🔩 볼트 및 너트 (세트)</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>규격 (S × L)</th><th>볼트(EA)</th><th>너트(EA)</th></tr></thead>
+            <tbody>${boltRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-sec">
+        <h3>⭕ 가스켓</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>규격 및 재질</th><th>수량(장)</th></tr></thead>
+            <tbody>${gasketRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="table-sec" style="grid-column: 1 / -1;">
+        <h3>⚓ U-볼트</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>규격 (호칭경)</th><th>수량(Set)</th></tr></thead>
+            <tbody>${uboltRows}</tbody>
+          </table>
+        </div>
+      </div>
+      ${memoHtml}
     </div>
-    <div class="res-section" style="grid-column:1/-1"><h3>⚓ U-볼트 (세트)</h3><div class="table-wrap"><table><thead><tr><th class="u">규격</th><th class="u">수량(set)</th></tr></thead><tbody>${sU.map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`).join('')||'<tr><td colspan="2">없음</td></tr>'}</tbody></table></div>
-    </div>
-    <div class="footnote">※ 가스켓은 포인트 포함분과 추가 입력분이 자동 합산되었습니다.<br>※ 너트는 볼트와 1:1 수량으로 자동 계산됩니다.<br>※ U-볼트는 단순 개수(세트)만 집계됩니다.</div>
-  </div>`;
-  document.getElementById('result').innerHTML=res;
-  document.getElementById('result').scrollIntoView({behavior:'smooth', block:'start'});
+  `;
+  resBox.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function copyResult() {
+  if(!lastCalculatedString) return;
+  try {
+    const ta = document.getElementById('copyArea');
+    ta.value = lastCalculatedString;
+    ta.select();
+    document.execCommand('copy');
+    alert('내역이 클립보드에 복사되었습니다.\n엑셀, 카카오톡 등에 붙여넣기 하세요.');
+  } catch (err) {
+    alert('복사 기능을 지원하지 않는 기기입니다.');
+  }
 }
 
 function init(){
   USIZES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s+'A';usizeSel.appendChild(o);});
-  refreshSizes();
-  refreshGSizes();
+  refreshSizes(); refreshGSizes();
 }
 </script>
 </body>
