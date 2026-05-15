@@ -123,6 +123,7 @@
       'tb.redo_title':        '다시 실행 (Ctrl+Y)',
       'tb.theme':             '테마 전환',
       'tb.help':              '사용 가이드 열기',
+      'tb.help_btn':          '❓ 도움말',
       'tb.lang':              '언어 변경',
       'tb.lang_select':       '언어 선택',
       'proj.default':         '기본 현장',
@@ -328,7 +329,9 @@
       'x.cat_ub':             'U-볼트',
       'x.cat_memo':           '메모',
       'x.fname_suffix':       '_자재집계',
-      'x.share_title':        'JIS 자재 집계'
+      'x.share_title':        'JIS 자재 집계',
+      'vis.today':            '오늘 방문자:',
+      'vis.unit':             '명'
     },
 
     vi: {
@@ -347,6 +350,7 @@
       'tb.redo_title':        'Làm lại (Ctrl+Y)',
       'tb.theme':             'Đổi giao diện',
       'tb.help':              'Mở hướng dẫn sử dụng',
+      'tb.help_btn':          '❓ Hướng dẫn',
       'tb.lang':              'Đổi ngôn ngữ',
       'tb.lang_select':       'Chọn ngôn ngữ',
       'proj.default':         'Dự án mặc định',
@@ -536,7 +540,9 @@
       'x.cat_ub':             'Bu lông U',
       'x.cat_memo':           'Ghi chú',
       'x.fname_suffix':       '_tonghop_vattu',
-      'x.share_title':        'Tổng hợp Vật tư JIS'
+      'x.share_title':        'Tổng hợp Vật tư JIS',
+      'vis.today':            'Khách hôm nay:',
+      'vis.unit':             'người'
     },
 
     id: {
@@ -555,6 +561,7 @@
       'tb.redo_title':        'Ulangi (Ctrl+Y)',
       'tb.theme':             'Ganti tema',
       'tb.help':              'Buka panduan penggunaan',
+      'tb.help_btn':          '❓ Panduan',
       'tb.lang':              'Ganti bahasa',
       'tb.lang_select':       'Pilih bahasa',
       'proj.default':         'Proyek default',
@@ -744,7 +751,9 @@
       'x.cat_ub':             'Baut U',
       'x.cat_memo':           'Catatan',
       'x.fname_suffix':       '_rekap_material',
-      'x.share_title':        'Rekap Material JIS'
+      'x.share_title':        'Rekap Material JIS',
+      'vis.today':            'Pengunjung hari ini:',
+      'vis.unit':             'orang'
     }
   };
 
@@ -2219,17 +2228,6 @@
       }
     } catch (e) { /* storage unavailable (e.g. in-app browser) */ }
     $('#visitorCount').textContent = count;
-
-    const btn = $('#btnVisitor');
-    const popup = $('#visitorPopup');
-    btn.addEventListener('click', () => {
-      popup.classList.toggle('show');
-    });
-    document.addEventListener('click', (e) => {
-      if (!btn.contains(e.target) && !popup.contains(e.target)) {
-        popup.classList.remove('show');
-      }
-    });
   }
 
   /* =====================================================================
