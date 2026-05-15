@@ -834,13 +834,13 @@
     <!-- ============================== COLUMN 1: 입력 ============================== -->
     <section class="col" data-i18n-attr="aria-label:sec.input" aria-label="자재 입력">
 
-      <!-- 1. 플랜지 외경 역산 (기본 닫힘) -->
+      <!-- 1. 플랜지 사이즈 역산 (기본 열림) -->
       <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFind">
-          <h2><span data-i18n="card.find">🔍 플랜지 찾기</span> <small style="font-weight:600;color:var(--c-text-mute)" data-i18n="card.find_sub">(외경 역산)</small></h2>
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFind">
+          <h2><span data-i18n="card.find">🔍 플랜지 사이즈 역산</span></h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
-        <div id="accBodyFind" class="acc-body" aria-hidden="true" inert>
+        <div id="accBodyFind" class="acc-body">
           <div class="acc-body-inner">
             <div class="form-grid col-auto" style="margin-bottom:8px;">
               <div class="field">
@@ -920,10 +920,10 @@
         </div>
       </div>
 
-      <!-- 3. 가스켓 단독 (기본 닫힘) -->
+      <!-- 3. 가스켓 추가 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasket">
-          <h2 data-i18n="card.gasket">⭕ 추가 가스켓</h2>
+          <h2 data-i18n="card.gasket">⭕ 가스켓 추가</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyGasket" class="acc-body" aria-hidden="true" inert>
