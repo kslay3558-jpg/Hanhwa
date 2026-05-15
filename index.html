@@ -130,6 +130,7 @@
 
   /* App header */
   .app-header {
+    position: relative;
     background: var(--c-surface);
     border-radius: var(--r-lg);
     box-shadow: var(--e-1);
@@ -138,10 +139,18 @@
     display: flex; align-items: center; gap: 12px;
     border: 1px solid var(--c-border);
     flex-wrap: wrap; row-gap: 8px;
+    overflow: hidden;
+  }
+  /* Subtle accent strip on the top edge of the header */
+  .app-header::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--c-primary) 0%, var(--c-success) 60%, var(--c-accent) 100%);
+    opacity: .85;
   }
   /* brand: 최소 200px flex-basis로 controls에 밀려 0px가 되는 현상 방지 */
   .app-header .brand { flex: 1 1 200px; min-width: 0; }
-  .app-header .brand p { color: var(--c-text-mute); font-size: .8rem; margin-top: 2px; }
+  .app-header .brand h1 { line-height: 1.2; }
+  .app-header .brand p { color: var(--c-text-mute); font-size: .78rem; margin-top: 3px; font-weight: 500; }
   /* controls: min-width 0으로 flex-shrink가 제대로 동작하게 함 */
   .app-header .controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-width: 0; }
 
@@ -243,17 +252,29 @@
   .card {
     background: var(--c-surface);
     border-radius: var(--r-lg);
-    padding: 16px;
+    padding: 18px 18px 16px;
     box-shadow: var(--e-2);
     border: 1px solid var(--c-border);
-    transition: box-shadow var(--m-base), border-color var(--m-base);
+    transition: box-shadow var(--m-base), border-color var(--m-base), transform var(--m-base);
   }
+  @media (max-width: 480px) { .card { padding: 16px 14px 14px; } }
   .card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
   .card-head {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
   }
-  .card-head h2 { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
+  .card-head h2 {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+    position: relative; padding-left: 10px;
+  }
+  /* Subtle colored accent bar to anchor each section visually */
+  .card-head h2::before {
+    content: ''; position: absolute; left: 0; top: 50%;
+    width: 3px; height: 18px; transform: translateY(-50%);
+    background: var(--c-primary); border-radius: 2px;
+  }
   .card-head .badge {
     background: var(--c-primary-weak); color: var(--c-primary-strong);
     font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
@@ -269,8 +290,8 @@
     .col-3 > .full-on-mobile { grid-column: 1 / -1; }
   }
   .field label, label.field-label {
-    display: block; font-size: .72rem; font-weight: 700;
-    color: var(--c-text-sub); margin-bottom: 4px; letter-spacing: 0;
+    display: block; font-size: .78rem; font-weight: 700;
+    color: var(--c-text-sub); margin-bottom: 5px; letter-spacing: 0;
   }
 
   select, input[type=number], input[type=text], input[type=range], textarea {
@@ -505,7 +526,11 @@
   .table-wrapper { border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; }
   table { width: 100%; border-collapse: collapse; font-size: .85rem; }
   th, td { padding: 9px 10px; text-align: center; border-bottom: 1px solid var(--c-border); color: var(--c-text); }
-  th { background: var(--c-surface-2); color: var(--c-text-sub); font-weight: 700; font-size: .75rem; }
+  th { background: var(--c-surface-2); color: var(--c-text-sub); font-weight: 700; font-size: .75rem;
+       letter-spacing: .02em; text-transform: none; position: sticky; top: 0; }
+  tbody tr { transition: background var(--m-fast); }
+  tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--c-surface-2) 55%, transparent); }
+  tbody tr:hover td { background: var(--c-primary-weak); }
   tbody tr:last-child td { border-bottom: none; }
   td b { color: var(--c-text); font-size: .95rem; font-weight: 800; }
   td.muted { color: var(--c-text-mute); }
