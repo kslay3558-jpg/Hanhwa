@@ -511,6 +511,29 @@
   }
   #toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+  /* Visitor counter button */
+  #btnVisitor {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 910;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--c-surface); border: 1px solid var(--c-border);
+    box-shadow: var(--e-3);
+    font-size: 1.4rem; line-height: 1;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: box-shadow var(--m-base), transform var(--m-base);
+  }
+  #btnVisitor:hover { box-shadow: var(--e-4); transform: scale(1.08); }
+  #visitorPopup {
+    position: fixed; right: 16px; bottom: calc(72px + env(safe-area-inset-bottom));
+    z-index: 920;
+    background: var(--c-surface); border: 1px solid var(--c-border);
+    border-radius: var(--r-lg); box-shadow: var(--e-4);
+    padding: 12px 18px; font-size: .92rem; white-space: nowrap;
+    display: none;
+  }
+  #visitorPopup.show { display: block; }
+  #visitorPopup strong { color: var(--c-primary); font-size: 1.1rem; }
+
   /* Floating bar */
   .floating-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
@@ -628,15 +651,6 @@
       <p data-i18n="app.subtitle">JIS 규격 기반 · 오프라인 PWA</p>
     </div>
     <div class="controls" role="toolbar" data-i18n-attr="aria-label:app.toolbar" aria-label="앱 도구">
-      <div class="proj-picker" role="group" data-i18n-attr="aria-label:tb.proj_group" aria-label="프로젝트 선택">
-        <label class="sr-only" for="projectSelect" data-i18n="tb.proj_label">현장(프로젝트)</label>
-        <select id="projectSelect" data-action="project-change" data-i18n-attr="aria-label:tb.proj_select" aria-label="현장(프로젝트) 선택">
-          <option value="default" data-i18n="proj.default">기본 현장</option>
-        </select>
-        <button class="icon-btn" data-action="project-new"    data-i18n-attr="title:tb.proj_new,aria-label:tb.proj_new"       title="새 현장 추가" aria-label="새 현장 추가">＋</button>
-        <button class="icon-btn" data-action="project-rename" data-i18n-attr="title:tb.proj_rename,aria-label:tb.proj_rename" title="현장 이름 변경" aria-label="현장 이름 변경">✎</button>
-        <button class="icon-btn" data-action="project-delete" data-i18n-attr="title:tb.proj_delete,aria-label:tb.proj_delete" title="현장 삭제" aria-label="현장 삭제">🗑</button>
-      </div>
       <div class="lang-picker" data-i18n-attr="aria-label:tb.lang">
         <span class="lp-icon" aria-hidden="true">🌐</span>
         <label class="sr-only" for="langSelect" data-i18n="tb.lang_select">언어 선택</label>
@@ -646,8 +660,6 @@
           <option value="id">🇮🇩 Bahasa Indonesia</option>
         </select>
       </div>
-      <button class="icon-btn" data-action="undo" id="btnUndo" disabled data-i18n-attr="title:tb.undo_title,aria-label:tb.undo" title="되돌리기 (Ctrl+Z)" aria-label="되돌리기">↶</button>
-      <button class="icon-btn" data-action="redo" id="btnRedo" disabled data-i18n-attr="title:tb.redo_title,aria-label:tb.redo" title="다시 실행 (Ctrl+Y)" aria-label="다시 실행">↷</button>
       <button class="icon-btn" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
       <button class="icon-btn" data-action="open-tutorial" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">?</button>
     </div>
@@ -904,6 +916,11 @@
         <label class="check-wrap"><input type="checkbox" id="chkHideTutorial"> <span data-i18n="tut.hide">다시 보지 않기</span></label>
       </div>
     </div>
+  </div>
+  <!-- 당일 방문자 수 버튼 -->
+  <button id="btnVisitor" aria-label="당일 방문자 수" title="당일 방문자 수">👤</button>
+  <div id="visitorPopup" role="status" aria-live="polite">
+    오늘 방문자: <strong id="visitorCount">0</strong>명
   </div>
 
 </div>

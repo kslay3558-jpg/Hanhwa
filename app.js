@@ -1157,6 +1157,7 @@
     },
 
     populateProjectSelect(selectEl) {
+      if (!selectEl) return;
       selectEl.textContent = '';
       for (const [id, p] of Object.entries(Store.projects)) {
         selectEl.appendChild(el('option', { value: id }, p.name));
@@ -1295,8 +1296,8 @@
     },
 
     updateUndoRedoButtons() {
-      $('#btnUndo').disabled = !Store.canUndo();
-      $('#btnRedo').disabled = !Store.canRedo();
+      const u = $('#btnUndo'); if (u) u.disabled = !Store.canUndo();
+      const r = $('#btnRedo'); if (r) r.disabled = !Store.canRedo();
     },
 
     /** Render result panel. */
@@ -1934,7 +1935,7 @@
     'theme-toggle':      actionToggleTheme,
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
-    'project-change':    () => actionProjectChange($('#projectSelect').value),
+    'project-change':    () => { const s = $('#projectSelect'); if (s) actionProjectChange(s.value); },
     'project-new':       actionProjectNew,
     'project-rename':    actionProjectRename,
     'project-delete':    actionProjectDelete,
@@ -2195,6 +2196,28 @@
     // PWA
     registerSW();
     bindInstallBanner();
+
+    // Visitor counter
+    initVisitorCounter();
+  }
+
+  function initVisitorCounter() {
+    const today = new Date().toISOString().slice(0, 10);
+    const key = 'visitor_' + today;
+    const count = (parseInt(localStorage.getItem(key) || '0', 10) || 0) + 1;
+    localStorage.setItem(key, String(count));
+    $('#visitorCount').textContent = count;
+
+    const btn = $('#btnVisitor');
+    const popup = $('#visitorPopup');
+    btn.addEventListener('click', () => {
+      popup.classList.toggle('show');
+    });
+    document.addEventListener('click', (e) => {
+      if (!btn.contains(e.target) && !popup.contains(e.target)) {
+        popup.classList.remove('show');
+      }
+    });
   }
 
   if (document.readyState === 'loading') {
