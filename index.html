@@ -7,151 +7,165 @@
 <style>
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   :root {
-    --bg: #f3f4f6;
+    --bg: #f1f5f9;
     --surface: #ffffff;
     --primary: #2563eb;
     --text-main: #0f172a;
-    --text-sub: #64748b;
-    --border: #e2e8f0;
+    --text-sub: #475569;
+    --border: #cbd5e1;
     --input-bg: #f8fafc;
-    --radius-lg: 20px;
-    --radius-md: 12px;
-    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-    --shadow-md: 0 8px 24px rgba(15,23,42,0.06);
+    --radius-lg: 14px;
+    --radius-md: 8px;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(15,23,42,0.06);
   }
 
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif; background: var(--bg); margin: 0; padding: 12px 12px 40px; color: var(--text-main); -webkit-text-size-adjust: 100%; }
-  .wrap { max-width: 1000px; margin: 0 auto; position: relative; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto, sans-serif; background: var(--bg); margin: 0; padding: 10px 10px 80px; color: var(--text-main); -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 900px; margin: 0 auto; position: relative; }
   
-  .header { padding: 16px 20px; margin-bottom: 16px; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 4px; }
-  .header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); }
-  .header p { margin: 0; font-size: 13px; color: var(--text-sub); }
+  .header { padding: 12px 14px; margin-bottom: 12px; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; gap: 2px; text-align: center; }
+  .header h1 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-main); }
+  .header p { margin: 0; font-size: 12px; color: var(--text-sub); }
 
-  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
   @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
 
-  .card { background: var(--surface); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; border: 1px solid rgba(226, 232, 240, 0.8); }
-  .card h2 { font-size: 16px; font-weight: 800; margin: 0 0 16px 0; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
-  .card h2 span.badge { background: #eff6ff; color: #1e40af; font-size: 12px; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+  .card { background: var(--surface); border-radius: var(--radius-lg); padding: 16px 14px; box-shadow: var(--shadow-sm); margin-bottom: 12px; border: 1px solid rgba(203, 213, 225, 0.5); }
+  
+  .card h2 { font-size: 19px; font-weight: 800; margin: 0 0 16px 0; color: var(--text-main); display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; letter-spacing: -0.3px; }
+  .card h2 span.badge { background: #eff6ff; color: #1e40af; font-size: 13px; padding: 3px 10px; border-radius: 12px; font-weight: 700; transform: translateY(-1px); }
 
-  /* 간소화 폼 */
-  .compact-card { padding: 18px 20px; }
-  .compact-card h2 { font-size: 15px; margin-bottom: 12px; }
-  .compact-card select, .compact-card input[type=number], .compact-card .stepper { height: 44px; font-size: 14px; }
-  .compact-card .btn { height: 44px; font-size: 14px; }
-  .compact-card .stepper button { font-size: 18px; flex: 0 0 40px; }
-  .compact-card label { margin-bottom: 4px; font-size: 11.5px; }
+  /* 간소화 폼 패딩 조정 */
+  .compact-card { padding: 20px 16px; }
 
-  .form-grid { display: grid; gap: 12px; margin-bottom: 16px; }
+  /* 폼 요소 간격 */
+  .form-grid { display: grid; gap: 8px; margin-bottom: 12px; }
   .col-3 { grid-template-columns: 1fr 1fr 1fr; }
   .col-2 { grid-template-columns: 1fr 1fr; }
-  .col-auto { grid-template-columns: 1fr 80px; }
+  .col-auto { grid-template-columns: 1fr 70px; }
   
   @media (max-width: 480px) {
     .col-3 { grid-template-columns: 1fr 1fr; }
     .col-3 > div:last-child { grid-column: 1 / -1; }
   }
 
-  label { font-size: 12px; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 6px; }
+  label { font-size: 11px; font-weight: 700; color: var(--text-sub); display: block; margin-bottom: 3px; }
   
-  select, input[type=number] { width: 100%; height: 48px; padding: 0 14px; font-size: 15px; font-weight: 600; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-main); transition: all 0.2s ease; appearance: none; -webkit-appearance: none; }
-  select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; padding-right: 40px; }
-  select:focus, input[type=number]:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+  select, input[type=number] { width: 100%; height: 38px; padding: 0 10px; font-size: 13.5px; font-weight: 600; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-main); transition: all 0.2s ease; appearance: none; -webkit-appearance: none; }
+  select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 8px center; background-size: 14px; padding-right: 28px; }
+  select:focus, input[type=number]:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
   
-  textarea { width: 100%; padding: 12px 14px; font-size: 14px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-main); transition: all 0.2s ease; resize: vertical; font-family: inherit; line-height: 1.5; }
-  textarea:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+  textarea { width: 100%; padding: 10px; font-size: 13px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-main); transition: all 0.2s ease; resize: vertical; font-family: inherit; line-height: 1.4; }
+  textarea:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
 
-  .stepper { display: flex; height: 48px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
-  .stepper button { flex: 0 0 44px; background: transparent; border: none; color: var(--text-sub); font-size: 20px; font-weight: 400; cursor: pointer; transition: background 0.1s; padding: 0; }
+  .stepper { display: flex; height: 38px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .stepper button { flex: 0 0 36px; background: transparent; border: none; color: var(--text-sub); font-size: 18px; font-weight: 400; cursor: pointer; transition: background 0.1s; padding: 0; }
   .stepper button:active { background: #e2e8f0; }
-  .stepper input { flex: 1; height: 100%; border: none; border-radius: 0; background: transparent; text-align: center; font-size: 16px; padding: 0; }
+  .stepper input { flex: 1; height: 100%; border: none; border-radius: 0; background: transparent; text-align: center; font-size: 14px; padding: 0; font-weight: 700; }
   .stepper-separator { width: 1px; background: var(--border); height: 60%; margin: auto 0; }
 
-  .btn { width: 100%; height: 50px; border: none; border-radius: var(--radius-md); font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s; }
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+  .btn { width: 100%; height: 38px; border: none; border-radius: var(--radius-md); font-size: 13.5px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; transition: transform 0.1s; }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2); }
   .btn-secondary { background: #334155; color: #fff; }
-  .btn-search { background: #d97706; color: #fff; height: 48px; }
+  .btn-search { background: #ea580c; color: #fff; height: 38px; }
   
-  .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  /* 슬림 옵션 토글 구역 */
+  .option-box { background: var(--input-bg); padding: 0 12px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 12px; }
+  .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
   .toggle-row:last-child { border-bottom: none; }
-  .toggle-title { font-size: 14.5px; font-weight: 700; color: var(--text-main); }
+  .toggle-title { font-size: 13px; font-weight: 700; color: var(--text-main); }
   
-  .switch { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+  .switch { position: relative; display: inline-block; width: 38px; height: 22px; flex-shrink: 0; }
   .switch input { opacity: 0; width: 0; height: 0; }
-  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 26px; }
-  .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 22px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
   input:checked + .slider { background-color: var(--primary); }
-  input:checked + .slider:before { transform: translateX(20px); }
+  input:checked + .slider:before { transform: translateX(16px); }
 
-  .gasket-select { width: 110px !important; height: 32px !important; font-size: 13px !important; padding: 0 10px !important; border-radius: 6px; }
+  .gasket-select { width: 90px !important; height: 26px !important; font-size: 11.5px !important; padding: 0 8px !important; border-radius: 4px; background-position: right 4px center; padding-right: 20px;}
 
-  .search-res { margin-top: 12px; padding: 14px; background: #fef3c7; border-radius: var(--radius-md); border: 1px solid #fde68a; font-size: 13.5px; color: #92400e; display: none; line-height: 1.5; }
-  .search-res .badge { display: inline-block; background: #fff; padding: 4px 8px; border-radius: 6px; border: 1px solid #fcd34d; font-weight: 700; margin: 4px 4px 0 0; }
+  .search-res { margin-top: 8px; padding: 10px; background: #fef3c7; border-radius: var(--radius-md); border: 1px solid #fde68a; font-size: 12.5px; color: #92400e; display: none; line-height: 1.4; text-align: center; }
+  .search-res .badge { display: inline-block; background: #fff; padding: 2px 6px; border-radius: 4px; border: 1px solid #fcd34d; font-weight: 700; margin: 4px 4px 0 0; }
 
-  .queue-list { display: flex; flex-direction: column; gap: 10px; max-height: 500px; overflow-y: auto; padding-right: 4px; }
-  .q-item { display: flex; align-items: center; justify-content: space-between; padding: 14px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); }
-  .q-info { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-  .q-title { font-size: 14px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .q-qty { color: var(--primary); font-weight: 800; font-size: 15px; }
-  .q-desc { font-size: 12px; color: var(--text-sub); }
-  .q-tags { display: flex; gap: 4px; flex-wrap: wrap; }
-  .q-tag { font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: #e2e8f0; color: #475569; }
+  /* 대기열 리스트 */
+  .queue-list { display: flex; flex-direction: column; gap: 8px; max-height: 450px; overflow-y: auto; padding-right: 4px; margin-bottom: 12px;}
+  .q-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--border); border-radius: var(--radius-md); animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  .q-info { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .q-title { font-size: 13px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .q-qty { color: var(--primary); font-weight: 800; font-size: 14px; }
+  .q-desc { font-size: 11.5px; color: var(--text-sub); }
+  .q-tags { display: flex; gap: 3px; flex-wrap: wrap; }
+  .q-tag { font-size: 10px; font-weight: 700; padding: 2px 4px; border-radius: 3px; background: #e2e8f0; color: #475569; }
   .q-tag.blue { background: #dbeafe; color: #1d4ed8; }
-  .btn-del { width: 36px; height: 36px; border-radius: 8px; border: none; background: #fee2e2; color: #b91c1c; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+  .btn-del { width: 30px; height: 30px; border-radius: 6px; border: none; background: #fee2e2; color: #b91c1c; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 
-  .empty-state { padding: 40px 20px; text-align: center; color: var(--text-sub); font-size: 14px; background: var(--input-bg); border-radius: var(--radius-md); border: 1px dashed #cbd5e1; }
+  .empty-state { padding: 30px 16px; text-align: center; color: var(--text-sub); font-size: 13px; background: var(--input-bg); border-radius: var(--radius-md); border: 1px dashed #cbd5e1; }
 
-  .action-row { display: flex; gap: 10px; margin-top: 16px; }
-  .btn-calc { background: #10b981; color: #fff; flex: 2; height: 54px; font-size: 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
-  .btn-clear { background: #fff; border: 1px solid var(--border); color: var(--text-sub); flex: 1; height: 54px; }
+  .action-row { display: flex; gap: 8px; margin-top: auto; }
+  .btn-calc { background: #10b981; color: #fff; flex: 2; height: 46px; font-size: 15px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
+  .btn-clear { background: #fff; border: 1px solid var(--border); color: var(--text-sub); flex: 1; height: 46px; }
 
-  .result-box { margin-top: 16px; padding: 20px; background: #fff; border: 2px solid #34d399; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); display: none; }
-  .result-box h2 { color: #065f46; border-bottom: 2px dashed #a7f3d0; padding-bottom: 12px; margin-top:0;}
-  .btn-copy { background: #f0fdf4; border: 1px solid #6ee7b7; color: #059669; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  /* 결과창 */
+  .result-box { margin-top: 12px; padding: 20px 16px; background: #fff; border: 2px solid #34d399; border-radius: var(--radius-lg); box-shadow: var(--shadow-md); display: none; }
+  .result-box h2 { color: #065f46; font-size: 19px; font-weight: 800; border-bottom: 2px dashed #a7f3d0; padding-bottom: 16px; margin: 0 0 16px 0; display: flex; align-items: center; justify-content: center; gap: 10px; text-align: center; }
+  .btn-copy { background: #f0fdf4; border: 1px solid #6ee7b7; color: #059669; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; }
   
-  .res-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .res-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media (max-width: 768px) { .res-tables { grid-template-columns: 1fr; } }
   
-  .table-sec h3 { font-size: 14px; color: var(--text-main); margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px; }
-  .table-sec h3::before { content: ''; width: 4px; height: 14px; background: var(--primary); border-radius: 2px; }
+  .table-sec h3 { font-size: 13px; color: var(--text-main); margin: 0 0 6px 0; display: flex; align-items: center; gap: 4px; }
+  .table-sec h3::before { content: ''; width: 3px; height: 12px; background: var(--primary); border-radius: 2px; }
   .table-wrapper { border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
-  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-  th, td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--border); }
-  th { background: var(--input-bg); color: var(--text-sub); font-weight: 700; font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th, td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+  th { background: var(--input-bg); color: var(--text-sub); font-weight: 700; font-size: 11px; }
   tbody tr:last-child td { border-bottom: none; }
-  td b { color: var(--text-main); font-size: 15px; font-weight: 800; }
-  .notice { margin-top: 16px; padding: 12px; background: var(--input-bg); border-radius: var(--radius-md); font-size: 12.5px; color: var(--text-sub); line-height: 1.5; }
+  td b { color: var(--text-main); font-size: 14px; font-weight: 800; }
+  .notice { margin-top: 16px; padding: 12px; background: var(--input-bg); border-radius: var(--radius-md); font-size: 11.5px; color: var(--text-sub); line-height: 1.5; text-align: center; }
   
-  .pitch-info { font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 6px; padding-left: 4px; display: flex; align-items: center; gap: 4px;}
-  .pitch-info::before { content: '↔'; font-size: 12px; }
+  .pitch-info { font-size: 10px; color: var(--primary); font-weight: 700; margin-top: 4px; padding-left: 2px; display: flex; align-items: center; gap: 2px;}
+  .pitch-info::before { content: '↔'; font-size: 11px; }
 
-  /* 토스트 알림 CSS */
-  #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 30px; padding: 14px 24px; position: fixed; z-index: 999; left: 50%; bottom: 30px; font-size: 14px; font-weight: 600; transform: translateX(-50%); box-shadow: 0 4px 12px rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
-  #toast.show { visibility: visible; opacity: 1; bottom: 40px; }
+  #toast { visibility: hidden; min-width: 220px; background-color: rgba(15, 23, 42, 0.9); color: #fff; text-align: center; border-radius: 20px; padding: 10px 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; font-size: 13px; font-weight: 600; transform: translateX(-50%); opacity: 0; transition: opacity 0.3s, bottom 0.3s; }
+  #toast.show { visibility: visible; opacity: 1; bottom: 80px; }
 
-  /* 튜토리얼 모달 CSS */
-  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+  /* 모바일 하단 장바구니 바 */
+  .floating-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); border-top: 1px solid var(--border); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 900; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .floating-bar.show { transform: translateY(0); }
+  .float-info { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; color: var(--text-main); }
+  .float-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; transition: transform 0.2s; }
+  .float-badge.pop { transform: scale(1.3); }
+  .float-btn { background: #10b981; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 13.5px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3); }
+
+  /* 🚀 업그레이드된 튜토리얼 팝업 */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
   .modal-overlay.show { opacity: 1; visibility: visible; }
-  .modal-content { background: #fff; width: 90%; max-width: 400px; border-radius: 24px; padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 85vh; overflow-y: auto; }
+  .modal-content { background: #fff; width: 88%; max-width: 380px; border-radius: 20px; padding: 24px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.25); transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 85vh; overflow-y: auto; }
   .modal-overlay.show .modal-content { transform: translateY(0); }
-  .modal-content h2 { font-size: 18px; color: var(--text-main); margin: 0 0 16px 0; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-  .guide-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+  .modal-content h2 { font-size: 18px; margin: 0 0 12px 0; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--text-main); }
+  
+  .guide-intro { font-size: 13px; color: var(--text-main); line-height: 1.5; margin: 0 0 16px 0; text-align: center; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px dashed var(--border); word-break: keep-all;}
+  .guide-intro b { color: var(--primary); }
+
+  .guide-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
   .guide-item { display: flex; gap: 12px; align-items: flex-start; }
-  .guide-icon { font-size: 20px; flex-shrink: 0; background: #f1f5f9; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
-  .guide-text h4 { margin: 0 0 4px 0; font-size: 14px; color: #1e293b; font-weight: 700; }
-  .guide-text p { margin: 0; font-size: 13px; color: var(--text-sub); line-height: 1.4; }
+  .guide-icon { font-size: 20px; flex-shrink: 0; background: #eff6ff; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);}
+  .guide-text h4 { margin: 0 0 4px 0; font-size: 14px; color: #0f172a; font-weight: 800; }
+  .guide-text p { margin: 0; font-size: 12.5px; color: var(--text-sub); line-height: 1.4; word-break: keep-all; }
   .modal-actions { display: flex; flex-direction: column; gap: 12px; }
-  .check-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-sub); justify-content: center; cursor: pointer; }
-  .check-wrap input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+  .check-wrap { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-sub); justify-content: center; cursor: pointer; }
+  .check-wrap input { width: 16px; height: 16px; accent-color: var(--primary); }
 </style>
 </head>
 <body onload="init()">
 <div class="wrap">
   
+  <!-- 상단 앱 헤더 영역 -->
   <div class="header">
     <h1>설비/배관 자재 계산기</h1>
-    <p>JIS 규격 기반 · 현장 모바일 최적화</p>
+    <p>JIS 규격 기반 · 콤팩트 모드</p>
   </div>
   
   <div class="main-grid">
@@ -161,11 +175,11 @@
       
       <!-- 1. 플랜지 역산 검색 -->
       <div class="card">
-        <h2>🔍 플랜지 찾기 (외경 기준)</h2>
+        <h2>🔍 플랜지 찾기 (외경)</h2>
         <div class="form-grid col-auto" style="margin-bottom:0;">
           <div>
             <label>플랜지 외경 (OD, mm)</label>
-            <input type="number" id="searchOD" placeholder="외경 입력 시 즉시 찾기" oninput="findFlange()">
+            <input type="number" id="searchOD" placeholder="외경 입력 시 즉시 검색" oninput="findFlange()">
           </div>
           <div>
             <label>&nbsp;</label>
@@ -204,7 +218,7 @@
           </div>
         </div>
         
-        <div style="background: var(--input-bg); padding: 0 16px; border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 16px;">
+        <div class="option-box">
           <div class="toggle-row">
             <div class="toggle-title">볼트 5mm 더 길게</div>
             <label class="switch"><input type="checkbox" id="optExtended"><span class="slider"></span></label>
@@ -215,7 +229,7 @@
           </div>
           <div class="toggle-row">
             <div class="toggle-title">가스켓 포함하기</div>
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
               <select id="gTypeInFlange" class="gasket-select">
                 <option value="일반" selected>일반(RF)</option>
                 <option value="논레이어">논레이어</option>
@@ -228,7 +242,7 @@
           </div>
         </div>
         
-        <button class="btn btn-primary" onclick="addPoint()">+ 플랜지 포인트 추가</button>
+        <button class="btn btn-primary" onclick="addPoint()">+ 포인트 추가</button>
       </div>
 
       <!-- 3. 가스켓 단독 -->
@@ -252,7 +266,7 @@
             <div class="stepper"><button onclick="adjQty('gqty', -1)">−</button><div class="stepper-separator"></div><input type="number" id="gqty" value="1" onchange="validateQty(this)"><div class="stepper-separator"></div><button onclick="adjQty('gqty', 1)">+</button></div>
           </div>
         </div>
-        <button class="btn btn-secondary" onclick="addGasket()">+ 추가</button>
+        <button class="btn btn-secondary" onclick="addGasket()">+ 가스켓 추가</button>
       </div>
       
       <!-- 4. U-볼트 -->
@@ -269,27 +283,27 @@
             <div class="stepper"><button onclick="adjQty('uqty', -1)">−</button><div class="stepper-separator"></div><input type="number" id="uqty" value="1" onchange="validateQty(this)"><div class="stepper-separator"></div><button onclick="adjQty('uqty', 1)">+</button></div>
           </div>
         </div>
-        <button class="btn btn-secondary" onclick="addUbolt()" style="margin-top:4px;">+ 추가</button>
+        <button class="btn btn-secondary" onclick="addUbolt()" style="margin-top:4px;">+ U-볼트 추가</button>
       </div>
 
       <!-- 5. 자유 입력 메모장 -->
       <div class="card">
-        <h2>📝 추가 메모 (자유 입력)</h2>
-        <textarea id="memoInput" rows="3" placeholder="예: 서포트 50A 300mm 추가 등 자유롭게 기입하세요."></textarea>
+        <h2>📝 추가 메모</h2>
+        <textarea id="memoInput" rows="2" placeholder="기타 자재를 자유롭게 기입하세요."></textarea>
       </div>
 
     </div>
 
     <!-- 🟢 오른쪽: 대기열 및 결과 컬럼 -->
     <div>
-      <div class="card" style="display:flex; flex-direction:column; padding-bottom:16px;">
+      <div class="card" style="display:flex; flex-direction:column; padding-bottom:16px;" id="queueCard">
         <h2>📋 등록 대기열 <span class="badge" id="qCount">0건</span></h2>
         
         <div id="qBody" class="queue-list"><div class="empty-state">등록된 항목이 없습니다.<br>좌측 양식에서 추가해주세요.</div></div>
         
         <div class="action-row">
-          <button class="btn btn-calc" onclick="calculate()">🧮 최종 집계하기</button>
-          <button class="btn btn-clear" onclick="clearAll()">🗑 초기화</button>
+          <button class="btn btn-calc" onclick="calculate()">🧮 최종 집계</button>
+          <button class="btn btn-clear" onclick="clearAll()">초기화</button>
         </div>
       </div>
 
@@ -301,47 +315,56 @@
   
   <textarea id="copyArea" style="position:absolute; left:-9999px;"></textarea>
   
-  <!-- 토스트 알림 요소 -->
-  <div id="toast">복사 완료! 카카오톡에 붙여넣기 하세요.</div>
+  <div id="toast"></div>
 
-  <!-- 최초 안내(튜토리얼) 팝업 모달 -->
+  <!-- 모바일 하단 플로팅 바 -->
+  <div id="floatingBar" class="floating-bar">
+    <div class="float-info">
+      🛒 대기열 <span id="floatCount" class="float-badge">0</span>건
+    </div>
+    <button class="float-btn" onclick="scrollToCalc()">🧮 결과보기</button>
+  </div>
+
+  <!-- 🚀 업그레이드된 튜토리얼 팝업 -->
   <div id="tutorialModal" class="modal-overlay">
     <div class="modal-content">
-      <h2>🎉 배관 자재 계산기 사용 꿀팁!</h2>
+      <h2>🎉 사용 가이드</h2>
+      <p class="guide-intro">도면에 있는 배관 자재를 <b>장바구니 담듯 추가</b>하면, 전체 필요 수량을 알아서 합산해주는 스마트 계산기입니다.</p>
+      
       <div class="guide-list">
         <div class="guide-item">
-          <div class="guide-icon">🔍</div>
+          <div class="guide-icon">🛒</div>
           <div class="guide-text">
-            <h4>외경으로 규격 찾기</h4>
-            <p>플랜지 외경(OD)만 알면 몇 K, 몇 A인지 알아서 찾아줍니다.</p>
+            <h4>1. 필요한 만큼 쏙쏙 담기</h4>
+            <p>규격을 선택하고 <b>[+ 추가]</b> 버튼을 눌러 대기열(장바구니)에 마음껏 담아주세요.</p>
           </div>
         </div>
         <div class="guide-item">
-          <div class="guide-icon">🔩</div>
+          <div class="guide-icon">🧠</div>
           <div class="guide-text">
-            <h4>볼트 길이 자동 연장</h4>
-            <p>'더블 너트 적용'을 켜면 해당 볼트 굵기(M)에 비례하여 <b>볼트 길이가 자동으로 길게 산출</b>됩니다.</p>
+            <h4>2. JIS 규격 자동 산출</h4>
+            <p>플랜지 규격만 넣으면 볼트 굵기, 길이, 수량이 알아서 계산됩니다. (더블너트 시 길이 연장!)</p>
           </div>
         </div>
         <div class="guide-item">
-          <div class="guide-icon">📦</div>
+          <div class="guide-icon">🧮</div>
           <div class="guide-text">
-            <h4>동일 자재 자동 병합</h4>
-            <p>서로 다른 포인트에 입력했어도 <b>같은 규격의 볼트, 너트, 가스켓은 깔끔하게 하나로 합쳐서</b> 보여줍니다.</p>
+            <h4>3. 중복 자재 완벽 합산</h4>
+            <p>하단의 <b>[최종 집계]</b>를 누르면 뿔뿔이 흩어진 동일 규격 자재들을 하나로 깔끔하게 묶어줍니다.</p>
           </div>
         </div>
         <div class="guide-item">
           <div class="guide-icon">📋</div>
           <div class="guide-text">
-            <h4>카톡/엑셀로 1초 만에 복사</h4>
-            <p>자유 메모까지 다 적은 후 [내역 복사] 버튼을 누르면 발주 준비 끝!</p>
+            <h4>4. 1초 만에 발주 준비 끝</h4>
+            <p>결과창의 <b>[내역 복사]</b>를 눌러 카카오톡이나 엑셀에 그대로 붙여넣기 하세요.</p>
           </div>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="btn btn-primary" onclick="closeTutorial()">확인했습니다, 시작할게요!</button>
+        <button class="btn btn-primary" style="height:48px; font-size:15px;" onclick="closeTutorial()">확인했습니다, 시작할게요!</button>
         <label class="check-wrap">
-          <input type="checkbox" id="chkHideTutorial"> 앞으로 이 안내 창 보지 않기
+          <input type="checkbox" id="chkHideTutorial"> 다시 보지 않기
         </label>
       </div>
     </div>
@@ -352,7 +375,6 @@
 const SIZES=[15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,550,600];
 const USIZES=[15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500];
 
-// U-볼트 JIS 표준 홀 간격 (C-C)
 const UBOLT_PITCH = {
   15: 34, 20: 40, 25: 46, 32: 56, 40: 62, 50: 74, 
   65: 90, 80: 104, 100: 130, 125: 156, 150: 182, 
@@ -374,12 +396,20 @@ const FLANGE_OD_DATA = [
 
 let queue = [];
 let lastCalculatedString = "";
+let toastTimeout;
 
 const sizeSel=document.getElementById('size'), ratingSel=document.getElementById('rating');
 const gsizeSel=document.getElementById('gsize'), gratingSel=document.getElementById('grating');
 const usizeSel=document.getElementById('usize');
 
-// 튜토리얼 팝업 관리
+function showToast(msg) {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.className = "show";
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+}
+
 function checkTutorial() {
   if (localStorage.getItem('hideTutorial') !== 'true') {
     document.getElementById('tutorialModal').classList.add('show');
@@ -393,7 +423,10 @@ function closeTutorial() {
   document.getElementById('tutorialModal').classList.remove('show');
 }
 
-// 수량 입력란 수동 입력 시 검증 로직
+function scrollToCalc() {
+  document.getElementById('queueCard').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 function validateQty(el) {
   let val = parseInt(el.value);
   if (isNaN(val) || val < 1) { el.value = 1; }
@@ -425,10 +458,10 @@ function findFlange() {
   resDiv.style.display = 'block';
   
   if (closestDiff > 25) {
-    resDiv.innerHTML = `<span style="color:#b91c1c; font-weight:700;">⚠️ 일치하는 규격이 없습니다. (최소 오차: ${closestDiff}mm)</span>`;
+    resDiv.innerHTML = `<span style="color:#b91c1c; font-weight:700;">⚠️ 일치 규격 없음 (최소 오차: ${closestDiff}mm)</span>`;
   } else {
-    let html = `🎯 <b>${targetOD}mm</b> 근접 규격 (오차 ${closestDiff}mm)<br><div style="margin-top:6px;">`;
-    matches.forEach(m => { html += `<span class="badge">${m.r} ${m.s}A (외경:${m.od}mm)</span>`; });
+    let html = `🎯 <b>${targetOD}mm</b> 근접 (오차 ${closestDiff}mm)<br><div style="margin-top:4px;">`;
+    matches.forEach(m => { html += `<span class="badge">${m.r} ${m.s}A (${m.od}mm)</span>`; });
     html += `</div>`;
     resDiv.innerHTML = html;
   }
@@ -477,6 +510,7 @@ function addPoint(){
   if(optGasket){ queue.push({type:'gasket', r, s, qty, gtype:gType, auto:true}); }
   
   document.getElementById('qty').value = 1;
+  showToast(`✅ 자재 추가됨 (${queue.length}건)`);
   renderQueue();
 }
 
@@ -485,6 +519,7 @@ function addGasket(){
   if(!DATA[r][s]) return;
   queue.push({type:'gasket', r, s, qty, gtype:type, auto:false});
   document.getElementById('gqty').value = 1;
+  showToast(`✅ 자재 추가됨 (${queue.length}건)`);
   renderQueue();
 }
 
@@ -492,12 +527,17 @@ function addUbolt(){
   const s=parseInt(usizeSel.value), qty=parseInt(document.getElementById('uqty').value)||1;
   queue.push({type:'ubolt', s, qty});
   document.getElementById('uqty').value = 1;
+  showToast(`✅ 자재 추가됨 (${queue.length}건)`);
   renderQueue();
 }
 
-function delPoint(i){ queue.splice(i,1); renderQueue(); }
+function delPoint(i){ 
+  queue.splice(i,1); 
+  renderQueue(); 
+}
+
 function clearAll(){ 
-  if(queue.length && !confirm('등록된 항목을 모두 지우시겠습니까?')) return; 
+  if(queue.length && !confirm('모두 지우시겠습니까?')) return; 
   queue=[]; 
   renderQueue(); 
   document.getElementById('result').style.display='none'; 
@@ -506,8 +546,21 @@ function clearAll(){
 
 function renderQueue(){
   const tb=document.getElementById('qBody');
-  document.getElementById('qCount').textContent=`${queue.length}건`;
+  const countBadge = document.getElementById('qCount');
+  const floatBar = document.getElementById('floatingBar');
+  const floatBadge = document.getElementById('floatCount');
   
+  countBadge.textContent=`${queue.length}건`;
+  
+  if(queue.length > 0) {
+    floatBar.classList.add('show');
+    floatBadge.textContent = queue.length;
+    floatBadge.classList.add('pop');
+    setTimeout(() => floatBadge.classList.remove('pop'), 200);
+  } else {
+    floatBar.classList.remove('show');
+  }
+
   if(!queue.length){
     tb.innerHTML='<div class="empty-state">등록된 항목이 없습니다.<br>좌측 양식에서 추가해주세요.</div>';
     return;
@@ -518,13 +571,13 @@ function renderQueue(){
     let title='', desc='', tags='';
     
     if(q.type==='bolt'){
-      title=`${q.r} ${q.s}A 플랜지 포인트`;
+      title=`${q.r} ${q.s}A 플랜지`;
       desc=`${q.bS}×${q.bL}L · ${q.bC}공/pt`;
-      if(q.ext) tags+=`<span class="q-tag blue">+5mm여유</span>`;
+      if(q.ext) tags+=`<span class="q-tag blue">+5mm</span>`;
       if(q.doubleNut) tags+=`<span class="q-tag blue">더블너트</span>`;
     }else if(q.type==='gasket'){
       title=`${q.r} ${q.s}A 가스켓`;
-      desc=`${q.gtype} ${q.auto ? '(포인트포함)' : ''}`;
+      desc=`${q.gtype}`;
     }else if(q.type==='ubolt'){
       title=`U-볼트 ${q.s}A`;
       desc=`홀 간격: ${UBOLT_PITCH[q.s] || '-'}mm`;
@@ -534,7 +587,7 @@ function renderQueue(){
       <div class="q-item">
         <div class="q-info">
           <div class="q-title">${title} <span class="q-qty">× ${q.qty}</span></div>
-          <div style="display:flex; align-items:center; gap:8px;">
+          <div style="display:flex; align-items:center; gap:6px;">
             ${desc ? `<span class="q-desc">${desc}</span>` : ''}
             ${tags ? `<div class="q-tags">${tags}</div>` : ''}
           </div>
@@ -550,7 +603,7 @@ function calculate(){
   const memoContent = document.getElementById('memoInput').value.trim();
   
   if(!queue.length && !memoContent){
-    alert('등록된 자재나 입력된 메모가 없습니다.');
+    alert('등록된 자재가 없습니다.');
     return;
   }
   
@@ -591,7 +644,7 @@ function calculate(){
   });
   const sU=Object.entries(uM).sort((a,b)=>parseInt(a[0])-parseInt(b[0]));
 
-  let copyText = "[배관 자재 집계 내역]\n\n";
+  let copyText = "[자재 집계 내역]\n\n";
   
   let boltRows = sB.length ? sB.map(([k,v]) => {
     copyText += `[볼트] ${k} : ${v}개\n`;
@@ -614,7 +667,7 @@ function calculate(){
   let uboltRows = sU.length ? sU.map(([k,v]) => {
     const p = UBOLT_PITCH[parseInt(k)] || '-';
     copyText += `[U-볼트] ${k} (C-C: ${p}mm) : ${v}set\n`;
-    return `<tr><td>${k} <span style="font-size:11px; color:var(--text-sub); display:block;">(C-C: ${p}mm)</span></td><td style="vertical-align:middle;"><b>${v}</b></td></tr>`;
+    return `<tr><td>${k} <span style="font-size:10px; color:var(--text-sub); display:block;">(C-C: ${p}mm)</span></td><td style="vertical-align:middle;"><b>${v}</b></td></tr>`;
   }).join('') : `<tr><td colspan="2" style="color:#94a3b8;">내역 없음</td></tr>`;
 
   if (memoContent) {
@@ -626,9 +679,9 @@ function calculate(){
   let memoHtml = '';
   if (memoContent) {
     memoHtml = `
-      <div class="table-sec" style="grid-column: 1 / -1; margin-top:8px;">
-        <h3>📝 추가 메모</h3>
-        <div style="background:var(--input-bg); padding:16px; border:1px solid var(--border); border-radius:var(--radius-md); white-space:pre-wrap; font-size:14px; color:var(--text-main); line-height:1.6;">${memoContent}</div>
+      <div class="table-sec" style="grid-column: 1 / -1; margin-top:4px;">
+        <h3 style="justify-content:center;">📝 추가 메모</h3>
+        <div style="background:var(--input-bg); padding:12px; border:1px solid var(--border); border-radius:var(--radius-md); white-space:pre-wrap; font-size:12.5px; color:var(--text-main); line-height:1.5;">${memoContent}</div>
       </div>
     `;
   }
@@ -638,12 +691,12 @@ function calculate(){
   
   resBox.innerHTML=`
     <h2>
-      ✅ 자재 최종 집계
+      ✅ 최종 집계
       <button class="btn-copy" onclick="copyResult()">📋 내역 복사</button>
     </h2>
     <div class="res-tables">
       <div class="table-sec">
-        <h3>🔩 볼트 (Bolt)</h3>
+        <h3 style="justify-content:center;">🔩 볼트 (Bolt)</h3>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>규격 (S × L)</th><th>수량(EA)</th></tr></thead>
@@ -652,7 +705,7 @@ function calculate(){
         </div>
       </div>
       <div class="table-sec">
-        <h3>🔩 너트 (Nut)</h3>
+        <h3 style="justify-content:center;">🔩 너트 (Nut)</h3>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>규격 (M)</th><th>수량(EA)</th></tr></thead>
@@ -661,7 +714,7 @@ function calculate(){
         </div>
       </div>
       <div class="table-sec">
-        <h3>⭕ 가스켓</h3>
+        <h3 style="justify-content:center;">⭕ 가스켓</h3>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>규격 및 재질</th><th>수량(장)</th></tr></thead>
@@ -670,7 +723,7 @@ function calculate(){
         </div>
       </div>
       <div class="table-sec">
-        <h3>⚓ U-볼트</h3>
+        <h3 style="justify-content:center;">⚓ U-볼트</h3>
         <div class="table-wrapper">
           <table>
             <thead><tr><th>규격 (호칭경)</th><th>수량(Set)</th></tr></thead>
@@ -681,18 +734,11 @@ function calculate(){
       ${memoHtml}
     </div>
     <div class="notice">
-      <b>※ 알림: 동일한 규격의 자재는 서로 다른 포인트에서 추가되었더라도 한 줄로 통합되어 합산됩니다.</b><br>
-      - 너트는 볼트 길이와 무관하게 <b>규격(M)별로 분리되어 총 수량이 독립적으로 집계</b>됩니다.<br>
-      - 더블 너트 적용 시 볼트 규격(M)에 비례하여 볼트 길이가 자동으로 연장 산출됩니다.
+      <b>※ 알림: 동일 규격 자재는 자동으로 병합 산출됩니다.</b><br>
+      - 너트는 볼트 길이와 무관하게 <b>규격(M)별로 독립 집계</b>됩니다.
     </div>
   `;
   resBox.scrollIntoView({behavior:'smooth', block:'start'});
-}
-
-function showToast() {
-  const toast = document.getElementById("toast");
-  toast.className = "show";
-  setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
 }
 
 function copyResult() {
@@ -702,7 +748,7 @@ function copyResult() {
     ta.value = lastCalculatedString;
     ta.select();
     document.execCommand('copy');
-    showToast();
+    showToast("✨ 복사 완료! 카카오톡에 붙여넣기 하세요.");
   } catch (err) {
     alert('복사 기능을 지원하지 않는 기기입니다.');
   }
@@ -712,7 +758,7 @@ function init(){
   USIZES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s+'A';usizeSel.appendChild(o);});
   refreshSizes(); refreshGSizes();
   updatePitch(); 
-  checkTutorial(); // 앱 로드 시 튜토리얼 확인
+  checkTutorial(); 
 }
 </script>
 </body>
