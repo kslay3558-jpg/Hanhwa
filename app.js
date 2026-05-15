@@ -1965,7 +1965,20 @@
     'install-app':       () => triggerInstall(),
     'install-dismiss':   () => { $('#installBanner').classList.remove('show'); try { localStorage.setItem('jis-install-dismissed','1'); } catch (e) {} },
     'lang-change':       (el2) => actionLangChange(el2.value || el2.dataset.lang),
-    'lang-pick':         (el2) => actionLangChange(el2.dataset.lang)
+    'lang-pick':         (el2) => actionLangChange(el2.dataset.lang),
+    'acc-toggle':        (el2) => {
+      const body = document.getElementById(el2.getAttribute('aria-controls'));
+      if (!body) return;
+      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
+      el2.setAttribute('aria-expanded', String(willOpen));
+      body.setAttribute('aria-hidden', String(!willOpen));
+      body.toggleAttribute('inert', !willOpen);
+      // Focus the first input when opening for accessibility
+      if (willOpen) {
+        const first = body.querySelector('input, select, textarea');
+        if (first) requestAnimationFrame(() => first.focus({ preventScroll: false }));
+      }
+    }
   };
 
   /**
@@ -2091,9 +2104,14 @@
       }
 
       // Enter in flange/gasket/ubolt area → add
+      // Guard: acc-head 버튼 자체에 포커스된 경우 Enter는 toggle 동작에 위임
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !inEditable) {
+        if (e.target.classList.contains('acc-head')) return;
         const card = e.target.closest('.card');
         if (card) {
+          // Only trigger if the accordion body is open (not inert/hidden)
+          const body = card.querySelector('.acc-body');
+          if (body && body.hasAttribute('inert')) return;
           if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); return; }
           if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); return; }
           if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); return; }
@@ -2104,6 +2122,8 @@
       if (e.key === 'Enter' && inNumber) {
         const card = e.target.closest('.card');
         if (card) {
+          const body = card.querySelector('.acc-body');
+          if (body && body.hasAttribute('inert')) return;
           if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); }
           else if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); }
           else if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); }

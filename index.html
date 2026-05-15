@@ -280,6 +280,79 @@
     font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
   }
 
+  /* ==========================================================================
+     Accordion Cards — 접이식 입력 섹션
+     - .acc-card: 기본 .card + 패딩 0 (헤더/바디가 각자 패딩)
+     - .acc-head: 클릭 가능한 섹션 헤더 버튼
+     - .acc-body: grid-template-rows 트랜지션으로 부드럽게 열림/닫힘
+     - .acc-body-inner: overflow:hidden 내부 래퍼 + 실제 폼 패딩
+     ========================================================================== */
+  .acc-card {
+    padding: 0;
+    overflow: hidden;
+  }
+  .acc-card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
+  .acc-head {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 14px 18px;
+    background: none; border: none; cursor: pointer;
+    text-align: left; color: inherit; font-family: inherit;
+    position: relative; overflow: hidden;
+    transition: background var(--m-fast);
+  }
+  .acc-head::before {
+    content: ''; position: absolute; left: 0; top: 50%;
+    width: 3px; height: 20px; transform: translateY(-50%);
+    background: var(--c-primary); border-radius: 0 2px 2px 0;
+    transition: opacity var(--m-fast);
+  }
+  .acc-head[aria-expanded="false"]::before { opacity: .45; }
+  .acc-head:hover, .acc-head:focus-visible { background: var(--c-primary-weak); outline: none; }
+  .acc-head:focus-visible { box-shadow: inset 0 0 0 2px var(--c-focus); }
+  .acc-head h2 {
+    flex: 1; min-width: 0; padding-left: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .acc-head-meta {
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+  .acc-badge {
+    font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+    background: var(--c-primary-weak); color: var(--c-primary-strong);
+    opacity: 0; transition: opacity var(--m-fast);
+    pointer-events: none;
+  }
+  .acc-head[aria-expanded="false"] .acc-badge.has-val { opacity: 1; }
+  .acc-chevron {
+    flex-shrink: 0; display: inline-block; width: 20px; height: 20px;
+    color: var(--c-text-mute); font-size: 1rem; font-style: normal;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--m-base);
+  }
+  .acc-head[aria-expanded="true"] .acc-chevron { transform: rotate(180deg); }
+  /* Divider line shows only when expanded */
+  .acc-head[aria-expanded="true"] {
+    border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
+  }
+  .acc-head[aria-expanded="false"] { border-bottom: 1px solid transparent; }
+  /* Body grid animation */
+  .acc-body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows .28s cubic-bezier(.4,0,.2,1);
+  }
+  .acc-body[aria-hidden="true"] { grid-template-rows: 0fr; }
+  .acc-body-inner {
+    overflow: hidden;
+    padding: 0 18px 16px;
+  }
+  @media (max-width: 480px) {
+    .acc-head { padding: 12px 14px; }
+    .acc-body-inner { padding: 0 14px 14px; }
+  }
+  /* Inside acc-body the first form-grid loses top margin gap */
+  .acc-body-inner > .form-grid:first-child { margin-top: 14px; }
+
   /* Forms */
   .form-grid { display: grid; gap: 10px; margin-bottom: 12px; }
   .col-3 { grid-template-columns: repeat(3, 1fr); }
@@ -761,143 +834,178 @@
     <!-- ============================== COLUMN 1: 입력 ============================== -->
     <section class="col" data-i18n-attr="aria-label:sec.input" aria-label="자재 입력">
 
-      <!-- 1. 플랜지 외경 역산 -->
-      <div class="card">
-        <div class="card-head"><h2><span data-i18n="card.find">🔍 플랜지 찾기</span> <small style="font-weight:600;color:var(--c-text-mute)" data-i18n="card.find_sub">(외경 역산)</small></h2></div>
-        <div class="form-grid col-auto" style="margin-bottom:8px;">
-          <div class="field">
-            <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
-            <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
-          </div>
-          <div class="field">
-            <label aria-hidden="true">&nbsp;</label>
-            <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
+      <!-- 1. 플랜지 외경 역산 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFind">
+          <h2><span data-i18n="card.find">🔍 플랜지 찾기</span> <small style="font-weight:600;color:var(--c-text-mute)" data-i18n="card.find_sub">(외경 역산)</small></h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyFind" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-auto" style="margin-bottom:8px;">
+              <div class="field">
+                <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
+                <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
+              </div>
+              <div class="field">
+                <label aria-hidden="true">&nbsp;</label>
+                <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
+              </div>
+            </div>
+            <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
           </div>
         </div>
-        <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
       </div>
 
-      <!-- 2. 플랜지 포인트 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.flange">🔩 플랜지 포인트</h2></div>
-        <div class="form-grid col-3">
-          <div class="field">
-            <label for="rating" data-i18n="form.rating">압력등급</label>
-            <select id="rating" data-action="rating-change">
-              <option value="5K">5K</option>
-              <option value="10K" selected>10K</option>
-              <option value="16K">16K</option>
-              <option value="30K">30K</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="size" data-i18n="form.size">호칭경 (A)</label>
-            <select id="size" aria-describedby="dataWarn"></select>
-          </div>
-          <div class="field full-on-mobile">
-            <label for="qty" data-i18n="form.qty_pt">포인트 개소</label>
-            <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_pt" aria-label="포인트 개소 조절">
-              <button type="button" data-action="qty-dec" data-target="qty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
-              <input type="number" id="qty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:form.qty_pt" aria-label="포인트 개소">
-              <button type="button" data-action="qty-inc" data-target="qty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+      <!-- 2. 플랜지 포인트 (기본 열림) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFlange">
+          <h2 data-i18n="card.flange">🔩 플랜지 포인트</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyFlange" class="acc-body" aria-hidden="false">
+          <div class="acc-body-inner">
+            <div class="form-grid col-3">
+              <div class="field">
+                <label for="rating" data-i18n="form.rating">압력등급</label>
+                <select id="rating" data-action="rating-change">
+                  <option value="5K">5K</option>
+                  <option value="10K" selected>10K</option>
+                  <option value="16K">16K</option>
+                  <option value="30K">30K</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="size" data-i18n="form.size">호칭경 (A)</label>
+                <select id="size" aria-describedby="dataWarn"></select>
+              </div>
+              <div class="field full-on-mobile">
+                <label for="qty" data-i18n="form.qty_pt">포인트 개소</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_pt" aria-label="포인트 개소 조절">
+                  <button type="button" data-action="qty-dec" data-target="qty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="qty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:form.qty_pt" aria-label="포인트 개소">
+                  <button type="button" data-action="qty-inc" data-target="qty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
             </div>
+            <div id="dataWarn" class="search-res" role="status" aria-live="polite"></div>
+
+            <div class="option-box">
+              <div class="toggle-row">
+                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게</span>
+                <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)</span>
+                <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <span class="toggle-title" id="lblGsk" data-i18n="opt.gsk">가스켓 포함</span>
+                <div class="toggle-extra">
+                  <label class="sr-only" for="gTypeInFlange" data-i18n="aria.gsk_type">가스켓 종류</label>
+                  <select id="gTypeInFlange" class="gasket-select" data-i18n-attr="aria-label:aria.gsk_type_in" aria-label="포함될 가스켓 종류">
+                    <option value="일반"     selected data-i18n="gsk.normal">일반(RF)</option>
+                    <option value="논레이어"           data-i18n="gsk.nl">논레이어</option>
+                    <option value="그라파이트"         data-i18n="gsk.gr">그라파이트</option>
+                    <option value="메탈"               data-i18n="gsk.metal">메탈</option>
+                    <option value="풀페이스"           data-i18n="gsk.full">풀페이스</option>
+                  </select>
+                  <label class="switch"><input type="checkbox" id="optGasket" checked aria-labelledby="lblGsk"><span class="slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" data-action="add-bolt"><span data-i18n="btn.add_pt">＋ 포인트 추가</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.enter">(Enter)</small></button>
           </div>
         </div>
-        <div id="dataWarn" class="search-res" role="status" aria-live="polite"></div>
-
-        <div class="option-box">
-          <div class="toggle-row">
-            <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게</span>
-            <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)</span>
-            <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-title" id="lblGsk" data-i18n="opt.gsk">가스켓 포함</span>
-            <div class="toggle-extra">
-              <label class="sr-only" for="gTypeInFlange" data-i18n="aria.gsk_type">가스켓 종류</label>
-              <select id="gTypeInFlange" class="gasket-select" data-i18n-attr="aria-label:aria.gsk_type_in" aria-label="포함될 가스켓 종류">
-                <option value="일반"     selected data-i18n="gsk.normal">일반(RF)</option>
-                <option value="논레이어"           data-i18n="gsk.nl">논레이어</option>
-                <option value="그라파이트"         data-i18n="gsk.gr">그라파이트</option>
-                <option value="메탈"               data-i18n="gsk.metal">메탈</option>
-                <option value="풀페이스"           data-i18n="gsk.full">풀페이스</option>
-              </select>
-              <label class="switch"><input type="checkbox" id="optGasket" checked aria-labelledby="lblGsk"><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn btn-primary" data-action="add-bolt"><span data-i18n="btn.add_pt">＋ 포인트 추가</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.enter">(Enter)</small></button>
       </div>
 
-      <!-- 3. 가스켓 단독 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.gasket">⭕ 추가 가스켓</h2></div>
-        <div class="form-grid col-2">
-          <div class="field">
-            <label for="grating" data-i18n="form.rating">압력등급</label>
-            <select id="grating" data-action="grating-change">
-              <option value="5K">5K</option>
-              <option value="10K" selected>10K</option>
-              <option value="16K">16K</option>
-              <option value="30K">30K</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="gsize" data-i18n="form.size">호칭경 (A)</label>
-            <select id="gsize"></select>
-          </div>
-          <div class="field">
-            <label for="gtype" data-i18n="form.gtype">재질/타입</label>
-            <select id="gtype">
-              <option value="일반"     data-i18n="gsk.normal">일반(RF)</option>
-              <option value="논레이어"  data-i18n="gsk.nl">논레이어</option>
-              <option value="그라파이트" data-i18n="gsk.gr">그라파이트</option>
-              <option value="메탈"      data-i18n="gsk.metal">메탈</option>
-              <option value="풀페이스"  data-i18n="gsk.full">풀페이스</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="gqty" data-i18n="form.qty_sht">수량 (장)</label>
-            <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gsk" aria-label="가스켓 수량 조절">
-              <button type="button" data-action="qty-dec" data-target="gqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
-              <input type="number" id="gqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gsk_in" aria-label="가스켓 수량">
-              <button type="button" data-action="qty-inc" data-target="gqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+      <!-- 3. 가스켓 단독 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasket">
+          <h2 data-i18n="card.gasket">⭕ 추가 가스켓</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyGasket" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-2">
+              <div class="field">
+                <label for="grating" data-i18n="form.rating">압력등급</label>
+                <select id="grating" data-action="grating-change">
+                  <option value="5K">5K</option>
+                  <option value="10K" selected>10K</option>
+                  <option value="16K">16K</option>
+                  <option value="30K">30K</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="gsize" data-i18n="form.size">호칭경 (A)</label>
+                <select id="gsize"></select>
+              </div>
+              <div class="field">
+                <label for="gtype" data-i18n="form.gtype">재질/타입</label>
+                <select id="gtype">
+                  <option value="일반"     data-i18n="gsk.normal">일반(RF)</option>
+                  <option value="논레이어"  data-i18n="gsk.nl">논레이어</option>
+                  <option value="그라파이트" data-i18n="gsk.gr">그라파이트</option>
+                  <option value="메탈"      data-i18n="gsk.metal">메탈</option>
+                  <option value="풀페이스"  data-i18n="gsk.full">풀페이스</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="gqty" data-i18n="form.qty_sht">수량 (장)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gsk" aria-label="가스켓 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="gqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="gqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gsk_in" aria-label="가스켓 수량">
+                  <button type="button" data-action="qty-inc" data-target="gqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
             </div>
+            <button class="btn btn-secondary" data-action="add-gasket" data-i18n="btn.add_gsk">＋ 가스켓 추가</button>
           </div>
         </div>
-        <button class="btn btn-secondary" data-action="add-gasket" data-i18n="btn.add_gsk">＋ 가스켓 추가</button>
       </div>
 
-      <!-- 4. U-볼트 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.ubolt">⚓ U-볼트 추가</h2></div>
-        <div class="form-grid col-2">
-          <div class="field">
-            <label for="usize" data-i18n="form.size">호칭경 (A)</label>
-            <select id="usize" data-action="usize-change"></select>
-            <div id="uPitchInfo" class="pitch-info">홀 간격: -</div>
-          </div>
-          <div class="field">
-            <label for="uqty" data-i18n="form.qty_set">수량 (Set)</label>
-            <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_ub" aria-label="U-볼트 수량 조절">
-              <button type="button" data-action="qty-dec" data-target="uqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
-              <input type="number" id="uqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_ub_in" aria-label="U-볼트 수량">
-              <button type="button" data-action="qty-inc" data-target="uqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+      <!-- 4. U-볼트 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyUbolt">
+          <h2 data-i18n="card.ubolt">⚓ U-볼트 추가</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyUbolt" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-2">
+              <div class="field">
+                <label for="usize" data-i18n="form.size">호칭경 (A)</label>
+                <select id="usize" data-action="usize-change"></select>
+                <div id="uPitchInfo" class="pitch-info">홀 간격: -</div>
+              </div>
+              <div class="field">
+                <label for="uqty" data-i18n="form.qty_set">수량 (Set)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_ub" aria-label="U-볼트 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="uqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="uqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_ub_in" aria-label="U-볼트 수량">
+                  <button type="button" data-action="qty-inc" data-target="uqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
             </div>
+            <button class="btn btn-secondary" data-action="add-ubolt" data-i18n="btn.add_ub">＋ U-볼트 추가</button>
           </div>
         </div>
-        <button class="btn btn-secondary" data-action="add-ubolt" data-i18n="btn.add_ub">＋ U-볼트 추가</button>
       </div>
 
-      <!-- 5. 메모 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.memo">📝 추가 메모</h2></div>
-        <label class="sr-only" for="memoInput" data-i18n="form.memo_label">자유 메모</label>
-        <textarea id="memoInput" rows="3" data-i18n-attr="placeholder:form.memo_ph" placeholder="기타 자재 또는 비고를 자유롭게 기입하세요."></textarea>
+      <!-- 5. 메모 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
+          <h2 data-i18n="card.memo">📝 추가 메모</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyMemo" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <label class="sr-only" for="memoInput" data-i18n="form.memo_label">자유 메모</label>
+            <textarea id="memoInput" rows="3" data-i18n-attr="placeholder:form.memo_ph" placeholder="기타 자재 또는 비고를 자유롭게 기입하세요." style="margin-top:14px;"></textarea>
+          </div>
+        </div>
       </div>
     </section>
 
