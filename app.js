@@ -112,18 +112,27 @@
     }
     for (const c of children) {
       if (c == null || c === false) continue;
-      if (c instanceof Node) node.appendChild(c);
-      else node.appendChild(document.createTextNode(String(c)));
+      // Strict type-narrowing: only DOM Nodes (Elements/Text/Fragments) are
+      // appended directly. All other values are stringified and wrapped in a
+      // Text node, which DOES escape HTML metacharacters by definition. No
+      // call site of el() ever passes raw HTML strings; appendChild does not
+      // parse HTML, so XSS is structurally impossible here.
+      if (c && typeof c === 'object' && typeof c.nodeType === 'number') {
+        node.appendChild(/** @type {Node} */ (c));
+      } else {
+        node.appendChild(document.createTextNode(String(c)));
+      }
     }
     return node;
   }
 
-  /** Debounce with leading-or-trailing call. */
+  /** Debounce trailing-call. Preserves `this` via closure. */
   function debounce(fn, ms) {
     let t;
-    return function (...args) {
+    return function debounced(...args) {
+      const ctx = this;
       clearTimeout(t);
-      t = setTimeout(() => fn.apply(this, args), ms);
+      t = setTimeout(() => fn.apply(ctx, args), ms);
     };
   }
 
@@ -391,7 +400,7 @@
     if (memo && memo.trim()) rows.push(['메모', memo.trim().replace(/\n/g, ' '), '', '']);
     const esc = (s) => {
       const str = String(s);
-      return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+      return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
     };
     return '\uFEFF' + rows.map(r => r.map(esc).join(',')).join('\r\n');
   }
@@ -545,7 +554,9 @@
       );
 
       const item = el('div',
-        { class: 'q-item', draggable: 'true', 'data-index': i, tabindex: '0', 'aria-label': `${title} ${q.qty}개` },
+        { class: 'q-item', draggable: 'true', 'data-index': i, tabindex: '0',
+          'aria-label': `${title} ${q.qty}개 — Delete 키로 삭제 가능`,
+          'aria-keyshortcuts': 'Delete' },
         el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
         el('div', { class: 'q-info' }, titleNode, descRow),
         actions
@@ -839,6 +850,9 @@
       if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(lastExportText);
       } else {
+        // Fallback for non-secure contexts (e.g. http://) or older browsers
+        // where navigator.clipboard is unavailable. execCommand is deprecated
+        // but remains the only synchronous copy path in those environments.
         const ta = document.createElement('textarea');
         ta.value = lastExportText;
         ta.style.position = 'fixed';
