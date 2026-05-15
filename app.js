@@ -984,13 +984,8 @@
     canRedo() { return this.future.length > 0; },
 
     save() {
-      try {
-        const data = {
-          currentProject: this.currentProject,
-          projects: this.projects
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      } catch (e) { /* quota or disabled */ }
+      // Project data is intentionally NOT persisted — app always starts fresh.
+      // Only language preference (LANG_KEY) is saved across sessions.
     },
     load() {
       try {
@@ -1871,7 +1866,7 @@
   /** ----- Theme ----- */
   function applyTheme(mode) {
     document.documentElement.setAttribute('data-theme', mode);
-    try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+    // Theme is intentionally NOT persisted — only language setting is saved.
     const btn = $('#btnTheme');
     btn.textContent = mode === 'dark' ? '☀️' : mode === 'light' ? '🌙' : '🌗';
     const modeName = mode === 'auto' ? t('t.theme_auto') : mode === 'dark' ? t('t.theme_dark') : t('t.theme_light');
@@ -2170,13 +2165,11 @@
     Lang.set(Lang.detect());
     applyI18n();
 
-    // Theme
-    let savedTheme = 'auto';
-    try { savedTheme = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
-    applyTheme(savedTheme);
+    // Theme (always start fresh — not persisted)
+    applyTheme('auto');
 
-    // Load store
-    Store.load();
+    // Store is intentionally NOT loaded — app always starts with a fresh state.
+    // Only language preference is persisted across sessions.
 
     // Populate selects
     View.populateSizeSelect($('#size'), $('#rating').value);
