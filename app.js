@@ -1772,8 +1772,8 @@
     } else if (item.type === 'gasket') {
       const r = $('#editGRating').value;
       const s = parseInt($('#editGSize').value, 10);
-      const t = $('#editGType').value;
-      const newItem = buildGasketItem(r, s, item.qty, t, item.auto);
+      const gtype = $('#editGType').value;
+      const newItem = buildGasketItem(r, s, item.qty, gtype, item.auto);
       if (newItem) Store.queue[i] = newItem;
     }
     Store.save();

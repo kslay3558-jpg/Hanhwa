@@ -137,10 +137,13 @@
     margin-bottom: 14px;
     display: flex; align-items: center; gap: 12px;
     border: 1px solid var(--c-border);
+    flex-wrap: wrap; row-gap: 8px;
   }
-  .app-header .brand { flex: 1; min-width: 0; }
+  /* brand: 최소 200px flex-basis로 controls에 밀려 0px가 되는 현상 방지 */
+  .app-header .brand { flex: 1 1 200px; min-width: 0; }
   .app-header .brand p { color: var(--c-text-mute); font-size: .8rem; margin-top: 2px; }
-  .app-header .controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  /* controls: min-width 0으로 flex-shrink가 제대로 동작하게 함 */
+  .app-header .controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-width: 0; }
 
   /* Project picker */
   .proj-picker { display: flex; align-items: center; gap: 4px; }
