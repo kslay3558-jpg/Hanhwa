@@ -691,7 +691,11 @@
     border: 2.5px solid #fff; border-radius: 50%; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     font-size: 1.4rem; box-shadow: 0 4px 18px rgba(245,158,11,.45), 0 2px 8px rgba(0,0,0,.18);
-    transition: transform var(--m-base), background var(--m-base), box-shadow var(--m-base);
+    transition: bottom var(--m-spring), transform var(--m-base), background var(--m-base), box-shadow var(--m-base);
+  }
+  /* Lift FAB above floating bar when bar is visible */
+  body:has(.floating-bar.show) .cart-fab {
+    bottom: calc(74px + env(safe-area-inset-bottom));
   }
   .cart-fab:hover { background: #d97706; transform: scale(1.07); box-shadow: 0 6px 22px rgba(217,119,6,.5), 0 2px 8px rgba(0,0,0,.2); }
   .cart-fab:active { transform: scale(.95); }
