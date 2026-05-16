@@ -232,6 +232,8 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
       'r.memo_title':         '📝 추가 메모',
+      'r.sec_kind':           '종',
+      'r.sec_kinds':          '종',
       'r.notice_pre':         '※ 자동 합산됨',
       'r.notice_total':       ' · 총 {n} 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2',
       // Floating bar
@@ -461,6 +463,8 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(không có pitch)',
       'r.memo_title':         '📝 Ghi chú thêm',
+      'r.sec_kind':           'loại',
+      'r.sec_kinds':          'loại',
       'r.notice_pre':         '※ Đã tự động cộng dồn',
       'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
       'fb.queue':             '🛒 Hàng chờ',
@@ -681,6 +685,8 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(pitch tdk diketahui)',
       'r.memo_title':         '📝 Catatan tambahan',
+      'r.sec_kind':           'jenis',
+      'r.sec_kinds':          'jenis',
       'r.notice_pre':         '※ Otomatis dijumlah',
       'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
       'fb.queue':             '🛒 Antrean',
@@ -1390,33 +1396,56 @@
       card.classList.add('show');
 
       const head = el('div', { class: 'res-head' },
-        el('h2', null, t('r.title')),
-        el('div', { class: 'res-actions' },
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy'))
-        )
+        el('h2', null, t('r.title'))
       );
       card.appendChild(head);
 
+      // Summary chips (per-category totals)
+      const totB = agg.sB.reduce((s, [, v]) => s + v, 0);
+      const totN = agg.sN.reduce((s, [, v]) => s + v, 0);
+      const totG = agg.sG.reduce((s, [, v]) => s + v, 0);
+      const totU = agg.sU.reduce((s, [, v]) => s + v, 0);
+      const summary = el('div', { class: 'res-summary' });
+      const chipData = [
+        { cls: 'bolt', label: t('r.bolt'), val: totB, unit: t('r.col_qty_ea') },
+        { cls: 'nut',  label: t('r.nut'),  val: totN, unit: t('r.col_qty_ea') },
+        { cls: 'gsk',  label: t('r.gsk'),  val: totG, unit: t('r.col_qty_sheet') },
+        { cls: 'ub',   label: t('r.ub'),   val: totU, unit: t('r.col_qty_set') },
+      ];
+      for (const { cls, label, val, unit } of chipData) {
+        const valNode = el('span', { class: 'chip-val' }, '0');
+        const chip = el('div', { class: `res-summary-chip res-chip-${cls}` },
+          el('span', { class: 'chip-label' }, label),
+          valNode,
+          el('span', { class: 'chip-label' }, unit)
+        );
+        summary.appendChild(chip);
+        countUp(valNode, val, 600);
+      }
+      card.appendChild(summary);
+
       const tables = el('div', { class: 'res-tables' },
-        this._tableSection(t('r.bolt'), [t('r.col_bolt_spec'), t('r.col_qty_ea')],    agg.sB),
-        this._tableSection(t('r.nut'),  [t('r.col_nut_spec'),  t('r.col_qty_ea')],    agg.sN),
-        this._tableSection(t('r.gsk'),  [t('r.col_gsk_spec'),  t('r.col_qty_sheet')], agg.sG, true),
-        this._tableSection(t('r.ub'),   [t('r.col_ub_spec'),   t('r.col_qty_set')],   agg.sU, false, true)
+        this._tableSection(t('r.bolt'), [t('r.col_bolt_spec'), t('r.col_qty_ea')],    agg.sB, false, false, 'bolt'),
+        this._tableSection(t('r.nut'),  [t('r.col_nut_spec'),  t('r.col_qty_ea')],    agg.sN, false, false, 'nut'),
+        this._tableSection(t('r.gsk'),  [t('r.col_gsk_spec'),  t('r.col_qty_sheet')], agg.sG, true,  false, 'gsk'),
+        this._tableSection(t('r.ub'),   [t('r.col_ub_spec'),   t('r.col_qty_set')],   agg.sU, false, true,  'ub')
       );
       card.appendChild(tables);
 
       if (memo && memo.trim()) {
         const memoBox = el('div', { class: 'table-sec', style: 'margin-top:12px;' },
-          el('h3', null, t('r.memo_title')),
+          el('h3', null,
+            el('span', { class: 'sec-title-left' },
+              el('span', { class: 'sec-bar sec-bar-bolt' }),
+              document.createTextNode(t('r.memo_title'))
+            )
+          ),
           el('div', { style: 'background:var(--c-surface-2);padding:12px;border:1px solid var(--c-border);border-radius:var(--r-md);white-space:pre-wrap;font-size:.85rem;line-height:1.55;' }, memo.trim())
         );
         card.appendChild(memoBox);
       }
 
-      const totalCount = agg.sB.reduce((s, [, v]) => s + v, 0)
-                       + agg.sN.reduce((s, [, v]) => s + v, 0)
-                       + agg.sG.reduce((s, [, v]) => s + v, 0)
-                       + agg.sU.reduce((s, [, v]) => s + v, 0);
+      const totalCount = totB + totN + totG + totU;
       const totalNode = el('span', null, '0');
       const noticeParts = t('r.notice_total', { n: '\u0001' }).split('\u0001');
       const notice = el('div', { class: 'notice' },
@@ -1427,13 +1456,25 @@
       card.appendChild(notice);
       countUp(totalNode, totalCount, 700);
 
+      // Action strip (copy / CSV / share / print)
+      const strip = el('div', { class: 'res-action-strip' },
+        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
+        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'export-csv' }, t('r.csv')),
+        ...(navigator.share ? [el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'share-result' }, t('r.share'))] : []),
+        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'print-result' }, t('r.print'))
+      );
+      card.appendChild(strip);
+
       // Scroll into view (mobile)
       if (window.matchMedia('(max-width: 1199px)').matches) {
         card.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     },
 
-    _tableSection(title, headers, rows, leftAlign = false, extraDesc = false) {
+    _tableSection(title, headers, rows, leftAlign = false, extraDesc = false, colorKey = 'bolt') {
+      const countBadge = rows.length
+        ? el('span', { class: `sec-count-badge sec-badge-${colorKey}` }, String(rows.length) + (rows.length === 1 ? ' ' + t('r.sec_kind') : ' ' + t('r.sec_kinds')))
+        : null;
       const thead = el('thead', null, el('tr', null, ...headers.map(h => el('th', null, h))));
       const tbody = el('tbody');
       if (!rows.length) {
@@ -1456,7 +1497,13 @@
         }
       }
       return el('div', { class: 'table-sec' },
-        el('h3', null, title),
+        el('h3', null,
+          el('span', { class: 'sec-title-left' },
+            el('span', { class: `sec-bar sec-bar-${colorKey}` }),
+            document.createTextNode(title)
+          ),
+          countBadge
+        ),
         el('div', { class: 'table-wrapper' }, el('table', null, thead, tbody))
       );
     },
