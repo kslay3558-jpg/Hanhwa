@@ -214,9 +214,8 @@
       'r.sc_copy':            '복사',
       'r.title':              '✅ 최종 집계',
       'r.copy':               '📋 복사',
-      'r.csv':                '⬇ CSV',
+      'r.save_image':         '🖼 이미지 저장',
       'r.share':              '🔗 공유',
-      'r.print':              '🖨 인쇄',
       'r.bolt':               '🔩 볼트 (Bolt)',
       'r.nut':                '🔩 너트 (Nut)',
       'r.gsk':                '⭕ 가스켓',
@@ -295,7 +294,7 @@
       't.no_items':           '⚠️ 등록된 자재가 없습니다.',
       't.copy_ok':            '✨ 복사 완료!',
       't.copy_fail':          '⚠️ 복사 실패',
-      't.csv_dl':             '⬇ CSV 다운로드',
+      't.img_save':           '🖼 이미지 저장됨',
       't.share_unsupported':  '🔗 공유 미지원: 복사로 대체',
       't.dup':                '⎘ 항목 복제됨',
       't.saved':              '💾 저장됨',
@@ -450,9 +449,8 @@
       'r.sc_copy':            'Sao chép',
       'r.title':              '✅ Tổng hợp cuối',
       'r.copy':               '📋 Sao chép',
-      'r.csv':                '⬇ CSV',
+      'r.save_image':         '🖼 Lưu ảnh',
       'r.share':              '🔗 Chia sẻ',
-      'r.print':              '🖨 In',
       'r.bolt':               '🔩 Bu lông (Bolt)',
       'r.nut':                '🔩 Đai ốc (Nut)',
       'r.gsk':                '⭕ Gioăng',
@@ -525,7 +523,7 @@
       't.no_items':           '⚠️ Chưa có vật tư nào.',
       't.copy_ok':            '✨ Đã sao chép!',
       't.copy_fail':          '⚠️ Sao chép thất bại',
-      't.csv_dl':             '⬇ Đang tải CSV',
+      't.img_save':           '🖼 Đã lưu ảnh',
       't.share_unsupported':  '🔗 Không hỗ trợ chia sẻ: đã sao chép thay thế',
       't.dup':                '⎘ Đã nhân đôi mục',
       't.saved':              '💾 Đã lưu',
@@ -677,9 +675,8 @@
       'r.sc_copy':            'Salin',
       'r.title':              '✅ Rekap akhir',
       'r.copy':               '📋 Salin',
-      'r.csv':                '⬇ CSV',
+      'r.save_image':         '🖼 Simpan Gambar',
       'r.share':              '🔗 Bagikan',
-      'r.print':              '🖨 Cetak',
       'r.bolt':               '🔩 Baut (Bolt)',
       'r.nut':                '🔩 Mur (Nut)',
       'r.gsk':                '⭕ Gasket',
@@ -752,7 +749,7 @@
       't.no_items':           '⚠️ Belum ada material terdaftar.',
       't.copy_ok':            '✨ Tersalin!',
       't.copy_fail':          '⚠️ Gagal menyalin',
-      't.csv_dl':             '⬇ Mengunduh CSV',
+      't.img_save':           '🖼 Gambar tersimpan',
       't.share_unsupported':  '🔗 Berbagi tidak didukung: disalin sebagai gantinya',
       't.dup':                '⎘ Item digandakan',
       't.saved':              '💾 Tersimpan',
@@ -1364,8 +1361,7 @@
       }
 
       const titleNode = el('div', { class: 'q-title' },
-        el('span', { class: 'q-title-text' }, title),
-        el('span', { class: 'q-qty' }, '× ' + q.qty)
+        el('span', { class: 'q-title-text' }, title)
       );
 
       const tagsRow = tags.length
@@ -1385,7 +1381,6 @@
         (q.type === 'bolt' || q.type === 'gasket')
           ? el('button', { class: 'icon-btn', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, '✎')
           : null,
-        el('button', { class: 'icon-btn', 'data-action': 'q-dup', 'data-index': i, title: t('q.dup'), 'aria-label': t('q.dup') }, '⎘'),
         el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
       );
 
@@ -1457,12 +1452,10 @@
       card.appendChild(notice);
       countUp(totalNode, totalCount, 600);
 
-      // Action strip (copy / CSV / share / print)
+      // Action strip (copy / save-image)
       const strip = el('div', { class: 'res-action-strip' },
         el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
-        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'export-csv' }, t('r.csv')),
-        ...(navigator.share ? [el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'share-result' }, t('r.share'))] : []),
-        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'print-result' }, t('r.print'))
+        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'save-image' }, t('r.save_image'))
       );
       card.appendChild(strip);
 
@@ -1768,6 +1761,201 @@
   function actionPrintResult() {
     if (!lastExportText) actionCalculate();
     window.print();
+  }
+
+  /** Save result as PNG image via canvas. */
+  function actionSaveImage() {
+    if (!lastExportText) { actionCalculate(); if (!lastExportText) return; }
+
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    const bg      = isDark ? '#1a2035' : '#ffffff';
+    const surface = isDark ? '#1e2b42' : '#f8fafc';
+    const fg      = isDark ? '#e2e8f0' : '#1e293b';
+    const fgSub   = isDark ? '#94a3b8' : '#64748b';
+    const fgMute  = isDark ? '#475569'  : '#94a3b8';
+    const border  = isDark ? '#2d3f5c' : '#e2e8f0';
+    const primary = isDark ? '#60a5fa' : '#3b82f6';
+    const success = isDark ? '#4ade80' : '#22c55e';
+
+    const agg = aggregate(Store.queue);
+    const allRows = [
+      ...agg.sB.map(([k, v]) => [t('r.tag_bolt'), k, String(v)]),
+      ...agg.sN.map(([k, v]) => [t('r.tag_nut'),  k, String(v)]),
+      ...agg.sG.map(([k, v]) => [t('r.tag_gsk'),  k, String(v)]),
+      ...agg.sU.map(([k, v]) => {
+        const p = UBOLT_PITCH[parseInt(k, 10)];
+        return [t('r.tag_ub'), k + (p ? ` (C-C ${p}mm)` : ''), String(v)];
+      }),
+    ];
+
+    const projName = (Store.projects[Store.currentProject] || {}).name || '';
+    const memo = Store.memo ? Store.memo.trim() : '';
+
+    const pad   = 28;
+    const cW    = 620;
+    const rowH  = 38;
+    const thH   = 40;
+    const titleH = projName ? 68 : 48;
+    const memoLines = memo ? memo.split('\n') : [];
+    const memoH = memo ? 14 + memoLines.length * 20 + 20 : 0;
+    const cH    = pad + titleH + thH + Math.max(allRows.length, 1) * rowH + memoH + 36 + pad;
+
+    const dpr    = window.devicePixelRatio || 2;
+    const canvas = document.createElement('canvas');
+    canvas.width  = cW * dpr;
+    canvas.height = cH * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const font = (w, sz) => `${w} ${sz}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+    const rRect = (x, y, w, h, r) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+      ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+      ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+      ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r);
+      ctx.closePath();
+    };
+
+    // Background
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, cW, cH);
+
+    // Title
+    let y = pad;
+    ctx.fillStyle = success;
+    ctx.font = font('800', 17);
+    ctx.fillText(t('r.title'), pad, y + 20);
+    y += 26;
+    if (projName) {
+      ctx.fillStyle = fgSub;
+      ctx.font = font('400', 12);
+      ctx.fillText(projName, pad, y + 14);
+      y += 20;
+    }
+    y += 10;
+
+    // Table
+    const tableTop = y;
+    const tableH   = thH + Math.max(allRows.length, 1) * rowH;
+
+    const colCatW  = 90;
+    const colQtyW  = 70;
+    const colSpecW = cW - pad * 2 - colCatW - colQtyW;
+    const xCat  = pad;
+    const xSpec = pad + colCatW;
+    const xQty  = pad + colCatW + colSpecW;
+
+    // Table outer border
+    rRect(pad, tableTop, cW - pad * 2, tableH, 8);
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.save();
+    rRect(pad, tableTop, cW - pad * 2, tableH, 8);
+    ctx.clip();
+
+    // Header
+    ctx.fillStyle = surface;
+    ctx.fillRect(pad, tableTop, cW - pad * 2, thH);
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad, tableTop + thH); ctx.lineTo(xQty + colQtyW, tableTop + thH);
+    ctx.stroke();
+    ctx.fillStyle = fgSub;
+    ctx.font = font('700', 10);
+    ctx.textAlign = 'center';
+    ctx.fillText(t('x.csv_cat').toUpperCase(),  xCat + colCatW / 2,   tableTop + thH / 2 + 4);
+    ctx.textAlign = 'left';
+    ctx.fillText(t('x.csv_spec').toUpperCase(), xSpec + 10,           tableTop + thH / 2 + 4);
+    ctx.textAlign = 'right';
+    ctx.fillText(t('x.csv_qty').toUpperCase(),  xQty  + colQtyW - 10, tableTop + thH / 2 + 4);
+    ctx.textAlign = 'left';
+
+    // Data rows
+    if (allRows.length === 0) {
+      ctx.fillStyle = fgMute;
+      ctx.font = font('400', 12);
+      ctx.textAlign = 'center';
+      ctx.fillText(t('r.no_rows'), pad + (cW - pad * 2) / 2, tableTop + thH + rowH / 2 + 5);
+      ctx.textAlign = 'left';
+    } else {
+      allRows.forEach(([cat, spec, qty], idx) => {
+        const ry = tableTop + thH + idx * rowH;
+        if (idx % 2 === 1) {
+          ctx.fillStyle = isDark ? '#243050' : '#f8fafc';
+          ctx.fillRect(pad, ry, cW - pad * 2, rowH);
+        }
+        if (idx < allRows.length - 1) {
+          ctx.strokeStyle = border;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(pad, ry + rowH); ctx.lineTo(xQty + colQtyW, ry + rowH);
+          ctx.stroke();
+        }
+        const cy = ry + rowH / 2 + 5;
+        ctx.fillStyle = fgSub;
+        ctx.font = font('600', 11);
+        ctx.textAlign = 'center';
+        ctx.fillText(cat, xCat + colCatW / 2, cy);
+        ctx.fillStyle = fg;
+        ctx.font = font('400', 13);
+        ctx.textAlign = 'left';
+        const maxSpecW = colSpecW - 20;
+        let specText = spec;
+        while (ctx.measureText(specText).width > maxSpecW && specText.length > 1) {
+          specText = specText.slice(0, -1);
+        }
+        if (specText !== spec) specText += '…';
+        ctx.fillText(specText, xSpec + 10, cy);
+        ctx.fillStyle = primary;
+        ctx.font = font('800', 14);
+        ctx.textAlign = 'right';
+        ctx.fillText(qty, xQty + colQtyW - 10, cy);
+        ctx.textAlign = 'left';
+      });
+    }
+
+    ctx.restore();
+
+    y = tableTop + tableH;
+
+    // Memo
+    if (memo) {
+      y += 14;
+      ctx.fillStyle = fgSub;
+      ctx.font = font('700', 11);
+      ctx.fillText(t('r.memo_title'), pad, y);
+      y += 18;
+      ctx.fillStyle = fg;
+      ctx.font = font('400', 12);
+      for (const line of memoLines) {
+        ctx.fillText(line, pad + 4, y);
+        y += 20;
+      }
+    }
+
+    // Footer date
+    ctx.fillStyle = fgMute;
+    ctx.font = font('400', 10);
+    ctx.fillText(new Date().toLocaleDateString(), pad, cH - pad + 8);
+
+    // Download
+    canvas.toBlob((blob) => {
+      if (!blob) { toast(t('t.copy_fail')); return; }
+      const safe = sanitizeFilename(projName || 'result');
+      const fname = `${safe}${t('x.fname_suffix')}.png`;
+      const url = URL.createObjectURL(blob);
+      const a = el('a', { href: url, download: fname });
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      toast(t('t.img_save'));
+    }, 'image/png');
   }
 
   /** ----- Queue item actions ----- */
@@ -2076,7 +2264,7 @@
     'q-qty-dec':         (el2) => actionUpdateQty(+el2.dataset.index, -1),
     'cart-del':          (el2) => actionDeleteItem(+el2.dataset.index, () => View.renderCartModal()),
     'copy-result':       actionCopyResult,
-    'export-csv':        actionExportCSV,
+    'save-image':        actionSaveImage,
     'share-result':      actionShareResult,
     'print-result':      actionPrintResult,
     'undo':              () => { if (Store.undo()) { Store.save(); View.renderQueue(); toast(t('t.undo')); } },
