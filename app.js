@@ -232,7 +232,7 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
       'r.memo_title':         '📝 추가 메모',
-      'r.sec_kind':           '종',
+      'r.sec_kind':           '종', // Korean has no plural form; same as r.sec_kinds intentionally
       'r.sec_kinds':          '종',
       'r.notice_pre':         '※ 자동 합산됨',
       'r.notice_total':       ' · 총 {n} 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2',
