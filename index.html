@@ -737,8 +737,24 @@
   .cart-item-ro-title { font-size: .92rem; font-weight: 800; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cart-item-ro-desc { font-size: .78rem; color: var(--c-text-sub); margin-top: 2px; }
   .cart-item-ro-qty { font-size: .85rem; font-weight: 800; color: var(--c-primary); white-space: nowrap; }
+  .cart-item-ro-del {
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: var(--r-sm);
+    border: none; background: transparent; color: var(--c-text-mute);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: .85rem; transition: background var(--m-fast), color var(--m-fast);
+  }
+  .cart-item-ro-del:hover { background: var(--c-danger-weak); color: var(--c-danger); }
   .cart-drawer-actions { display: flex; gap: 8px; margin-top: 16px; }
   .cart-drawer-actions .btn { flex: 1; }
+
+  /* Compact queue items */
+  .q-item { padding: 7px 10px; gap: 5px; }
+  .q-item-main { gap: 8px; }
+  .q-detail { display: none; font-size: .75rem; color: var(--c-text-sub); margin-top: 2px; padding: 3px 6px; background: var(--c-primary-weak); border-radius: var(--r-sm); }
+  .q-item.expanded .q-detail { display: block; }
+  .q-info { gap: 2px; }
+  .q-title { font-size: .88rem; }
+  .q-compact-label { font-size: .75rem; color: var(--c-text-mute); margin-left: 4px; }
 
   /* Modal */
   .modal {

@@ -1313,7 +1313,7 @@
         body.appendChild(el('p', { style: 'text-align:center;color:var(--c-text-sub);padding:24px 0;', 'data-i18n': 'cart.empty' }, t('cart.empty')));
         return;
       }
-      queue.forEach((q) => {
+      queue.forEach((q, i) => {
         let title = '', desc = '';
         if (q.type === 'bolt') {
           title = `${q.r} ${q.s}A ${t('q.flange')}`;
@@ -1326,12 +1326,18 @@
           const p = UBOLT_PITCH[q.s];
           desc  = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
         }
+        const delBtn = el('button', {
+          class: 'cart-item-ro-del', type: 'button',
+          'data-action': 'cart-del', 'data-index': String(i),
+          title: t('q.del_title'), 'aria-label': t('q.del')
+        }, '✕');
         const row = el('div', { class: 'cart-item-ro' },
           el('div', { class: 'cart-item-ro-info' },
             el('div', { class: 'cart-item-ro-title' }, title),
             desc ? el('div', { class: 'cart-item-ro-desc' }, desc) : null
           ),
-          el('span', { class: 'cart-item-ro-qty' }, '× ' + q.qty)
+          el('span', { class: 'cart-item-ro-qty' }, '× ' + q.qty),
+          delBtn
         );
         body.appendChild(row);
       });
@@ -1339,21 +1345,21 @@
 
     /** Render one queue row (XSS-safe). */
     renderQueueItem(q, i) {
-      let title = '', desc = '';
+      let title = '', detail = '';
       const tags = [];
 
       if (q.type === 'bolt') {
-        title = `${q.r} ${q.s}A ${t('q.flange')}`;
-        desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
+        title = `${q.r} ${q.s}A`;
+        detail = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
         if (q.ext) tags.push({ label: '+5mm', kind: 'blue' });
         if (q.doubleNut) tags.push({ label: t('q.tag_dn'), kind: 'blue' });
       } else if (q.type === 'gasket') {
         title = `${q.r} ${q.s}A ${t('q.gasket')}`;
-        desc  = Lang.tGType(q.gtype) + (q.auto ? ' · ' + t('q.tag_auto') : '');
+        detail = Lang.tGType(q.gtype) + (q.auto ? ' · ' + t('q.tag_auto') : '');
       } else if (q.type === 'ubolt') {
         title = `${t('q.ubolt')} ${q.s}A`;
         const p = UBOLT_PITCH[q.s];
-        desc  = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
+        detail = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
         if (!p) tags.push({ label: t('q.tag_pitch_unknown'), kind: 'warn' });
       }
 
@@ -1362,12 +1368,11 @@
         el('span', { class: 'q-qty' }, '× ' + q.qty)
       );
 
-      const descRow = el('div', null,
-        desc ? el('span', { class: 'q-desc' }, desc) : null,
-        tags.length
-          ? el('div', { class: 'q-tags' }, ...tags.map(t => el('span', { class: 'q-tag ' + (t.kind || '') }, t.label)))
-          : null
-      );
+      const tagsRow = tags.length
+        ? el('div', { class: 'q-tags' }, ...tags.map(tg => el('span', { class: 'q-tag ' + (tg.kind || '') }, tg.label)))
+        : null;
+
+      const detailNode = el('div', { class: 'q-detail' }, detail);
 
       const stepper = el('div', { class: 'q-mini-stepper', role: 'group', 'aria-label': t('q.qty_aria') },
         el('button', { type: 'button', 'data-action': 'q-qty-dec', 'data-index': i, 'aria-label': t('q.qty_dec') }, '−'),
@@ -1390,10 +1395,17 @@
           'aria-keyshortcuts': 'Delete' },
         el('div', { class: 'q-item-main' },
           el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
-          el('div', { class: 'q-info' }, titleNode, descRow)
+          el('div', { class: 'q-info' }, titleNode, tagsRow, detailNode)
         ),
         actions
       );
+
+      // Click on item body (not on action buttons) toggles detail
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.q-actions')) return;
+        item.classList.toggle('expanded');
+      });
+
       return item;
     },
 
@@ -1753,7 +1765,7 @@
   }
 
   /** ----- Queue item actions ----- */
-  function actionDeleteItem(i) {
+  function actionDeleteItem(i, afterDelete) {
     const node = $(`.q-item[data-index="${i}"]`);
     if (node) {
       node.classList.add('removing');
@@ -1762,12 +1774,14 @@
         Store.queue.splice(i, 1);
         Store.save();
         View.renderQueue();
+        if (afterDelete) afterDelete();
       }, 220);
     } else {
       Store.snapshot();
       Store.queue.splice(i, 1);
       Store.save();
       View.renderQueue();
+      if (afterDelete) afterDelete();
     }
   }
 
@@ -2054,6 +2068,7 @@
     'q-edit':            (el2) => openEditModal(+el2.dataset.index),
     'q-qty-inc':         (el2) => actionUpdateQty(+el2.dataset.index, 1),
     'q-qty-dec':         (el2) => actionUpdateQty(+el2.dataset.index, -1),
+    'cart-del':          (el2) => actionDeleteItem(+el2.dataset.index, () => View.renderCartModal()),
     'copy-result':       actionCopyResult,
     'export-csv':        actionExportCSV,
     'share-result':      actionShareResult,
