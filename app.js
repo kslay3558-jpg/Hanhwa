@@ -221,6 +221,13 @@
       'r.nut':                '🔩 너트 (Nut)',
       'r.gsk':                '⭕ 가스켓',
       'r.ub':                 '⚓ U-볼트',
+      'r.tag_bolt':           '볼트',
+      'r.tag_nut':            '너트',
+      'r.tag_gsk':            '가스켓',
+      'r.tag_ub':             'U볼트',
+      'r.col_cat':            '분류',
+      'r.col_spec':           '규격',
+      'r.col_qty':            '수량',
       'r.col_bolt_spec':      '규격 (S × L)',
       'r.col_nut_spec':       '규격 (M)',
       'r.col_gsk_spec':       '규격 및 재질',
@@ -232,8 +239,6 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
       'r.memo_title':         '📝 추가 메모',
-      'r.sec_kind':           '종', // Korean has no plural form; same as r.sec_kinds intentionally
-      'r.sec_kinds':          '종',
       'r.notice_pre':         '※ 자동 합산됨',
       'r.notice_total':       ' · 총 {n} 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2',
       // Floating bar
@@ -452,6 +457,13 @@
       'r.nut':                '🔩 Đai ốc (Nut)',
       'r.gsk':                '⭕ Gioăng',
       'r.ub':                 '⚓ Bu lông U',
+      'r.tag_bolt':           'Bu lông',
+      'r.tag_nut':            'Đai ốc',
+      'r.tag_gsk':            'Gioăng',
+      'r.tag_ub':             'Bu lông U',
+      'r.col_cat':            'Loại',
+      'r.col_spec':           'Quy cách',
+      'r.col_qty':            'SL',
       'r.col_bolt_spec':      'Quy cách (S × L)',
       'r.col_nut_spec':       'Quy cách (M)',
       'r.col_gsk_spec':       'Quy cách & Vật liệu',
@@ -463,8 +475,6 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(không có pitch)',
       'r.memo_title':         '📝 Ghi chú thêm',
-      'r.sec_kind':           'loại',
-      'r.sec_kinds':          'loại',
       'r.notice_pre':         '※ Đã tự động cộng dồn',
       'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
       'fb.queue':             '🛒 Hàng chờ',
@@ -674,6 +684,13 @@
       'r.nut':                '🔩 Mur (Nut)',
       'r.gsk':                '⭕ Gasket',
       'r.ub':                 '⚓ Baut U',
+      'r.tag_bolt':           'Baut',
+      'r.tag_nut':            'Mur',
+      'r.tag_gsk':            'Gasket',
+      'r.tag_ub':             'Baut U',
+      'r.col_cat':            'Jenis',
+      'r.col_spec':           'Spesifikasi',
+      'r.col_qty':            'Jml',
       'r.col_bolt_spec':      'Spesifikasi (S × L)',
       'r.col_nut_spec':       'Spesifikasi (M)',
       'r.col_gsk_spec':       'Spesifikasi & Material',
@@ -685,8 +702,6 @@
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(pitch tdk diketahui)',
       'r.memo_title':         '📝 Catatan tambahan',
-      'r.sec_kind':           'jenis',
-      'r.sec_kinds':          'jenis',
       'r.notice_pre':         '※ Otomatis dijumlah',
       'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
       'fb.queue':             '🛒 Antrean',
@@ -1400,52 +1415,20 @@
       );
       card.appendChild(head);
 
-      // Summary chips (per-category totals)
-      const totB = agg.sB.reduce((s, [, v]) => s + v, 0);
-      const totN = agg.sN.reduce((s, [, v]) => s + v, 0);
-      const totG = agg.sG.reduce((s, [, v]) => s + v, 0);
-      const totU = agg.sU.reduce((s, [, v]) => s + v, 0);
-      const summary = el('div', { class: 'res-summary' });
-      const chipData = [
-        { cls: 'bolt', label: t('r.bolt'), val: totB, unit: t('r.col_qty_ea') },
-        { cls: 'nut',  label: t('r.nut'),  val: totN, unit: t('r.col_qty_ea') },
-        { cls: 'gsk',  label: t('r.gsk'),  val: totG, unit: t('r.col_qty_sheet') },
-        { cls: 'ub',   label: t('r.ub'),   val: totU, unit: t('r.col_qty_set') },
-      ];
-      for (const { cls, label, val, unit } of chipData) {
-        const valNode = el('span', { class: 'chip-val' }, '0');
-        const chip = el('div', { class: `res-summary-chip res-chip-${cls}` },
-          el('span', { class: 'chip-label' }, label),
-          valNode,
-          el('span', { class: 'chip-label' }, unit)
-        );
-        summary.appendChild(chip);
-        countUp(valNode, val, 600);
-      }
-      card.appendChild(summary);
-
-      const tables = el('div', { class: 'res-tables' },
-        this._tableSection(t('r.bolt'), [t('r.col_bolt_spec'), t('r.col_qty_ea')],    agg.sB, false, false, 'bolt'),
-        this._tableSection(t('r.nut'),  [t('r.col_nut_spec'),  t('r.col_qty_ea')],    agg.sN, false, false, 'nut'),
-        this._tableSection(t('r.gsk'),  [t('r.col_gsk_spec'),  t('r.col_qty_sheet')], agg.sG, true,  false, 'gsk'),
-        this._tableSection(t('r.ub'),   [t('r.col_ub_spec'),   t('r.col_qty_set')],   agg.sU, false, true,  'ub')
-      );
-      card.appendChild(tables);
+      card.appendChild(this._flatList(agg));
 
       if (memo && memo.trim()) {
-        const memoBox = el('div', { class: 'table-sec', style: 'margin-top:12px;' },
-          el('h3', null,
-            el('span', { class: 'sec-title-left' },
-              el('span', { class: 'sec-bar sec-bar-bolt' }),
-              document.createTextNode(t('r.memo_title'))
-            )
-          ),
+        const memoBox = el('div', { style: 'margin-top:12px;' },
+          el('div', { style: 'font-size:.82rem;font-weight:700;color:var(--c-text-sub);margin-bottom:6px;' }, t('r.memo_title')),
           el('div', { style: 'background:var(--c-surface-2);padding:12px;border:1px solid var(--c-border);border-radius:var(--r-md);white-space:pre-wrap;font-size:.85rem;line-height:1.55;' }, memo.trim())
         );
         card.appendChild(memoBox);
       }
 
-      const totalCount = totB + totN + totG + totU;
+      const totalCount = agg.sB.reduce((s, [, v]) => s + v, 0)
+                       + agg.sN.reduce((s, [, v]) => s + v, 0)
+                       + agg.sG.reduce((s, [, v]) => s + v, 0)
+                       + agg.sU.reduce((s, [, v]) => s + v, 0);
       const totalNode = el('span', null, '0');
       const noticeParts = t('r.notice_total', { n: '\u0001' }).split('\u0001');
       const notice = el('div', { class: 'notice' },
@@ -1454,7 +1437,7 @@
         document.createTextNode(noticeParts[1] || '')
       );
       card.appendChild(notice);
-      countUp(totalNode, totalCount, 700);
+      countUp(totalNode, totalCount, 600);
 
       // Action strip (copy / CSV / share / print)
       const strip = el('div', { class: 'res-action-strip' },
@@ -1471,40 +1454,58 @@
       }
     },
 
-    _tableSection(title, headers, rows, leftAlign = false, extraDesc = false, colorKey = 'bolt') {
-      const countBadge = rows.length
-        ? el('span', { class: `sec-count-badge sec-badge-${colorKey}` }, String(rows.length) + (rows.length === 1 ? ' ' + t('r.sec_kind') : ' ' + t('r.sec_kinds')))
-        : null;
-      const thead = el('thead', null, el('tr', null, ...headers.map(h => el('th', null, h))));
+    /** Build a single flat table listing every item across all categories. */
+    _flatList(agg) {
+      const thead = el('thead', null,
+        el('tr', null,
+          el('th', null, t('r.col_cat')),
+          el('th', { style: 'text-align:left;' }, t('r.col_spec')),
+          el('th', null, t('r.col_qty'))
+        )
+      );
       const tbody = el('tbody');
-      if (!rows.length) {
-        tbody.appendChild(el('tr', null, el('td', { colspan: headers.length, class: 'muted' }, t('r.no_rows'))));
-      } else {
+
+      const sections = [
+        { cat: 'bolt', rows: agg.sB, unit: t('x.unit_ea') },
+        { cat: 'nut',  rows: agg.sN, unit: t('x.unit_ea') },
+        { cat: 'gsk',  rows: agg.sG, unit: t('x.unit_sheet') },
+        { cat: 'ub',   rows: agg.sU, unit: t('x.unit_set') },
+      ];
+      const catLabels = {
+        bolt: t('r.tag_bolt'), nut: t('r.tag_nut'), gsk: t('r.tag_gsk'), ub: t('r.tag_ub')
+      };
+
+      let hasAny = false;
+      for (const { cat, rows, unit } of sections) {
         for (const [k, v] of rows) {
-          let firstCell;
-          if (extraDesc) {
+          hasAny = true;
+          let specCell;
+          if (cat === 'ub') {
             const sNum = parseInt(k, 10);
             const p = UBOLT_PITCH[sNum];
-            firstCell = el('td', null,
-              k,
-              el('span', { style: 'display:block;font-size:.7rem;color:var(--c-text-mute);margin-top:2px;' },
-                p ? t('r.cc_pitch', { p }) : t('r.cc_unknown'))
+            specCell = el('td', { class: 'spec-cell' },
+              document.createTextNode(k),
+              el('span', { class: 'spec-sub' }, p ? t('r.cc_pitch', { p }) : t('r.cc_unknown'))
             );
           } else {
-            firstCell = el('td', leftAlign ? { style: 'text-align:left;' } : null, k);
+            specCell = el('td', { class: 'spec-cell' }, k);
           }
-          tbody.appendChild(el('tr', null, firstCell, el('td', null, el('b', null, String(v)))));
+          tbody.appendChild(el('tr', null,
+            el('td', null, el('span', { class: `res-cat-tag res-cat-tag-${cat}` }, catLabels[cat])),
+            specCell,
+            el('td', null, el('b', null, v + ' ' + unit))
+          ));
         }
       }
-      return el('div', { class: 'table-sec' },
-        el('h3', null,
-          el('span', { class: 'sec-title-left' },
-            el('span', { class: `sec-bar sec-bar-${colorKey}` }),
-            document.createTextNode(title)
-          ),
-          countBadge
-        ),
-        el('div', { class: 'table-wrapper' }, el('table', null, thead, tbody))
+
+      if (!hasAny) {
+        tbody.appendChild(el('tr', null,
+          el('td', { colspan: '3', class: 'muted' }, t('r.no_rows'))
+        ));
+      }
+
+      return el('div', { class: 'res-flat-wrapper' },
+        el('table', { class: 'res-flat-table' }, thead, tbody)
       );
     },
 
