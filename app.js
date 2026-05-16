@@ -1800,7 +1800,7 @@
     const memoH = memo ? 14 + memoLines.length * 20 + 20 : 0;
     const cH    = pad + titleH + thH + Math.max(allRows.length, 1) * rowH + memoH + 36 + pad;
 
-    const dpr    = window.devicePixelRatio || 2;
+    const dpr    = Math.min(window.devicePixelRatio || 1, 2);
     const canvas = document.createElement('canvas');
     canvas.width  = cW * dpr;
     canvas.height = cH * dpr;
