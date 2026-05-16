@@ -1400,10 +1400,16 @@
         actions
       );
 
-      // Click on item body (not on action buttons) toggles detail
+      // Click or keyboard (Enter/Space) on item body (not action buttons) toggles detail
       item.addEventListener('click', (e) => {
         if (e.target.closest('.q-actions')) return;
         item.classList.toggle('expanded');
+      });
+      item.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.q-actions')) {
+          e.preventDefault();
+          item.classList.toggle('expanded');
+        }
       });
 
       return item;
