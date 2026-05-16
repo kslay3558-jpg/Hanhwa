@@ -663,6 +663,59 @@
   .float-badge.pop { transform: scale(1.3); }
   .floating-bar button { width: auto; min-height: 38px; padding: 0 14px; }
 
+  /* Cart FAB */
+  .cart-fab {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 960; width: 56px; height: 56px;
+    background: var(--c-primary); color: #fff;
+    border: none; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; box-shadow: 0 4px 16px rgba(0,0,0,.22);
+    transition: transform var(--m-base), background var(--m-base);
+  }
+  .cart-fab:hover { background: var(--c-primary-strong); transform: scale(1.07); }
+  .cart-fab:active { transform: scale(.95); }
+  .cart-fab-badge {
+    position: absolute; top: 4px; right: 4px;
+    background: var(--c-danger, #e53e3e); color: #fff;
+    font-size: .62rem; font-weight: 800; min-width: 17px; height: 17px;
+    padding: 0 4px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--m-base);
+    pointer-events: none;
+  }
+  .cart-fab-badge[hidden] { display: none; }
+  .cart-fab-badge.pop { transform: scale(1.4); }
+
+  /* Cart drawer (bottom-sheet modal variant) */
+  .cart-drawer { align-items: flex-end; padding: 0; }
+  .cart-drawer .modal-content {
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    max-width: 600px; width: 100%; margin: 0 auto;
+    max-height: 75vh; overflow-y: auto;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+  }
+  .cart-drawer.show .modal-content { transform: none; }
+  .cart-drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; position: sticky; top: 0;
+    background: var(--c-surface); z-index: 1; padding-top: 4px;
+  }
+  .cart-drawer-header h2 { margin-bottom: 0; }
+  .cart-item-ro {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--c-surface-2);
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    margin-bottom: 8px;
+  }
+  .cart-item-ro-info { flex: 1; min-width: 0; }
+  .cart-item-ro-title { font-size: .92rem; font-weight: 800; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-item-ro-desc { font-size: .78rem; color: var(--c-text-sub); margin-top: 2px; }
+  .cart-item-ro-qty { font-size: .85rem; font-weight: 800; color: var(--c-primary); white-space: nowrap; }
+  .cart-drawer-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .cart-drawer-actions .btn { flex: 1; }
+
   /* Modal */
   .modal {
     position: fixed; inset: 0; z-index: 3000;
@@ -794,7 +847,7 @@
   /* Print */
   @media print {
     body { background: #fff; color: #000; padding: 0; }
-    .app-header .controls, .floating-bar, .install-banner, .install-cta, #toast, .modal,
+    .app-header .controls, .floating-bar, .cart-fab, .install-banner, .install-cta, #toast, .modal,
     .card:not(#queueCard):not(#resultCard), .action-row, .q-actions, .q-handle,
     .res-actions, .card-head .badge { display: none !important; }
     .main-grid { grid-template-columns: 1fr !important; }
@@ -1045,6 +1098,27 @@
   </div>
 
   <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 장바구니 FAB (항상 표시) -->
+  <button id="cartFab" class="cart-fab" type="button" data-action="open-cart" aria-label="장바구니 대기열 보기">
+    🛒
+    <span id="cartFabBadge" class="cart-fab-badge" hidden>0</span>
+  </button>
+
+  <!-- 장바구니 드로어 -->
+  <div id="cartModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-hidden="true">
+    <div class="modal-content">
+      <div class="cart-drawer-header">
+        <h2 id="cartDrawerTitle" data-i18n="cart.title">🛒 현재 대기열</h2>
+        <button class="icon-btn" type="button" data-action="close-cart" data-i18n-attr="aria-label:cart.close" aria-label="닫기">✕</button>
+      </div>
+      <div id="cartDrawerBody"></div>
+      <div class="cart-drawer-actions">
+        <button class="btn btn-ghost" type="button" data-action="close-cart" data-i18n="cart.to_queue">대기열로 이동</button>
+        <button class="btn btn-success" type="button" data-action="cart-calculate" data-i18n="fb.show_result">🧮 결과보기</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 모바일 플로팅 바 -->
   <div id="floatingBar" class="floating-bar" aria-hidden="true">

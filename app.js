@@ -237,6 +237,11 @@
       // Floating bar
       'fb.queue':             '🛒 대기열',
       'fb.show_result':       '🧮 결과보기',
+      // Cart drawer
+      'cart.title':           '🛒 현재 대기열',
+      'cart.close':           '닫기',
+      'cart.to_queue':        '대기열로 이동',
+      'cart.empty':           '대기열이 비어 있어요',
       // Install banner
       'install.title':        '홈 화면에 추가',
       'install.desc':         '오프라인에서도 빠르게 사용할 수 있어요.',
@@ -460,6 +465,11 @@
       'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
       'fb.queue':             '🛒 Hàng chờ',
       'fb.show_result':       '🧮 Xem kết quả',
+      // Cart drawer
+      'cart.title':           '🛒 Hàng chờ hiện tại',
+      'cart.close':           'Đóng',
+      'cart.to_queue':        'Đến hàng chờ',
+      'cart.empty':           'Hàng chờ trống',
       'install.title':        'Thêm vào màn hình chính',
       'install.desc':         'Có thể dùng nhanh ngay cả khi ngoại tuyến.',
       'install.btn':          'Cài đặt',
@@ -675,6 +685,11 @@
       'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
       'fb.queue':             '🛒 Antrean',
       'fb.show_result':       '🧮 Lihat hasil',
+      // Cart drawer
+      'cart.title':           '🛒 Antrean saat ini',
+      'cart.close':           'Tutup',
+      'cart.to_queue':        'Ke antrean',
+      'cart.empty':           'Antrean kosong',
       'install.title':        'Tambah ke Layar Utama',
       'install.desc':         'Bisa dipakai cepat bahkan saat offline.',
       'install.btn':          'Pasang',
@@ -1208,6 +1223,19 @@
 
       qCount.textContent = t('unit.count', { n: queue.length });
 
+      // Cart FAB badge
+      const cartBadge = $('#cartFabBadge');
+      if (cartBadge) {
+        if (queue.length > 0) {
+          cartBadge.textContent = String(queue.length);
+          cartBadge.hidden = false;
+          cartBadge.classList.add('pop');
+          setTimeout(() => cartBadge.classList.remove('pop'), 220);
+        } else {
+          cartBadge.hidden = true;
+        }
+      }
+
       // Floating bar (mobile)
       if (queue.length > 0) {
         fb.classList.add('show');
@@ -1252,6 +1280,40 @@
       queue.forEach((q, i) => tb.appendChild(this.renderQueueItem(q, i)));
       tb.scrollTop = tb.scrollHeight;
       this.updateUndoRedoButtons();
+    },
+
+    /** Render read-only cart drawer content. */
+    renderCartModal() {
+      const body = $('#cartDrawerBody');
+      if (!body) return;
+      body.textContent = '';
+      const queue = Store.queue;
+      if (!queue.length) {
+        body.appendChild(el('p', { style: 'text-align:center;color:var(--c-text-sub);padding:24px 0;', 'data-i18n': 'cart.empty' }, t('cart.empty')));
+        return;
+      }
+      queue.forEach((q) => {
+        let title = '', desc = '';
+        if (q.type === 'bolt') {
+          title = `${q.r} ${q.s}A ${t('q.flange')}`;
+          desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
+        } else if (q.type === 'gasket') {
+          title = `${q.r} ${q.s}A ${t('q.gasket')}`;
+          desc  = Lang.tGType(q.gtype);
+        } else if (q.type === 'ubolt') {
+          title = `${t('q.ubolt')} ${q.s}A`;
+          const p = UBOLT_PITCH[q.s];
+          desc  = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
+        }
+        const row = el('div', { class: 'cart-item-ro' },
+          el('div', { class: 'cart-item-ro-info' },
+            el('div', { class: 'cart-item-ro-title' }, title),
+            desc ? el('div', { class: 'cart-item-ro-desc' }, desc) : null
+          ),
+          el('span', { class: 'cart-item-ro-qty' }, '× ' + q.qty)
+        );
+        body.appendChild(row);
+      });
     },
 
     /** Render one queue row (XSS-safe). */
@@ -1953,6 +2015,9 @@
     'theme-toggle':      actionToggleTheme,
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
+    'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
+    'close-cart':        () => { ModalCtl.close($('#cartModal')); },
+    'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
     'project-change':    () => { const s = $('#projectSelect'); if (s) actionProjectChange(s.value); },
     'project-new':       actionProjectNew,
     'project-rename':    actionProjectRename,
@@ -2141,7 +2206,7 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#tutorialModal')].forEach(m => {
+    [$('#editModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
