@@ -655,6 +655,69 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
+  #boardToggle {
+    background: none; border: 1px solid var(--c-border); border-radius: 99px;
+    padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
+    transition: background var(--m-fast), border-color var(--m-fast);
+    line-height: 1.4;
+  }
+  #boardToggle:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+
+  /* Board modal */
+  .board-write-section { margin-bottom: 14px; }
+  .board-write-toggle { width: 100%; }
+  .board-write-form {
+    display: none; flex-direction: column; gap: 8px; margin-top: 10px;
+    padding: 12px; background: var(--c-surface-2);
+    border-radius: var(--r-md); border: 1px solid var(--c-border);
+  }
+  .board-write-form.open { display: flex; }
+  .board-input {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm);
+    background: var(--c-surface); color: var(--c-text); font-size: .9rem; font-family: var(--font-sans);
+    box-sizing: border-box;
+  }
+  .board-input:focus { outline: 2px solid var(--c-focus); outline-offset: 1px; }
+  .board-textarea {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm);
+    background: var(--c-surface); color: var(--c-text); font-size: .88rem; font-family: var(--font-sans);
+    resize: vertical; box-sizing: border-box; line-height: 1.5; min-height: 70px;
+  }
+  .board-textarea:focus { outline: 2px solid var(--c-focus); outline-offset: 1px; }
+  .board-btn-row { display: flex; gap: 8px; align-items: center; }
+  .board-empty { text-align: center; color: var(--c-text-mute); padding: 28px 0; font-size: .9rem; }
+  .board-post {
+    background: var(--c-surface-2); border: 1px solid var(--c-border);
+    border-radius: var(--r-md); padding: 12px; margin-bottom: 10px;
+  }
+  .board-post-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .board-post-title { flex: 1; font-size: .95rem; font-weight: 800; color: var(--c-text); line-height: 1.4; }
+  .board-post-meta { font-size: .75rem; color: var(--c-text-mute); white-space: nowrap; padding-top: 2px; }
+  .board-post-content {
+    font-size: .88rem; color: var(--c-text-sub); line-height: 1.6; white-space: pre-wrap;
+    margin-bottom: 10px; padding: 10px; background: var(--c-surface);
+    border-radius: var(--r-sm); border: 1px solid var(--c-border);
+  }
+  .board-del { color: var(--c-text-mute); font-size: .85rem; flex-shrink: 0; }
+  .board-del:hover { color: var(--c-danger); background: var(--c-danger-weak); }
+  .board-comment-count {
+    font-size: .8rem; color: var(--c-primary); cursor: pointer; padding: 4px 0; user-select: none;
+  }
+  .board-comment-count:hover { text-decoration: underline; }
+  .board-comment-body { margin-top: 8px; }
+  .board-comment {
+    padding: 8px 10px; background: var(--c-surface); border: 1px solid var(--c-border);
+    border-radius: var(--r-sm); margin-bottom: 6px;
+  }
+  .board-comment-content { font-size: .85rem; color: var(--c-text); line-height: 1.5; white-space: pre-wrap; }
+  .board-comment-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .board-comment-meta { font-size: .72rem; color: var(--c-text-mute); flex: 1; }
+  .board-comment-form { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .board-pw-confirm { margin-top: 8px; padding: 8px 10px; background: var(--c-danger-weak); border-radius: var(--r-sm); border: 1px solid var(--c-danger); }
+  .board-pw-confirm .board-pw-row { display: flex; gap: 6px; align-items: center; }
+  .board-pw-confirm .board-input { font-size: .82rem; padding: 5px 8px; }
+  .btn-danger { background: var(--c-danger); color: #fff; border: none; }
+  .btn-danger:hover { background: #b91c1c; }
 
   /* Floating bar */
   .floating-bar {
@@ -1246,6 +1309,20 @@
       <span data-i18n="vis.today">오늘 방문자:</span>
       <strong id="visitorCount">0</strong><span data-i18n="vis.unit">명</span>
     </span>
+    <button id="boardToggle" type="button" aria-label="문의 및 건의 게시판 열기" title="문의 및 건의 게시판">
+      <span aria-hidden="true">💬</span>
+    </button>
+  </div>
+
+  <!-- 문의·건의 게시판 모달 -->
+  <div id="boardModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="boardTitle" aria-hidden="true">
+    <div class="modal-content">
+      <div class="cart-drawer-header">
+        <h2 id="boardTitle">💬 문의·건의 게시판</h2>
+        <button class="icon-btn" type="button" id="boardClose" aria-label="닫기">✕</button>
+      </div>
+      <div id="boardBody"></div>
+    </div>
   </div>
 
 </div>

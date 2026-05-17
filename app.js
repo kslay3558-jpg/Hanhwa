@@ -2594,6 +2594,9 @@
 
     // Visitor counter
     initVisitorCounter();
+
+    // Bulletin board
+    initBoard();
   }
 
   function initVisitorCounter() {
@@ -2620,6 +2623,242 @@
         btn.setAttribute('aria-expanded', String(!shown));
       });
     }
+  }
+
+  /* =====================================================================
+     §10. BULLETIN BOARD (문의·건의 게시판)
+     - localStorage 기반 게시판 (백엔드 없음)
+     - 게시글/댓글 비밀번호 기반 삭제
+     - 마스터 비밀번호: 5867 (관리자 전용)
+     ===================================================================== */
+
+  const BOARD_KEY = 'jis-board';
+  const BOARD_MASTER = '5867';
+
+  const Board = {
+    load() {
+      try { return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); } catch { return []; }
+    },
+    save(posts) {
+      try { localStorage.setItem(BOARD_KEY, JSON.stringify(posts)); } catch { /**/ }
+    },
+    uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); },
+    fmtDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    },
+    addPost(title, content, pw) {
+      const posts = this.load();
+      posts.unshift({ id: this.uid(), title, content, pw, date: new Date().toISOString(), comments: [] });
+      this.save(posts);
+    },
+    deletePost(postId, pw) {
+      const posts = this.load();
+      const post = posts.find(p => p.id === postId);
+      if (!post) return false;
+      if (pw !== BOARD_MASTER && post.pw !== pw) return false;
+      this.save(posts.filter(p => p.id !== postId));
+      return true;
+    },
+    addComment(postId, content, pw) {
+      const posts = this.load();
+      const post = posts.find(p => p.id === postId);
+      if (!post) return false;
+      post.comments.push({ id: this.uid(), content, pw, date: new Date().toISOString() });
+      this.save(posts);
+      return true;
+    },
+    deleteComment(postId, commentId, pw) {
+      const posts = this.load();
+      const post = posts.find(p => p.id === postId);
+      if (!post) return false;
+      const comment = post.comments.find(c => c.id === commentId);
+      if (!comment) return false;
+      if (pw !== BOARD_MASTER && comment.pw !== pw) return false;
+      post.comments = post.comments.filter(c => c.id !== commentId);
+      this.save(posts);
+      return true;
+    }
+  };
+
+  function renderBoardModal() {
+    const body = $('#boardBody');
+    if (!body) return;
+    body.textContent = '';
+
+    // ── Write new post section ──────────────────────────────────────────
+    const writeSection = el('div', { class: 'board-write-section' });
+    const writeToggleBtn = el('button', { class: 'btn btn-primary board-write-toggle', type: 'button' }, '✏️ 새 글쓰기');
+    const writeForm = el('div', { class: 'board-write-form' });
+
+    const titleInput    = el('input',    { type: 'text',     placeholder: '제목을 입력하세요',        maxlength: '100', class: 'board-input', 'aria-label': '제목' });
+    const contentInput  = el('textarea', {                   placeholder: '문의 또는 건의 내용 입력', maxlength: '1000', class: 'board-textarea', rows: '4', 'aria-label': '내용' });
+    const pwInput       = el('input',    { type: 'password', placeholder: '삭제용 비밀번호 설정',     maxlength: '30',  class: 'board-input', 'aria-label': '삭제용 비밀번호' });
+    const submitBtn     = el('button',   { type: 'button',   class: 'btn btn-success' }, '등록');
+    const cancelBtn     = el('button',   { type: 'button',   class: 'btn btn-ghost'   }, '취소');
+
+    writeForm.append(titleInput, contentInput, pwInput, el('div', { class: 'board-btn-row' }, submitBtn, cancelBtn));
+
+    writeToggleBtn.addEventListener('click', () => {
+      const open = writeForm.classList.toggle('open');
+      writeToggleBtn.textContent = open ? '접기' : '✏️ 새 글쓰기';
+      if (open) titleInput.focus();
+    });
+
+    submitBtn.addEventListener('click', () => {
+      const title   = titleInput.value.trim();
+      const content = contentInput.value.trim();
+      const pw      = pwInput.value.trim();
+      if (!title)   { toast('제목을 입력해주세요.'); titleInput.focus(); return; }
+      if (!content) { toast('내용을 입력해주세요.'); contentInput.focus(); return; }
+      if (!pw)      { toast('삭제용 비밀번호를 입력해주세요.'); pwInput.focus(); return; }
+      Board.addPost(title, content, pw);
+      toast('게시글이 등록되었습니다.');
+      renderBoardModal();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      writeForm.classList.remove('open');
+      writeToggleBtn.textContent = '✏️ 새 글쓰기';
+    });
+
+    writeSection.append(writeToggleBtn, writeForm);
+    body.appendChild(writeSection);
+
+    // ── Post list ───────────────────────────────────────────────────────
+    const posts = Board.load();
+    if (!posts.length) {
+      body.appendChild(el('p', { class: 'board-empty' }, '아직 등록된 게시글이 없습니다.'));
+      return;
+    }
+
+    posts.forEach(post => {
+      const postEl = el('div', { class: 'board-post' });
+
+      // Header: title | date | delete
+      const delBtn = el('button', { class: 'icon-btn board-del', type: 'button', title: '게시글 삭제', 'aria-label': '게시글 삭제' }, '🗑');
+      postEl.appendChild(
+        el('div', { class: 'board-post-header' },
+          el('div', { class: 'board-post-title' }, post.title),
+          el('div', { class: 'board-post-meta' }, Board.fmtDate(post.date)),
+          delBtn
+        )
+      );
+
+      // Content
+      postEl.appendChild(el('div', { class: 'board-post-content' }, post.content));
+
+      // Delete confirm area helper
+      function showDeleteConfirm(parentNode, onConfirmPw) {
+        parentNode.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
+        const area    = el('div', { class: 'board-pw-confirm' });
+        const input   = el('input', { type: 'password', placeholder: '비밀번호 입력', class: 'board-input', style: 'flex:1;min-width:0;' });
+        const okBtn   = el('button', { type: 'button', class: 'btn btn-danger',  style: 'font-size:.8rem;padding:5px 10px;' }, '삭제');
+        const noBtn   = el('button', { type: 'button', class: 'btn btn-ghost',   style: 'font-size:.8rem;padding:5px 10px;' }, '취소');
+        okBtn.addEventListener('click', () => onConfirmPw(input.value.trim()));
+        noBtn.addEventListener('click', () => area.remove());
+        area.appendChild(el('div', { class: 'board-pw-row' }, input, okBtn, noBtn));
+        parentNode.appendChild(area);
+        input.focus();
+      }
+
+      delBtn.addEventListener('click', () => {
+        showDeleteConfirm(postEl, (pw) => {
+          if (Board.deletePost(post.id, pw)) {
+            toast('게시글이 삭제되었습니다.');
+            renderBoardModal();
+          } else {
+            toast('비밀번호가 일치하지 않습니다.');
+          }
+        });
+      });
+
+      // Comments
+      const commentsWrap = el('div', { class: 'board-comments' });
+      const countLabel = el('div', { class: 'board-comment-count' }, `💬 댓글 ${post.comments.length}개`);
+      const commentBody = el('div', { class: 'board-comment-body', hidden: true });
+
+      // Existing comments
+      post.comments.forEach(c => {
+        const cEl   = el('div', { class: 'board-comment' });
+        const cDel  = el('button', { class: 'icon-btn board-del board-cdel', type: 'button', title: '댓글 삭제', 'aria-label': '댓글 삭제', style: 'font-size:.72rem;' }, '✕');
+        cEl.appendChild(el('div', { class: 'board-comment-content' }, c.content));
+        cEl.appendChild(
+          el('div', { class: 'board-comment-row' },
+            el('span', { class: 'board-comment-meta' }, Board.fmtDate(c.date)),
+            cDel
+          )
+        );
+        cDel.addEventListener('click', () => {
+          showDeleteConfirm(cEl, (pw) => {
+            if (Board.deleteComment(post.id, c.id, pw)) {
+              toast('댓글이 삭제되었습니다.');
+              renderBoardModal();
+            } else {
+              toast('비밀번호가 일치하지 않습니다.');
+            }
+          });
+        });
+        commentBody.appendChild(cEl);
+      });
+
+      // Comment write form
+      const cContent = el('textarea', { placeholder: '댓글을 입력하세요', rows: '2', maxlength: '500', class: 'board-textarea board-comment-textarea', 'aria-label': '댓글 내용' });
+      const cPw      = el('input',    { type: 'password', placeholder: '삭제용 비밀번호', maxlength: '30', class: 'board-input', style: 'flex:1;min-width:0;', 'aria-label': '댓글 삭제용 비밀번호' });
+      const cSubmit  = el('button',   { type: 'button', class: 'btn btn-primary', style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;' }, '댓글 등록');
+
+      cSubmit.addEventListener('click', () => {
+        const content = cContent.value.trim();
+        const pw      = cPw.value.trim();
+        if (!content) { toast('댓글 내용을 입력해주세요.'); cContent.focus(); return; }
+        if (!pw)      { toast('삭제용 비밀번호를 입력해주세요.'); cPw.focus(); return; }
+        Board.addComment(post.id, content, pw);
+        toast('댓글이 등록되었습니다.');
+        renderBoardModal();
+      });
+
+      commentBody.appendChild(
+        el('div', { class: 'board-comment-form' },
+          cContent,
+          el('div', { class: 'board-btn-row' }, cPw, cSubmit)
+        )
+      );
+
+      countLabel.addEventListener('click', () => {
+        commentBody.hidden = !commentBody.hidden;
+      });
+
+      commentsWrap.append(countLabel, commentBody);
+      postEl.appendChild(commentsWrap);
+      body.appendChild(postEl);
+    });
+  }
+
+  function initBoard() {
+    const toggleBtn = $('#boardToggle');
+    const modal     = $('#boardModal');
+    const closeBtn  = $('#boardClose');
+    if (!toggleBtn || !modal) return;
+
+    function openBoard() {
+      renderBoardModal();
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    function closeBoard() {
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      toggleBtn.focus();
+    }
+
+    toggleBtn.addEventListener('click', openBoard);
+    closeBtn && closeBtn.addEventListener('click', closeBoard);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeBoard(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeBoard();
+    });
   }
 
   /* =====================================================================
