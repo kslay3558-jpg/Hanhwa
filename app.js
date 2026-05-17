@@ -1378,9 +1378,6 @@
 
       const actions = el('div', { class: 'q-actions' },
         stepper,
-        (q.type === 'bolt' || q.type === 'gasket')
-          ? el('button', { class: 'icon-btn', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, '✎')
-          : null,
         el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
       );
 
