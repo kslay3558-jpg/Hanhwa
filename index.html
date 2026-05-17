@@ -514,8 +514,8 @@
     margin-bottom: 12px;
   }
   .q-item {
-    display: flex; flex-direction: row; align-items: center; gap: 0;
-    padding: 9px 12px; background: var(--c-surface-2);
+    display: flex; flex-direction: column; gap: 7px;
+    padding: 10px 12px; background: var(--c-surface-2);
     border: 1px solid var(--c-border); border-radius: var(--r-md);
     animation: springIn .38s var(--m-spring);
     cursor: grab;
@@ -526,18 +526,17 @@
   @keyframes springIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
   @keyframes springOut { to { opacity: 0; transform: translateX(20px); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  /* 단일 행: 드래그 핸들 + 정보 (flex:1) */
-  .q-item-main { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+  /* 상단 행: 드래그 핸들 + 타이틀 (전체 너비) */
+  .q-item-main { display: flex; align-items: flex-start; gap: 8px; }
   .q-handle {
-    flex: 0 0 auto; width: 16px; color: var(--c-text-mute);
-    text-align: center; font-size: .95rem; line-height: 1; cursor: grab;
-    user-select: none;
+    flex: 0 0 auto; width: 18px; color: var(--c-text-mute);
+    text-align: center; font-size: 1rem; line-height: 1; cursor: grab;
+    user-select: none; padding-top: 2px;
   }
-  .q-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .q-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
   .q-title {
-    font-size: .9rem; font-weight: 800; color: var(--c-text);
-    display: flex; align-items: baseline; gap: 6px; flex-wrap: nowrap;
-    overflow: hidden;
+    font-size: .92rem; font-weight: 800; color: var(--c-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .q-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .q-desc { font-size: .78rem; color: var(--c-text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -549,12 +548,12 @@
   }
   .q-tag.blue { background: var(--c-primary-weak); color: var(--c-primary-strong); border-color: transparent; }
   .q-tag.warn { background: var(--c-warn-weak); color: var(--c-warn); border-color: transparent; }
-  /* 액션 버튼: 우측 고정 */
-  .q-actions { display: flex; gap: 5px; align-items: center; flex-shrink: 0; margin-left: 8px; }
+  /* 하단 행: 컨트롤 우측 정렬 */
+  .q-actions { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
   .q-mini-stepper { display: flex; align-items: center; height: 32px; border: 1px solid var(--c-border); border-radius: var(--r-sm); overflow: hidden; background: var(--c-surface); }
   .q-mini-stepper button { width: 32px; height: 32px; border: none; background: transparent; color: var(--c-text-sub); cursor: pointer; font-size: .95rem; }
   .q-mini-stepper button:hover { background: var(--c-primary-weak); color: var(--c-primary); }
-  .q-mini-stepper input { width: 38px; height: 32px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: .88rem; padding: 0; color: var(--c-text); }
+  .q-mini-stepper input { width: 42px; height: 32px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: .88rem; padding: 0; color: var(--c-text); }
 
   /* Empty state */
   .empty-state {
@@ -742,7 +741,7 @@
   .cart-drawer-actions .btn { flex: 1; }
 
   /* Compact queue items */
-  .q-item { padding: 7px 10px; }
+  .q-item { padding: 7px 10px; gap: 5px; }
   .q-item-main { gap: 7px; }
   .q-detail { display: none; font-size: .75rem; color: var(--c-text-sub); margin-top: 2px; padding: 3px 6px; background: var(--c-primary-weak); border-radius: var(--r-sm); }
   .q-item.expanded .q-detail { display: block; }
@@ -751,7 +750,7 @@
   .q-compact-label { font-size: .75rem; color: var(--c-text-mute); margin-left: 4px; }
   .q-mini-stepper { height: 30px; }
   .q-mini-stepper button { width: 30px; height: 30px; }
-  .q-mini-stepper input { width: 34px; height: 30px; }
+  .q-mini-stepper input { width: 36px; height: 30px; }
 
   /* Modal */
   .modal {
