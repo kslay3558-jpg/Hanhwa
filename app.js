@@ -2627,21 +2627,22 @@
 
   /* =====================================================================
      §10. BULLETIN BOARD (문의·건의 게시판)
-     - localStorage 기반 게시판 (백엔드 없음)
+     - Firestore 기반 온라인 게시판 (Firebase Web SDK compat)
+     - _fbDb (index.html에서 초기화) 가 없으면 localStorage fallback
      - 게시글/댓글 비밀번호 기반 삭제
      - 마스터 비밀번호: 5867 (관리자 전용)
      ===================================================================== */
 
-  const BOARD_KEY = 'jis-board';
+  const BOARD_KEY    = 'jis-board';        // localStorage fallback용
   const BOARD_MASTER = '5867';
+  const POSTS_COL    = 'posts';            // Firestore 컬렉션 이름
+
+  /** Firestore 사용 가능 여부 */
+  function _useFirestore() {
+    return typeof _fbDb !== 'undefined' && _fbDb !== null;
+  }
 
   const Board = {
-    load() {
-      try { return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); } catch { return []; }
-    },
-    save(posts) {
-      try { localStorage.setItem(BOARD_KEY, JSON.stringify(posts)); } catch { /**/ }
-    },
     uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); },
     fmtDate(iso) {
       if (!iso) return '';
@@ -2649,55 +2650,130 @@
       const pad = n => String(n).padStart(2, '0');
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     },
-    addPost(title, content, pw, nick) {
-      const posts = this.load();
-      posts.unshift({ id: this.uid(), title, content, pw, nick: nick || '익명', date: new Date().toISOString(), comments: [] });
-      this.save(posts);
+
+    /* ── Firestore 경로 헬퍼 ── */
+    _col()       { return _fbDb.collection(POSTS_COL); },
+    _doc(postId) { return _fbDb.collection(POSTS_COL).doc(postId); },
+
+    /* ── localStorage fallback ── */
+    _lsLoad()       { try { return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); } catch { return []; } },
+    _lsSave(posts)  { try { localStorage.setItem(BOARD_KEY, JSON.stringify(posts)); } catch { /**/ } },
+
+    /* ------------------------------------------------------------------
+     * load() — 게시글 목록을 최신순으로 반환
+     * ------------------------------------------------------------------ */
+    async load() {
+      if (_useFirestore()) {
+        const snap = await this._col().orderBy('date', 'desc').get();
+        return snap.docs.map(d => ({ id: d.id, ...d.data(), comments: d.data().comments || [] }));
+      }
+      return this._lsLoad();
     },
-    deletePost(postId, pw) {
-      const posts = this.load();
-      const post = posts.find(p => p.id === postId);
+
+    /* ------------------------------------------------------------------
+     * addPost() — 새 게시글 등록
+     * ------------------------------------------------------------------ */
+    async addPost(title, content, pw, nick) {
+      const data = {
+        title,
+        content,
+        pw,
+        nick: nick || '익명',
+        date: new Date().toISOString(),
+        comments: []
+      };
+      if (_useFirestore()) {
+        await this._col().add(data);
+      } else {
+        const posts = this._lsLoad();
+        posts.unshift({ id: this.uid(), ...data });
+        this._lsSave(posts);
+      }
+    },
+
+    /* ------------------------------------------------------------------
+     * deletePost() — 비밀번호 확인 후 게시글 삭제
+     * ------------------------------------------------------------------ */
+    async deletePost(postId, pw) {
+      if (_useFirestore()) {
+        const ref  = this._doc(postId);
+        const snap = await ref.get();
+        if (!snap.exists) return false;
+        const post = snap.data();
+        if (pw !== BOARD_MASTER && post.pw !== pw) return false;
+        await ref.delete();
+        return true;
+      }
+      const posts = this._lsLoad();
+      const post  = posts.find(p => p.id === postId);
       if (!post) return false;
       if (pw !== BOARD_MASTER && post.pw !== pw) return false;
-      this.save(posts.filter(p => p.id !== postId));
+      this._lsSave(posts.filter(p => p.id !== postId));
       return true;
     },
-    addComment(postId, content, pw) {
-      const posts = this.load();
-      const post = posts.find(p => p.id === postId);
-      if (!post) return false;
-      post.comments.push({ id: this.uid(), content, pw, date: new Date().toISOString() });
-      this.save(posts);
+
+    /* ------------------------------------------------------------------
+     * addComment() — 댓글 등록 (Firestore arrayUnion 사용)
+     * ------------------------------------------------------------------ */
+    async addComment(postId, content, pw) {
+      const comment = { id: this.uid(), content, pw, date: new Date().toISOString() };
+      if (_useFirestore()) {
+        await this._doc(postId).update({
+          comments: firebase.firestore.FieldValue.arrayUnion(comment)
+        });
+      } else {
+        const posts = this._lsLoad();
+        const post  = posts.find(p => p.id === postId);
+        if (!post) return false;
+        post.comments.push(comment);
+        this._lsSave(posts);
+      }
       return true;
     },
-    deleteComment(postId, commentId, pw) {
-      const posts = this.load();
-      const post = posts.find(p => p.id === postId);
+
+    /* ------------------------------------------------------------------
+     * deleteComment() — 비밀번호 확인 후 댓글 삭제 (Firestore arrayRemove)
+     * ------------------------------------------------------------------ */
+    async deleteComment(postId, commentId, pw) {
+      if (_useFirestore()) {
+        const ref  = this._doc(postId);
+        const snap = await ref.get();
+        if (!snap.exists) return false;
+        const comment = (snap.data().comments || []).find(c => c.id === commentId);
+        if (!comment) return false;
+        if (pw !== BOARD_MASTER && comment.pw !== pw) return false;
+        await ref.update({
+          comments: firebase.firestore.FieldValue.arrayRemove(comment)
+        });
+        return true;
+      }
+      const posts   = this._lsLoad();
+      const post    = posts.find(p => p.id === postId);
       if (!post) return false;
       const comment = post.comments.find(c => c.id === commentId);
       if (!comment) return false;
       if (pw !== BOARD_MASTER && comment.pw !== pw) return false;
       post.comments = post.comments.filter(c => c.id !== commentId);
-      this.save(posts);
+      this._lsSave(posts);
       return true;
     }
   };
 
-  function renderBoardModal() {
+  async function renderBoardModal() {
     const body = $('#boardBody');
     if (!body) return;
     body.textContent = '';
 
-    // ── Write new post section ──────────────────────────────────────────
-    const writeSection = el('div', { class: 'board-write-section' });
+    // ── Write new post section (동기 부분 먼저 그리기) ────────────────────
+    const writeSection   = el('div', { class: 'board-write-section' });
     const writeToggleBtn = el('button', { class: 'btn btn-primary board-write-toggle', type: 'button' }, '✏️ 새 글쓰기');
-    const writeForm = el('div', { class: 'board-write-form' });
+    const writeForm      = el('div', { class: 'board-write-form' });
 
-    const titleInput    = el('input',    { type: 'text',     placeholder: '제목을 입력하세요',        maxlength: '100', class: 'board-input', 'aria-label': '제목' });
-    const contentInput  = el('textarea', {                   placeholder: '문의 또는 건의 내용 입력', maxlength: '1000', class: 'board-textarea', rows: '4', 'aria-label': '내용' });
-    const pwInput       = el('input',    { type: 'password', placeholder: '삭제용 비밀번호 설정',     maxlength: '30',  class: 'board-input', 'aria-label': '삭제용 비밀번호' });
-    const submitBtn     = el('button',   { type: 'button',   class: 'btn btn-success' }, '등록');
-    const cancelBtn     = el('button',   { type: 'button',   class: 'btn btn-ghost'   }, '취소');
+    const titleInput   = el('input',    { type: 'text',     placeholder: '제목을 입력하세요',        maxlength: '100',  class: 'board-input',    'aria-label': '제목' });
+    const contentInput = el('textarea', {                   placeholder: '문의 또는 건의 내용 입력', maxlength: '1000', class: 'board-textarea', rows: '4', 'aria-label': '내용' });
+    const pwInput      = el('input',    { type: 'password', placeholder: '삭제용 비밀번호 설정',     maxlength: '30',   class: 'board-input',    'aria-label': '삭제용 비밀번호' });
+    const submitBtn    = el('button',   { type: 'button',   class: 'btn btn-success' }, '등록');
+    const cancelBtn    = el('button',   { type: 'button',   class: 'btn btn-ghost'   }, '취소');
 
     writeForm.append(titleInput, contentInput, pwInput, el('div', { class: 'board-btn-row' }, submitBtn, cancelBtn));
 
@@ -2707,16 +2783,24 @@
       if (open) titleInput.focus();
     });
 
-    submitBtn.addEventListener('click', () => {
+    submitBtn.addEventListener('click', async () => {
       const title   = titleInput.value.trim();
       const content = contentInput.value.trim();
       const pw      = pwInput.value.trim();
-      if (!title)   { toast('제목을 입력해주세요.'); titleInput.focus(); return; }
-      if (!content) { toast('내용을 입력해주세요.'); contentInput.focus(); return; }
-      if (!pw)      { toast('삭제용 비밀번호를 입력해주세요.'); pwInput.focus(); return; }
-      Board.addPost(title, content, pw);
-      toast('게시글이 등록되었습니다.');
-      renderBoardModal();
+      if (!title)   { toast('제목을 입력해주세요.');           titleInput.focus();   return; }
+      if (!content) { toast('내용을 입력해주세요.');           contentInput.focus(); return; }
+      if (!pw)      { toast('삭제용 비밀번호를 입력해주세요.'); pwInput.focus();      return; }
+      submitBtn.disabled = true;
+      submitBtn.textContent = '등록 중…';
+      try {
+        await Board.addPost(title, content, pw);
+        toast('게시글이 등록되었습니다.');
+        await renderBoardModal();
+      } catch (e) {
+        toast('등록에 실패했습니다. 다시 시도해주세요.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '등록';
+      }
     });
 
     cancelBtn.addEventListener('click', () => {
@@ -2727,8 +2811,26 @@
     writeSection.append(writeToggleBtn, writeForm);
     body.appendChild(writeSection);
 
-    // ── Post list ───────────────────────────────────────────────────────
-    const posts = Board.load();
+    // ── Loading indicator ────────────────────────────────────────────────
+    const loading = el('p', { class: 'board-empty' }, '⏳ 불러오는 중…');
+    body.appendChild(loading);
+
+    let posts;
+    try {
+      posts = await Board.load();
+    } catch (e) {
+      loading.textContent = '❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요.';
+      return;
+    }
+    loading.remove();
+
+    // ── Online / offline badge ───────────────────────────────────────────
+    if (_useFirestore()) {
+      body.appendChild(el('p', { style: 'font-size:.75rem;color:var(--c-success);margin-bottom:8px;' }, '🟢 온라인 게시판'));
+    } else {
+      body.appendChild(el('p', { style: 'font-size:.75rem;color:var(--c-warn);margin-bottom:8px;' }, '🟡 오프라인 모드 (로컬 저장)'));
+    }
+
     if (!posts.length) {
       body.appendChild(el('p', { class: 'board-empty' }, '아직 등록된 게시글이 없습니다.'));
       return;
@@ -2753,10 +2855,10 @@
       // Delete confirm area helper
       function showDeleteConfirm(parentNode, onConfirmPw) {
         parentNode.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
-        const area    = el('div', { class: 'board-pw-confirm' });
-        const input   = el('input', { type: 'password', placeholder: '비밀번호 입력', class: 'board-input', style: 'flex:1;min-width:0;' });
-        const okBtn   = el('button', { type: 'button', class: 'btn btn-danger',  style: 'font-size:.8rem;padding:5px 10px;' }, '삭제');
-        const noBtn   = el('button', { type: 'button', class: 'btn btn-ghost',   style: 'font-size:.8rem;padding:5px 10px;' }, '취소');
+        const area  = el('div', { class: 'board-pw-confirm' });
+        const input = el('input',  { type: 'password', placeholder: '비밀번호 입력', class: 'board-input', style: 'flex:1;min-width:0;' });
+        const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'font-size:.8rem;padding:5px 10px;' }, '삭제');
+        const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'font-size:.8rem;padding:5px 10px;' }, '취소');
         okBtn.addEventListener('click', () => onConfirmPw(input.value.trim()));
         noBtn.addEventListener('click', () => area.remove());
         area.appendChild(el('div', { class: 'board-pw-row' }, input, okBtn, noBtn));
@@ -2765,25 +2867,27 @@
       }
 
       delBtn.addEventListener('click', () => {
-        showDeleteConfirm(postEl, (pw) => {
-          if (Board.deletePost(post.id, pw)) {
-            toast('게시글이 삭제되었습니다.');
-            renderBoardModal();
-          } else {
-            toast('비밀번호가 일치하지 않습니다.');
-          }
+        showDeleteConfirm(postEl, async (pw) => {
+          try {
+            if (await Board.deletePost(post.id, pw)) {
+              toast('게시글이 삭제되었습니다.');
+              await renderBoardModal();
+            } else {
+              toast('비밀번호가 일치하지 않습니다.');
+            }
+          } catch { toast('삭제에 실패했습니다. 다시 시도해주세요.'); }
         });
       });
 
       // Comments
       const commentsWrap = el('div', { class: 'board-comments' });
-      const countLabel = el('div', { class: 'board-comment-count' }, `💬 댓글 ${post.comments.length}개`);
-      const commentBody = el('div', { class: 'board-comment-body', hidden: true });
+      const countLabel   = el('div', { class: 'board-comment-count' }, `💬 댓글 ${post.comments.length}개`);
+      const commentBody  = el('div', { class: 'board-comment-body', hidden: true });
 
       // Existing comments
       post.comments.forEach(c => {
-        const cEl   = el('div', { class: 'board-comment' });
-        const cDel  = el('button', { class: 'icon-btn board-del board-cdel', type: 'button', title: '댓글 삭제', 'aria-label': '댓글 삭제', style: 'font-size:.72rem;' }, '✕');
+        const cEl  = el('div', { class: 'board-comment' });
+        const cDel = el('button', { class: 'icon-btn board-del board-cdel', type: 'button', title: '댓글 삭제', 'aria-label': '댓글 삭제', style: 'font-size:.72rem;' }, '✕');
         cEl.appendChild(el('div', { class: 'board-comment-content' }, c.content));
         cEl.appendChild(
           el('div', { class: 'board-comment-row' },
@@ -2792,13 +2896,15 @@
           )
         );
         cDel.addEventListener('click', () => {
-          showDeleteConfirm(cEl, (pw) => {
-            if (Board.deleteComment(post.id, c.id, pw)) {
-              toast('댓글이 삭제되었습니다.');
-              renderBoardModal();
-            } else {
-              toast('비밀번호가 일치하지 않습니다.');
-            }
+          showDeleteConfirm(cEl, async (pw) => {
+            try {
+              if (await Board.deleteComment(post.id, c.id, pw)) {
+                toast('댓글이 삭제되었습니다.');
+                await renderBoardModal();
+              } else {
+                toast('비밀번호가 일치하지 않습니다.');
+              }
+            } catch { toast('삭제에 실패했습니다. 다시 시도해주세요.'); }
           });
         });
         commentBody.appendChild(cEl);
@@ -2809,14 +2915,22 @@
       const cPw      = el('input',    { type: 'password', placeholder: '삭제용 비밀번호', maxlength: '30', class: 'board-input', style: 'flex:1;min-width:0;', 'aria-label': '댓글 삭제용 비밀번호' });
       const cSubmit  = el('button',   { type: 'button', class: 'btn btn-primary', style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;' }, '댓글 등록');
 
-      cSubmit.addEventListener('click', () => {
+      cSubmit.addEventListener('click', async () => {
         const content = cContent.value.trim();
         const pw      = cPw.value.trim();
         if (!content) { toast('댓글 내용을 입력해주세요.'); cContent.focus(); return; }
         if (!pw)      { toast('삭제용 비밀번호를 입력해주세요.'); cPw.focus(); return; }
-        Board.addComment(post.id, content, pw);
-        toast('댓글이 등록되었습니다.');
-        renderBoardModal();
+        cSubmit.disabled = true;
+        cSubmit.textContent = '등록 중…';
+        try {
+          await Board.addComment(post.id, content, pw);
+          toast('댓글이 등록되었습니다.');
+          await renderBoardModal();
+        } catch {
+          toast('댓글 등록에 실패했습니다.');
+          cSubmit.disabled = false;
+          cSubmit.textContent = '댓글 등록';
+        }
       });
 
       commentBody.appendChild(
