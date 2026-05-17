@@ -2649,9 +2649,9 @@
       const pad = n => String(n).padStart(2, '0');
       return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
     },
-    addPost(title, content, pw) {
+    addPost(title, content, pw, nick) {
       const posts = this.load();
-      posts.unshift({ id: this.uid(), title, content, pw, date: new Date().toISOString(), comments: [] });
+      posts.unshift({ id: this.uid(), title, content, pw, nick: nick || '익명', date: new Date().toISOString(), comments: [] });
       this.save(posts);
     },
     deletePost(postId, pw) {
