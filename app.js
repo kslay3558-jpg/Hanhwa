@@ -1342,21 +1342,18 @@
 
     /** Render one queue row (XSS-safe). */
     renderQueueItem(q, i) {
-      let title = '', detail = '';
+      let title = '';
       const tags = [];
 
       if (q.type === 'bolt') {
         title = `${q.r} ${q.s}A`;
-        detail = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
         if (q.ext) tags.push({ label: '+5mm', kind: 'blue' });
         if (q.doubleNut) tags.push({ label: t('q.tag_dn'), kind: 'blue' });
       } else if (q.type === 'gasket') {
         title = `${q.r} ${q.s}A ${t('q.gasket')}`;
-        detail = Lang.tGType(q.gtype) + (q.auto ? ' · ' + t('q.tag_auto') : '');
       } else if (q.type === 'ubolt') {
         title = `${t('q.ubolt')} ${q.s}A`;
         const p = UBOLT_PITCH[q.s];
-        detail = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
         if (!p) tags.push({ label: t('q.tag_pitch_unknown'), kind: 'warn' });
       }
 
@@ -1367,8 +1364,6 @@
       const tagsRow = tags.length
         ? el('div', { class: 'q-tags' }, ...tags.map(tg => el('span', { class: 'q-tag ' + (tg.kind || '') }, tg.label)))
         : null;
-
-      const detailNode = el('div', { class: 'q-detail' }, detail);
 
       const stepper = el('div', { class: 'q-mini-stepper', role: 'group', 'aria-label': t('q.qty_aria') },
         el('button', { type: 'button', 'data-action': 'q-qty-dec', 'data-index': i, 'aria-label': t('q.qty_dec') }, '−'),
@@ -1381,30 +1376,16 @@
         el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
       );
 
-      const item = el('div',
+      return el('div',
         { class: 'q-item', draggable: 'true', 'data-index': i, tabindex: '0',
           'aria-label': t('q.aria_label', { title, n: q.qty }),
           'aria-keyshortcuts': 'Delete' },
         el('div', { class: 'q-item-main' },
           el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
-          el('div', { class: 'q-info' }, titleNode, tagsRow, detailNode)
+          el('div', { class: 'q-info' }, titleNode, tagsRow)
         ),
         actions
       );
-
-      // Click or keyboard (Enter/Space) on item body (not action buttons) toggles detail
-      item.addEventListener('click', (e) => {
-        if (e.target.closest('.q-actions')) return;
-        item.classList.toggle('expanded');
-      });
-      item.addEventListener('keydown', (e) => {
-        if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.q-actions')) {
-          e.preventDefault();
-          item.classList.toggle('expanded');
-        }
-      });
-
-      return item;
     },
 
     updateUndoRedoButtons() {
