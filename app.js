@@ -2247,6 +2247,7 @@
     ModalCtl.close($('#tutorialModal'));
   }
 
+  const DEFAULT_MEASURE_GUIDE = 'flange-od';
   const MEASURE_GUIDES = {
     'flange-od': {
       titleKey: 'guide.flange_od_title',
@@ -2259,7 +2260,7 @@
   };
 
   function actionOpenMeasureGuide(kind) {
-    const guide = MEASURE_GUIDES[kind] || MEASURE_GUIDES['flange-od'];
+    const guide = MEASURE_GUIDES[kind] || MEASURE_GUIDES[DEFAULT_MEASURE_GUIDE];
     $('#measureGuideTitle').textContent = t(guide.titleKey);
     $$('#measureGuideBody [data-guide-panel]').forEach(panel => {
       panel.hidden = panel.id !== guide.panelId;
