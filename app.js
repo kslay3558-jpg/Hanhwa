@@ -403,7 +403,8 @@
       'pc.err.diag_lt':       '⚠️ 사선 거리 D는 수평 거리 L보다 커야 합니다.',
       'pc.err.ded_neg':       '⚠️ 공제값은 음수가 될 수 없습니다.',
       'pc.err.weld_neg':      '⚠️ 용접 갭은 음수가 될 수 없습니다.',
-      'pc.err.cut_neg':       '⚠️ 공제 후 커팅 길이가 0 이하입니다. 공제값을 줄여주세요.'
+      'pc.err.cut_neg':       '⚠️ 공제 후 커팅 길이가 0 이하입니다. 공제값을 줄여주세요.',
+      'pc.err.short_neg':     '⚠️ 단변 길이가 0 이하입니다. 각도가 너무 크거나 공제값이 너무 큽니다.'
     },
 
     vi: {
@@ -681,7 +682,8 @@
       'pc.err.diag_lt':       '⚠️ D phải lớn hơn L.',
       'pc.err.ded_neg':       '⚠️ Giá trị khấu trừ không được âm.',
       'pc.err.weld_neg':      '⚠️ Khe hở hàn không được âm.',
-      'pc.err.cut_neg':       '⚠️ Chiều dài cắt sau khấu trừ ≤ 0. Hãy giảm khấu trừ.'
+      'pc.err.cut_neg':       '⚠️ Chiều dài cắt sau khấu trừ ≤ 0. Hãy giảm khấu trừ.',
+      'pc.err.short_neg':     '⚠️ Cạnh ngắn ≤ 0. Góc quá lớn hoặc khấu trừ quá nhiều.'
     },
 
     id: {
@@ -959,7 +961,8 @@
       'pc.err.diag_lt':       '⚠️ D harus lebih besar dari L.',
       'pc.err.ded_neg':       '⚠️ Nilai deduksi tidak boleh negatif.',
       'pc.err.weld_neg':      '⚠️ Celah las tidak boleh negatif.',
-      'pc.err.cut_neg':       '⚠️ Panjang potong setelah deduksi ≤ 0. Kurangi nilai deduksi.'
+      'pc.err.cut_neg':       '⚠️ Panjang potong setelah deduksi ≤ 0. Kurangi nilai deduksi.',
+      'pc.err.short_neg':     '⚠️ Sisi pendek ≤ 0. Sudut terlalu besar atau deduksi terlalu banyak.'
     }
   };
 
@@ -1738,6 +1741,10 @@
     '125A': 139.8, '150A': 165.2, '200A': 216.3
   };
   const PIPE_SIZES = ['15A','20A','25A','32A','40A','50A','65A','80A','100A','125A','150A','200A'];
+  /** Field IDs and their default values for the pipe calc form. */
+  const PC_FIELDS = [
+    ['#pcHoriz', ''], ['#pcDiag', ''], ['#pcDed1', '0'], ['#pcDed2', '0'], ['#pcWeld', '0']
+  ];
 
   const PipeCalc = {
     /** Populate the pipe size dropdown and restore persisted size selection. */
@@ -1831,6 +1838,8 @@
       const longSide  = cutLength + B;
       const shortSide = cutLength - B;
 
+      if (shortSide <= 0) { showErr('pc.err.short_neg'); return; }
+
       this.saveForm();
 
       // Render result grid
@@ -1861,8 +1870,8 @@
 
     /** Reset the form back to defaults. */
     reset() {
-      [['#pcHoriz', ''], ['#pcDiag', ''], ['#pcDed1', '0'], ['#pcDed2', '0'], ['#pcWeld', '0']].forEach(([id, def]) => {
-        const el2 = $(id); if (el2) el2.value = def;
+      PC_FIELDS.forEach(function(pair) {
+        const el2 = $(pair[0]); if (el2) el2.value = pair[1];
       });
       const errEl = $('#pcError'); if (errEl) errEl.hidden = true;
       const resEl = $('#pcResult'); if (resEl) resEl.hidden = true;
@@ -2824,9 +2833,9 @@
     bindDrag();
 
     // Pipe calc: persist form values on input change
-    ['#pcHoriz','#pcDiag','#pcDed1','#pcDed2','#pcWeld'].forEach(id => {
-      const el2 = $(id);
-      if (el2) el2.addEventListener('change', () => PipeCalc.saveForm());
+    PC_FIELDS.forEach(function(pair) {
+      const el2 = $(pair[0]);
+      if (el2) el2.addEventListener('change', function() { PipeCalc.saveForm(); });
     });
   }
 
