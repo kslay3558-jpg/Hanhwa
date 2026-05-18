@@ -91,6 +91,8 @@
   const HISTORY_LIMIT = 10;
   /** 외경 역산 검색 시 표시할 최대 허용 오차 (mm). 이 범위 내 후보를 모두 표시하고, 없으면 가장 가까운 5개를 표시한다. */
   const OD_SEARCH_RANGE = 20;
+  /** Firestore 게시판 로드 타임아웃 (ms). 이 시간 내 응답 없으면 연결 실패 처리. */
+  const FIRESTORE_TIMEOUT_MS = 10000;
 
   /* =====================================================================
      §1.5 I18N — Korean / Vietnamese / Indonesian
@@ -2647,10 +2649,15 @@
 
     /* ------------------------------------------------------------------
      * load() — 게시글 목록을 최신순으로 반환
+     * 10초 타임아웃: Firestore 연결이 응답 없이 대기하는 경우를 방지.
      * ------------------------------------------------------------------ */
     async load() {
       const { getDocs, query, orderBy } = window._fbFS;
-      const snap = await getDocs(query(this._col(), orderBy('createdAt', 'desc')));
+      const fetchSnap = getDocs(query(this._col(), orderBy('createdAt', 'desc')));
+      const timeout   = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Firestore 응답 시간 초과')), FIRESTORE_TIMEOUT_MS)
+      );
+      const snap = await Promise.race([fetchSnap, timeout]);
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     },
 
@@ -2700,6 +2707,9 @@
       body.appendChild(el('p', { class: 'board-empty' }, '❌ Firebase가 초기화되지 않았습니다. 새로고침 후 다시 시도해주세요.'));
       return;
     }
+
+    // 예상치 못한 예외가 발생해도 상태 표시기가 "확인 중"에 고착되지 않도록 감싸기
+    try {
 
     // ── Write form ─────────────────────────────────────────────────────
     const writeSection   = el('div', { class: 'board-write-section' });
@@ -2811,6 +2821,13 @@
       wrap.appendChild(row);
       body.appendChild(wrap);
     });
+
+    } catch (e) {
+      // 예상치 못한 오류 → 상태를 "서버 연결 안됨"으로 변경
+      setStatus('offline', '서버 연결 안됨');
+      body.textContent = '';
+      body.appendChild(el('p', { class: 'board-empty' }, '❌ 오류가 발생했습니다. 새로고침 후 다시 시도해주세요.'));
+    }
   }
 
   function initBoard() {
@@ -2820,7 +2837,7 @@
     if (!toggleBtn || !modal) return;
 
     function openBoard() {
-      renderBoardModal();
+      renderBoardModal().catch((err) => console.error('Board modal error:', err));
       modal.classList.add('show');
       modal.setAttribute('aria-hidden', 'false');
     }
