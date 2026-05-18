@@ -2461,6 +2461,7 @@
      ===================================================================== */
 
   let deferredInstallPrompt = null;
+  const MSG_ADDED_HOME = '🏠 홈 화면에 추가되었습니다!';
 
   function registerSW() {
     if (!('serviceWorker' in navigator)) return;
@@ -2486,7 +2487,7 @@
       $('#installBanner').classList.remove('show');
       deferredInstallPrompt = null;
       reflectInstalledState();
-      toast(t('t.installed'));
+      toast(MSG_ADDED_HOME);
     });
   }
 
@@ -2535,15 +2536,133 @@
     }
   }
 
+  /**
+   * iOS에서 "홈 화면에 추가" 단계별 가이드를 하단 슬라이드업 시트로 표시.
+   */
+  function showIOSInstallGuide() {
+    if (document.getElementById('iosInstallGuide')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'iosInstallGuide';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', '홈 화면에 추가 방법');
+    overlay.style.cssText = [
+      'position:fixed;inset:0;z-index:9100',
+      'display:flex;align-items:flex-end;justify-content:center',
+      'background:rgba(0,0,0,.52)'
+    ].join(';');
+
+    const sheet = document.createElement('div');
+    sheet.style.cssText = [
+      'background:var(--c-surface,#fff);color:var(--c-text,#111)',
+      'width:100%;max-width:480px',
+      'border-radius:20px 20px 0 0',
+      'padding:24px 22px calc(28px + env(safe-area-inset-bottom))',
+      'box-shadow:0 -4px 24px rgba(0,0,0,.18)',
+      'font-family:inherit',
+      'animation:_iosGuideUp .32s cubic-bezier(.34,1.56,.64,1)'
+    ].join(';');
+
+    const styleTag = document.createElement('style');
+    styleTag.textContent = '@keyframes _iosGuideUp{from{transform:translateY(100%)}to{transform:none}}';
+    sheet.appendChild(styleTag);
+
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:18px';
+
+    const title = document.createElement('strong');
+    title.style.cssText = 'font-size:1.05rem;flex:1';
+    title.textContent = '📱 홈 화면에 추가하기';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.setAttribute('aria-label', '닫기');
+    closeBtn.style.cssText = [
+      'background:none;border:none;padding:4px 6px',
+      'font-size:1.2rem;cursor:pointer;color:var(--c-text-mute,#888)',
+      'border-radius:6px;line-height:1'
+    ].join(';');
+    closeBtn.textContent = '✕';
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+    sheet.appendChild(header);
+
+    const steps = [
+      ['①', ['화면 하단 ', '공유 버튼 ⎋', ' 을 탭해요']],
+      ['②', ['"홈 화면에 추가"', ' 를 찾아 탭해요']],
+      ['③', ['오른쪽 위 ', '"추가"', ' 를 탭하면 완료! 🎉']]
+    ];
+    const ol = document.createElement('ol');
+    ol.style.cssText = 'margin:0 0 18px;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px';
+    steps.forEach(([num, parts]) => {
+      const li = document.createElement('li');
+      li.style.cssText = 'display:flex;align-items:flex-start;gap:12px;font-size:.95rem;line-height:1.5';
+      const badge = document.createElement('span');
+      badge.style.cssText = [
+        'flex-shrink:0;width:28px;height:28px;border-radius:50%',
+        'background:var(--c-primary,#2563eb);color:#fff',
+        'display:flex;align-items:center;justify-content:center',
+        'font-size:.8rem;font-weight:800;margin-top:1px'
+      ].join(';');
+      badge.textContent = num;
+      const text = document.createElement('span');
+      // Odd indices are bold, even indices are plain text
+      parts.forEach((part, i) => {
+        if (i % 2 === 1) {
+          const strong = document.createElement('strong');
+          strong.textContent = part;
+          text.appendChild(strong);
+        } else {
+          text.appendChild(document.createTextNode(part));
+        }
+      });
+      li.appendChild(badge);
+      li.appendChild(text);
+      ol.appendChild(li);
+    });
+    sheet.appendChild(ol);
+
+    const note = document.createElement('div');
+    note.style.cssText = [
+      'background:var(--c-surface-2,#f4f4f4);border-radius:10px',
+      'padding:10px 14px;font-size:.82rem',
+      'color:var(--c-text-sub,#555);display:flex;align-items:center;gap:8px'
+    ].join(';');
+    const noteIcon = document.createElement('span');
+    noteIcon.textContent = 'ℹ️';
+    const noteText = document.createElement('span');
+    noteText.textContent = 'Safari 브라우저에서만 홈 화면 추가가 가능합니다.';
+    note.appendChild(noteIcon);
+    note.appendChild(noteText);
+    sheet.appendChild(note);
+
+    overlay.appendChild(sheet);
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  }
+
   async function triggerInstall() {
     if (!deferredInstallPrompt) {
-      toast(t('t.install_ios'));
+      if (isIOSLike()) {
+        showIOSInstallGuide();
+      } else {
+        toast(t('t.install_ios'));
+      }
       return;
     }
-    deferredInstallPrompt.prompt();
-    try { await deferredInstallPrompt.userChoice; } catch (e) {}
+    try {
+      deferredInstallPrompt.prompt();
+      const result = await deferredInstallPrompt.userChoice;
+      if (result && result.outcome === 'accepted') {
+        toast(MSG_ADDED_HOME);
+      }
+    } catch (e) {}
     deferredInstallPrompt = null;
     $('#installBanner').classList.remove('show');
+    reflectInstalledState();
   }
 
   /* =====================================================================
