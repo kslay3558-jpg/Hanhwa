@@ -1870,7 +1870,7 @@
 
     /** Reset the form back to defaults. */
     reset() {
-      PC_FIELDS.forEach(function(pair) {
+      PC_FIELDS.forEach((pair) => {
         const el2 = $(pair[0]); if (el2) el2.value = pair[1];
       });
       const errEl = $('#pcError'); if (errEl) errEl.hidden = true;
@@ -2833,9 +2833,9 @@
     bindDrag();
 
     // Pipe calc: persist form values on input change
-    PC_FIELDS.forEach(function(pair) {
+    PC_FIELDS.forEach((pair) => {
       const el2 = $(pair[0]);
-      if (el2) el2.addEventListener('change', function() { PipeCalc.saveForm(); });
+      if (el2) el2.addEventListener('change', () => { PipeCalc.saveForm(); });
     });
   }
 
