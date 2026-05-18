@@ -2664,8 +2664,13 @@
      * ------------------------------------------------------------------ */
     async load() {
       if (_useFirestore()) {
-        const snap = await this._col().orderBy('date', 'desc').get();
-        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        try {
+          const snap = await this._col().orderBy('date', 'desc').get();
+          return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        } catch (e) {
+          console.warn('[Board] Firestore 연결 실패, 로컬 저장소로 전환합니다.', e);
+          _fbDb = null;
+        }
       }
       return this._lsLoad();
     },
@@ -2681,12 +2686,17 @@
         date:    new Date().toISOString()
       };
       if (_useFirestore()) {
-        await this._col().add(data);
-      } else {
-        const list = this._lsLoad();
-        list.unshift({ id: this.uid(), ...data });
-        this._lsSave(list);
+        try {
+          await this._col().add(data);
+          return;
+        } catch (e) {
+          console.warn('[Board] Firestore 쓰기 실패, 로컬에 저장합니다.', e);
+          _fbDb = null;
+        }
       }
+      const list = this._lsLoad();
+      list.unshift({ id: this.uid(), ...data });
+      this._lsSave(list);
     },
 
     /* ------------------------------------------------------------------
@@ -2694,13 +2704,18 @@
      * ------------------------------------------------------------------ */
     async deleteComment(commentId, pw) {
       if (_useFirestore()) {
-        const ref  = this._doc(commentId);
-        const snap = await ref.get();
-        if (!snap.exists) return false;
-        const c = snap.data();
-        if (pw !== BOARD_MASTER && c.pw !== pw) return false;
-        await ref.delete();
-        return true;
+        try {
+          const ref  = this._doc(commentId);
+          const snap = await ref.get();
+          if (!snap.exists) return false;
+          const c = snap.data();
+          if (pw !== BOARD_MASTER && c.pw !== pw) return false;
+          await ref.delete();
+          return true;
+        } catch (e) {
+          console.warn('[Board] Firestore 삭제 실패, 로컬에서 시도합니다.', e);
+          _fbDb = null;
+        }
       }
       const list = this._lsLoad();
       const c    = list.find(x => x.id === commentId);
