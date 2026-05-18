@@ -2627,24 +2627,15 @@
 
   /* =====================================================================
      §10. COMMENT BOARD (댓글 게시판)
-     - Firestore 기반 온라인 댓글 게시판 (Firebase Web SDK compat)
-     - _fbDb (index.html에서 초기화) 가 없으면 localStorage fallback
+     - Firestore 전용 온라인 댓글 게시판 (Firebase Web SDK v12 Modular)
      - 작성자 비밀번호 기반 삭제
      - 마스터 비밀번호: 5867 (관리자 전용)
      ===================================================================== */
 
-  const BOARD_KEY    = 'jis-board';
   const BOARD_MASTER = '5867';
   const COMMENTS_COL = 'comments';          // Firestore 컬렉션 이름
 
-  /** Firestore 사용 가능 여부 */
-  function _useFirestore() {
-    return typeof _fbDb !== 'undefined' && _fbDb !== null &&
-           typeof window._fbFS !== 'undefined' && window._fbFS !== null;
-  }
-
   const Board = {
-    uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); },
     fmtDate(iso) {
       if (!iso) return '';
       const d = new Date(iso);
@@ -2656,74 +2647,37 @@
     _col()         { return window._fbFS.collection(_fbDb, COMMENTS_COL); },
     _doc(commentId){ return window._fbFS.doc(_fbDb, COMMENTS_COL, commentId); },
 
-    /* ── localStorage fallback ── */
-    _lsLoad()      { try { return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); } catch { return []; } },
-    _lsSave(list)  { try { localStorage.setItem(BOARD_KEY, JSON.stringify(list)); } catch { /**/ } },
-
     /* ------------------------------------------------------------------
      * load() — 댓글 목록을 최신순으로 반환
      * ------------------------------------------------------------------ */
     async load() {
-      if (_useFirestore()) {
-        try {
-          const { getDocs, query, orderBy } = window._fbFS;
-          const snap = await getDocs(query(this._col(), orderBy('date', 'desc')));
-          return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        } catch (e) {
-          console.warn('[Board] Firestore 연결 실패, 로컬 저장소로 전환합니다.', e);
-          _fbDb = null;
-        }
-      }
-      return this._lsLoad();
+      const { getDocs, query, orderBy } = window._fbFS;
+      const snap = await getDocs(query(this._col(), orderBy('date', 'desc')));
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     },
 
     /* ------------------------------------------------------------------
      * addComment() — 새 댓글 등록
      * ------------------------------------------------------------------ */
     async addComment(nick, content, pw) {
-      const data = {
+      await window._fbFS.addDoc(this._col(), {
         nick:    nick || '익명',
         content,
         pw,
         date:    new Date().toISOString()
-      };
-      if (_useFirestore()) {
-        try {
-          await window._fbFS.addDoc(this._col(), data);
-          return;
-        } catch (e) {
-          console.warn('[Board] Firestore 쓰기 실패, 로컬에 저장합니다.', e);
-          _fbDb = null;
-        }
-      }
-      const list = this._lsLoad();
-      list.unshift({ id: this.uid(), ...data });
-      this._lsSave(list);
+      });
     },
 
     /* ------------------------------------------------------------------
      * deleteComment() — 비밀번호 확인 후 댓글 삭제
      * ------------------------------------------------------------------ */
     async deleteComment(commentId, pw) {
-      if (_useFirestore()) {
-        try {
-          const ref  = this._doc(commentId);
-          const snap = await window._fbFS.getDoc(ref);
-          if (!snap.exists()) return false;
-          const c = snap.data();
-          if (pw !== BOARD_MASTER && c.pw !== pw) return false;
-          await window._fbFS.deleteDoc(ref);
-          return true;
-        } catch (e) {
-          console.warn('[Board] Firestore 삭제 실패, 로컬에서 시도합니다.', e);
-          _fbDb = null;
-        }
-      }
-      const list = this._lsLoad();
-      const c    = list.find(x => x.id === commentId);
-      if (!c) return false;
+      const ref  = this._doc(commentId);
+      const snap = await window._fbFS.getDoc(ref);
+      if (!snap.exists()) return false;
+      const c = snap.data();
       if (pw !== BOARD_MASTER && c.pw !== pw) return false;
-      this._lsSave(list.filter(x => x.id !== commentId));
+      await window._fbFS.deleteDoc(ref);
       return true;
     }
   };
