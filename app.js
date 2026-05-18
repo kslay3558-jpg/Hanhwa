@@ -2511,6 +2511,7 @@
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
+          else if (m.id === 'measureGuideModal') ModalCtl.close($('#measureGuideModal'));
           else ModalCtl.close(m);
         }
       });
