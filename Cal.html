@@ -1567,6 +1567,20 @@
   <script>
     const STORAGE_KEY = "pipe_miter_calculator_production_v3";
     const THEME_KEY = "pipe_miter_calculator_theme";
+    const THEME_TEXT = {
+      ko: {
+        toggle: "테마 전환",
+        auto: "자동모드",
+        light: "주간모드",
+        dark: "야간모드"
+      },
+      en: {
+        toggle: "Toggle theme",
+        auto: "auto mode",
+        light: "light mode",
+        dark: "dark mode"
+      }
+    };
 
     const PIPE_SIZES = {
       "15A": 21.7,
@@ -1597,19 +1611,21 @@
       selectedSize: DEFAULTS.pipeSize
     };
 
+    function themeText(key) {
+      const lang = (document.documentElement.lang || "ko").split("-")[0];
+      return (THEME_TEXT[lang] || THEME_TEXT.ko)[key];
+    }
+
     function applyTheme(theme) {
       const safeTheme = ["auto", "light", "dark"].includes(theme) ? theme : "auto";
       document.documentElement.dataset.theme = safeTheme;
 
       const themeToggle = $("themeToggle");
       if (themeToggle) {
-        const label = safeTheme === "dark"
-          ? "야간모드"
-          : safeTheme === "light"
-            ? "주간모드"
-            : "자동모드";
-        themeToggle.setAttribute("aria-label", `테마 전환: ${label}`);
-        themeToggle.setAttribute("title", `테마 전환: ${label}`);
+        const label = themeText(safeTheme);
+        const title = `${themeText("toggle")}: ${label}`;
+        themeToggle.setAttribute("aria-label", title);
+        themeToggle.setAttribute("title", title);
       }
     }
 
@@ -1617,6 +1633,7 @@
       try {
         applyTheme(localStorage.getItem(THEME_KEY) || "auto");
       } catch (error) {
+        console.warn("테마 설정을 불러오지 못했습니다.", error);
         applyTheme("auto");
       }
     }
@@ -1628,7 +1645,9 @@
 
       try {
         localStorage.setItem(THEME_KEY, next);
-      } catch (error) {}
+      } catch (error) {
+        console.warn("테마 설정을 저장하지 못했습니다.", error);
+      }
     }
 
     function $(id) {
