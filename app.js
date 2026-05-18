@@ -92,7 +92,7 @@
   /** 외경 역산 검색 시 표시할 최대 허용 오차 (mm). 이 범위 내 후보를 모두 표시하고, 없으면 가장 가까운 5개를 표시한다. */
   const OD_SEARCH_RANGE = 20;
   /** Firestore 게시판 로드 타임아웃 (ms). 이 시간 내 응답 없으면 연결 실패 처리. */
-  const FIRESTORE_TIMEOUT_MS = 10000;
+  const FIRESTORE_TIMEOUT_MS = 5000;
 
   /* =====================================================================
      §1.5 I18N — Korean / Vietnamese / Indonesian
@@ -2649,7 +2649,7 @@
 
     /* ------------------------------------------------------------------
      * load() — 게시글 목록을 최신순으로 반환
-     * 10초 타임아웃: Firestore 연결이 응답 없이 대기하는 경우를 방지.
+     * 5초 타임아웃: Firestore 연결이 응답 없이 대기하는 경우를 방지.
      * ------------------------------------------------------------------ */
     async load() {
       const { getDocs, query, orderBy } = window._fbFS;
@@ -2705,6 +2705,31 @@
     if (!window._fbDb || !window._fbFS) {
       setStatus('offline', '서버 연결 안됨');
       body.appendChild(el('p', { class: 'board-empty' }, '❌ Firebase가 초기화되지 않았습니다. 새로고침 후 다시 시도해주세요.'));
+      return;
+    }
+
+    // ── KakaoTalk 인앱 브라우저: Firestore 연결 불가 안내 ──────────────────
+    if (/KAKAOTALK/i.test(navigator.userAgent)) {
+      setStatus('offline', '외부 브라우저 필요');
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const msgDiv = el('div', { class: 'board-empty', style: 'line-height:1.9;text-align:center' });
+      msgDiv.appendChild(document.createTextNode('📱 카카오톡 브라우저에서는 게시판 서버에 연결할 수 없습니다.'));
+      msgDiv.appendChild(el('br'));
+      if (isAndroid) {
+        const intentUrl = 'intent://' + location.host + location.pathname + location.search
+          + '#Intent;scheme=' + location.protocol.replace(':', '')
+          + ';package=com.android.chrome'
+          + ';S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end';
+        const link = el('a', {
+          href: intentUrl,
+          style: 'font-weight:700;color:var(--c-primary);text-decoration:underline'
+        }, '📲 크롬으로 열기');
+        msgDiv.appendChild(link);
+        msgDiv.appendChild(document.createTextNode(' 또는 우측 상단 ··· → 다른 브라우저로 열기'));
+      } else {
+        msgDiv.appendChild(document.createTextNode('우측 상단 ··· → 다른 브라우저로 열기를 눌러 사파리/크롬에서 이용해주세요.'));
+      }
+      body.appendChild(msgDiv);
       return;
     }
 
