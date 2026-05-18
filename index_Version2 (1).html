@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>파이프 사선 커팅 & 컷백 계산기</title>
+
+  <style>
+    :root {
+      --blue-900: #1e3a8a;
+      --blue-800: #1e40af;
+      --blue-700: #1d4ed8;
+      --blue-600: #2563eb;
+      --blue-500: #3b82f6;
+      --blue-100: #dbeafe;
+      --blue-50: #eff6ff;
+
+      --green-700: #047857;
+      --green-600: #059669;
+      --green-100: #d1fae5;
+      --green-50: #ecfdf5;
+
+      --red-700: #b91c1c;
+      --red-600: #dc2626;
+      --red-100: #fee2e2;
+      --red-50: #fef2f2;
+
+      --amber-700: #b45309;
+      --amber-100: #fef3c7;
+      --amber-50: #fffbeb;
+
+      --slate-950: #020617;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-400: #94a3b8;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 22px 60px rgba(15, 23, 42, 0.14);
+      --radius-xl: 18px;
+      --radius-2xl: 24px;
+      --radius-3xl: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding-bottom: 104px;
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans KR",
+        "Apple SD Gothic Neo",
+        sans-serif;
+      color: var(--slate-900);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 34%),
+        var(--slate-50);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .page {
+      width: min(100%, 1440px);
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    .app-shell {
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      border-radius: var(--radius-3xl);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .header {
+      position: relative;
+      overflow: hidden;
+      padding: 26px 22px;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(30, 58, 138, 0.98), rgba(37, 99, 235, 0.96), rgba(6, 182, 212, 0.92));
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.22;
+      background-image:
+        linear-gradient(to right, rgba(255,255,255,0.18) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.18) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    .header-inner {
+      position: relative;
+      display: grid;
+      gap: 12px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 11px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .title {
+      margin: 0;
+      font-size: clamp(26px, 5vw, 42px);
+      font-weight: 950;
+      line-height: 1.18;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      max-width: 860px;
+      margin: 0;
+      color: rgba(239, 246, 255, 0.96);
+      font-size: 15px;
+      line-height: 1.65;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 18px;
+      background: rgba(248, 250, 252, 0.74);
+    }
+
+    .section {
+      margin-bottom: 16px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      margin: 0;
+      color: var(--slate-950);
+      font-size: 20px;
+      font-weight: 950;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+    }
+
+    .section-desc {
+      margin: 4px 0 0;
+      color: var(--slate-500);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .sidebar,
+    .main {
+      min-width: 0;
+    }
+
+    .card {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-2xl);
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-guide {
+      padding: 18px;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .guide-note {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+      padding: 6px 2px 6px 2px;
+    }
+
+    .guide-callout {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--blue-50);
+      color: var(--blue-700);
+      font-size: 12px;
+      font-weight: 950;
+      border: 1px solid var(--blue-100);
+    }
+
+    .guide-title {
+      margin: 0;
+      color: var(--slate-950);
+      font-size: 24px;
+      font-weight: 950;
+      line-height: 1.22;
+      letter-spacing: -0.04em;
+    }
+
+    .guide-text {
+      margin: 0;
+      color: var(--slate-600);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .guide-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .guide-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: var(--slate-700);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .guide-list strong {
+      color: var(--slate-950);
+    }
+
+    .guide-index {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--blue-600);
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 950;
+      margin-top: 1px;
+    }
+
+    .svg-wrap {
+      border-radius: var(--radius-2xl);
+      background: var(--slate-50);
+      padding: 10px;
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .svg-title-text {
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans KR",
+        sans-serif;
+      font-size: 13px;
+      font-weight: 950;
+      fill: var(--slate-950);
+    }
+
+    .svg-small {
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans KR",
+        sans-serif;
+      font-size: 10.5px;
+      font-weight: 800;
+      fill: var(--slate-500);
+    }
+
+    .save-badge,
+    .status-badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .save-badge {
+      background: var(--slate-100);
+      color: var(--slate-500);
+    }
+
+    .status-ok {
+      border: 1px solid var(--green-100);
+      background: var(--green-50);
+      color: var(--green-700);
+    }
+
+    .status-error {
+      border: 1px solid var(--red-100);
+      background: var(--red-50);
+      color: var(--red-700);
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .label {
+      color: var(--slate-700);
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: -0.01em;
+    }
+
+    .help {
+      margin: 0;
+      color: var(--slate-500);
+      font-size: 12px;
+      line-height: 1.5;
+      font-weight: 650;
+    }
+
+    .input,
+    .select {
+      width: 100%;
+      min-height: 58px;
+      padding: 13px 15px;
+      border: 1px solid var(--slate-300);
+      border-radius: var(--radius-xl);
+      outline: none;
+      background: var(--white);
+      color: var(--slate-950);
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: var(--shadow-sm);
+      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+
+    .select {
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--slate-500) 50%),
+        linear-gradient(135deg, var(--slate-500) 50%, transparent 50%);
+      background-position:
+        calc(100% - 22px) 50%,
+        calc(100% - 15px) 50%;
+      background-size: 7px 7px, 7px 7px;
+      background-repeat: no-repeat;
+      padding-right: 44px;
+    }
+
+    .input:focus,
+    .select:focus {
+      border-color: var(--blue-600);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.13);
+    }
+
+    .applied-size {
+      border: 1px solid var(--blue-100);
+      border-radius: var(--radius-2xl);
+      padding: 15px;
+      background: linear-gradient(135deg, var(--blue-50), #fff);
+    }
+
+    .applied-size-label {
+      margin: 0;
+      color: var(--blue-700);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .applied-size-value {
+      margin: 5px 0 0;
+      color: var(--blue-900);
+      font-size: 25px;
+      line-height: 1.2;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .muted {
+      color: var(--slate-400);
+    }
+
+    .error-box {
+      display: none;
+      margin-bottom: 16px;
+      border: 1px solid var(--red-100);
+      border-radius: var(--radius-2xl);
+      background: var(--red-50);
+      padding: 15px;
+    }
+
+    .error-box.is-visible {
+      display: block;
+    }
+
+    .error-title {
+      margin: 0;
+      color: var(--red-700);
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .error-text {
+      margin: 5px 0 0;
+      color: var(--red-700);
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 750;
+    }
+
+    .advanced {
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-2xl);
+      background: var(--slate-50);
+      padding: 14px;
+    }
+
+    .advanced > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .advanced > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .advanced-title {
+      margin: 0;
+      color: var(--slate-800);
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .advanced-desc {
+      margin: 3px 0 0;
+      color: var(--slate-500);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .advanced-chip {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      background: var(--white);
+      padding: 6px 9px;
+      color: var(--slate-500);
+      font-size: 11px;
+      font-weight: 950;
+      border: 1px solid var(--slate-200);
+    }
+
+    .advanced-content {
+      display: grid;
+      gap: 14px;
+      margin-top: 15px;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      min-height: 56px;
+      border: 0;
+      border-radius: var(--radius-xl);
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 950;
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      color: var(--white);
+      background: var(--blue-600);
+      box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-700);
+    }
+
+    .btn-secondary {
+      color: var(--slate-700);
+      background: var(--slate-100);
+    }
+
+    .btn-secondary:hover {
+      background: var(--slate-200);
+    }
+
+    .notice {
+      margin-top: 16px;
+      border: 1px solid var(--amber-100);
+      border-radius: var(--radius-2xl);
+      background: var(--amber-50);
+      padding: 14px;
+    }
+
+    .notice-title {
+      margin: 0;
+      color: var(--amber-700);
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .notice-text {
+      margin: 5px 0 0;
+      color: var(--amber-700);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 750;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .result-card {
+      position: relative;
+      overflow: hidden;
+      padding: 18px;
+    }
+
+    .result-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 5px;
+    }
+
+    .bar-slate::after {
+      background: linear-gradient(90deg, var(--slate-300), var(--slate-500));
+    }
+
+    .bar-blue::after {
+      background: linear-gradient(90deg, #93c5fd, var(--blue-600));
+    }
+
+    .bar-green::after {
+      background: linear-gradient(90deg, #6ee7b7, var(--green-600));
+    }
+
+    .bar-red::after {
+      background: linear-gradient(90deg, #fca5a5, var(--red-600));
+    }
+
+    .result-label {
+      margin: 0;
+      font-size: 13px;
+      font-weight: 950;
+    }
+
+    .result-label.slate { color: var(--slate-600); }
+    .result-label.blue { color: var(--blue-700); }
+    .result-label.green { color: var(--green-700); }
+    .result-label.red { color: var(--red-600); }
+
+    .result-value {
+      margin: 8px 0 0;
+      font-size: clamp(30px, 7vw, 42px);
+      line-height: 1.08;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      color: var(--slate-950);
+    }
+
+    .result-value.red {
+      color: var(--red-600);
+    }
+
+    .unit {
+      color: var(--slate-400);
+      font-size: 17px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+    }
+
+    .unit-red {
+      color: #fca5a5;
+    }
+
+    .result-help {
+      margin: 8px 0 0;
+      color: var(--slate-500);
+      font-size: 12px;
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .key-badge {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      background: var(--red-600);
+      color: var(--white);
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 950;
+      margin-bottom: 8px;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .detail-card {
+      padding: 14px;
+    }
+
+    .detail-label {
+      margin: 0;
+      color: var(--slate-500);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .detail-value {
+      margin: 5px 0 0;
+      color: var(--slate-950);
+      font-size: 22px;
+      line-height: 1.18;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .work-guide {
+      margin-top: 14px;
+      padding: 18px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      border-radius: var(--radius-xl);
+      padding: 14px;
+    }
+
+    .step.blue {
+      background: var(--blue-50);
+    }
+
+    .step.red {
+      background: var(--red-50);
+    }
+
+    .step.green {
+      background: var(--green-50);
+    }
+
+    .step-dot {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .step-dot.blue { background: var(--blue-600); }
+    .step-dot.red { background: var(--red-600); }
+    .step-dot.green { background: var(--green-600); }
+
+    .step-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 950;
+    }
+
+    .step-title.blue { color: var(--blue-900); }
+    .step-title.red { color: var(--red-700); }
+    .step-title.green { color: var(--green-700); }
+
+    .step-text {
+      margin: 4px 0 0;
+      font-size: 13px;
+      font-weight: 750;
+      line-height: 1.55;
+    }
+
+    .step-text.blue { color: var(--blue-700); }
+    .step-text.red { color: var(--red-700); }
+    .step-text.green { color: var(--green-700); }
+
+    .tutorial-card {
+      margin-top: 14px;
+      padding: 18px;
+    }
+
+    .sticky {
+      position: fixed;
+      z-index: 50;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-top: 1px solid var(--slate-200);
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 -18px 40px rgba(15,23,42,0.12);
+      backdrop-filter: blur(12px);
+      padding: 10px;
+    }
+
+    .sticky-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .sticky-item {
+      border-radius: 16px;
+      padding: 9px 6px;
+      text-align: center;
+    }
+
+    .sticky-item.blue { background: var(--blue-50); }
+    .sticky-item.green { background: var(--green-50); }
+    .sticky-item.red { background: var(--red-50); }
+
+    .sticky-label {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 950;
+    }
+
+    .sticky-label.blue { color: var(--blue-700); }
+    .sticky-label.green { color: var(--green-700); }
+    .sticky-label.red { color: var(--red-600); }
+
+    .sticky-value {
+      margin: 2px 0 0;
+      color: var(--slate-950);
+      font-size: 18px;
+      line-height: 1.1;
+      font-weight: 950;
+      letter-spacing: -0.04em;
+    }
+
+    .sticky-value.red {
+      color: var(--red-600);
+    }
+
+    @media (min-width: 720px) {
+      .page {
+        padding: 24px;
+      }
+
+      .header {
+        padding: 32px;
+      }
+
+      .content {
+        padding: 24px;
+      }
+
+      .guide-grid {
+        grid-template-columns: 1.05fr 1.45fr;
+      }
+
+      .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 1120px) {
+      body {
+        padding-bottom: 24px;
+      }
+
+      .layout {
+        grid-template-columns: 410px minmax(0, 1fr);
+      }
+
+      .results-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .details-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .sticky {
+        display: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <div style="padding:16px; background:#fef2f2; color:#991b1b; font-weight:800;">
+      이 계산기는 JavaScript가 필요합니다. 브라우저 설정에서 JavaScript를 활성화해 주세요.
+    </div>
+  </noscript>
+
+  <div class="page">
+    <div class="app-shell">
+      <header class="header">
+        <div class="header-inner">
+          <div class="eyebrow">PIPE FIELD CALCULATOR</div>
+          <h1 class="title">파이프 사선 커팅 & 컷백 계산기</h1>
+          <p class="subtitle">
+            파이프 관경을 선택하고 수평 거리와 대각선 거리를 입력하면
+            절단 각도, 컷백 거리(B), 실제 절단 길이를 현장 작업 순서와 함께 계산합니다.
+          </p>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- 최상단 구조도 -->
+        <section class="section card hero-guide" aria-labelledby="topGuideTitle">
+          <div class="guide-grid">
+            <div class="guide-note">
+              <span class="guide-callout">먼저 확인하세요</span>
+              <h2 id="topGuideTitle" class="guide-title">배관 오프셋 거리 기준</h2>
+              <p class="guide-text">
+                입력 전에 <strong>수평 거리</strong>, <strong>수직 거리</strong>, <strong>대각선 거리</strong>가
+                어떤 관계인지 먼저 확인하면 계산 기준을 헷갈리지 않습니다.
+                수직 거리(H)는 입력값이 아니라 자동 계산값입니다.
+              </p>
+              <ul class="guide-list">
+                <li><span class="guide-index">1</span><span><strong>수평 거리</strong>: 시작 중심과 도착 중심의 가로 거리</span></li>
+                <li><span class="guide-index">2</span><span><strong>대각선 거리</strong>: 실제 중심선 연결 길이</span></li>
+                <li><span class="guide-index">3</span><span><strong>수직 거리(H)</strong>: 수평/대각선 거리로부터 자동 계산</span></li>
+              </ul>
+            </div>
+
+            <div class="svg-wrap">
+              <svg viewBox="0 0 380 315" role="img" aria-label="배관 오프셋 구조도">
+                <defs>
+                  <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#2563eb"></path>
+                  </marker>
+                  <marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#059669"></path>
+                  </marker>
+                  <marker id="arrowDark" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#0f172a"></path>
+                  </marker>
+                </defs>
+
+                <rect x="18" y="18" width="344" height="268" rx="24" fill="#f8fafc" />
+
+                <path
+                  d="M 72 78 L 300 78 M 72 226 L 300 226 M 300 78 L 300 226"
+                  stroke="#cbd5e1"
+                  stroke-width="1.5"
+                  stroke-dasharray="6 6"
+                />
+
+                <rect x="52" y="203" width="20" height="46" rx="4" fill="#64748b" />
+                <rect x="300" y="55" width="20" height="46" rx="4" fill="#64748b" />
+
+                <circle cx="72" cy="226" r="6" fill="#0f172a" />
+                <circle cx="300" cy="78" r="6" fill="#0f172a" />
+
+                <line
+                  x1="72"
+                  y1="226"
+                  x2="300"
+                  y2="78"
+                  stroke="#0f172a"
+                  stroke-width="6"
+                  stroke-linecap="round"
+                  marker-end="url(#arrowDark)"
+                />
+
+                <line
+                  x1="72"
+                  y1="255"
+                  x2="300"
+                  y2="255"
+                  stroke="#2563eb"
+                  stroke-width="2.6"
+                  marker-end="url(#arrowBlue)"
+                />
+                <line x1="72" y1="246" x2="72" y2="264" stroke="#2563eb" stroke-width="2" />
+                <line x1="300" y1="246" x2="300" y2="264" stroke="#2563eb" stroke-width="2" />
+
+                <line
+                  x1="329"
+                  y1="226"
+                  x2="329"
+                  y2="78"
+                  stroke="#059669"
+                  stroke-width="2.6"
+                  marker-end="url(#arrowGreen)"
+                />
+                <line x1="319" y1="226" x2="339" y2="226" stroke="#059669" stroke-width="2" />
+                <line x1="319" y1="78" x2="339" y2="78" stroke="#059669" stroke-width="2" />
+
+                <text x="186" y="278" text-anchor="middle" class="svg-title-text" fill="#2563eb">
+                  수평 거리 = <tspan id="svg_L">400</tspan> mm
+                </text>
+
+                <text
+                  x="352"
+                  y="154"
+                  text-anchor="middle"
+                  class="svg-title-text"
+                  fill="#059669"
+                  transform="rotate(90 352 154)"
+                >
+                  수직 거리 = <tspan id="svg_H">300</tspan> mm
+                </text>
+
+                <text
+                  x="178"
+                  y="132"
+                  text-anchor="middle"
+                  class="svg-title-text"
+                  transform="rotate(-33 178 132)"
+                >
+                  대각선 거리 = <tspan id="svg_T">500</tspan> mm
+                </text>
+
+                <text x="45" y="228" text-anchor="end" class="svg-small">시작 중심</text>
+                <text x="300" y="46" text-anchor="middle" class="svg-small">도착 중심</text>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- 입력 / 결과 -->
+        <div class="layout">
+          <aside class="sidebar card panel" aria-label="입력 영역">
+            <div class="section-head">
+              <div>
+                <h2 class="section-title">입력값 설정</h2>
+                <p class="section-desc">현장 기준값을 입력하세요.</p>
+              </div>
+              <span id="saveBadge" class="save-badge">자동 저장</span>
+            </div>
+
+            <div id="errorBox" class="error-box" role="alert" aria-live="assertive">
+              <p class="error-title">입력값을 확인하세요</p>
+              <p id="errorText" class="error-text"></p>
+            </div>
+
+            <form class="form-grid" onsubmit="event.preventDefault(); calculate();">
+              <div class="field">
+                <label for="pipeSize" class="label">파이프 관경</label>
+                <select id="pipeSize" class="select" onchange="onPipeSizeChange()">
+                  <option value="15A">15A · 외경 21.7 mm</option>
+                  <option value="20A">20A · 외경 27.2 mm</option>
+                  <option value="25A">25A · 외경 34.0 mm</option>
+                  <option value="32A">32A · 외경 42.7 mm</option>
+                  <option value="40A">40A · 외경 48.6 mm</option>
+                  <option value="50A">50A · 외경 60.5 mm</option>
+                  <option value="65A">65A · 외경 76.3 mm</option>
+                  <option value="80A">80A · 외경 89.1 mm</option>
+                  <option value="100A" selected>100A · 외경 114.3 mm</option>
+                  <option value="125A">125A · 외경 139.8 mm</option>
+                  <option value="150A">150A · 외경 165.2 mm</option>
+                  <option value="200A">200A · 외경 216.3 mm</option>
+                </select>
+                <p class="help">15A부터 200A까지 JIS PIPE 외경 기준으로 자동 적용됩니다.</p>
+              </div>
+
+              <div class="applied-size" aria-live="polite">
+                <p class="applied-size-label">적용 관경 / 외경</p>
+                <p class="applied-size-value">
+                  <span id="selectedSize">100A</span>
+                  <span class="muted">/</span>
+                  <span id="selectedOD">114.3</span> mm
+                </p>
+              </div>
+
+              <div class="field">
+                <label for="input_L" class="label">수평 거리</label>
+                <input
+                  id="input_L"
+                  class="input"
+                  type="number"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.1"
+                  value="400"
+                  oninput="calculate()"
+                />
+                <p class="help">시작 중심점과 도착 중심점 사이의 수평 방향 거리입니다.</p>
+              </div>
+
+              <div class="field">
+                <label for="input_T" class="label">대각선 거리</label>
+                <input
+                  id="input_T"
+                  class="input"
+                  type="number"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.1"
+                  value="500"
+                  oninput="calculate()"
+                />
+                <p class="help">실제 연결되는 중심선 거리입니다. 수평 거리보다 작을 수 없습니다.</p>
+              </div>
+
+              <details class="advanced">
+                <summary>
+                  <div>
+                    <p class="advanced-title">고급 옵션</p>
+                    <p class="advanced-desc">감면 길이와 총 용접 갭이 필요한 경우만 사용</p>
+                  </div>
+                  <span class="advanced-chip">열기 / 닫기</span>
+                </summary>
+
+                <div class="advanced-content">
+                  <div class="field">
+                    <label for="input_D1" class="label">감면 길이 1</label>
+                    <input
+                      id="input_D1"
+                      class="input"
+                      type="number"
+                      inputmode="decimal"
+                      min="0"
+                      step="0.1"
+                      value="0"
+                      oninput="calculate()"
+                    />
+                    <p class="help">한쪽 부속, 플랜지, 엘보 등의 감면 길이가 있으면 입력합니다.</p>
+                  </div>
+
+                  <div class="field">
+                    <label for="input_D2" class="label">감면 길이 2</label>
+                    <input
+                      id="input_D2"
+                      class="input"
+                      type="number"
+                      inputmode="decimal"
+                      min="0"
+                      step="0.1"
+                      value="0"
+                      oninput="calculate()"
+                    />
+                    <p class="help">반대쪽 감면 길이가 있으면 입력합니다. 없으면 0으로 둡니다.</p>
+                  </div>
+
+                  <div class="field">
+                    <label for="input_Gap" class="label">총 용접 갭</label>
+                    <input
+                      id="input_Gap"
+                      class="input"
+                      type="number"
+                      inputmode="decimal"
+                      min="0"
+                      step="0.1"
+                      value="0"
+                      oninput="calculate()"
+                    />
+                    <p class="help">양쪽 갭을 합산한 총값입니다. 예: 3mm씩 2곳이면 6 입력.</p>
+                  </div>
+                </div>
+              </details>
+
+              <div class="field">
+                <label for="roundMode" class="label">표시 반올림</label>
+                <select id="roundMode" class="select" onchange="calculate()">
+                  <option value="0.1">0.1 mm 단위</option>
+                  <option value="1">1 mm 단위</option>
+                  <option value="5">5 mm 단위</option>
+                </select>
+              </div>
+
+              <div class="button-row">
+                <button type="submit" class="btn btn-primary">계산하기</button>
+                <button type="button" class="btn btn-secondary" onclick="resetValues()">초기화</button>
+              </div>
+            </form>
+
+            <div class="notice">
+              <p class="notice-title">현장 팁</p>
+              <p class="notice-text">
+                먼저 긴쪽 기준으로 직각선을 긋고, 반대편에서 컷백 거리(B)만큼 표시한 뒤 두 점을 연결하면 됩니다.
+              </p>
+            </div>
+          </aside>
+
+          <main class="main" aria-label="결과 영역">
+            <section aria-labelledby="resultTitle">
+              <div class="section-head">
+                <div>
+                  <h2 id="resultTitle" class="section-title">계산 결과</h2>
+                  <p class="section-desc">현장 마킹에 바로 사용할 수 있는 핵심값입니다.</p>
+                </div>
+                <span id="statusBadge" class="status-badge status-ok" aria-live="polite">계산 정상</span>
+              </div>
+
+              <div class="results-grid" aria-live="polite">
+                <article class="card result-card bar-slate">
+                  <p class="result-label slate">대각선 기준 길이</p>
+                  <p id="res_diagonal" class="result-value">
+                    0.0 <span class="unit">mm</span>
+                  </p>
+                  <p class="result-help">입력한 실제 중심선 거리</p>
+                </article>
+
+                <article class="card result-card bar-blue">
+                  <p class="result-label blue">실제 절단 길이</p>
+                  <p id="res_cut" class="result-value">
+                    0.0 <span class="unit">mm</span>
+                  </p>
+                  <p class="result-help">감면 길이와 총 용접 갭 반영</p>
+                </article>
+
+                <article class="card result-card bar-green">
+                  <p class="result-label green">절단 각도</p>
+                  <p id="res_angle" class="result-value">
+                    0.0 <span class="unit">°</span>
+                  </p>
+                  <p class="result-help">수평 기준 절단 각도</p>
+                </article>
+
+                <article class="card result-card bar-red">
+                  <span class="key-badge">마킹 핵심</span>
+                  <p class="result-label red">컷백 거리 (B)</p>
+                  <p id="res_B" class="result-value red">
+                    0.0 <span class="unit unit-red">mm</span>
+                  </p>
+                  <p class="result-help">반대편에 표시할 높이 차이</p>
+                </article>
+              </div>
+
+              <div class="details-grid">
+                <article class="card detail-card">
+                  <p class="detail-label">수직 거리</p>
+                  <p id="detail_H" class="detail-value">0.0 mm</p>
+                </article>
+
+                <article class="card detail-card">
+                  <p class="detail-label">적용 외경</p>
+                  <p id="detail_OD" class="detail-value">114.3 mm</p>
+                </article>
+
+                <article class="card detail-card">
+                  <p class="detail-label">긴쪽 참고 길이</p>
+                  <p id="detail_long" class="detail-value">0.0 mm</p>
+                </article>
+
+                <article class="card detail-card">
+                  <p class="detail-label">짧은쪽 참고 길이</p>
+                  <p id="detail_short" class="detail-value">0.0 mm</p>
+                </article>
+              </div>
+            </section>
+
+            <section class="card work-guide" aria-labelledby="guideTitle">
+              <h2 id="guideTitle" class="section-title">현장 작업 순서</h2>
+              <p class="section-desc">처음 사용하는 작업자도 따라 할 수 있도록 순서화했습니다.</p>
+
+              <div class="steps">
+                <article class="step blue">
+                  <span class="step-dot blue">1</span>
+                  <div>
+                    <p class="step-title blue">기준 직각선 표시</p>
+                    <p class="step-text blue">긴쪽 기준으로 파이프 둘레에 직각선을 먼저 표시합니다.</p>
+                  </div>
+                </article>
+
+                <article class="step red">
+                  <span class="step-dot red">2</span>
+                  <div>
+                    <p class="step-title red">컷백 거리 표시</p>
+                    <p class="step-text red">
+                      반대편 위치에 <strong id="guide_B">B = 0.0 mm</strong> 만큼 올라간 위치를 표시합니다.
+                    </p>
+                  </div>
+                </article>
+
+                <article class="step green">
+                  <span class="step-dot green">3</span>
+                  <div>
+                    <p class="step-title green">절단선 연결</p>
+                    <p class="step-text green">기준선 끝점과 표시점을 연결하여 사선 절단선을 그립니다.</p>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="card tutorial-card" aria-labelledby="tutorialTitle">
+              <div class="section-head">
+                <div>
+                  <h2 id="tutorialTitle" class="section-title">파이프 마킹 튜토리얼</h2>
+                  <p class="section-desc">컷백 거리(B)를 이용한 실제 사선 마킹</p>
+                </div>
+              </div>
+
+              <div class="svg-wrap">
+                <svg viewBox="0 0 380 430" role="img" aria-label="파이프 사선 마킹 튜토리얼">
+                  <rect x="20" y="20" width="340" height="386" rx="26" fill="#f8fafc" />
+
+                  <circle cx="58" cy="50" r="13" fill="#2563eb" />
+                  <text x="58" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="900">1</text>
+                  <text x="78" y="55" class="svg-small">긴쪽 기준 직각선 표시</text>
+
+                  <circle cx="58" cy="78" r="13" fill="#dc2626" />
+                  <text x="58" y="83" text-anchor="middle" fill="white" font-size="12" font-weight="900">2</text>
+                  <text x="78" y="83" class="svg-small">반대편 컷백 거리(B) 표시</text>
+
+                  <circle cx="58" cy="106" r="13" fill="#059669" />
+                  <text x="58" y="111" text-anchor="middle" fill="white" font-size="12" font-weight="900">3</text>
+                  <text x="78" y="111" class="svg-small">두 점 연결 후 절단</text>
+
+                  <path d="M 125 145 L 125 322" stroke="#111827" stroke-width="5" stroke-linecap="round" />
+                  <path d="M 255 145 L 255 322" stroke="#111827" stroke-width="5" stroke-linecap="round" />
+                  <rect x="125" y="145" width="130" height="177" fill="rgba(148, 163, 184, 0.08)" />
+
+                  <path d="M 125 322 L 255 322" stroke="#64748b" stroke-width="3" stroke-dasharray="7 6" />
+                  <text x="197" y="347" text-anchor="middle" class="svg-small">① 기준 직각선</text>
+
+                  <path
+                    id="svg_slant"
+                    d="M 125 245 L 255 322"
+                    stroke="#ef4444"
+                    stroke-width="5"
+                    stroke-linecap="round"
+                  />
+
+                  <text id="cutLabel" x="289" y="263" text-anchor="middle" class="svg-small" fill="#dc2626">
+                    ③ 절단선
+                  </text>
+
+                  <line id="bTopTick" x1="93" y1="245" x2="115" y2="245" stroke="#dc2626" stroke-width="3" />
+                  <line id="bBottomTick" x1="93" y1="322" x2="115" y2="322" stroke="#dc2626" stroke-width="3" />
+                  <line id="bLine" x1="104" y1="245" x2="104" y2="322" stroke="#dc2626" stroke-width="3" />
+
+                  <text id="bLabel1" x="88" y="276" text-anchor="end" class="svg-title-text" fill="#dc2626">
+                    ② 컷백 거리
+                  </text>
+                  <text id="bLabel2" x="88" y="296" text-anchor="end" class="svg-title-text" fill="#dc2626">
+                    B = <tspan id="svg_B">0.0</tspan> mm
+                  </text>
+
+                  <circle id="shortPoint" cx="125" cy="245" r="6" fill="#dc2626" />
+                  <circle cx="255" cy="322" r="6" fill="#2563eb" />
+
+                  <text x="294" y="323" text-anchor="middle" class="svg-small" fill="#2563eb">긴쪽 기준</text>
+                  <text id="shortLabel" x="169" y="238" text-anchor="middle" class="svg-small" fill="#dc2626">짧은쪽 점</text>
+
+                  <line x1="125" y1="376" x2="255" y2="376" stroke="#64748b" stroke-width="2" />
+                  <line x1="125" y1="368" x2="125" y2="384" stroke="#64748b" stroke-width="2" />
+                  <line x1="255" y1="368" x2="255" y2="384" stroke="#64748b" stroke-width="2" />
+
+                  <text x="190" y="399" text-anchor="middle" class="svg-title-text">
+                    파이프 외경 = <tspan id="svg_OD">114.3</tspan> mm
+                  </text>
+
+                  <path
+                    id="svg_arc"
+                    d="M 225 322 A 30 30 0 0 1 230 305"
+                    fill="none"
+                    stroke="#059669"
+                    stroke-width="3"
+                  />
+                  <text x="210" y="307" text-anchor="middle" class="svg-title-text" fill="#059669">
+                    절단 각도 <tspan id="svg_A">16.7</tspan>°
+                  </text>
+                </svg>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sticky" aria-label="모바일 핵심 결과">
+    <div class="sticky-grid">
+      <div class="sticky-item blue">
+        <p class="sticky-label blue">절단 길이</p>
+        <p id="sticky_cut" class="sticky-value">0.0</p>
+      </div>
+      <div class="sticky-item green">
+        <p class="sticky-label green">각도</p>
+        <p id="sticky_angle" class="sticky-value">0.0°</p>
+      </div>
+      <div class="sticky-item red">
+        <p class="sticky-label red">컷백 B</p>
+        <p id="sticky_B" class="sticky-value red">0.0</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "pipe_miter_calculator_production_v3";
+
+    const PIPE_SIZES = {
+      "15A": 21.7,
+      "20A": 27.2,
+      "25A": 34.0,
+      "32A": 42.7,
+      "40A": 48.6,
+      "50A": 60.5,
+      "65A": 76.3,
+      "80A": 89.1,
+      "100A": 114.3,
+      "125A": 139.8,
+      "150A": 165.2,
+      "200A": 216.3
+    };
+
+    const DEFAULTS = {
+      pipeSize: "100A",
+      L: "400",
+      T: "500",
+      D1: "0",
+      D2: "0",
+      Gap: "0",
+      roundMode: "0.1"
+    };
+
+    const state = {
+      selectedSize: DEFAULTS.pipeSize
+    };
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function getNumber(id) {
+      const value = parseFloat($(id).value);
+      return Number.isFinite(value) ? value : 0;
+    }
+
+    function setText(id, value) {
+      const el = $(id);
+      if (el) el.textContent = value;
+    }
+
+    function setHtml(id, value) {
+      const el = $(id);
+      if (el) el.innerHTML = value;
+    }
+
+    function getRoundUnit() {
+      const unit = parseFloat($("roundMode").value);
+      return Number.isFinite(unit) && unit > 0 ? unit : 0.1;
+    }
+
+    function roundBy(value, unit) {
+      if (!Number.isFinite(value)) return 0;
+      return Math.round(value / unit) * unit;
+    }
+
+    function formatNumber(value) {
+      const unit = getRoundUnit();
+      const rounded = roundBy(value, unit);
+
+      if (unit >= 1) {
+        return rounded.toFixed(0);
+      }
+
+      return rounded.toFixed(1);
+    }
+
+    function showError(message) {
+      $("errorBox").classList.add("is-visible");
+      setText("errorText", message);
+
+      const badge = $("statusBadge");
+      badge.className = "status-badge status-error";
+      badge.textContent = "입력 오류";
+
+      const errorHtml = '<span style="font-size:20px; color:#dc2626; font-weight:950;">확인 필요</span>';
+
+      setHtml("res_diagonal", errorHtml);
+      setHtml("res_cut", errorHtml);
+      setHtml("res_angle", errorHtml);
+      setHtml("res_B", errorHtml);
+
+      setText("sticky_cut", "-");
+      setText("sticky_angle", "-");
+      setText("sticky_B", "-");
+    }
+
+    function clearError() {
+      $("errorBox").classList.remove("is-visible");
+
+      const badge = $("statusBadge");
+      badge.className = "status-badge status-ok";
+      badge.textContent = "계산 정상";
+    }
+
+    function validateInputs({ L, T, D1, D2, Gap }) {
+      if (L <= 0) return "수평 거리는 0보다 커야 합니다.";
+      if (T <= 0) return "대각선 거리는 0보다 커야 합니다.";
+      if (T < L) return "대각선 거리는 수평 거리보다 작을 수 없습니다.";
+      if (D1 < 0 || D2 < 0) return "감면 길이는 음수가 될 수 없습니다.";
+      if (Gap < 0) return "총 용접 갭은 음수가 될 수 없습니다.";
+      return "";
+    }
+
+    function onPipeSizeChange() {
+      state.selectedSize = $("pipeSize").value;
+      const od = PIPE_SIZES[state.selectedSize];
+
+      setText("selectedSize", state.selectedSize);
+      setText("selectedOD", od.toFixed(1));
+
+      calculate();
+    }
+
+    function updateSvg({ angleRad, angleDeg, bDistance, OD }) {
+      const pipeWidthSvg = 130;
+      const maxBSvg = 142;
+
+      let ratio = bDistance / OD;
+      if (!Number.isFinite(ratio)) ratio = 0;
+
+      let svgB = pipeWidthSvg * ratio;
+      svgB = Math.max(0, Math.min(svgB, maxBSvg));
+
+      const bottomY = 322;
+      const topY = bottomY - svgB;
+
+      $("svg_slant").setAttribute("d", `M 125 ${topY} L 255 ${bottomY}`);
+
+      $("bTopTick").setAttribute("y1", topY);
+      $("bTopTick").setAttribute("y2", topY);
+      $("bBottomTick").setAttribute("y1", bottomY);
+      $("bBottomTick").setAttribute("y2", bottomY);
+      $("bLine").setAttribute("y1", topY);
+      $("bLine").setAttribute("y2", bottomY);
+
+      $("shortPoint").setAttribute("cy", topY);
+      $("shortLabel").setAttribute("y", topY - 8);
+      $("cutLabel").setAttribute("y", topY + 18);
+
+      const midY = (topY + bottomY) / 2;
+      $("bLabel1").setAttribute("y", midY - 8);
+      $("bLabel2").setAttribute("y", midY + 12);
+
+      const arc = $("svg_arc");
+
+      if (angleDeg > 0.5) {
+        const radius = 30;
+        const startX = 255 - radius;
+        const startY = bottomY;
+        const endX = 255 - radius * Math.cos(angleRad);
+        const endY = bottomY - radius * Math.sin(angleRad);
+
+        arc.setAttribute(
+          "d",
+          `M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`
+        );
+        arc.style.display = "block";
+      } else {
+        arc.style.display = "none";
+      }
+    }
+
+    function calculate() {
+      const inputs = {
+        L: getNumber("input_L"),
+        T: getNumber("input_T"),
+        D1: getNumber("input_D1"),
+        D2: getNumber("input_D2"),
+        Gap: getNumber("input_Gap")
+      };
+
+      const validationMessage = validateInputs(inputs);
+      if (validationMessage) {
+        showError(validationMessage);
+        saveValues();
+        return;
+      }
+
+      const OD = PIPE_SIZES[state.selectedSize];
+      const { L, T, D1, D2, Gap } = inputs;
+
+      const H = Math.sqrt((T * T) - (L * L));
+      const angleRad = Math.acos(L / T);
+      const angleDeg = angleRad * (180 / Math.PI);
+      const bDistance = OD * Math.tan(angleRad);
+
+      const actualCutLength = T - D1 - D2 - Gap;
+
+      if (actualCutLength <= 0) {
+        showError("실제 절단 길이가 0 이하입니다. 감면 길이와 총 용접 갭을 다시 확인하세요.");
+        saveValues();
+        return;
+      }
+
+      const longSide = actualCutLength + (bDistance / 2);
+      const shortSide = actualCutLength - (bDistance / 2);
+
+      clearError();
+
+      const diagonalText = formatNumber(T);
+      const cutText = formatNumber(actualCutLength);
+      const angleText = formatNumber(angleDeg);
+      const bText = formatNumber(bDistance);
+
+      setHtml("res_diagonal", `${diagonalText} <span class="unit">mm</span>`);
+      setHtml("res_cut", `${cutText} <span class="unit">mm</span>`);
+      setHtml("res_angle", `${angleText} <span class="unit">°</span>`);
+      setHtml("res_B", `${bText} <span class="unit unit-red">mm</span>`);
+
+      setText("detail_H", `${formatNumber(H)} mm`);
+      setText("detail_OD", `${formatNumber(OD)} mm`);
+      setText("detail_long", `${formatNumber(longSide)} mm`);
+      setText("detail_short", `${formatNumber(shortSide)} mm`);
+
+      setText("guide_B", `B = ${bText} mm`);
+
+      setText("sticky_cut", cutText);
+      setText("sticky_angle", `${angleText}°`);
+      setText("sticky_B", bText);
+
+      setText("svg_L", formatNumber(L));
+      setText("svg_H", formatNumber(H));
+      setText("svg_T", formatNumber(T));
+      setText("svg_B", bText);
+      setText("svg_OD", formatNumber(OD));
+      setText("svg_A", angleText);
+
+      updateSvg({
+        angleRad,
+        angleDeg,
+        bDistance,
+        OD
+      });
+
+      saveValues();
+    }
+
+    function saveValues() {
+      const values = {
+        pipeSize: $("pipeSize").value,
+        L: $("input_L").value,
+        T: $("input_T").value,
+        D1: $("input_D1").value,
+        D2: $("input_D2").value,
+        Gap: $("input_Gap").value,
+        roundMode: $("roundMode").value
+      };
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
+        const badge = $("saveBadge");
+        badge.textContent = "저장됨";
+        window.clearTimeout(saveValues._timer);
+        saveValues._timer = window.setTimeout(() => {
+          badge.textContent = "자동 저장";
+        }, 850);
+      } catch (error) {
+        $("saveBadge").textContent = "저장 불가";
+      }
+    }
+
+    function loadValues() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+
+        const values = JSON.parse(raw);
+
+        if (values.pipeSize && PIPE_SIZES[values.pipeSize]) {
+          $("pipeSize").value = values.pipeSize;
+          state.selectedSize = values.pipeSize;
+        }
+
+        if (values.L !== undefined) $("input_L").value = values.L;
+        if (values.T !== undefined) $("input_T").value = values.T;
+        if (values.D1 !== undefined) $("input_D1").value = values.D1;
+        if (values.D2 !== undefined) $("input_D2").value = values.D2;
+        if (values.Gap !== undefined) $("input_Gap").value = values.Gap;
+        if (values.roundMode !== undefined) $("roundMode").value = values.roundMode;
+      } catch (error) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function resetValues() {
+      $("pipeSize").value = DEFAULTS.pipeSize;
+      $("input_L").value = DEFAULTS.L;
+      $("input_T").value = DEFAULTS.T;
+      $("input_D1").value = DEFAULTS.D1;
+      $("input_D2").value = DEFAULTS.D2;
+      $("input_Gap").value = DEFAULTS.Gap;
+      $("roundMode").value = DEFAULTS.roundMode;
+
+      state.selectedSize = DEFAULTS.pipeSize;
+
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (error) {}
+
+      onPipeSizeChange();
+    }
+
+    window.addEventListener("load", () => {
+      loadValues();
+      onPipeSizeChange();
+    });
+  </script>
+</body>
+</html>
