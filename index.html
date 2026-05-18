@@ -704,7 +704,7 @@
   .cb-row {
     display: flex; align-items: flex-start; gap: 10px;
     padding: 10px 12px; background: var(--c-surface-2);
-    border: 1px solid var(--c-border); border-radius: var(--r-md); margin-bottom: 8px;
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
   }
   .cb-nick {
     min-width: 70px; max-width: 100px; font-size: .85rem; font-weight: 700;
@@ -729,6 +729,8 @@
   .board-pw-confirm { margin-top: 8px; padding: 8px 10px; background: var(--c-danger-weak); border-radius: var(--r-sm); border: 1px solid var(--c-danger); }
   .board-pw-confirm .board-pw-row { display: flex; gap: 6px; align-items: center; }
   .board-pw-confirm .board-input { font-size: .82rem; padding: 5px 8px; }
+  .board-pw-input { flex: 1; min-width: 0; width: 100%; }
+  .cb-wrap { margin-bottom: 8px; }
   .btn-danger { background: var(--c-danger); color: #fff; border: none; }
   .btn-danger:hover { background: #b91c1c; }
 
@@ -1367,7 +1369,7 @@
     measurementId:     "G-WTVVE493B0"
   };
 
-  let _fbDb = null;
+  var _fbDb = null;
   try {
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
     _fbDb = firebase.firestore();

@@ -2789,21 +2789,23 @@
     }
 
     // ── Delete confirm helper ────────────────────────────────────────────
-    function showDeleteConfirm(parentNode, onConfirmPw) {
-      parentNode.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
+    function showDeleteConfirm(wrapperNode, onConfirmPw) {
+      wrapperNode.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
       const area  = el('div', { class: 'board-pw-confirm' });
-      const input = el('input',  { type: 'password', placeholder: '비밀번호 입력', class: 'board-input', style: 'flex:1;min-width:0;' });
-      const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'font-size:.8rem;padding:5px 10px;' }, '삭제');
-      const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'font-size:.8rem;padding:5px 10px;' }, '취소');
+      const input = el('input',  { type: 'password', placeholder: '비밀번호 입력', class: 'board-input board-pw-input' });
+      const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '삭제');
+      const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '취소');
       okBtn.addEventListener('click', () => onConfirmPw(input.value.trim()));
       noBtn.addEventListener('click', () => area.remove());
       area.appendChild(el('div', { class: 'board-pw-row' }, input, okBtn, noBtn));
-      parentNode.appendChild(area);
+      wrapperNode.appendChild(area);
       input.focus();
     }
 
     // ── Comment rows ─────────────────────────────────────────────────────
     comments.forEach(c => {
+      // wrap each row so the delete-confirm can appear below full-width
+      const wrap   = el('div', { class: 'cb-wrap' });
       const row    = el('div', { class: 'cb-row' });
       const delBtn = el('button', { class: 'icon-btn board-del', type: 'button', title: '댓글 삭제', 'aria-label': '댓글 삭제' }, '🗑');
 
@@ -2817,7 +2819,7 @@
       );
 
       delBtn.addEventListener('click', () => {
-        showDeleteConfirm(row, async (pw) => {
+        showDeleteConfirm(wrap, async (pw) => {
           try {
             if (await Board.deleteComment(c.id, pw)) {
               toast('댓글이 삭제되었습니다.');
@@ -2829,7 +2831,8 @@
         });
       });
 
-      body.appendChild(row);
+      wrap.appendChild(row);
+      body.appendChild(wrap);
     });
   }
 
