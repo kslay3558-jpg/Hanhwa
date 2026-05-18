@@ -1540,8 +1540,8 @@
                   <span class="step-dot red">2</span>
                   <div>
                     <p id="step2Title" class="step-title red">컷백 거리 표시</p>
-                    <p class="step-text red">
-                      반대편 위치에 <strong id="guide_B">B = 0.0 mm</strong> 만큼 올라간 위치를 표시합니다.
+                    <p id="step2Text" class="step-text red">
+                      <span id="step2TextPrefix">반대편 위치에 </span><strong id="guide_B">B = 0.0 mm</strong><span id="step2TextSuffix"> 만큼 올라간 위치를 표시합니다.</span>
                     </p>
                   </div>
                 </article>
@@ -2133,7 +2133,6 @@
         pageTitle: "title",
         pageSubtitle: "subtitle",
         guideCallout: "guideCallout",
-        topGuideTitle: "guideTitle",
         inputTitle: "inputTitle",
         inputDesc: "inputDesc",
         errorTitle: "errorTitle",
@@ -2196,6 +2195,7 @@
         langSelectLabel: "langSelect"
       };
       Object.entries(textMap).forEach(([id, key]) => setText(id, t(key)));
+      setText("topGuideTitle", t("guideTitle"));
 
       const htmlMap = {
         guideText: "guideText",
@@ -2228,11 +2228,10 @@
       setHtml("svgODText", `${t("svgPipeOD")} = <tspan id="svg_OD">${currentText("svg_OD", PIPE_SIZES[DEFAULTS.pipeSize].toFixed(1))}</tspan> mm`);
       setHtml("svgAngleText", `${t("svgCutAngle")} <tspan id="svg_A">${currentText("svg_A", "0.0")}</tspan>°`);
 
-      const guideValue = currentText("guide_B", "B = 0.0 mm");
-      const guideParent = $("guide_B") ? $("guide_B").parentElement : null;
-      if (guideParent) {
-        guideParent.innerHTML = t("step2Text", { value: `<strong id="guide_B">${guideValue}</strong>` });
-      }
+      const guideTemplate = t("step2Text", { value: "__VALUE__" });
+      const [guidePrefix = "", guideSuffix = ""] = guideTemplate.split("__VALUE__");
+      setText("step2TextPrefix", guidePrefix);
+      setText("step2TextSuffix", guideSuffix);
 
       applyTheme(document.documentElement.dataset.theme || "auto");
       $("langSelect").value = state.language;
