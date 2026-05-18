@@ -2533,10 +2533,9 @@
     if (!('serviceWorker' in navigator)) return;
     // Don't register on file:// or non-http(s)
     if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
-    const hasControllerAtInit = !!navigator.serviceWorker.controller;
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      if (!hasControllerAtInit || refreshing) return;
+      if (refreshing) return;
       refreshing = true;
       window.location.reload();
     });
