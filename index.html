@@ -700,6 +700,19 @@
   }
   .board-del { color: var(--c-text-mute); font-size: .85rem; flex-shrink: 0; }
   .board-del:hover { color: var(--c-danger); background: var(--c-danger-weak); }
+  /* Comment-board row layout */
+  .cb-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; background: var(--c-surface-2);
+    border: 1px solid var(--c-border); border-radius: var(--r-md); margin-bottom: 8px;
+  }
+  .cb-nick {
+    min-width: 70px; max-width: 100px; font-size: .85rem; font-weight: 700;
+    color: var(--c-primary); word-break: break-all; padding-top: 1px;
+  }
+  .cb-body { flex: 1; min-width: 0; }
+  .cb-content { font-size: .88rem; color: var(--c-text); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .cb-meta { font-size: .72rem; color: var(--c-text-mute); margin-top: 3px; }
   .board-comment-count {
     font-size: .8rem; color: var(--c-primary); cursor: pointer; padding: 4px 0; user-select: none;
   }
@@ -1309,16 +1322,16 @@
       <span data-i18n="vis.today">오늘 방문자:</span>
       <strong id="visitorCount">0</strong><span data-i18n="vis.unit">명</span>
     </span>
-    <button id="boardToggle" type="button" aria-label="문의 및 건의 게시판 열기" title="문의 및 건의 게시판">
+    <button id="boardToggle" type="button" aria-label="댓글 게시판 열기" title="댓글 게시판">
       <span aria-hidden="true">💬</span>
     </button>
   </div>
 
-  <!-- 문의·건의 게시판 모달 -->
+  <!-- 댓글 게시판 모달 -->
   <div id="boardModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="boardTitle" aria-hidden="true">
     <div class="modal-content">
       <div class="cart-drawer-header">
-        <h2 id="boardTitle">💬 문의·건의 게시판</h2>
+        <h2 id="boardTitle">💬 댓글 게시판</h2>
         <button class="icon-btn" type="button" id="boardClose" aria-label="닫기">✕</button>
       </div>
       <div id="boardBody"></div>
@@ -1350,8 +1363,8 @@
     projectId:         "guest-13bd6",
     storageBucket:     "guest-13bd6.firebasestorage.app",
     messagingSenderId: "808898051744",
-    appId:             "1:808898051744:web:a2280409728801ddadd3c5",
-    measurementId:     "G-DNPPH99QBS"
+    appId:             "1:808898051744:web:1cb162d3f329d5bdadd3c5",
+    measurementId:     "G-WTVVE493B0"
   };
 
   let _fbDb = null;
