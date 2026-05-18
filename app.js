@@ -2533,8 +2533,29 @@
     if (!('serviceWorker' in navigator)) return;
     // Don't register on file:// or non-http(s)
     if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
+    const hadController = !!navigator.serviceWorker.controller;
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!hadController || refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => { /* offline / unsupported */ });
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => {
+          reg.update().catch(() => { /* offline */ });
+          if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          reg.addEventListener('updatefound', () => {
+            const worker = reg.installing;
+            if (!worker) return;
+            worker.addEventListener('statechange', () => {
+              if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                worker.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+        })
+        .catch(() => { /* offline / unsupported */ });
     });
   }
 

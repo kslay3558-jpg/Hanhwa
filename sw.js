@@ -2,13 +2,14 @@
  * 캐시 우선(cache-first) 전략으로 오프라인 동작 보장.
  * 새 버전 배포 시 CACHE_NAME의 버전을 올려 강제 갱신.
  */
-const CACHE_NAME = 'jis-calc-v3.18.0';
+const CACHE_NAME = 'jis-calc-v3.18.1';
 const ASSETS = [
   './',
   './index.html',
   './app.js',
   './manifest.webmanifest'
 ];
+const ASSET_URLS = new Set(ASSETS.map((asset) => new URL(asset, self.location).href));
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -24,6 +25,12 @@ self.addEventListener('activate', (event) => {
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', (event) => {
@@ -44,7 +51,24 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 정적 리소스: 캐시 우선 → 네트워크 폴백
+  // 앱 핵심 정적 리소스: 네트워크 우선 → 실패 시 캐시
+  // app.js가 오래된 캐시에 고정되어 새 UI 동작이 누락되는 문제를 방지한다.
+  if (ASSET_URLS.has(req.url)) {
+    event.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.status === 200 && res.type === 'basic') {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // 기타 정적 리소스: 캐시 우선 → 네트워크 폴백
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;
