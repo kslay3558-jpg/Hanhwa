@@ -2761,6 +2761,9 @@
 
     // Bulletin board
     initBoard();
+
+    // KMA temperature alert
+    initTempAlert();
   }
 
   function initVisitorCounter() {
@@ -3041,6 +3044,229 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('show')) closeBoard();
     });
+  }
+
+  /* =====================================================================
+     §11. KMA TEMPERATURE ALERT — 기상청 AWS 온도 알림
+     매일 12:03~12:15 에 기상청 294 관측소 분 데이터를 읽어
+     28°C 이상이면 Web Notification 으로 폰에 알림.
+     ===================================================================== */
+
+  const KMA_AWS_URL = 'http://www.kma.go.kr/cgi-bin/aws/nph-aws_txt_min?0&0&mindb_01m&294&a';
+  const KMA_AWS_FETCH_URL = 'https://corsproxy.io/?' + encodeURIComponent(KMA_AWS_URL);
+  const KMA_ALERT_THRESHOLD = 28;
+  const KMA_ALERT_START_MINUTES = 12 * 60 + 3;
+  const KMA_ALERT_END_MINUTES = 12 * 60 + 15;
+  const KMA_ALERT_TAG = 'kma-temp-alert';
+  const KMA_CHECK_INTERVAL_MS = 60 * 1000;
+  const KMA_FETCH_TIMEOUT_MS = 8000;
+  const KMA_MIN_VALID_TEMP = -50;
+  const KMA_MAX_VALID_TEMP = 60;
+
+  let kmaAlertTimer = 0;
+  let kmaAlertInFlight = false;
+  let kmaAlertIconPromise = null;
+
+  function pad2(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function getLocalDateKey(date = new Date()) {
+    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+  }
+
+  function getKmaAlertSessionKey(date = new Date()) {
+    return `kma-alert-sent-${getLocalDateKey(date)}`;
+  }
+
+  function hasSentKmaAlertToday(date = new Date()) {
+    try {
+      return sessionStorage.getItem(getKmaAlertSessionKey(date)) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markKmaAlertSent(date = new Date()) {
+    try {
+      sessionStorage.setItem(getKmaAlertSessionKey(date), '1');
+    } catch (e) {}
+  }
+
+  function isWithinKmaAlertWindow(date = new Date()) {
+    const minutes = date.getHours() * 60 + date.getMinutes();
+    return minutes >= KMA_ALERT_START_MINUTES && minutes <= KMA_ALERT_END_MINUTES;
+  }
+
+  function splitKmaLine(line) {
+    return String(line || '')
+      .trim()
+      .split(/[,\s]+/)
+      .map(token => token.trim())
+      .filter(Boolean);
+  }
+
+  function normalizeKmaToken(token) {
+    return String(token || '').toLowerCase().replace(/[^a-z가-힣]/g, '');
+  }
+
+  function coerceKmaTemperature(token) {
+    const value = Number.parseFloat(String(token));
+    return Number.isFinite(value) && value >= KMA_MIN_VALID_TEMP && value <= KMA_MAX_VALID_TEMP ? value : NaN;
+  }
+
+  function findKmaTemperatureColumn(lines) {
+    const keywords = new Set(['ta', 'temp', 'temperature', 'airtemp', '기온']);
+    for (const raw of lines) {
+      if (!raw || raw[0] !== '#') continue;
+      const tokens = splitKmaLine(raw.replace(/^#+\s*/, ''));
+      const index = tokens.findIndex(token => keywords.has(normalizeKmaToken(token)));
+      if (index !== -1) return index;
+    }
+    return -1;
+  }
+
+  function parseKmaTemperature(text) {
+    const lines = String(text || '')
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    if (!lines.length) {
+      console.warn('KMA temperature alert parse failed: empty response');
+      return NaN;
+    }
+
+    const latestDataLine = [...lines].reverse().find(line => line && line[0] !== '#');
+    if (!latestDataLine) {
+      console.warn('KMA temperature alert parse failed: no data line found');
+      return NaN;
+    }
+
+    const tokens = splitKmaLine(latestDataLine);
+    if (!tokens.length) {
+      console.warn('KMA temperature alert parse failed: latest data line is empty');
+      return NaN;
+    }
+
+    const headerIndex = findKmaTemperatureColumn(lines);
+    if (headerIndex >= 0 && headerIndex < tokens.length) {
+      const byHeader = coerceKmaTemperature(tokens[headerIndex]);
+      if (Number.isFinite(byHeader)) return byHeader;
+    }
+
+    for (const token of tokens) {
+      if (!/[.+-]/.test(token)) continue;
+      const value = coerceKmaTemperature(token);
+      if (Number.isFinite(value)) return value;
+    }
+
+    for (const token of tokens) {
+      const value = coerceKmaTemperature(token);
+      if (Number.isFinite(value)) return value;
+    }
+
+    console.warn('KMA temperature alert parse failed: no valid temperature token');
+    return NaN;
+  }
+
+  async function getKmaAlertIcon() {
+    if (kmaAlertIconPromise) return kmaAlertIconPromise;
+    kmaAlertIconPromise = (async () => {
+      const manifestLink = document.querySelector('link[rel="manifest"]');
+      const href = manifestLink && manifestLink.getAttribute('href');
+      if (!href) return '';
+      try {
+        const manifestUrl = new URL(href, location.href);
+        const response = await fetch(manifestUrl.href, { cache: 'force-cache' });
+        if (!response.ok) return '';
+        const manifest = await response.json();
+        const iconSrc = manifest && Array.isArray(manifest.icons) && manifest.icons[0] && manifest.icons[0].src;
+        return iconSrc ? new URL(iconSrc, manifestUrl.href).href : '';
+      } catch (e) {
+        return '';
+      }
+    })();
+    return kmaAlertIconPromise;
+  }
+
+  async function requestNotificationPermission() {
+    if (typeof Notification === 'undefined') return;
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+    try {
+      await Notification.requestPermission();
+    } catch (e) {
+      console.warn('KMA temperature alert permission request failed:', e);
+    }
+  }
+
+  async function notifyKmaTemperature(temp) {
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
+      toast(`⚠️ 현재 기온 ${temp.toFixed(1)}°C이지만 브라우저 알림 권한이 없습니다.`, 4000);
+      return true;
+    }
+
+    try {
+      const options = {
+        body: `현재 기온 ${temp.toFixed(1)}°C — 28°C 이상입니다! (기상청 294 관측소)`,
+        tag: KMA_ALERT_TAG
+      };
+      const icon = await getKmaAlertIcon();
+      if (icon) options.icon = icon;
+      new Notification('🌡️ 기온 경보', options);
+      return true;
+    } catch (e) {
+      console.warn('KMA temperature alert notification failed:', e);
+      toast(`⚠️ 현재 기온 ${temp.toFixed(1)}°C이지만 브라우저 알림을 표시하지 못했습니다.`, 4000);
+      return true;
+    }
+  }
+
+  async function checkKmaTemperatureAlert(now = new Date()) {
+    if (kmaAlertInFlight) return;
+    if (!isWithinKmaAlertWindow(now)) return;
+    if (hasSentKmaAlertToday(now)) return;
+
+    kmaAlertInFlight = true;
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), KMA_FETCH_TIMEOUT_MS) : 0;
+    try {
+      const response = await fetch(KMA_AWS_FETCH_URL, {
+        cache: 'no-store',
+        ...(controller ? { signal: controller.signal } : {})
+      });
+      if (!response.ok) {
+        console.warn('KMA temperature alert fetch failed:', response.status, response.statusText);
+        return;
+      }
+
+      const text = await response.text();
+      const temp = parseKmaTemperature(text);
+      if (!Number.isFinite(temp)) return;
+      if (temp < KMA_ALERT_THRESHOLD) return;
+
+      const sent = await notifyKmaTemperature(temp);
+      if (sent) markKmaAlertSent(now);
+    } catch (e) {
+      console.warn('KMA temperature alert fetch failed:', e);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+      kmaAlertInFlight = false;
+    }
+  }
+
+  function initTempAlert() {
+    requestNotificationPermission();
+
+    const tick = () => {
+      checkKmaTemperatureAlert().catch((e) => {
+        console.warn('KMA temperature alert check failed:', e);
+      });
+    };
+
+    tick();
+    if (kmaAlertTimer) clearInterval(kmaAlertTimer);
+    kmaAlertTimer = window.setInterval(tick, KMA_CHECK_INTERVAL_MS);
   }
 
   /* =====================================================================
