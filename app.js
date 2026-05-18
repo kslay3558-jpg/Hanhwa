@@ -2990,8 +2990,8 @@
         wrap.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
         const area  = el('div', { class: 'board-pw-confirm' });
         const input = el('input',  { type: 'password', placeholder: '삭제용 비밀번호 입력', class: 'board-input board-pw-input' });
-        const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '삭제');
-        const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '취소');
+        const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'width:auto;min-height:0;font-size:.8rem;padding:5px 10px;white-space:nowrap;flex-shrink:0;' }, '삭제');
+        const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'width:auto;min-height:0;font-size:.8rem;padding:5px 10px;white-space:nowrap;flex-shrink:0;' }, '취소');
         okBtn.addEventListener('click', async () => {
           const pw = input.value.trim();
           if (!pw) { input.focus(); return; }
