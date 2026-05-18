@@ -3270,8 +3270,24 @@
     }
   }
 
+  function updateNotifPermBtn() {
+    const btn = document.getElementById('notifPermBtn');
+    if (!btn || typeof Notification === 'undefined') return;
+    const perm = Notification.permission;
+    btn.hidden = (perm === 'granted' || perm === 'denied');
+  }
+
   function initTempAlert() {
-    requestNotificationPermission();
+    requestNotificationPermission().then(updateNotifPermBtn);
+
+    const permBtn = document.getElementById('notifPermBtn');
+    if (permBtn) {
+      updateNotifPermBtn();
+      permBtn.addEventListener('click', async () => {
+        await requestNotificationPermission();
+        updateNotifPermBtn();
+      });
+    }
 
     const tick = () => {
       checkKmaTemperatureAlert().catch((e) => {

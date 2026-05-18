@@ -677,14 +677,15 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle, #tempLink {
+  #boardToggle, #tempLink, #notifPermBtn {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
     text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover, #tempLink:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #notifPermBtn[hidden] { display: none; }
 
   /* Board modal */
   .board-write-section { margin-bottom: 14px; }
@@ -1392,6 +1393,9 @@
        aria-label="기상청 온도 사이트 열기">
       <span aria-hidden="true">🌡️</span>
     </a>
+    <button id="notifPermBtn" type="button" title="온도 알람 알림 허용" aria-label="알람 허용하기" hidden>
+      <span aria-hidden="true">🔔</span>
+    </button>
   </div>
 
   <!-- 댓글 게시판 모달 -->
