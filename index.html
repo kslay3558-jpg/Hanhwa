@@ -376,6 +376,21 @@
     display: block; font-size: .78rem; font-weight: 700;
     color: var(--c-text-sub); margin-bottom: 5px; letter-spacing: 0;
   }
+  .label-with-help {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
+  }
+  .field .label-with-help label { margin-bottom: 0; }
+  .measure-help-btn {
+    flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
+    border: 1px solid var(--c-border); background: var(--c-primary-weak);
+    color: var(--c-primary-strong); font-size: .72rem; font-weight: 900;
+    line-height: 1; display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background var(--m-fast), border-color var(--m-fast), transform var(--m-fast);
+  }
+  .measure-help-btn:hover {
+    background: var(--c-primary); border-color: var(--c-primary); color: #fff;
+  }
+  .measure-help-btn:active { transform: scale(.94); }
 
   select, input[type=number], input[type=text], input[type=range], textarea {
     width: 100%; font-family: inherit; font-size: .9rem; font-weight: 600;
@@ -526,6 +541,8 @@
   }
   .pitch-info::before { content: '↔ '; }
   .pitch-info.missing { color: var(--c-warn); }
+  .pitch-help-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .pitch-help-row .pitch-info { margin-top: 0; }
 
   /* Queue */
   .queue-list {
@@ -677,14 +694,15 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle, #tempLink {
+  #boardToggle, #tempLink, #notifPermBtn {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
     text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover, #tempLink:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #notifPermBtn[hidden] { display: none; }
 
   /* Board modal */
   .board-write-section { margin-bottom: 14px; }
@@ -721,7 +739,10 @@
     margin-bottom: 10px; padding: 10px; background: var(--c-surface);
     border-radius: var(--r-sm); border: 1px solid var(--c-border);
   }
-  .board-del { color: var(--c-text-mute); font-size: .85rem; flex-shrink: 0; }
+  .board-del {
+    width: auto; height: auto; padding: 4px 6px;
+    color: var(--c-text-mute); font-size: .75rem; line-height: 1; flex-shrink: 0;
+  }
   .board-del:hover { color: var(--c-danger); background: var(--c-danger-weak); }
   /* Comment-board row layout */
   .cb-row {
@@ -752,7 +773,8 @@
   .board-pw-confirm { margin-top: 8px; padding: 8px 10px; background: var(--c-danger-weak); border-radius: var(--r-sm); border: 1px solid var(--c-danger); }
   .board-pw-confirm .board-pw-row { display: flex; gap: 6px; align-items: center; }
   .board-pw-confirm .board-input { font-size: .82rem; padding: 5px 8px; }
-  .board-pw-input { flex: 1; min-width: 0; width: 100%; }
+  .board-pw-input { flex: 1 1 0; min-width: 0; width: 0 !important; }
+  .board-pw-confirm .board-pw-row .btn { width: auto !important; min-height: 0 !important; padding: 5px 12px !important; font-size: .82rem !important; flex-shrink: 0; }
   .cb-wrap { margin-bottom: 8px; }
   .btn-danger { background: var(--c-danger); color: #fff; border: none; }
   .btn-danger:hover { background: #b91c1c; }
@@ -901,6 +923,16 @@
   .modal.show .modal-content { transform: none; }
   .modal-content h2 { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .measure-guide { display: grid; gap: 12px; }
+  .measure-guide-panel { display: grid; gap: 12px; }
+  .measure-guide-panel[hidden] { display: none !important; }
+  .measure-guide svg {
+    width: 100%; height: auto; display: block;
+    background: var(--c-surface-2); border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+  }
+  .measure-guide-desc { font-size: .88rem; color: var(--c-text-sub); line-height: 1.6; }
+  .measure-guide-desc b { color: var(--c-primary); }
   .check-wrap {
     display: flex; align-items: center; gap: 8px; justify-content: center;
     font-size: .85rem; color: var(--c-text-sub); cursor: pointer;
@@ -1063,7 +1095,10 @@
           <div class="acc-body-inner">
             <div class="form-grid col-auto" style="margin-bottom:8px;">
               <div class="field">
-                <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
+                <div class="label-with-help">
+                  <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
+                  <button class="measure-help-btn" type="button" data-action="open-measure-guide" data-guide="flange-od" data-i18n-attr="title:guide.flange_od_aria,aria-label:guide.flange_od_aria">?</button>
+                </div>
                 <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
               </div>
               <div class="field">
@@ -1111,11 +1146,11 @@
 
             <div class="option-box">
               <div class="toggle-row">
-                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게</span>
+                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)</span>
                 <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
               </div>
               <div class="toggle-row">
-                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)</span>
+                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (너트 두께 자동 합산)</span>
                 <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
               </div>
               <div class="toggle-row">
@@ -1197,7 +1232,10 @@
               <div class="field">
                 <label for="usize" data-i18n="form.size">호칭경 (A)</label>
                 <select id="usize" data-action="usize-change"></select>
-                <div id="uPitchInfo" class="pitch-info">홀 간격: -</div>
+                <div class="pitch-help-row">
+                  <div id="uPitchInfo" class="pitch-info">홀 간격: -</div>
+                  <button class="measure-help-btn" type="button" data-action="open-measure-guide" data-guide="ubolt-pitch" data-i18n-attr="title:guide.ubolt_pitch_aria,aria-label:guide.ubolt_pitch_aria">?</button>
+                </div>
               </div>
               <div class="field">
                 <label for="uqty" data-i18n="form.qty_set">수량 (Set)</label>
@@ -1312,6 +1350,58 @@
     </div>
   </div>
 
+  <!-- 치수 측정 가이드 모달 -->
+  <div id="measureGuideModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="measureGuideTitle" aria-hidden="true">
+    <div class="modal-content">
+      <h2 id="measureGuideTitle">치수 측정 가이드</h2>
+      <div id="measureGuideBody" class="measure-guide">
+        <div id="guidePanelFlangeOd" class="measure-guide-panel" data-guide-panel="flange-od">
+          <svg viewBox="0 0 360 210" role="img" data-i18n-attr="aria-label:guide.flange_od_svg_aria" aria-label="플랜지 OD 측정 위치 도면">
+            <defs>
+              <marker id="arrowOd" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="var(--c-primary)"/>
+              </marker>
+            </defs>
+            <circle cx="180" cy="104" r="72" fill="none" stroke="var(--c-border-strong)" stroke-width="16"/>
+            <circle cx="180" cy="104" r="30" fill="var(--c-surface)" stroke="var(--c-border)" stroke-width="3"/>
+            <circle cx="138" cy="62" r="8" fill="var(--c-primary-weak)" stroke="var(--c-primary)" stroke-width="3"/>
+            <circle cx="222" cy="62" r="8" fill="var(--c-primary-weak)" stroke="var(--c-primary)" stroke-width="3"/>
+            <circle cx="138" cy="146" r="8" fill="var(--c-primary-weak)" stroke="var(--c-primary)" stroke-width="3"/>
+            <circle cx="222" cy="146" r="8" fill="var(--c-primary-weak)" stroke="var(--c-primary)" stroke-width="3"/>
+            <line x1="100" y1="188" x2="260" y2="188" stroke="var(--c-primary)" stroke-width="2" marker-start="url(#arrowOd)" marker-end="url(#arrowOd)"/>
+            <line x1="100" y1="170" x2="100" y2="196" stroke="var(--c-primary)" stroke-width="2"/>
+            <line x1="260" y1="170" x2="260" y2="196" stroke="var(--c-primary)" stroke-width="2"/>
+            <text x="180" y="202" text-anchor="middle" fill="var(--c-primary)" font-size="18" font-weight="800">OD</text>
+            <text x="180" y="28" text-anchor="middle" fill="var(--c-text-sub)" font-size="14" font-weight="700">outside edge ↔ outside edge</text>
+          </svg>
+          <p class="measure-guide-desc" data-i18n="guide.flange_od_desc">OD(외경)는 플랜지 바깥쪽 끝에서 반대쪽 바깥쪽 끝까지 재는 전체 지름입니다.</p>
+        </div>
+        <div id="guidePanelUboltPitch" class="measure-guide-panel" data-guide-panel="ubolt-pitch" hidden>
+          <svg viewBox="0 0 360 210" role="img" data-i18n-attr="aria-label:guide.ubolt_pitch_svg_aria" aria-label="U-볼트 홀 센터 간격 도면">
+            <defs>
+              <marker id="arrowPitch" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L7,3.5 L0,7 Z" fill="var(--c-primary)"/>
+              </marker>
+            </defs>
+            <path d="M118 98 V62 C118 28 242 28 242 62 V98" fill="none" stroke="var(--c-border-strong)" stroke-width="18" stroke-linecap="round"/>
+            <rect x="82" y="118" width="196" height="34" rx="8" fill="var(--c-surface)" stroke="var(--c-border)" stroke-width="3"/>
+            <circle cx="118" cy="135" r="11" fill="var(--c-primary-weak)" stroke="var(--c-primary)" stroke-width="3"/>
+            <circle cx="242" cy="135" r="11" fill="var(--c-primary-weak)" stroke="var(--c-primary)" stroke-width="3"/>
+            <line x1="118" y1="134" x2="242" y2="134" stroke="var(--c-primary)" stroke-width="2" marker-start="url(#arrowPitch)" marker-end="url(#arrowPitch)"/>
+            <line x1="118" y1="106" x2="118" y2="166" stroke="var(--c-primary)" stroke-width="2" stroke-dasharray="5 5"/>
+            <line x1="242" y1="106" x2="242" y2="166" stroke="var(--c-primary)" stroke-width="2" stroke-dasharray="5 5"/>
+            <text x="180" y="188" text-anchor="middle" fill="var(--c-primary)" font-size="18" font-weight="800">C-C</text>
+            <text x="180" y="28" text-anchor="middle" fill="var(--c-text-sub)" font-size="14" font-weight="700">hole center ↔ hole center</text>
+          </svg>
+          <p class="measure-guide-desc" data-i18n="guide.ubolt_pitch_desc">홀 센터 간격(C-C)은 왼쪽 볼트 구멍 중심에서 오른쪽 볼트 구멍 중심까지의 거리입니다.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" type="button" data-action="close-measure-guide" data-i18n="guide.close">확인</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 튜토리얼 모달 -->
   <div id="tutorialModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" aria-hidden="true">
     <div class="modal-content">
@@ -1388,6 +1478,9 @@
        aria-label="기상청 온도 사이트 열기">
       <span aria-hidden="true">🌡️</span>
     </a>
+    <button id="notifPermBtn" type="button" title="온도 알람 알림 허용" aria-label="알람 허용하기" hidden>
+      <span aria-hidden="true">🔔</span>
+    </button>
   </div>
 
   <!-- 댓글 게시판 모달 -->

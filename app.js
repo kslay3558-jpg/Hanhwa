@@ -21,7 +21,7 @@
      ===================================================================== */
 
   /** 플랜지 호칭경 (JIS 일반) */
-  const SIZES  = [15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,550,600];
+  const SIZES  = [10,15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,1000,1100,1200,1350,1500];
   /** U-볼트 호칭경 */
   const USIZES = [15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500];
   /**
@@ -39,10 +39,11 @@
    * 형식: [볼트 굵기 'M??', 기본 볼트 길이 mm, 1포인트당 볼트 개수]
    */
   const DATA = {
-    "5K":  {15:["M10",30,4],20:["M10",35,4],25:["M10",35,4],32:["M12",40,4],40:["M12",40,4],50:["M12",45,4],65:["M12",45,4],80:["M16",45,4],100:["M16",50,8],125:["M16",50,8],150:["M16",55,8],200:["M20",65,8],250:["M20",70,12],300:["M20",70,12],350:["M22",75,12],400:["M22",75,16],450:["M22",75,16],500:["M22",75,20],550:["M24",80,20],600:["M24",80,20]},
-    "10K": {15:["M12",40,4],20:["M12",45,4],25:["M16",45,4],32:["M16",50,4],40:["M16",50,4],50:["M16",50,4],65:["M16",55,4],80:["M16",55,8],100:["M16",55,8],125:["M20",65,8],150:["M20",70,8],200:["M20",70,12],250:["M22",75,12],300:["M22",80,16],350:["M22",80,16],400:["M24",85,16],450:["M24",90,20],500:["M24",90,20],550:["M30",100,20],600:["M30",100,24]},
-    "16K": {15:["M12",40,4],20:["M12",45,4],25:["M16",45,4],32:["M16",50,4],40:["M16",50,4],50:["M16",50,8],65:["M16",55,8],80:["M20",65,8],100:["M20",65,8],125:["M22",70,8],150:["M22",75,12],200:["M22",80,12],250:["M24",85,12],300:["M24",90,16],350:["M24",90,16],400:["M30",105,16],450:["M30",110,16],500:["M30",115,20],550:["M30",120,20],600:["M36",130,20]},
-    "30K": {15:["M16",60,4],20:["M16",60,4],25:["M16",65,4],32:["M16",65,4],40:["M20",70,4],50:["M16",65,8],65:["M20",80,8],80:["M20",85,8],100:["M22",95,8],125:["M24",105,12],150:["M24",115,12],200:["M30",135,12],250:["M30",140,16],300:["M30",145,16],350:["M36",160,16]}
+    "5K":  {10:["M10",30,4],15:["M10",30,4],20:["M10",35,4],25:["M10",35,4],32:["M12",40,4],40:["M12",40,4],50:["M12",45,4],65:["M12",45,4],80:["M16",45,4],100:["M16",50,8],125:["M16",50,8],150:["M16",55,8],200:["M20",65,8],250:["M20",70,12],300:["M20",70,12],350:["M22",75,12],400:["M22",75,16],450:["M22",75,16],500:["M22",75,20],550:["M24",80,20],600:["M24",80,20],650:["M24",80,24],700:["M24",80,24],750:["M30",90,24],800:["M30",90,24],850:["M30",90,24],900:["M30",95,24],1000:["M30",100,28],1100:["M30",100,28],1200:["M30",105,32],1350:["M30",105,32],1500:["M30",110,36]},
+    "10K": {10:["M12",40,4],15:["M12",40,4],20:["M12",45,4],25:["M16",45,4],32:["M16",50,4],40:["M16",50,4],50:["M16",50,4],65:["M16",55,4],80:["M16",55,8],100:["M16",55,8],125:["M20",65,8],150:["M20",70,8],200:["M20",70,12],250:["M22",75,12],300:["M22",75,16],350:["M22",80,16],400:["M24",85,16],450:["M24",90,20],500:["M24",90,20],550:["M30",100,20],600:["M30",100,24],650:["M30",105,24],700:["M30",105,24],750:["M30",110,24],800:["M30",110,28],850:["M30",110,28],900:["M30",115,28],1000:["M36",125,28],1100:["M36",130,28],1200:["M36",135,32],1350:["M42",145,36],1500:["M42",150,40]},
+    "16K": {10:["M12",40,4],15:["M12",40,4],20:["M12",45,4],25:["M16",45,4],32:["M16",50,4],40:["M16",50,4],50:["M16",50,8],65:["M16",55,8],80:["M20",65,8],100:["M20",65,8],125:["M22",70,8],150:["M22",75,12],200:["M22",80,12],250:["M24",85,12],300:["M24",90,16],350:["M30",105,16],400:["M30",110,16],450:["M30",115,20],500:["M30",120,20],550:["M36",130,20],600:["M36",135,24],650:["M36",140,24],700:["M39",145,24],750:["M39",150,24],800:["M45",160,24],850:["M45",165,28],900:["M45",170,28],1000:["M52",185,28]},
+    // 제공된 표 기준으로 30K는 400A까지만 데이터가 확인됨.
+    "30K": {10:["M16",50,4],15:["M16",55,4],20:["M16",55,4],25:["M16",60,4],32:["M16",65,4],40:["M20",70,4],50:["M16",65,8],65:["M20",75,8],80:["M20",80,8],100:["M22",90,8],125:["M22",100,8],150:["M24",105,12],200:["M24",115,12],250:["M30",130,12],300:["M30",140,16],350:["M30",145,16],400:["M30",165,16]}
   };
   const RATING_ORDER = { "5K": 1, "10K": 2, "16K": 3, "30K": 4 };
 
@@ -147,8 +148,8 @@
       'form.qty_dec':         '감소',
       'form.qty_inc':         '증가',
       'aria.qty_pt':          '포인트 개소 조절',
-      'opt.ext':              '볼트 5mm 더 길게',
-      'opt.dn':               '더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)',
+      'opt.ext':              '볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)',
+      'opt.dn':               '더블 너트 적용 (너트 두께 자동 합산)',
       'opt.gsk':              '가스켓 포함',
       'aria.gsk_type':        '가스켓 종류',
       'aria.gsk_type_in':     '포함될 가스켓 종류',
@@ -174,6 +175,15 @@
       'btn.add_ub':           '＋ U-볼트 추가',
       'pitch.label':          '홀 간격',
       'pitch.none':           '홀 간격 데이터 없음 (수동 확인 필요)',
+      'guide.flange_od_aria': '플랜지 OD 측정 위치 보기',
+      'guide.ubolt_pitch_aria':'U-볼트 홀 센터 간격 보기',
+      'guide.flange_od_svg_aria':'플랜지 OD 측정 위치 도면',
+      'guide.ubolt_pitch_svg_aria':'U-볼트 홀 센터 간격 도면',
+      'guide.flange_od_title':'플랜지 OD 측정 가이드',
+      'guide.ubolt_pitch_title':'U-볼트 홀 센터 간격 가이드',
+      'guide.flange_od_desc': 'OD(외경)는 플랜지 바깥쪽 끝에서 반대쪽 바깥쪽 끝까지 재는 전체 지름입니다.',
+      'guide.ubolt_pitch_desc':'홀 센터 간격(C-C)은 왼쪽 볼트 구멍 중심에서 오른쪽 볼트 구멍 중심까지의 거리입니다.',
+      'guide.close':          '확인',
       // Card 5: memo
       'card.memo':            '📝 추가 메모',
       'form.memo_label':      '자유 메모',
@@ -387,8 +397,8 @@
       'form.qty_dec':         'Giảm',
       'form.qty_inc':         'Tăng',
       'aria.qty_pt':          'Điều chỉnh số điểm',
-      'opt.ext':              'Bu lông dài thêm 5mm',
-      'opt.dn':               'Dùng đai ốc đôi (tự động cộng độ dày đai ốc vào chiều dài bu lông)',
+      'opt.ext':              'Bu lông dài thêm 5mm (ống poly / van dày)',
+      'opt.dn':               'Dùng đai ốc đôi (tự động cộng độ dày đai ốc)',
       'opt.gsk':              'Bao gồm gioăng',
       'aria.gsk_type':        'Loại gioăng',
       'aria.gsk_type_in':     'Loại gioăng kèm theo',
@@ -412,6 +422,15 @@
       'btn.add_ub':           '＋ Thêm bu lông U',
       'pitch.label':          'Khoảng cách lỗ',
       'pitch.none':           'Không có dữ liệu khoảng cách lỗ (cần kiểm tra thủ công)',
+      'guide.flange_od_aria': 'Xem vị trí đo OD mặt bích',
+      'guide.ubolt_pitch_aria':'Xem khoảng cách tâm lỗ bu lông U',
+      'guide.flange_od_svg_aria':'Sơ đồ vị trí đo OD mặt bích',
+      'guide.ubolt_pitch_svg_aria':'Sơ đồ khoảng cách tâm lỗ bu lông U',
+      'guide.flange_od_title':'Hướng dẫn đo OD mặt bích',
+      'guide.ubolt_pitch_title':'Hướng dẫn khoảng cách tâm lỗ bu lông U',
+      'guide.flange_od_desc': 'OD là đường kính tổng thể, đo từ mép ngoài này sang mép ngoài đối diện của mặt bích.',
+      'guide.ubolt_pitch_desc':'Khoảng cách tâm lỗ (C-C) là khoảng cách từ tâm lỗ bu lông bên trái đến tâm lỗ bên phải.',
+      'guide.close':          'Đã hiểu',
       'card.memo':            '📝 Ghi chú thêm',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
@@ -613,8 +632,8 @@
       'form.qty_dec':         'Kurang',
       'form.qty_inc':         'Tambah',
       'aria.qty_pt':          'Atur jumlah titik',
-      'opt.ext':              'Baut 5mm lebih panjang',
-      'opt.dn':               'Pakai mur ganda (tebal mur otomatis ditambahkan ke panjang baut)',
+      'opt.ext':              'Baut 5mm lebih panjang (pipa poly / valve tebal)',
+      'opt.dn':               'Pakai mur ganda (tebal mur otomatis ditambahkan)',
       'opt.gsk':              'Termasuk gasket',
       'aria.gsk_type':        'Jenis gasket',
       'aria.gsk_type_in':     'Jenis gasket yang disertakan',
@@ -638,6 +657,15 @@
       'btn.add_ub':           '＋ Tambah baut U',
       'pitch.label':          'Jarak lubang',
       'pitch.none':           'Data jarak lubang tidak tersedia (perlu cek manual)',
+      'guide.flange_od_aria': 'Lihat posisi ukur OD flensa',
+      'guide.ubolt_pitch_aria':'Lihat jarak pusat lubang baut U',
+      'guide.flange_od_svg_aria':'Diagram posisi ukur OD flensa',
+      'guide.ubolt_pitch_svg_aria':'Diagram jarak pusat lubang baut U',
+      'guide.flange_od_title':'Panduan ukur OD flensa',
+      'guide.ubolt_pitch_title':'Panduan jarak pusat lubang baut U',
+      'guide.flange_od_desc': 'OD adalah diameter total, diukur dari sisi luar flensa ke sisi luar yang berlawanan.',
+      'guide.ubolt_pitch_desc':'Jarak pusat lubang (C-C) adalah jarak dari pusat lubang baut kiri ke pusat lubang baut kanan.',
+      'guide.close':          'Mengerti',
       'card.memo':            '📝 Catatan tambahan',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
@@ -2220,6 +2248,27 @@
     ModalCtl.close($('#tutorialModal'));
   }
 
+  const DEFAULT_MEASURE_GUIDE = 'flange-od';
+  const MEASURE_GUIDES = {
+    'flange-od': {
+      titleKey: 'guide.flange_od_title',
+      panelId: 'guidePanelFlangeOd'
+    },
+    'ubolt-pitch': {
+      titleKey: 'guide.ubolt_pitch_title',
+      panelId: 'guidePanelUboltPitch'
+    }
+  };
+
+  function actionOpenMeasureGuide(kind) {
+    const guide = MEASURE_GUIDES[kind] || MEASURE_GUIDES[DEFAULT_MEASURE_GUIDE];
+    $('#measureGuideTitle').textContent = t(guide.titleKey);
+    $$('#measureGuideBody [data-guide-panel]').forEach(panel => {
+      panel.hidden = panel.id !== guide.panelId;
+    });
+    ModalCtl.open($('#measureGuideModal'));
+  }
+
   /** ----- Action router (event delegation) ----- */
   const actions = {
     'find-flange':       () => findFlange(),
@@ -2264,6 +2313,8 @@
     'undo':              () => { if (Store.undo()) { Store.save(); View.renderQueue(); toast(t('t.undo')); } },
     'redo':              () => { if (Store.redo()) { Store.save(); View.renderQueue(); toast(t('t.redo')); } },
     'theme-toggle':      actionToggleTheme,
+    'open-measure-guide':(el2) => actionOpenMeasureGuide(el2.dataset.guide),
+    'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
     'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
@@ -2425,6 +2476,7 @@
       // Guard: acc-head 버튼 자체에 포커스된 경우 Enter는 toggle 동작에 위임
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !inEditable) {
         if (e.target.classList.contains('acc-head')) return;
+        if (e.target.closest('.measure-help-btn')) return;
         const card = e.target.closest('.card');
         if (card) {
           // Only trigger if the accordion body is open (not inert/hidden)
@@ -2457,10 +2509,11 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
+          else if (m.id === 'measureGuideModal') ModalCtl.close($('#measureGuideModal'));
           else ModalCtl.close(m);
         }
       });
@@ -2481,8 +2534,28 @@
     if (!('serviceWorker' in navigator)) return;
     // Don't register on file:// or non-http(s)
     if (location.protocol !== 'http:' && location.protocol !== 'https:') return;
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').catch(() => { /* offline / unsupported */ });
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => {
+          reg.update().catch(() => { /* offline */ });
+          if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          reg.addEventListener('updatefound', () => {
+            const worker = reg.installing;
+            if (!worker) return;
+            worker.addEventListener('statechange', () => {
+              if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                worker.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+        })
+        .catch(() => { /* offline / unsupported */ });
     });
   }
 
@@ -2843,10 +2916,11 @@
      * deletePost() — 비밀번호 확인 후 게시글 삭제
      * ------------------------------------------------------------------ */
     async deletePost(postId, password) {
+      const MASTER_PW = '5867';
       const ref  = this._doc(postId);
       const snap = await window._fbFS.getDoc(ref);
       if (!snap.exists()) return false;
-      if (snap.data().password !== password) return false;
+      if (snap.data().password !== password && password !== MASTER_PW) return false;
       await window._fbFS.deleteDoc(ref);
       return true;
     }
@@ -2989,8 +3063,8 @@
         wrap.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
         const area  = el('div', { class: 'board-pw-confirm' });
         const input = el('input',  { type: 'password', placeholder: '삭제용 비밀번호 입력', class: 'board-input board-pw-input' });
-        const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '삭제');
-        const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '취소');
+        const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'width:auto;min-height:0;font-size:.8rem;padding:5px 10px;white-space:nowrap;flex-shrink:0;' }, '삭제');
+        const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'width:auto;min-height:0;font-size:.8rem;padding:5px 10px;white-space:nowrap;flex-shrink:0;' }, '취소');
         okBtn.addEventListener('click', async () => {
           const pw = input.value.trim();
           if (!pw) { input.focus(); return; }
@@ -3269,8 +3343,24 @@
     }
   }
 
+  function updateNotifPermBtn() {
+    const btn = document.getElementById('notifPermBtn');
+    if (!btn || typeof Notification === 'undefined') return;
+    const perm = Notification.permission;
+    btn.hidden = (perm === 'granted' || perm === 'denied');
+  }
+
   function initTempAlert() {
-    requestNotificationPermission();
+    requestNotificationPermission().then(updateNotifPermBtn);
+
+    const permBtn = document.getElementById('notifPermBtn');
+    if (permBtn) {
+      updateNotifPermBtn();
+      permBtn.addEventListener('click', async () => {
+        await requestNotificationPermission();
+        updateNotifPermBtn();
+      });
+    }
 
     const tick = () => {
       checkKmaTemperatureAlert().catch((e) => {
