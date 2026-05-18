@@ -1688,6 +1688,7 @@
       Gap: "0",
       roundMode: "0.1"
     };
+    const GUIDE_VALUE_TOKEN = "\uE000GUIDE_VALUE\uE001";
     const I18N = {
       ko: {
         docTitle: "파이프 사선 커팅 계산기",
@@ -2228,8 +2229,8 @@
       setHtml("svgODText", `${t("svgPipeOD")} = <tspan id="svg_OD">${currentText("svg_OD", PIPE_SIZES[DEFAULTS.pipeSize].toFixed(1))}</tspan> mm`);
       setHtml("svgAngleText", `${t("svgCutAngle")} <tspan id="svg_A">${currentText("svg_A", "0.0")}</tspan>°`);
 
-      const guideTemplate = t("step2Text", { value: "__VALUE__" });
-      const [guidePrefix = "", guideSuffix = ""] = guideTemplate.split("__VALUE__");
+      const guideTemplate = t("step2Text", { value: GUIDE_VALUE_TOKEN });
+      const [guidePrefix = "", guideSuffix = ""] = guideTemplate.split(GUIDE_VALUE_TOKEN);
       setText("step2TextPrefix", guidePrefix);
       setText("step2TextSuffix", guideSuffix);
 
