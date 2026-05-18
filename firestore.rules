@@ -2,39 +2,36 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /comments/{commentId} {
+    match /posts/{postId} {
 
-      // 1. 누구나 댓글 읽기 가능
+      // 1. 누구나 게시글 읽기 가능
       allow read: if true;
 
-      // 2. 로그인 없이 댓글 작성 허용 (필드 유효성 검증)
+      // 2. 로그인 없이 글쓰기 허용 (필드 유효성 검증)
       allow create: if
-        // 필수 필드(닉네임, 내용, 삭제용 비밀번호, 작성일)가 모두 있어야 함
-        request.resource.data.keys().hasAll(['nick', 'content', 'pw', 'date'])
+        // 필수 필드(제목, 내용, 작성자ID, 작성일)가 모두 있어야 함
+        request.resource.data.keys().hasAll(['title', 'content', 'authorId', 'createdAt'])
         // 허용된 필드 외의 데이터 삽입 차단
-        && request.resource.data.keys().hasOnly(['nick', 'content', 'pw', 'date'])
-        // 닉네임: 문자열, 1자 이상 30자 이하
-        && request.resource.data.nick is string
-        && request.resource.data.nick.size() > 0
-        && request.resource.data.nick.size() <= 30
-        // 내용: 문자열, 1자 이상 500자 이하
+        && request.resource.data.keys().hasOnly(['title', 'content', 'authorId', 'createdAt'])
+        // 제목: 문자열, 1자 이상 100자 이하
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 100
+        // 내용: 문자열, 1자 이상 5000자 이하
         && request.resource.data.content is string
         && request.resource.data.content.size() > 0
-        && request.resource.data.content.size() <= 500
-        // 비밀번호: 문자열, 1자 이상 30자 이하
-        && request.resource.data.pw is string
-        && request.resource.data.pw.size() > 0
-        && request.resource.data.pw.size() <= 30
+        && request.resource.data.content.size() <= 5000
+        // 작성자ID: 문자열 (익명 고정값 허용)
+        && request.resource.data.authorId is string
+        && request.resource.data.authorId.size() > 0
         // 작성일: 문자열 (ISO 8601)
-        && request.resource.data.date is string
-        && request.resource.data.date.size() > 0;
+        && request.resource.data.createdAt is string
+        && request.resource.data.createdAt.size() > 0;
 
-      // 3. 댓글 수정 불가 (앱에서 수정 기능 없음)
+      // 3. 게시글 수정 불가 (앱에서 수정 기능 없음)
       allow update: if false;
 
-      // 4. 삭제는 앱 레벨에서 비밀번호 검증 후 허용
-      //    Firestore Rules에서 요청 비밀번호를 직접 검사할 수 없으므로
-      //    클라이언트 코드(Board.deleteComment)에서 비밀번호 일치 확인 후 삭제
+      // 4. 삭제 허용 (로그인 없는 환경이므로 누구나 삭제 가능 — 추후 인증 도입 시 수정)
       allow delete: if true;
     }
 
