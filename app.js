@@ -3058,6 +3058,8 @@
   const KMA_ALERT_START_MINUTES = 12 * 60 + 3;
   const KMA_ALERT_END_MINUTES = 12 * 60 + 15;
   const KMA_ALERT_TAG = 'kma-temp-alert';
+  const KMA_CHECK_INTERVAL_MS = 60 * 1000;
+  const KMA_FETCH_TIMEOUT_MS = 8000;
 
   let kmaAlertTimer = 0;
   let kmaAlertInFlight = false;
@@ -3169,7 +3171,7 @@
   async function getKmaAlertIcon() {
     if (kmaAlertIconPromise) return kmaAlertIconPromise;
     kmaAlertIconPromise = (async () => {
-      const manifestLink = $('link[rel="manifest"]');
+      const manifestLink = document.querySelector('link[rel="manifest"]');
       const href = manifestLink && manifestLink.getAttribute('href');
       if (!href) return '';
       try {
@@ -3224,8 +3226,13 @@
     if (hasSentKmaAlertToday(now)) return;
 
     kmaAlertInFlight = true;
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), KMA_FETCH_TIMEOUT_MS) : 0;
     try {
-      const response = await fetch(KMA_AWS_FETCH_URL, { cache: 'no-store' });
+      const response = await fetch(KMA_AWS_FETCH_URL, {
+        cache: 'no-store',
+        ...(controller ? { signal: controller.signal } : {})
+      });
       if (!response.ok) {
         console.warn('KMA temperature alert fetch failed:', response.status, response.statusText);
         return;
@@ -3241,6 +3248,7 @@
     } catch (e) {
       console.warn('KMA temperature alert fetch failed:', e);
     } finally {
+      if (timeoutId) clearTimeout(timeoutId);
       kmaAlertInFlight = false;
     }
   }
@@ -3256,7 +3264,7 @@
 
     tick();
     if (kmaAlertTimer) clearInterval(kmaAlertTimer);
-    kmaAlertTimer = window.setInterval(tick, 60 * 1000);
+    kmaAlertTimer = window.setInterval(tick, KMA_CHECK_INTERVAL_MS);
   }
 
   /* =====================================================================
