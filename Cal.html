@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="auto">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#2563eb" />
+  <meta name="color-scheme" content="light dark" />
   <title>파이프 사선 커팅 계산기</title>
 
   <style>
     :root {
+      color-scheme: light dark;
       --blue-900: #1e3a8a;
       --blue-800: #1e40af;
       --blue-700: #1d4ed8;
@@ -49,6 +51,104 @@
       --radius-xl: 18px;
       --radius-2xl: 24px;
       --radius-3xl: 30px;
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-solid: #ffffff;
+      --surface-muted: rgba(248, 250, 252, 0.78);
+      --field-bg: #ffffff;
+      --field-bg-2: #f8fafc;
+      --sticky-bg: rgba(255,255,255,0.96);
+      --hero-gradient:
+        linear-gradient(135deg, rgba(30, 58, 138, 0.98), rgba(37, 99, 235, 0.96), rgba(6, 182, 212, 0.92));
+    }
+
+    [data-theme="dark"] {
+      --blue-900: #dbeafe;
+      --blue-800: #bfdbfe;
+      --blue-700: #93c5fd;
+      --blue-600: #60a5fa;
+      --blue-500: #3b82f6;
+      --blue-100: rgba(96, 165, 250, 0.24);
+      --blue-50: rgba(30, 58, 138, 0.28);
+      --green-700: #86efac;
+      --green-600: #34d399;
+      --green-100: rgba(52, 211, 153, 0.22);
+      --green-50: rgba(6, 78, 59, 0.42);
+      --red-700: #fca5a5;
+      --red-600: #f87171;
+      --red-100: rgba(248, 113, 113, 0.22);
+      --red-50: rgba(127, 29, 29, 0.38);
+      --amber-700: #fcd34d;
+      --amber-100: rgba(251, 191, 36, 0.24);
+      --amber-50: rgba(120, 53, 15, 0.34);
+      --slate-950: #f8fafc;
+      --slate-900: #f1f5f9;
+      --slate-800: #e2e8f0;
+      --slate-700: #cbd5e1;
+      --slate-600: #94a3b8;
+      --slate-500: #94a3b8;
+      --slate-400: #64748b;
+      --slate-300: #475569;
+      --slate-200: #334155;
+      --slate-100: #1e293b;
+      --slate-50: #0b1220;
+      --white: #111a2e;
+      --surface: rgba(17, 26, 46, 0.88);
+      --surface-solid: #111a2e;
+      --surface-muted: rgba(15, 24, 40, 0.78);
+      --field-bg: #0f1828;
+      --field-bg-2: #111a2e;
+      --sticky-bg: rgba(15, 24, 40, 0.94);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.38);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.34);
+      --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.46);
+      --hero-gradient:
+        linear-gradient(135deg, rgba(11, 18, 32, 0.98), rgba(30, 64, 175, 0.9), rgba(14, 116, 144, 0.78));
+    }
+
+    @media (prefers-color-scheme: dark) {
+      [data-theme="auto"] {
+        --blue-900: #dbeafe;
+        --blue-800: #bfdbfe;
+        --blue-700: #93c5fd;
+        --blue-600: #60a5fa;
+        --blue-500: #3b82f6;
+        --blue-100: rgba(96, 165, 250, 0.24);
+        --blue-50: rgba(30, 58, 138, 0.28);
+        --green-700: #86efac;
+        --green-600: #34d399;
+        --green-100: rgba(52, 211, 153, 0.22);
+        --green-50: rgba(6, 78, 59, 0.42);
+        --red-700: #fca5a5;
+        --red-600: #f87171;
+        --red-100: rgba(248, 113, 113, 0.22);
+        --red-50: rgba(127, 29, 29, 0.38);
+        --amber-700: #fcd34d;
+        --amber-100: rgba(251, 191, 36, 0.24);
+        --amber-50: rgba(120, 53, 15, 0.34);
+        --slate-950: #f8fafc;
+        --slate-900: #f1f5f9;
+        --slate-800: #e2e8f0;
+        --slate-700: #cbd5e1;
+        --slate-600: #94a3b8;
+        --slate-500: #94a3b8;
+        --slate-400: #64748b;
+        --slate-300: #475569;
+        --slate-200: #334155;
+        --slate-100: #1e293b;
+        --slate-50: #0b1220;
+        --white: #111a2e;
+        --surface: rgba(17, 26, 46, 0.88);
+        --surface-solid: #111a2e;
+        --surface-muted: rgba(15, 24, 40, 0.78);
+        --field-bg: #0f1828;
+        --field-bg-2: #111a2e;
+        --sticky-bg: rgba(15, 24, 40, 0.94);
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.38);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.34);
+        --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.46);
+        --hero-gradient:
+          linear-gradient(135deg, rgba(11, 18, 32, 0.98), rgba(30, 64, 175, 0.9), rgba(14, 116, 144, 0.78));
+      }
     }
 
     * {
@@ -74,9 +174,10 @@
         sans-serif;
       color: var(--slate-900);
       background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 34%),
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.16), transparent 32%),
         var(--slate-50);
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     button,
@@ -109,8 +210,9 @@
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.82);
       border-radius: var(--radius-3xl);
-      background: rgba(255, 255, 255, 0.82);
+      background: var(--surface);
       box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(16px);
     }
 
     .header {
@@ -118,8 +220,7 @@
       overflow: hidden;
       padding: 26px 22px;
       color: var(--white);
-      background:
-        linear-gradient(135deg, rgba(30, 58, 138, 0.98), rgba(37, 99, 235, 0.96), rgba(6, 182, 212, 0.92));
+      background: var(--hero-gradient);
     }
 
     .header::before {
@@ -144,6 +245,13 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex: 0 0 auto;
     }
 
     .eyebrow {
@@ -181,6 +289,10 @@
       transform: translateY(-1px);
     }
 
+    button.header-link {
+      padding: 0;
+    }
+
     .title {
       margin: 0;
       font-size: clamp(26px, 5vw, 42px);
@@ -200,7 +312,7 @@
 
     .content {
       padding: 18px;
-      background: rgba(248, 250, 252, 0.74);
+      background: var(--surface-muted);
     }
 
     .section {
@@ -250,7 +362,7 @@
     .card {
       border: 1px solid var(--slate-200);
       border-radius: var(--radius-2xl);
-      background: var(--white);
+      background: var(--surface-solid);
       box-shadow: var(--shadow-md);
     }
 
@@ -342,7 +454,7 @@
 
     .svg-wrap {
       border-radius: var(--radius-2xl);
-      background: var(--slate-50);
+      background: var(--field-bg-2);
       padding: 10px;
     }
 
@@ -445,7 +557,7 @@
       border: 1px solid var(--slate-300);
       border-radius: var(--radius-xl);
       outline: none;
-      background: var(--white);
+      background: var(--field-bg);
       color: var(--slate-950);
       font-size: 18px;
       font-weight: 900;
@@ -476,7 +588,7 @@
       border: 1px solid var(--blue-100);
       border-radius: var(--radius-2xl);
       padding: 15px;
-      background: linear-gradient(135deg, var(--blue-50), #fff);
+      background: linear-gradient(135deg, var(--blue-50), var(--surface-solid));
     }
 
     .applied-size-label {
@@ -564,7 +676,7 @@
     .advanced-chip {
       flex: 0 0 auto;
       border-radius: 999px;
-      background: var(--white);
+      background: var(--surface-solid);
       padding: 6px 9px;
       color: var(--slate-500);
       font-size: 11px;
@@ -842,7 +954,7 @@
       right: 0;
       bottom: 0;
       border-top: 1px solid var(--slate-200);
-      background: rgba(255,255,255,0.96);
+      background: var(--sticky-bg);
       box-shadow: 0 -18px 40px rgba(15,23,42,0.12);
       backdrop-filter: blur(12px);
       padding: 10px;
@@ -964,7 +1076,10 @@
         <div class="header-inner">
           <div class="header-top">
             <div class="eyebrow">PIPE FIELD CALCULATOR</div>
-            <a class="header-link" href="./index.html" aria-label="메인으로 돌아가기 / Back to main" title="메인으로 돌아가기 / Back to main">🏠</a>
+            <div class="header-actions" aria-label="페이지 도구">
+              <button id="themeToggle" class="header-link" type="button" aria-label="테마 전환" title="테마 전환">🌗</button>
+              <a class="header-link" href="./index.html" aria-label="메인으로 돌아가기 / Back to main" title="메인으로 돌아가기 / Back to main">🏠</a>
+            </div>
           </div>
           <h1 class="title">파이프 사선 커팅 & 컷백 계산기</h1>
           <p class="subtitle">
@@ -1451,6 +1566,7 @@
 
   <script>
     const STORAGE_KEY = "pipe_miter_calculator_production_v3";
+    const THEME_KEY = "pipe_miter_calculator_theme";
 
     const PIPE_SIZES = {
       "15A": 21.7,
@@ -1480,6 +1596,40 @@
     const state = {
       selectedSize: DEFAULTS.pipeSize
     };
+
+    function applyTheme(theme) {
+      const safeTheme = ["auto", "light", "dark"].includes(theme) ? theme : "auto";
+      document.documentElement.dataset.theme = safeTheme;
+
+      const themeToggle = $("themeToggle");
+      if (themeToggle) {
+        const label = safeTheme === "dark"
+          ? "야간모드"
+          : safeTheme === "light"
+            ? "주간모드"
+            : "자동모드";
+        themeToggle.setAttribute("aria-label", `테마 전환: ${label}`);
+        themeToggle.setAttribute("title", `테마 전환: ${label}`);
+      }
+    }
+
+    function loadTheme() {
+      try {
+        applyTheme(localStorage.getItem(THEME_KEY) || "auto");
+      } catch (error) {
+        applyTheme("auto");
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.dataset.theme || "auto";
+      const next = current === "auto" ? "light" : current === "light" ? "dark" : "auto";
+      applyTheme(next);
+
+      try {
+        localStorage.setItem(THEME_KEY, next);
+      } catch (error) {}
+    }
 
     function $(id) {
       return document.getElementById(id);
@@ -1758,6 +1908,8 @@
     }
 
     window.addEventListener("load", () => {
+      loadTheme();
+      $("themeToggle").addEventListener("click", toggleTheme);
       loadValues();
       onPipeSizeChange();
     });
