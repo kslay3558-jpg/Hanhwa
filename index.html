@@ -130,6 +130,7 @@
 
   /* App header */
   .app-header {
+    position: relative;
     background: var(--c-surface);
     border-radius: var(--r-lg);
     box-shadow: var(--e-1);
@@ -138,10 +139,18 @@
     display: flex; align-items: center; gap: 12px;
     border: 1px solid var(--c-border);
     flex-wrap: wrap; row-gap: 8px;
+    overflow: hidden;
+  }
+  /* Subtle accent strip on the top edge of the header */
+  .app-header::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--c-primary) 0%, var(--c-success) 60%, var(--c-accent) 100%);
+    opacity: .85;
   }
   /* brand: 최소 200px flex-basis로 controls에 밀려 0px가 되는 현상 방지 */
   .app-header .brand { flex: 1 1 200px; min-width: 0; }
-  .app-header .brand p { color: var(--c-text-mute); font-size: .8rem; margin-top: 2px; }
+  .app-header .brand h1 { line-height: 1.2; }
+  .app-header .brand p { color: var(--c-text-mute); font-size: .78rem; margin-top: 3px; font-weight: 500; }
   /* controls: min-width 0으로 flex-shrink가 제대로 동작하게 함 */
   .app-header .controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-width: 0; }
 
@@ -163,6 +172,7 @@
   .help-btn { background: var(--c-primary) !important; color: #fff !important; border-color: var(--c-primary) !important; box-shadow: var(--e-1); }
   .help-btn:hover { background: var(--c-primary-strong, #1d4ed8) !important; filter: brightness(1.08); }
   .icon-btn:hover { background: var(--c-primary-weak); color: var(--c-primary); }
+  .icon-btn[data-action="q-del"]:hover { background: var(--c-danger-weak); color: var(--c-danger); }
   .icon-btn:active { transform: scale(.94); }
   .icon-btn[aria-pressed="true"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
 
@@ -243,21 +253,106 @@
   .card {
     background: var(--c-surface);
     border-radius: var(--r-lg);
-    padding: 16px;
+    padding: 18px 18px 16px;
     box-shadow: var(--e-2);
     border: 1px solid var(--c-border);
-    transition: box-shadow var(--m-base), border-color var(--m-base);
+    transition: box-shadow var(--m-base), border-color var(--m-base), transform var(--m-base);
   }
+  @media (max-width: 480px) { .card { padding: 16px 14px 14px; } }
   .card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
   .card-head {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
   }
-  .card-head h2 { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; }
+  .card-head h2 {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+    position: relative; padding-left: 10px;
+  }
+  /* Subtle colored accent bar to anchor each section visually */
+  .card-head h2::before {
+    content: ''; position: absolute; left: 0; top: 50%;
+    width: 3px; height: 18px; transform: translateY(-50%);
+    background: var(--c-primary); border-radius: 2px;
+  }
   .card-head .badge {
     background: var(--c-primary-weak); color: var(--c-primary-strong);
     font-size: .78rem; font-weight: 700; padding: 3px 10px; border-radius: 999px;
   }
+
+  /* ==========================================================================
+     Accordion Cards — 접이식 입력 섹션
+     - .acc-card: 기본 .card + 패딩 0 (헤더/바디가 각자 패딩)
+     - .acc-head: 클릭 가능한 섹션 헤더 버튼
+     - .acc-body: grid-template-rows 트랜지션으로 부드럽게 열림/닫힘
+     - .acc-body-inner: overflow:hidden 내부 래퍼 + 실제 폼 패딩
+     ========================================================================== */
+  .acc-card {
+    padding: 0;
+    overflow: hidden;
+  }
+  .acc-card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
+  .acc-head {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 14px 18px;
+    background: none; border: none; cursor: pointer;
+    text-align: left; color: inherit; font-family: inherit;
+    position: relative; overflow: hidden;
+    transition: background var(--m-fast);
+  }
+  .acc-head::before {
+    content: ''; position: absolute; left: 0; top: 50%;
+    width: 3px; height: 20px; transform: translateY(-50%);
+    background: var(--c-primary); border-radius: 0 2px 2px 0;
+    transition: opacity var(--m-fast);
+  }
+  .acc-head[aria-expanded="false"]::before { opacity: .45; }
+  .acc-head:hover, .acc-head:focus-visible { background: var(--c-primary-weak); outline: none; }
+  .acc-head:focus-visible { box-shadow: inset 0 0 0 2px var(--c-focus); }
+  .acc-head h2 {
+    flex: 1; min-width: 0; padding-left: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .acc-head-meta {
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+  .acc-badge {
+    font-size: .7rem; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+    background: var(--c-primary-weak); color: var(--c-primary-strong);
+    opacity: 0; transition: opacity var(--m-fast);
+    pointer-events: none;
+  }
+  .acc-head[aria-expanded="false"] .acc-badge.has-val { opacity: 1; }
+  .acc-chevron {
+    flex-shrink: 0; display: inline-block; width: 20px; height: 20px;
+    color: var(--c-text-mute); font-size: 1rem; font-style: normal;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--m-base);
+  }
+  .acc-head[aria-expanded="true"] .acc-chevron { transform: rotate(180deg); }
+  /* Divider line shows only when expanded */
+  .acc-head[aria-expanded="true"] {
+    border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
+  }
+  .acc-head[aria-expanded="false"] { border-bottom: 1px solid transparent; }
+  /* Body grid animation */
+  .acc-body {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows .28s cubic-bezier(.4,0,.2,1);
+  }
+  .acc-body[aria-hidden="true"] { grid-template-rows: 0fr; }
+  .acc-body-inner {
+    overflow: hidden;
+    padding: 0 18px 16px;
+  }
+  @media (max-width: 480px) {
+    .acc-head { padding: 12px 14px; }
+    .acc-body-inner { padding: 0 14px 14px; }
+  }
+  /* Inside acc-body the first form-grid loses top margin gap */
+  .acc-body-inner > .form-grid:first-child { margin-top: 14px; }
 
   /* Forms */
   .form-grid { display: grid; gap: 10px; margin-bottom: 12px; }
@@ -269,8 +364,8 @@
     .col-3 > .full-on-mobile { grid-column: 1 / -1; }
   }
   .field label, label.field-label {
-    display: block; font-size: .72rem; font-weight: 700;
-    color: var(--c-text-sub); margin-bottom: 4px; letter-spacing: 0;
+    display: block; font-size: .78rem; font-weight: 700;
+    color: var(--c-text-sub); margin-bottom: 5px; letter-spacing: 0;
   }
 
   select, input[type=number], input[type=text], input[type=range], textarea {
@@ -420,7 +515,7 @@
     margin-bottom: 12px;
   }
   .q-item {
-    display: flex; flex-direction: column; gap: 8px;
+    display: flex; flex-direction: row; align-items: center; gap: 8px;
     padding: 10px 12px; background: var(--c-surface-2);
     border: 1px solid var(--c-border); border-radius: var(--r-md);
     animation: springIn .38s var(--m-spring);
@@ -432,26 +527,19 @@
   @keyframes springIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
   @keyframes springOut { to { opacity: 0; transform: translateX(20px); } }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  /* 상단 행: 드래그 핸들 + 정보 */
-  .q-item-main { display: flex; align-items: flex-start; gap: 10px; }
+  /* 단일 행: 드래그 핸들 + 정보(flex:1) + 액션 */
+  .q-item-main { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
   .q-handle {
-    flex: 0 0 auto; width: 18px; color: var(--c-text-mute);
-    text-align: center; font-size: 1rem; line-height: 1; cursor: grab;
-    user-select: none; padding-top: 2px;
+    flex: 0 0 auto; width: 16px; color: var(--c-text-mute);
+    text-align: center; font-size: .95rem; line-height: 1; cursor: grab;
+    user-select: none;
   }
-  .q-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .q-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .q-title {
-    font-size: .92rem; font-weight: 800; color: var(--c-text);
-    display: flex; align-items: baseline; gap: 6px; flex-wrap: nowrap;
-    overflow: hidden;
+    font-size: .9rem; font-weight: 800; color: var(--c-text);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .q-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-  .q-qty {
-    flex-shrink: 0;
-    color: var(--c-primary); font-weight: 800; font-size: .9rem;
-    background: var(--c-primary-weak); padding: 1px 7px;
-    border-radius: 99px; white-space: nowrap;
-  }
   .q-desc { font-size: .78rem; color: var(--c-text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .q-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
   .q-tag {
@@ -461,12 +549,12 @@
   }
   .q-tag.blue { background: var(--c-primary-weak); color: var(--c-primary-strong); border-color: transparent; }
   .q-tag.warn { background: var(--c-warn-weak); color: var(--c-warn); border-color: transparent; }
-  /* 하단 행: 액션 버튼 우측 정렬 */
-  .q-actions { display: flex; gap: 6px; align-items: center; justify-content: flex-end; }
-  .q-mini-stepper { display: flex; align-items: center; height: 30px; border: 1px solid var(--c-border); border-radius: var(--r-sm); overflow: hidden; background: var(--c-surface); }
-  .q-mini-stepper button { width: 30px; height: 30px; border: none; background: transparent; color: var(--c-text-sub); cursor: pointer; font-size: .95rem; }
+  /* 액션: 우측 고정 (스테퍼 + 삭제만) */
+  .q-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .q-mini-stepper { display: flex; align-items: center; height: 32px; border: 1px solid var(--c-border); border-radius: var(--r-sm); overflow: hidden; background: var(--c-surface); }
+  .q-mini-stepper button { width: 28px; height: 32px; border: none; background: transparent; color: var(--c-text-sub); cursor: pointer; font-size: .95rem; }
   .q-mini-stepper button:hover { background: var(--c-primary-weak); color: var(--c-primary); }
-  .q-mini-stepper input { width: 40px; height: 30px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: .85rem; padding: 0; color: var(--c-text); }
+  .q-mini-stepper input { width: 36px; height: 32px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: .88rem; padding: 0; color: var(--c-text); }
 
   /* Empty state */
   .empty-state {
@@ -498,19 +586,43 @@
   .result-box .res-head h2 { color: var(--c-success); flex: 1; min-width: 0; }
   .result-box .res-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
-  .res-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media (max-width: 600px) { .res-tables { grid-template-columns: 1fr; } }
-  .table-sec h3 { font-size: .88rem; margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px; color: var(--c-text); }
-  .table-sec h3::before { content: ''; width: 3px; height: 14px; background: var(--c-primary); border-radius: 2px; display: inline-block; }
-  .table-wrapper { border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; }
-  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-  th, td { padding: 9px 10px; text-align: center; border-bottom: 1px solid var(--c-border); color: var(--c-text); }
-  th { background: var(--c-surface-2); color: var(--c-text-sub); font-weight: 700; font-size: .75rem; }
-  tbody tr:last-child td { border-bottom: none; }
-  td b { color: var(--c-text); font-size: .95rem; font-weight: 800; }
-  td.muted { color: var(--c-text-mute); }
+  /* Flat result list */
+  .res-flat-wrapper { border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 4px; }
+  .res-flat-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .res-flat-table th, .res-flat-table td { padding: 9px 10px; border-bottom: 1px solid var(--c-border); color: var(--c-text); vertical-align: middle; }
+  .res-flat-table th { background: var(--c-surface-2); color: var(--c-text-sub); font-weight: 700; font-size: .75rem; letter-spacing: .02em; position: sticky; top: 0; }
+  .res-flat-table th:first-child { width: 72px; text-align: center; }
+  .res-flat-table th:last-child  { width: 80px; text-align: right; }
+  .res-flat-table td:first-child { text-align: center; }
+  .res-flat-table td:last-child  { text-align: right; font-weight: 800; white-space: nowrap; }
+  .res-flat-table tbody tr { transition: background var(--m-fast); }
+  .res-flat-table tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--c-surface-2) 70%, transparent); }
+  .res-flat-table tbody tr:hover td { background: var(--c-primary-weak); }
+  .res-flat-table tbody tr:last-child td { border-bottom: none; }
+  .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
+  .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
+  .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
+
+  /* Category pill tags */
+  .res-cat-tag {
+    display: inline-block; padding: 3px 8px; border-radius: 999px;
+    font-size: .68rem; font-weight: 800; letter-spacing: .02em; white-space: nowrap;
+  }
+  .res-cat-tag-bolt { background: var(--c-primary-weak); color: var(--c-primary-strong, var(--c-primary)); }
+  .res-cat-tag-nut  { background: #7c3aed18; color: #7c3aed; }
+  [data-theme="dark"] .res-cat-tag-nut { color: #c4b5fd; background: #3b076455; }
+  .res-cat-tag-gsk  { background: var(--c-success-weak); color: var(--c-success); }
+  .res-cat-tag-ub   { background: var(--c-warn-weak); color: var(--c-warn); }
+
+  /* Result action strip (bottom) */
+  .res-action-strip {
+    display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap;
+    padding-top: 12px; border-top: 1px solid var(--c-border);
+  }
+  .res-action-strip .btn { flex: 1 1 80px; }
+
   .notice {
-    margin-top: 14px; padding: 12px; background: var(--c-surface-2);
+    margin-top: 12px; padding: 10px 12px; background: var(--c-surface-2);
     border-radius: var(--r-md); font-size: .78rem; color: var(--c-text-sub); line-height: 1.55;
   }
   .notice b { color: var(--c-text); }
@@ -543,6 +655,101 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
+  #boardToggle {
+    background: none; border: 1px solid var(--c-border); border-radius: 99px;
+    padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
+    transition: background var(--m-fast), border-color var(--m-fast);
+    line-height: 1.4;
+  }
+  #boardToggle:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+
+  /* Board modal */
+  .board-write-section { margin-bottom: 14px; }
+  .board-write-toggle { width: 100%; }
+  .board-write-form {
+    display: none; flex-direction: column; gap: 8px; margin-top: 10px;
+    padding: 12px; background: var(--c-surface-2);
+    border-radius: var(--r-md); border: 1px solid var(--c-border);
+  }
+  .board-write-form.open { display: flex; }
+  .board-input {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm);
+    background: var(--c-surface); color: var(--c-text); font-size: .9rem; font-family: var(--font-sans);
+    box-sizing: border-box;
+  }
+  .board-input:focus { outline: 2px solid var(--c-focus); outline-offset: 1px; }
+  .board-textarea {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm);
+    background: var(--c-surface); color: var(--c-text); font-size: .88rem; font-family: var(--font-sans);
+    resize: vertical; box-sizing: border-box; line-height: 1.5; min-height: 70px;
+  }
+  .board-textarea:focus { outline: 2px solid var(--c-focus); outline-offset: 1px; }
+  .board-btn-row { display: flex; gap: 8px; align-items: center; }
+  .board-empty { text-align: center; color: var(--c-text-mute); padding: 28px 0; font-size: .9rem; }
+  .board-post {
+    background: var(--c-surface-2); border: 1px solid var(--c-border);
+    border-radius: var(--r-md); padding: 12px; margin-bottom: 10px;
+  }
+  .board-post-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .board-post-title { flex: 1; font-size: .95rem; font-weight: 800; color: var(--c-text); line-height: 1.4; }
+  .board-post-meta { font-size: .75rem; color: var(--c-text-mute); white-space: nowrap; padding-top: 2px; }
+  .board-post-content {
+    font-size: .88rem; color: var(--c-text-sub); line-height: 1.6; white-space: pre-wrap;
+    margin-bottom: 10px; padding: 10px; background: var(--c-surface);
+    border-radius: var(--r-sm); border: 1px solid var(--c-border);
+  }
+  .board-del { color: var(--c-text-mute); font-size: .85rem; flex-shrink: 0; }
+  .board-del:hover { color: var(--c-danger); background: var(--c-danger-weak); }
+  /* Comment-board row layout */
+  .cb-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 12px; background: var(--c-surface-2);
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+  }
+  .cb-nick {
+    min-width: 70px; max-width: 100px; font-size: .85rem; font-weight: 700;
+    color: var(--c-primary); word-break: break-all; padding-top: 1px;
+  }
+  .cb-body { flex: 1; min-width: 0; }
+  .cb-content { font-size: .88rem; color: var(--c-text); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .cb-meta { font-size: .72rem; color: var(--c-text-mute); margin-top: 3px; }
+  .board-comment-count {
+    font-size: .8rem; color: var(--c-primary); cursor: pointer; padding: 4px 0; user-select: none;
+  }
+  .board-comment-count:hover { text-decoration: underline; }
+  .board-comment-body { margin-top: 8px; }
+  .board-comment {
+    padding: 8px 10px; background: var(--c-surface); border: 1px solid var(--c-border);
+    border-radius: var(--r-sm); margin-bottom: 6px;
+  }
+  .board-comment-content { font-size: .85rem; color: var(--c-text); line-height: 1.5; white-space: pre-wrap; }
+  .board-comment-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+  .board-comment-meta { font-size: .72rem; color: var(--c-text-mute); flex: 1; }
+  .board-comment-form { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .board-pw-confirm { margin-top: 8px; padding: 8px 10px; background: var(--c-danger-weak); border-radius: var(--r-sm); border: 1px solid var(--c-danger); }
+  .board-pw-confirm .board-pw-row { display: flex; gap: 6px; align-items: center; }
+  .board-pw-confirm .board-input { font-size: .82rem; padding: 5px 8px; }
+  .board-pw-input { flex: 1; min-width: 0; width: 100%; }
+  .cb-wrap { margin-bottom: 8px; }
+  .btn-danger { background: var(--c-danger); color: #fff; border: none; }
+  .btn-danger:hover { background: #b91c1c; }
+  /* Board server status indicator */
+  .board-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: .72rem; padding: 2px 9px; border-radius: 99px;
+    border: 1px solid var(--c-border); background: var(--c-surface-2);
+    color: var(--c-text-mute); flex-shrink: 0; white-space: nowrap; font-weight: 600;
+  }
+  .board-status::before {
+    content: ''; display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; flex-shrink: 0;
+  }
+  .board-status--checking::before { background: #9ca3af; }
+  .board-status--online { color: #15803d; }
+  .board-status--online::before { background: #22c55e; animation: statusPulse 2s infinite; }
+  .board-status--offline { color: var(--c-danger); }
+  .board-status--offline::before { background: var(--c-danger); }
+  @keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
   /* Floating bar */
   .floating-bar {
@@ -564,6 +771,80 @@
   }
   .float-badge.pop { transform: scale(1.3); }
   .floating-bar button { width: auto; min-height: 38px; padding: 0 14px; }
+
+  /* Cart FAB */
+  .cart-fab {
+    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
+    z-index: 960; width: 56px; height: 56px;
+    background: #f59e0b; color: #fff;
+    border: 2.5px solid #fff; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; box-shadow: 0 4px 18px rgba(245,158,11,.45), 0 2px 8px rgba(0,0,0,.18);
+    transition: bottom var(--m-spring), transform var(--m-base), background var(--m-base), box-shadow var(--m-base);
+  }
+  /* Lift FAB above floating bar when bar is visible */
+  body:has(.floating-bar.show) .cart-fab {
+    bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+  .cart-fab:hover { background: #d97706; transform: scale(1.07); box-shadow: 0 6px 22px rgba(217,119,6,.5), 0 2px 8px rgba(0,0,0,.2); }
+  .cart-fab:active { transform: scale(.95); }
+  .cart-fab-badge {
+    position: absolute; top: 4px; right: 4px;
+    background: var(--c-danger, #e53e3e); color: #fff;
+    font-size: .62rem; font-weight: 800; min-width: 17px; height: 17px;
+    padding: 0 4px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform var(--m-base);
+    pointer-events: none;
+  }
+  .cart-fab-badge[hidden] { display: none; }
+  .cart-fab-badge.pop { transform: scale(1.4); }
+
+  /* Cart drawer (bottom-sheet modal variant) */
+  .cart-drawer { align-items: flex-end; padding: 0; }
+  .cart-drawer .modal-content {
+    border-radius: var(--r-xl) var(--r-xl) 0 0;
+    max-width: 600px; width: 100%; margin: 0 auto;
+    max-height: 75vh; overflow-y: auto;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+  }
+  .cart-drawer.show .modal-content { transform: none; }
+  .cart-drawer-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; position: sticky; top: 0;
+    background: var(--c-surface); z-index: 1; padding-top: 4px;
+  }
+  .cart-drawer-header h2 { margin-bottom: 0; }
+  .cart-item-ro {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--c-surface-2);
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    margin-bottom: 8px;
+  }
+  .cart-item-ro-info { flex: 1; min-width: 0; }
+  .cart-item-ro-title { font-size: .92rem; font-weight: 800; color: var(--c-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-item-ro-desc { font-size: .78rem; color: var(--c-text-sub); margin-top: 2px; }
+  .cart-item-ro-qty { font-size: .85rem; font-weight: 800; color: var(--c-primary); white-space: nowrap; }
+  .cart-item-ro-del {
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: var(--r-sm);
+    border: none; background: transparent; color: var(--c-text-mute);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: .85rem; transition: background var(--m-fast), color var(--m-fast);
+  }
+  .cart-item-ro-del:hover { background: var(--c-danger-weak); color: var(--c-danger); }
+  .cart-drawer-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .cart-drawer-actions .btn { flex: 1; }
+
+  /* Compact queue items */
+  .q-item { padding: 7px 10px; gap: 6px; }
+  .q-item-main { gap: 6px; }
+  .q-info { gap: 1px; }
+  .q-title { font-size: .83rem; }
+  .q-compact-label { font-size: .75rem; color: var(--c-text-mute); margin-left: 4px; }
+  .q-mini-stepper { height: 30px; }
+  .q-mini-stepper button { width: 26px; height: 30px; }
+  .q-mini-stepper input { width: 32px; height: 30px; }
 
   /* Modal */
   .modal {
@@ -626,6 +907,62 @@
   .install-banner .ib-text b { display: block; font-size: .9rem; margin-bottom: 2px; }
   .install-banner button { width: auto; min-height: 34px; padding: 0 12px; font-size: .82rem; }
 
+  /* ==========================================================================
+     Bottom Install CTA — 컴팩트 가로 1줄 푸터 카드
+     - 화면을 압도하지 않게 약 58px 높이로 절제된 디자인
+     - 이미 설치된 경우 [hidden]으로 완전히 숨김
+     ========================================================================== */
+  .install-cta {
+    display: flex; align-items: center; gap: 12px;
+    margin: 24px auto 8px; max-width: 520px;
+    padding: 10px 12px 10px 14px;
+    background: linear-gradient(180deg, var(--c-surface) 0%, var(--c-primary-weak) 220%);
+    border: 1px solid var(--c-border);
+    border-radius: 14px;
+    box-shadow: var(--e-2);
+    transition: border-color var(--m-fast), box-shadow var(--m-fast), transform var(--m-fast);
+  }
+  .install-cta[hidden] { display: none !important; }
+  .install-cta:hover {
+    border-color: color-mix(in srgb, var(--c-primary) 50%, var(--c-border));
+    box-shadow: var(--e-3);
+  }
+  .install-cta-icon {
+    flex: 0 0 auto; width: 36px; height: 36px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--c-primary-weak); color: var(--c-primary-strong);
+    border-radius: 10px; font-size: 1.15rem; line-height: 1;
+  }
+  .install-cta-text { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+  .install-cta-text strong {
+    font-size: .9rem; font-weight: 800; color: var(--c-text);
+    letter-spacing: -0.015em;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .install-cta-hint {
+    font-size: .72rem; color: var(--c-text-mute); font-weight: 500;
+    margin-top: 2px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .install-cta-btn {
+    flex: 0 0 auto; width: auto;
+    min-height: 34px; padding: 0 16px;
+    border: none; border-radius: 999px;
+    background: var(--c-primary); color: #fff;
+    font-size: .82rem; font-weight: 700;
+    box-shadow: 0 2px 6px -1px color-mix(in srgb, var(--c-primary) 45%, transparent);
+    transition: background var(--m-fast), transform var(--m-fast), box-shadow var(--m-fast);
+  }
+  .install-cta-btn:hover:not(:disabled) {
+    background: var(--c-primary-strong);
+    box-shadow: 0 4px 10px -2px color-mix(in srgb, var(--c-primary) 55%, transparent);
+  }
+  .install-cta-btn:active:not(:disabled) { transform: scale(.96); }
+  @media (max-width: 380px) {
+    .install-cta { margin-left: 4px; margin-right: 4px; }
+    .install-cta-hint { display: none; }
+  }
+
   /* SR-only */
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -640,7 +977,7 @@
   /* Print */
   @media print {
     body { background: #fff; color: #000; padding: 0; }
-    .app-header .controls, .floating-bar, .install-banner, #toast, .modal,
+    .app-header .controls, .floating-bar, .cart-fab, .install-banner, .install-cta, #toast, .modal,
     .card:not(#queueCard):not(#resultCard), .action-row, .q-actions, .q-handle,
     .res-actions, .card-head .badge { display: none !important; }
     .main-grid { grid-template-columns: 1fr !important; }
@@ -680,143 +1017,178 @@
     <!-- ============================== COLUMN 1: 입력 ============================== -->
     <section class="col" data-i18n-attr="aria-label:sec.input" aria-label="자재 입력">
 
-      <!-- 1. 플랜지 외경 역산 -->
-      <div class="card">
-        <div class="card-head"><h2><span data-i18n="card.find">🔍 플랜지 찾기</span> <small style="font-weight:600;color:var(--c-text-mute)" data-i18n="card.find_sub">(외경 역산)</small></h2></div>
-        <div class="form-grid col-auto" style="margin-bottom:8px;">
-          <div class="field">
-            <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
-            <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
-          </div>
-          <div class="field">
-            <label aria-hidden="true">&nbsp;</label>
-            <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
+      <!-- 1. 플랜지 사이즈 역산 (기본 열림) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFind">
+          <h2><span data-i18n="card.find">🔍 플랜지 사이즈 역산</span></h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyFind" class="acc-body">
+          <div class="acc-body-inner">
+            <div class="form-grid col-auto" style="margin-bottom:8px;">
+              <div class="field">
+                <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
+                <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
+              </div>
+              <div class="field">
+                <label aria-hidden="true">&nbsp;</label>
+                <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
+              </div>
+            </div>
+            <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
           </div>
         </div>
-        <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
       </div>
 
-      <!-- 2. 플랜지 포인트 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.flange">🔩 플랜지 포인트</h2></div>
-        <div class="form-grid col-3">
-          <div class="field">
-            <label for="rating" data-i18n="form.rating">압력등급</label>
-            <select id="rating" data-action="rating-change">
-              <option value="5K">5K</option>
-              <option value="10K" selected>10K</option>
-              <option value="16K">16K</option>
-              <option value="30K">30K</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="size" data-i18n="form.size">호칭경 (A)</label>
-            <select id="size" aria-describedby="dataWarn"></select>
-          </div>
-          <div class="field full-on-mobile">
-            <label for="qty" data-i18n="form.qty_pt">포인트 개소</label>
-            <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_pt" aria-label="포인트 개소 조절">
-              <button type="button" data-action="qty-dec" data-target="qty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
-              <input type="number" id="qty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:form.qty_pt" aria-label="포인트 개소">
-              <button type="button" data-action="qty-inc" data-target="qty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+      <!-- 2. 플랜지 포인트 (기본 열림) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFlange">
+          <h2 data-i18n="card.flange">🔩 플랜지 포인트</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyFlange" class="acc-body">
+          <div class="acc-body-inner">
+            <div class="form-grid col-3">
+              <div class="field">
+                <label for="rating" data-i18n="form.rating">압력등급</label>
+                <select id="rating" data-action="rating-change">
+                  <option value="5K">5K</option>
+                  <option value="10K" selected>10K</option>
+                  <option value="16K">16K</option>
+                  <option value="30K">30K</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="size" data-i18n="form.size">호칭경 (A)</label>
+                <select id="size" aria-describedby="dataWarn"></select>
+              </div>
+              <div class="field full-on-mobile">
+                <label for="qty" data-i18n="form.qty_pt">포인트 개소</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_pt" aria-label="포인트 개소 조절">
+                  <button type="button" data-action="qty-dec" data-target="qty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="qty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:form.qty_pt" aria-label="포인트 개소">
+                  <button type="button" data-action="qty-inc" data-target="qty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
             </div>
+            <div id="dataWarn" class="search-res" role="status" aria-live="polite"></div>
+
+            <div class="option-box">
+              <div class="toggle-row">
+                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게</span>
+                <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)</span>
+                <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <span class="toggle-title" id="lblGsk" data-i18n="opt.gsk">가스켓 포함</span>
+                <div class="toggle-extra">
+                  <label class="sr-only" for="gTypeInFlange" data-i18n="aria.gsk_type">가스켓 종류</label>
+                  <select id="gTypeInFlange" class="gasket-select" data-i18n-attr="aria-label:aria.gsk_type_in" aria-label="포함될 가스켓 종류">
+                    <option value="일반"     selected data-i18n="gsk.normal">일반(RF)</option>
+                    <option value="논레이어"           data-i18n="gsk.nl">논레이어</option>
+                    <option value="그라파이트"         data-i18n="gsk.gr">그라파이트</option>
+                    <option value="메탈"               data-i18n="gsk.metal">메탈</option>
+                    <option value="풀페이스"           data-i18n="gsk.full">풀페이스</option>
+                  </select>
+                  <label class="switch"><input type="checkbox" id="optGasket" checked aria-labelledby="lblGsk"><span class="slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" data-action="add-bolt"><span data-i18n="btn.add_pt">＋ 포인트 추가</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.enter">(Enter)</small></button>
           </div>
         </div>
-        <div id="dataWarn" class="search-res" role="status" aria-live="polite"></div>
-
-        <div class="option-box">
-          <div class="toggle-row">
-            <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게</span>
-            <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)</span>
-            <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row">
-            <span class="toggle-title" id="lblGsk" data-i18n="opt.gsk">가스켓 포함</span>
-            <div class="toggle-extra">
-              <label class="sr-only" for="gTypeInFlange" data-i18n="aria.gsk_type">가스켓 종류</label>
-              <select id="gTypeInFlange" class="gasket-select" data-i18n-attr="aria-label:aria.gsk_type_in" aria-label="포함될 가스켓 종류">
-                <option value="일반"     selected data-i18n="gsk.normal">일반(RF)</option>
-                <option value="논레이어"           data-i18n="gsk.nl">논레이어</option>
-                <option value="그라파이트"         data-i18n="gsk.gr">그라파이트</option>
-                <option value="메탈"               data-i18n="gsk.metal">메탈</option>
-                <option value="풀페이스"           data-i18n="gsk.full">풀페이스</option>
-              </select>
-              <label class="switch"><input type="checkbox" id="optGasket" checked aria-labelledby="lblGsk"><span class="slider"></span></label>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn btn-primary" data-action="add-bolt"><span data-i18n="btn.add_pt">＋ 포인트 추가</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.enter">(Enter)</small></button>
       </div>
 
-      <!-- 3. 가스켓 단독 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.gasket">⭕ 추가 가스켓</h2></div>
-        <div class="form-grid col-2">
-          <div class="field">
-            <label for="grating" data-i18n="form.rating">압력등급</label>
-            <select id="grating" data-action="grating-change">
-              <option value="5K">5K</option>
-              <option value="10K" selected>10K</option>
-              <option value="16K">16K</option>
-              <option value="30K">30K</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="gsize" data-i18n="form.size">호칭경 (A)</label>
-            <select id="gsize"></select>
-          </div>
-          <div class="field">
-            <label for="gtype" data-i18n="form.gtype">재질/타입</label>
-            <select id="gtype">
-              <option value="일반"     data-i18n="gsk.normal">일반(RF)</option>
-              <option value="논레이어"  data-i18n="gsk.nl">논레이어</option>
-              <option value="그라파이트" data-i18n="gsk.gr">그라파이트</option>
-              <option value="메탈"      data-i18n="gsk.metal">메탈</option>
-              <option value="풀페이스"  data-i18n="gsk.full">풀페이스</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="gqty" data-i18n="form.qty_sht">수량 (장)</label>
-            <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gsk" aria-label="가스켓 수량 조절">
-              <button type="button" data-action="qty-dec" data-target="gqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
-              <input type="number" id="gqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gsk_in" aria-label="가스켓 수량">
-              <button type="button" data-action="qty-inc" data-target="gqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+      <!-- 3. 가스켓 추가 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasket">
+          <h2 data-i18n="card.gasket">⭕ 가스켓 추가</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyGasket" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-2">
+              <div class="field">
+                <label for="grating" data-i18n="form.rating">압력등급</label>
+                <select id="grating" data-action="grating-change">
+                  <option value="5K">5K</option>
+                  <option value="10K" selected>10K</option>
+                  <option value="16K">16K</option>
+                  <option value="30K">30K</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="gsize" data-i18n="form.size">호칭경 (A)</label>
+                <select id="gsize"></select>
+              </div>
+              <div class="field">
+                <label for="gtype" data-i18n="form.gtype">재질/타입</label>
+                <select id="gtype">
+                  <option value="일반"     data-i18n="gsk.normal">일반(RF)</option>
+                  <option value="논레이어"  data-i18n="gsk.nl">논레이어</option>
+                  <option value="그라파이트" data-i18n="gsk.gr">그라파이트</option>
+                  <option value="메탈"      data-i18n="gsk.metal">메탈</option>
+                  <option value="풀페이스"  data-i18n="gsk.full">풀페이스</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="gqty" data-i18n="form.qty_sht">수량 (장)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gsk" aria-label="가스켓 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="gqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="gqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gsk_in" aria-label="가스켓 수량">
+                  <button type="button" data-action="qty-inc" data-target="gqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
             </div>
+            <button class="btn btn-secondary" data-action="add-gasket" data-i18n="btn.add_gsk">＋ 가스켓 추가</button>
           </div>
         </div>
-        <button class="btn btn-secondary" data-action="add-gasket" data-i18n="btn.add_gsk">＋ 가스켓 추가</button>
       </div>
 
-      <!-- 4. U-볼트 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.ubolt">⚓ U-볼트 추가</h2></div>
-        <div class="form-grid col-2">
-          <div class="field">
-            <label for="usize" data-i18n="form.size">호칭경 (A)</label>
-            <select id="usize" data-action="usize-change"></select>
-            <div id="uPitchInfo" class="pitch-info">홀 간격: -</div>
-          </div>
-          <div class="field">
-            <label for="uqty" data-i18n="form.qty_set">수량 (Set)</label>
-            <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_ub" aria-label="U-볼트 수량 조절">
-              <button type="button" data-action="qty-dec" data-target="uqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
-              <input type="number" id="uqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_ub_in" aria-label="U-볼트 수량">
-              <button type="button" data-action="qty-inc" data-target="uqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+      <!-- 4. U-볼트 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyUbolt">
+          <h2 data-i18n="card.ubolt">⚓ U-볼트 추가</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyUbolt" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-2">
+              <div class="field">
+                <label for="usize" data-i18n="form.size">호칭경 (A)</label>
+                <select id="usize" data-action="usize-change"></select>
+                <div id="uPitchInfo" class="pitch-info">홀 간격: -</div>
+              </div>
+              <div class="field">
+                <label for="uqty" data-i18n="form.qty_set">수량 (Set)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_ub" aria-label="U-볼트 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="uqty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="uqty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_ub_in" aria-label="U-볼트 수량">
+                  <button type="button" data-action="qty-inc" data-target="uqty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
             </div>
+            <button class="btn btn-secondary" data-action="add-ubolt" data-i18n="btn.add_ub">＋ U-볼트 추가</button>
           </div>
         </div>
-        <button class="btn btn-secondary" data-action="add-ubolt" data-i18n="btn.add_ub">＋ U-볼트 추가</button>
       </div>
 
-      <!-- 5. 메모 -->
-      <div class="card">
-        <div class="card-head"><h2 data-i18n="card.memo">📝 추가 메모</h2></div>
-        <label class="sr-only" for="memoInput" data-i18n="form.memo_label">자유 메모</label>
-        <textarea id="memoInput" rows="3" data-i18n-attr="placeholder:form.memo_ph" placeholder="기타 자재 또는 비고를 자유롭게 기입하세요."></textarea>
+      <!-- 5. 메모 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
+          <h2 data-i18n="card.memo">📝 추가 메모</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyMemo" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <label class="sr-only" for="memoInput" data-i18n="form.memo_label">자유 메모</label>
+            <textarea id="memoInput" rows="3" data-i18n-attr="placeholder:form.memo_ph" placeholder="기타 자재 또는 비고를 자유롭게 기입하세요." style="margin-top:14px;"></textarea>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -856,6 +1228,27 @@
   </div>
 
   <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- 장바구니 FAB (항상 표시) -->
+  <button id="cartFab" class="cart-fab" type="button" data-action="open-cart" aria-label="장바구니 대기열 보기">
+    🛒
+    <span id="cartFabBadge" class="cart-fab-badge" hidden>0</span>
+  </button>
+
+  <!-- 장바구니 드로어 -->
+  <div id="cartModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-hidden="true">
+    <div class="modal-content">
+      <div class="cart-drawer-header">
+        <h2 id="cartDrawerTitle" data-i18n="cart.title">🛒 현재 대기열</h2>
+        <button class="icon-btn" type="button" data-action="close-cart" data-i18n-attr="aria-label:cart.close" aria-label="닫기">✕</button>
+      </div>
+      <div id="cartDrawerBody"></div>
+      <div class="cart-drawer-actions">
+        <button class="btn btn-ghost" type="button" data-action="close-cart" data-i18n="cart.to_queue">대기열로 이동</button>
+        <button class="btn btn-success" type="button" data-action="cart-calculate" data-i18n="fb.show_result">🧮 결과보기</button>
+      </div>
+    </div>
+  </div>
 
   <!-- 모바일 플로팅 바 -->
   <div id="floatingBar" class="floating-bar" aria-hidden="true">
@@ -927,6 +1320,18 @@
       </div>
     </div>
   </div>
+  <!-- 페이지 최하단: 내 폰에 설치하기 (컴팩트 푸터 카드) -->
+  <aside id="installCta" class="install-cta" hidden data-i18n-attr="aria-label:cta.install_aria" aria-label="내 폰에 설치하기">
+    <span class="install-cta-icon" aria-hidden="true">📱</span>
+    <div class="install-cta-text">
+      <strong data-i18n="cta.install_t">내 폰에 설치하기</strong>
+      <span class="install-cta-hint" id="installCtaHint" data-i18n="cta.install_hint_and">메뉴(⋮) → "앱 설치"</span>
+    </div>
+    <button type="button" class="btn install-cta-btn" id="installCtaBtn" data-action="install-app">
+      <span class="install-cta-btn-label" data-i18n="cta.install_btn">설치</span>
+    </button>
+  </aside>
+
   <!-- 당일 방문자 수 (클릭 시 표시) -->
   <div id="visitorFooter">
     <button id="visitorToggle" type="button" aria-expanded="false">
@@ -936,9 +1341,68 @@
       <span data-i18n="vis.today">오늘 방문자:</span>
       <strong id="visitorCount">0</strong><span data-i18n="vis.unit">명</span>
     </span>
+    <button id="boardToggle" type="button" aria-label="댓글 게시판 열기" title="댓글 게시판">
+      <span aria-hidden="true">💬</span>
+    </button>
+  </div>
+
+  <!-- 댓글 게시판 모달 -->
+  <div id="boardModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="boardTitle" aria-hidden="true">
+    <div class="modal-content">
+      <div class="cart-drawer-header">
+        <h2 id="boardTitle">💬 댓글 게시판</h2>
+        <span id="boardStatus" class="board-status board-status--checking" aria-live="polite">확인 중</span>
+        <button class="icon-btn" type="button" id="boardClose" aria-label="닫기">✕</button>
+      </div>
+      <div id="boardBody"></div>
+    </div>
   </div>
 
 </div>
+
+<!-- Firebase SDK (compat v10) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDnCv8DYsUW9crhyUA4TeV-yBtO2P_4Fhw",
+    authDomain: "guest-13bd6.firebaseapp.com",
+    projectId: "guest-13bd6",
+    storageBucket: "guest-13bd6.firebasestorage.app",
+    messagingSenderId: "808898051744",
+    appId: "1:808898051744:web:a2280409728801ddadd3c5",
+    measurementId: "G-DNPPH99QBS"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  // app.js의 Board 객체가 참조하는 전역 변수 노출
+  window._fbDb = firebase.firestore();
+
+  // app.js는 window._fbFS.collection(), window._fbFS.doc(), window._fbFS.addDoc(),
+  // window._fbFS.deleteDoc(), window._fbFS.getDocs(), window._fbFS.getDoc(),
+  // window._fbFS.query(), window._fbFS.orderBy() 형태로 호출하므로,
+  // compat SDK의 인스턴스 메서드를 래핑하여 제공
+  window._fbFS = {
+    collection: (db, col) => db.collection(col),
+    doc: (db, col, id) => db.collection(col).doc(id),
+    addDoc: (ref, data) => ref.add(data),
+    deleteDoc: (ref) => ref.delete(),
+    getDocs: (q) => q.get(),
+    // compat SDK에서 snap.exists는 프로퍼티이므로 모듈 방식(snap.exists())과
+    // 호환되도록 메서드로 감싸서 반환
+    getDoc: (ref) => ref.get().then(snap => ({
+      exists: () => snap.exists,
+      data: () => snap.data()
+    })),
+    query: (ref, ...constraints) => {
+      let q = ref;
+      for (const c of constraints) q = c(q);
+      return q;
+    },
+    orderBy: (field, dir) => (ref) => ref.orderBy(field, dir)
+  };
+</script>
 
 <script src="./app.js"></script>
 </body>

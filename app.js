@@ -133,8 +133,7 @@
       'sec.result':           '집계 결과',
       'sec.result_aria':      '최종 집계 결과',
       // Card 1: find flange
-      'card.find':            '🔍 플랜지 찾기',
-      'card.find_sub':        '(외경 역산)',
+      'card.find':            '🔍 플랜지 사이즈 역산',
       'form.od':              '플랜지 외경 (OD, mm)',
       'form.od_ph':           '예: 155',
       'btn.find':             '찾기',
@@ -159,7 +158,7 @@
       'btn.add_pt':           '＋ 포인트 추가',
       'kbd.enter':            '(Enter)',
       // Card 3: extra gasket
-      'card.gasket':          '⭕ 추가 가스켓',
+      'card.gasket':          '⭕ 가스켓 추가',
       'form.gtype':           '재질/타입',
       'form.qty_sht':         '수량 (장)',
       'aria.qty_gsk':         '가스켓 수량 조절',
@@ -215,13 +214,19 @@
       'r.sc_copy':            '복사',
       'r.title':              '✅ 최종 집계',
       'r.copy':               '📋 복사',
-      'r.csv':                '⬇ CSV',
+      'r.save_image':         '🖼 이미지 저장',
       'r.share':              '🔗 공유',
-      'r.print':              '🖨 인쇄',
       'r.bolt':               '🔩 볼트 (Bolt)',
       'r.nut':                '🔩 너트 (Nut)',
       'r.gsk':                '⭕ 가스켓',
       'r.ub':                 '⚓ U-볼트',
+      'r.tag_bolt':           '볼트',
+      'r.tag_nut':            '너트',
+      'r.tag_gsk':            '가스켓',
+      'r.tag_ub':             'U볼트',
+      'r.col_cat':            '분류',
+      'r.col_spec':           '규격',
+      'r.col_qty':            '수량',
       'r.col_bolt_spec':      '규격 (S × L)',
       'r.col_nut_spec':       '규격 (M)',
       'r.col_gsk_spec':       '규격 및 재질',
@@ -238,12 +243,23 @@
       // Floating bar
       'fb.queue':             '🛒 대기열',
       'fb.show_result':       '🧮 결과보기',
+      // Cart drawer
+      'cart.title':           '🛒 현재 대기열',
+      'cart.close':           '닫기',
+      'cart.to_queue':        '대기열로 이동',
+      'cart.empty':           '대기열이 비어 있어요',
       // Install banner
       'install.title':        '홈 화면에 추가',
       'install.desc':         '오프라인에서도 빠르게 사용할 수 있어요.',
       'install.btn':          '설치',
       'install.dismiss':      '닫기',
       'install.aria':         '홈 화면에 추가',
+      // Bottom install CTA (compact)
+      'cta.install_t':        '내 폰에 설치하기',
+      'cta.install_btn':      '설치',
+      'cta.install_aria':     '내 폰에 설치하기',
+      'cta.install_hint_ios': 'Safari 공유 → "홈 화면에 추가"',
+      'cta.install_hint_and': '메뉴(⋮) → "앱 설치"',
       // Edit modal
       'edit.title':           '✏️ 항목 편집',
       'edit.save':            '저장',
@@ -278,7 +294,7 @@
       't.no_items':           '⚠️ 등록된 자재가 없습니다.',
       't.copy_ok':            '✨ 복사 완료!',
       't.copy_fail':          '⚠️ 복사 실패',
-      't.csv_dl':             '⬇ CSV 다운로드',
+      't.img_save':           '🖼 이미지 저장됨',
       't.share_unsupported':  '🔗 공유 미지원: 복사로 대체',
       't.dup':                '⎘ 항목 복제됨',
       't.saved':              '💾 저장됨',
@@ -359,7 +375,6 @@
       'sec.result':           'Kết quả tổng hợp',
       'sec.result_aria':      'Kết quả tổng hợp cuối cùng',
       'card.find':            '🔍 Tìm Mặt bích',
-      'card.find_sub':        '(theo đường kính ngoài)',
       'form.od':              'Đường kính ngoài mặt bích (OD, mm)',
       'form.od_ph':           'VD: 155',
       'btn.find':             'Tìm',
@@ -434,13 +449,19 @@
       'r.sc_copy':            'Sao chép',
       'r.title':              '✅ Tổng hợp cuối',
       'r.copy':               '📋 Sao chép',
-      'r.csv':                '⬇ CSV',
+      'r.save_image':         '🖼 Lưu ảnh',
       'r.share':              '🔗 Chia sẻ',
-      'r.print':              '🖨 In',
       'r.bolt':               '🔩 Bu lông (Bolt)',
       'r.nut':                '🔩 Đai ốc (Nut)',
       'r.gsk':                '⭕ Gioăng',
       'r.ub':                 '⚓ Bu lông U',
+      'r.tag_bolt':           'Bu lông',
+      'r.tag_nut':            'Đai ốc',
+      'r.tag_gsk':            'Gioăng',
+      'r.tag_ub':             'Bu lông U',
+      'r.col_cat':            'Loại',
+      'r.col_spec':           'Quy cách',
+      'r.col_qty':            'SL',
       'r.col_bolt_spec':      'Quy cách (S × L)',
       'r.col_nut_spec':       'Quy cách (M)',
       'r.col_gsk_spec':       'Quy cách & Vật liệu',
@@ -456,11 +477,21 @@
       'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
       'fb.queue':             '🛒 Hàng chờ',
       'fb.show_result':       '🧮 Xem kết quả',
+      // Cart drawer
+      'cart.title':           '🛒 Hàng chờ hiện tại',
+      'cart.close':           'Đóng',
+      'cart.to_queue':        'Đến hàng chờ',
+      'cart.empty':           'Hàng chờ trống',
       'install.title':        'Thêm vào màn hình chính',
       'install.desc':         'Có thể dùng nhanh ngay cả khi ngoại tuyến.',
       'install.btn':          'Cài đặt',
       'install.dismiss':      'Đóng',
       'install.aria':         'Thêm vào màn hình chính',
+      'cta.install_t':        'Cài lên điện thoại',
+      'cta.install_btn':      'Cài đặt',
+      'cta.install_aria':     'Cài lên điện thoại',
+      'cta.install_hint_ios': 'Safari · Chia sẻ → "Thêm vào MH chính"',
+      'cta.install_hint_and': 'Menu (⋮) → "Cài đặt ứng dụng"',
       'edit.title':           '✏️ Sửa mục',
       'edit.save':            'Lưu',
       'edit.cancel':          'Hủy',
@@ -492,7 +523,7 @@
       't.no_items':           '⚠️ Chưa có vật tư nào.',
       't.copy_ok':            '✨ Đã sao chép!',
       't.copy_fail':          '⚠️ Sao chép thất bại',
-      't.csv_dl':             '⬇ Đang tải CSV',
+      't.img_save':           '🖼 Đã lưu ảnh',
       't.share_unsupported':  '🔗 Không hỗ trợ chia sẻ: đã sao chép thay thế',
       't.dup':                '⎘ Đã nhân đôi mục',
       't.saved':              '💾 Đã lưu',
@@ -570,7 +601,6 @@
       'sec.result':           'Hasil rekap',
       'sec.result_aria':      'Hasil rekap akhir',
       'card.find':            '🔍 Cari Flensa',
-      'card.find_sub':        '(dari diameter luar)',
       'form.od':              'Diameter luar flensa (OD, mm)',
       'form.od_ph':           'cth: 155',
       'btn.find':             'Cari',
@@ -645,13 +675,19 @@
       'r.sc_copy':            'Salin',
       'r.title':              '✅ Rekap akhir',
       'r.copy':               '📋 Salin',
-      'r.csv':                '⬇ CSV',
+      'r.save_image':         '🖼 Simpan Gambar',
       'r.share':              '🔗 Bagikan',
-      'r.print':              '🖨 Cetak',
       'r.bolt':               '🔩 Baut (Bolt)',
       'r.nut':                '🔩 Mur (Nut)',
       'r.gsk':                '⭕ Gasket',
       'r.ub':                 '⚓ Baut U',
+      'r.tag_bolt':           'Baut',
+      'r.tag_nut':            'Mur',
+      'r.tag_gsk':            'Gasket',
+      'r.tag_ub':             'Baut U',
+      'r.col_cat':            'Jenis',
+      'r.col_spec':           'Spesifikasi',
+      'r.col_qty':            'Jml',
       'r.col_bolt_spec':      'Spesifikasi (S × L)',
       'r.col_nut_spec':       'Spesifikasi (M)',
       'r.col_gsk_spec':       'Spesifikasi & Material',
@@ -667,11 +703,21 @@
       'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
       'fb.queue':             '🛒 Antrean',
       'fb.show_result':       '🧮 Lihat hasil',
+      // Cart drawer
+      'cart.title':           '🛒 Antrean saat ini',
+      'cart.close':           'Tutup',
+      'cart.to_queue':        'Ke antrean',
+      'cart.empty':           'Antrean kosong',
       'install.title':        'Tambah ke Layar Utama',
       'install.desc':         'Bisa dipakai cepat bahkan saat offline.',
       'install.btn':          'Pasang',
       'install.dismiss':      'Tutup',
       'install.aria':         'Tambah ke Layar Utama',
+      'cta.install_t':        'Pasang di ponsel',
+      'cta.install_btn':      'Pasang',
+      'cta.install_aria':     'Pasang di ponsel',
+      'cta.install_hint_ios': 'Safari · Bagikan → "Tambah ke Layar Utama"',
+      'cta.install_hint_and': 'Menu (⋮) → "Pasang aplikasi"',
       'edit.title':           '✏️ Edit item',
       'edit.save':            'Simpan',
       'edit.cancel':          'Batal',
@@ -703,7 +749,7 @@
       't.no_items':           '⚠️ Belum ada material terdaftar.',
       't.copy_ok':            '✨ Tersalin!',
       't.copy_fail':          '⚠️ Gagal menyalin',
-      't.csv_dl':             '⬇ Mengunduh CSV',
+      't.img_save':           '🖼 Gambar tersimpan',
       't.share_unsupported':  '🔗 Berbagi tidak didukung: disalin sebagai gantinya',
       't.dup':                '⎘ Item digandakan',
       't.saved':              '💾 Tersimpan',
@@ -1195,6 +1241,19 @@
 
       qCount.textContent = t('unit.count', { n: queue.length });
 
+      // Cart FAB badge
+      const cartBadge = $('#cartFabBadge');
+      if (cartBadge) {
+        if (queue.length > 0) {
+          cartBadge.textContent = String(queue.length);
+          cartBadge.hidden = false;
+          cartBadge.classList.add('pop');
+          setTimeout(() => cartBadge.classList.remove('pop'), 220);
+        } else {
+          cartBadge.hidden = true;
+        }
+      }
+
       // Floating bar (mobile)
       if (queue.length > 0) {
         fb.classList.add('show');
@@ -1241,37 +1300,70 @@
       this.updateUndoRedoButtons();
     },
 
+    /** Render read-only cart drawer content. */
+    renderCartModal() {
+      const body = $('#cartDrawerBody');
+      if (!body) return;
+      body.textContent = '';
+      const queue = Store.queue;
+      if (!queue.length) {
+        body.appendChild(el('p', { style: 'text-align:center;color:var(--c-text-sub);padding:24px 0;', 'data-i18n': 'cart.empty' }, t('cart.empty')));
+        return;
+      }
+      queue.forEach((q, i) => {
+        let title = '', desc = '';
+        if (q.type === 'bolt') {
+          title = `${q.r} ${q.s}A ${t('q.flange')}`;
+          desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
+        } else if (q.type === 'gasket') {
+          title = `${q.r} ${q.s}A ${t('q.gasket')}`;
+          desc  = Lang.tGType(q.gtype);
+        } else if (q.type === 'ubolt') {
+          title = `${t('q.ubolt')} ${q.s}A`;
+          const p = UBOLT_PITCH[q.s];
+          desc  = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
+        }
+        const delBtn = el('button', {
+          class: 'cart-item-ro-del', type: 'button',
+          'data-action': 'cart-del', 'data-index': String(i),
+          title: t('q.del_title'), 'aria-label': t('q.del')
+        }, '✕');
+        const row = el('div', { class: 'cart-item-ro' },
+          el('div', { class: 'cart-item-ro-info' },
+            el('div', { class: 'cart-item-ro-title' }, title),
+            desc ? el('div', { class: 'cart-item-ro-desc' }, desc) : null
+          ),
+          el('span', { class: 'cart-item-ro-qty' }, '× ' + q.qty),
+          delBtn
+        );
+        body.appendChild(row);
+      });
+    },
+
     /** Render one queue row (XSS-safe). */
     renderQueueItem(q, i) {
-      let title = '', desc = '';
+      let title = '';
       const tags = [];
 
       if (q.type === 'bolt') {
-        title = `${q.r} ${q.s}A ${t('q.flange')}`;
-        desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
+        title = `${q.r} ${q.s}A`;
         if (q.ext) tags.push({ label: '+5mm', kind: 'blue' });
         if (q.doubleNut) tags.push({ label: t('q.tag_dn'), kind: 'blue' });
       } else if (q.type === 'gasket') {
         title = `${q.r} ${q.s}A ${t('q.gasket')}`;
-        desc  = Lang.tGType(q.gtype) + (q.auto ? ' · ' + t('q.tag_auto') : '');
       } else if (q.type === 'ubolt') {
         title = `${t('q.ubolt')} ${q.s}A`;
         const p = UBOLT_PITCH[q.s];
-        desc  = p ? t('q.pitch_known', { p }) : t('q.pitch_unknown');
         if (!p) tags.push({ label: t('q.tag_pitch_unknown'), kind: 'warn' });
       }
 
       const titleNode = el('div', { class: 'q-title' },
-        el('span', { class: 'q-title-text' }, title),
-        el('span', { class: 'q-qty' }, '× ' + q.qty)
+        el('span', { class: 'q-title-text' }, title)
       );
 
-      const descRow = el('div', null,
-        desc ? el('span', { class: 'q-desc' }, desc) : null,
-        tags.length
-          ? el('div', { class: 'q-tags' }, ...tags.map(t => el('span', { class: 'q-tag ' + (t.kind || '') }, t.label)))
-          : null
-      );
+      const tagsRow = tags.length
+        ? el('div', { class: 'q-tags' }, ...tags.map(tg => el('span', { class: 'q-tag ' + (tg.kind || '') }, tg.label)))
+        : null;
 
       const stepper = el('div', { class: 'q-mini-stepper', role: 'group', 'aria-label': t('q.qty_aria') },
         el('button', { type: 'button', 'data-action': 'q-qty-dec', 'data-index': i, 'aria-label': t('q.qty_dec') }, '−'),
@@ -1281,24 +1373,19 @@
 
       const actions = el('div', { class: 'q-actions' },
         stepper,
-        (q.type === 'bolt' || q.type === 'gasket')
-          ? el('button', { class: 'icon-btn', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, '✎')
-          : null,
-        el('button', { class: 'icon-btn', 'data-action': 'q-dup', 'data-index': i, title: t('q.dup'), 'aria-label': t('q.dup') }, '⎘'),
         el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
       );
 
-      const item = el('div',
+      return el('div',
         { class: 'q-item', draggable: 'true', 'data-index': i, tabindex: '0',
           'aria-label': t('q.aria_label', { title, n: q.qty }),
           'aria-keyshortcuts': 'Delete' },
         el('div', { class: 'q-item-main' },
           el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
-          el('div', { class: 'q-info' }, titleNode, descRow)
+          el('div', { class: 'q-info' }, titleNode, tagsRow)
         ),
         actions
       );
-      return item;
     },
 
     updateUndoRedoButtons() {
@@ -1315,24 +1402,15 @@
       card.classList.add('show');
 
       const head = el('div', { class: 'res-head' },
-        el('h2', null, t('r.title')),
-        el('div', { class: 'res-actions' },
-          el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy'))
-        )
+        el('h2', null, t('r.title'))
       );
       card.appendChild(head);
 
-      const tables = el('div', { class: 'res-tables' },
-        this._tableSection(t('r.bolt'), [t('r.col_bolt_spec'), t('r.col_qty_ea')],    agg.sB),
-        this._tableSection(t('r.nut'),  [t('r.col_nut_spec'),  t('r.col_qty_ea')],    agg.sN),
-        this._tableSection(t('r.gsk'),  [t('r.col_gsk_spec'),  t('r.col_qty_sheet')], agg.sG, true),
-        this._tableSection(t('r.ub'),   [t('r.col_ub_spec'),   t('r.col_qty_set')],   agg.sU, false, true)
-      );
-      card.appendChild(tables);
+      card.appendChild(this._flatList(agg));
 
       if (memo && memo.trim()) {
-        const memoBox = el('div', { class: 'table-sec', style: 'margin-top:12px;' },
-          el('h3', null, t('r.memo_title')),
+        const memoBox = el('div', { style: 'margin-top:12px;' },
+          el('div', { style: 'font-size:.82rem;font-weight:700;color:var(--c-text-sub);margin-bottom:6px;' }, t('r.memo_title')),
           el('div', { style: 'background:var(--c-surface-2);padding:12px;border:1px solid var(--c-border);border-radius:var(--r-md);white-space:pre-wrap;font-size:.85rem;line-height:1.55;' }, memo.trim())
         );
         card.appendChild(memoBox);
@@ -1350,7 +1428,14 @@
         document.createTextNode(noticeParts[1] || '')
       );
       card.appendChild(notice);
-      countUp(totalNode, totalCount, 700);
+      countUp(totalNode, totalCount, 600);
+
+      // Action strip (copy / save-image)
+      const strip = el('div', { class: 'res-action-strip' },
+        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
+        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'save-image' }, t('r.save_image'))
+      );
+      card.appendChild(strip);
 
       // Scroll into view (mobile)
       if (window.matchMedia('(max-width: 1199px)').matches) {
@@ -1358,31 +1443,58 @@
       }
     },
 
-    _tableSection(title, headers, rows, leftAlign = false, extraDesc = false) {
-      const thead = el('thead', null, el('tr', null, ...headers.map(h => el('th', null, h))));
+    /** Build a single flat table listing every item across all categories. */
+    _flatList(agg) {
+      const thead = el('thead', null,
+        el('tr', null,
+          el('th', null, t('r.col_cat')),
+          el('th', { style: 'text-align:left;' }, t('r.col_spec')),
+          el('th', null, t('r.col_qty'))
+        )
+      );
       const tbody = el('tbody');
-      if (!rows.length) {
-        tbody.appendChild(el('tr', null, el('td', { colspan: headers.length, class: 'muted' }, t('r.no_rows'))));
-      } else {
+
+      const sections = [
+        { cat: 'bolt', rows: agg.sB, unit: t('x.unit_ea') },
+        { cat: 'nut',  rows: agg.sN, unit: t('x.unit_ea') },
+        { cat: 'gsk',  rows: agg.sG, unit: t('x.unit_sheet') },
+        { cat: 'ub',   rows: agg.sU, unit: t('x.unit_set') },
+      ];
+      const catLabels = {
+        bolt: t('r.tag_bolt'), nut: t('r.tag_nut'), gsk: t('r.tag_gsk'), ub: t('r.tag_ub')
+      };
+
+      let hasAny = false;
+      for (const { cat, rows, unit } of sections) {
         for (const [k, v] of rows) {
-          let firstCell;
-          if (extraDesc) {
+          hasAny = true;
+          let specCell;
+          if (cat === 'ub') {
             const sNum = parseInt(k, 10);
             const p = UBOLT_PITCH[sNum];
-            firstCell = el('td', null,
-              k,
-              el('span', { style: 'display:block;font-size:.7rem;color:var(--c-text-mute);margin-top:2px;' },
-                p ? t('r.cc_pitch', { p }) : t('r.cc_unknown'))
+            specCell = el('td', { class: 'spec-cell' },
+              document.createTextNode(k),
+              el('span', { class: 'spec-sub' }, p ? t('r.cc_pitch', { p }) : t('r.cc_unknown'))
             );
           } else {
-            firstCell = el('td', leftAlign ? { style: 'text-align:left;' } : null, k);
+            specCell = el('td', { class: 'spec-cell' }, k);
           }
-          tbody.appendChild(el('tr', null, firstCell, el('td', null, el('b', null, String(v)))));
+          tbody.appendChild(el('tr', null,
+            el('td', null, el('span', { class: `res-cat-tag res-cat-tag-${cat}` }, catLabels[cat])),
+            specCell,
+            el('td', null, el('b', null, v + ' ' + unit))
+          ));
         }
       }
-      return el('div', { class: 'table-sec' },
-        el('h3', null, title),
-        el('div', { class: 'table-wrapper' }, el('table', null, thead, tbody))
+
+      if (!hasAny) {
+        tbody.appendChild(el('tr', null,
+          el('td', { colspan: '3', class: 'muted' }, t('r.no_rows'))
+        ));
+      }
+
+      return el('div', { class: 'res-flat-wrapper' },
+        el('table', { class: 'res-flat-table' }, thead, tbody)
       );
     },
 
@@ -1629,8 +1741,203 @@
     window.print();
   }
 
+  /** Save result as PNG image via canvas. */
+  function actionSaveImage() {
+    if (!lastExportText) { actionCalculate(); if (!lastExportText) return; }
+
+    const isDark = document.documentElement.dataset.theme === 'dark';
+    const bg      = isDark ? '#1a2035' : '#ffffff';
+    const surface = isDark ? '#1e2b42' : '#f8fafc';
+    const fg      = isDark ? '#e2e8f0' : '#1e293b';
+    const fgSub   = isDark ? '#94a3b8' : '#64748b';
+    const fgMute  = isDark ? '#475569'  : '#94a3b8';
+    const border  = isDark ? '#2d3f5c' : '#e2e8f0';
+    const primary = isDark ? '#60a5fa' : '#3b82f6';
+    const success = isDark ? '#4ade80' : '#22c55e';
+
+    const agg = aggregate(Store.queue);
+    const allRows = [
+      ...agg.sB.map(([k, v]) => [t('r.tag_bolt'), k, String(v)]),
+      ...agg.sN.map(([k, v]) => [t('r.tag_nut'),  k, String(v)]),
+      ...agg.sG.map(([k, v]) => [t('r.tag_gsk'),  k, String(v)]),
+      ...agg.sU.map(([k, v]) => {
+        const p = UBOLT_PITCH[parseInt(k, 10)];
+        return [t('r.tag_ub'), k + (p ? ` (C-C ${p}mm)` : ''), String(v)];
+      }),
+    ];
+
+    const projName = (Store.projects[Store.currentProject] || {}).name || '';
+    const memo = Store.memo ? Store.memo.trim() : '';
+
+    const pad   = 28;
+    const cW    = 620;
+    const rowH  = 38;
+    const thH   = 40;
+    const titleH = projName ? 68 : 48;
+    const memoLines = memo ? memo.split('\n') : [];
+    const memoH = memo ? 14 + memoLines.length * 20 + 20 : 0;
+    const cH    = pad + titleH + thH + Math.max(allRows.length, 1) * rowH + memoH + 36 + pad;
+
+    const dpr    = Math.min(window.devicePixelRatio || 1, 2);
+    const canvas = document.createElement('canvas');
+    canvas.width  = cW * dpr;
+    canvas.height = cH * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    const font = (w, sz) => `${w} ${sz}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+    const rRect = (x, y, w, h, r) => {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y); ctx.arcTo(x + w, y, x + w, y + r, r);
+      ctx.lineTo(x + w, y + h - r); ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+      ctx.lineTo(x + r, y + h); ctx.arcTo(x, y + h, x, y + h - r, r);
+      ctx.lineTo(x, y + r); ctx.arcTo(x, y, x + r, y, r);
+      ctx.closePath();
+    };
+
+    // Background
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, cW, cH);
+
+    // Title
+    let y = pad;
+    ctx.fillStyle = success;
+    ctx.font = font('800', 17);
+    ctx.fillText(t('r.title'), pad, y + 20);
+    y += 26;
+    if (projName) {
+      ctx.fillStyle = fgSub;
+      ctx.font = font('400', 12);
+      ctx.fillText(projName, pad, y + 14);
+      y += 20;
+    }
+    y += 10;
+
+    // Table
+    const tableTop = y;
+    const tableH   = thH + Math.max(allRows.length, 1) * rowH;
+
+    const colCatW  = 90;
+    const colQtyW  = 70;
+    const colSpecW = cW - pad * 2 - colCatW - colQtyW;
+    const xCat  = pad;
+    const xSpec = pad + colCatW;
+    const xQty  = pad + colCatW + colSpecW;
+
+    // Table outer border
+    rRect(pad, tableTop, cW - pad * 2, tableH, 8);
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.save();
+    rRect(pad, tableTop, cW - pad * 2, tableH, 8);
+    ctx.clip();
+
+    // Header
+    ctx.fillStyle = surface;
+    ctx.fillRect(pad, tableTop, cW - pad * 2, thH);
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad, tableTop + thH); ctx.lineTo(xQty + colQtyW, tableTop + thH);
+    ctx.stroke();
+    ctx.fillStyle = fgSub;
+    ctx.font = font('700', 10);
+    ctx.textAlign = 'center';
+    ctx.fillText(t('x.csv_cat').toUpperCase(),  xCat + colCatW / 2,   tableTop + thH / 2 + 4);
+    ctx.textAlign = 'left';
+    ctx.fillText(t('x.csv_spec').toUpperCase(), xSpec + 10,           tableTop + thH / 2 + 4);
+    ctx.textAlign = 'right';
+    ctx.fillText(t('x.csv_qty').toUpperCase(),  xQty  + colQtyW - 10, tableTop + thH / 2 + 4);
+    ctx.textAlign = 'left';
+
+    // Data rows
+    if (allRows.length === 0) {
+      ctx.fillStyle = fgMute;
+      ctx.font = font('400', 12);
+      ctx.textAlign = 'center';
+      ctx.fillText(t('r.no_rows'), pad + (cW - pad * 2) / 2, tableTop + thH + rowH / 2 + 5);
+      ctx.textAlign = 'left';
+    } else {
+      allRows.forEach(([cat, spec, qty], idx) => {
+        const ry = tableTop + thH + idx * rowH;
+        if (idx % 2 === 1) {
+          ctx.fillStyle = isDark ? '#243050' : '#f8fafc';
+          ctx.fillRect(pad, ry, cW - pad * 2, rowH);
+        }
+        if (idx < allRows.length - 1) {
+          ctx.strokeStyle = border;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(pad, ry + rowH); ctx.lineTo(xQty + colQtyW, ry + rowH);
+          ctx.stroke();
+        }
+        const cy = ry + rowH / 2 + 5;
+        ctx.fillStyle = fgSub;
+        ctx.font = font('600', 11);
+        ctx.textAlign = 'center';
+        ctx.fillText(cat, xCat + colCatW / 2, cy);
+        ctx.fillStyle = fg;
+        ctx.font = font('400', 13);
+        ctx.textAlign = 'left';
+        const maxSpecW = colSpecW - 20;
+        let specText = spec;
+        while (ctx.measureText(specText).width > maxSpecW && specText.length > 1) {
+          specText = specText.slice(0, -1);
+        }
+        if (specText !== spec) specText += '…';
+        ctx.fillText(specText, xSpec + 10, cy);
+        ctx.fillStyle = primary;
+        ctx.font = font('800', 14);
+        ctx.textAlign = 'right';
+        ctx.fillText(qty, xQty + colQtyW - 10, cy);
+        ctx.textAlign = 'left';
+      });
+    }
+
+    ctx.restore();
+
+    y = tableTop + tableH;
+
+    // Memo
+    if (memo) {
+      y += 14;
+      ctx.fillStyle = fgSub;
+      ctx.font = font('700', 11);
+      ctx.fillText(t('r.memo_title'), pad, y);
+      y += 18;
+      ctx.fillStyle = fg;
+      ctx.font = font('400', 12);
+      for (const line of memoLines) {
+        ctx.fillText(line, pad + 4, y);
+        y += 20;
+      }
+    }
+
+    // Footer date
+    ctx.fillStyle = fgMute;
+    ctx.font = font('400', 10);
+    ctx.fillText(new Date().toLocaleDateString(), pad, cH - pad + 8);
+
+    // Download
+    canvas.toBlob((blob) => {
+      if (!blob) { toast(t('t.copy_fail')); return; }
+      const safe = sanitizeFilename(projName || 'result');
+      const fname = `${safe}${t('x.fname_suffix')}.png`;
+      const url = URL.createObjectURL(blob);
+      const a = el('a', { href: url, download: fname });
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      toast(t('t.img_save'));
+    }, 'image/png');
+  }
+
   /** ----- Queue item actions ----- */
-  function actionDeleteItem(i) {
+  function actionDeleteItem(i, afterDelete) {
     const node = $(`.q-item[data-index="${i}"]`);
     if (node) {
       node.classList.add('removing');
@@ -1639,12 +1946,14 @@
         Store.queue.splice(i, 1);
         Store.save();
         View.renderQueue();
+        if (afterDelete) afterDelete();
       }, 220);
     } else {
       Store.snapshot();
       Store.queue.splice(i, 1);
       Store.save();
       View.renderQueue();
+      if (afterDelete) afterDelete();
     }
   }
 
@@ -1931,8 +2240,9 @@
     'q-edit':            (el2) => openEditModal(+el2.dataset.index),
     'q-qty-inc':         (el2) => actionUpdateQty(+el2.dataset.index, 1),
     'q-qty-dec':         (el2) => actionUpdateQty(+el2.dataset.index, -1),
+    'cart-del':          (el2) => actionDeleteItem(+el2.dataset.index, () => View.renderCartModal()),
     'copy-result':       actionCopyResult,
-    'export-csv':        actionExportCSV,
+    'save-image':        actionSaveImage,
     'share-result':      actionShareResult,
     'print-result':      actionPrintResult,
     'undo':              () => { if (Store.undo()) { Store.save(); View.renderQueue(); toast(t('t.undo')); } },
@@ -1940,6 +2250,9 @@
     'theme-toggle':      actionToggleTheme,
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
+    'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
+    'close-cart':        () => { ModalCtl.close($('#cartModal')); },
+    'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
     'project-change':    () => { const s = $('#projectSelect'); if (s) actionProjectChange(s.value); },
     'project-new':       actionProjectNew,
     'project-rename':    actionProjectRename,
@@ -1949,7 +2262,25 @@
     'install-app':       () => triggerInstall(),
     'install-dismiss':   () => { $('#installBanner').classList.remove('show'); try { localStorage.setItem('jis-install-dismissed','1'); } catch (e) {} },
     'lang-change':       (el2) => actionLangChange(el2.value || el2.dataset.lang),
-    'lang-pick':         (el2) => actionLangChange(el2.dataset.lang)
+    'lang-pick':         (el2) => actionLangChange(el2.dataset.lang),
+    'acc-toggle':        (el2) => {
+      const body = document.getElementById(el2.getAttribute('aria-controls'));
+      if (!body) return;
+      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
+      el2.setAttribute('aria-expanded', String(willOpen));
+      if (willOpen) {
+        body.removeAttribute('aria-hidden');
+        body.removeAttribute('inert');
+      } else {
+        body.setAttribute('aria-hidden', 'true');
+        body.setAttribute('inert', '');
+      }
+      // Focus the first input when opening for accessibility
+      if (willOpen) {
+        const first = body.querySelector('input, select, textarea');
+        if (first) requestAnimationFrame(() => first.focus({ preventScroll: false }));
+      }
+    }
   };
 
   /**
@@ -1979,6 +2310,8 @@
       b.classList.toggle('active', b.dataset.lang === lang);
       b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
     });
+    // Re-localize bottom install CTA button label & per-platform hint
+    reflectInstalledState();
     // Update theme button title (uses i18n)
     let savedTh = 'auto';
     try { savedTh = localStorage.getItem(THEME_KEY) || 'auto'; } catch (e) {}
@@ -2073,9 +2406,14 @@
       }
 
       // Enter in flange/gasket/ubolt area → add
+      // Guard: acc-head 버튼 자체에 포커스된 경우 Enter는 toggle 동작에 위임
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !inEditable) {
+        if (e.target.classList.contains('acc-head')) return;
         const card = e.target.closest('.card');
         if (card) {
+          // Only trigger if the accordion body is open (not inert/hidden)
+          const body = card.querySelector('.acc-body');
+          if (body && body.hasAttribute('inert')) return;
           if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); return; }
           if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); return; }
           if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); return; }
@@ -2086,6 +2424,8 @@
       if (e.key === 'Enter' && inNumber) {
         const card = e.target.closest('.card');
         if (card) {
+          const body = card.querySelector('.acc-body');
+          if (body && body.hasAttribute('inert')) return;
           if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); }
           else if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); }
           else if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); }
@@ -2101,7 +2441,7 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#tutorialModal')].forEach(m => {
+    [$('#editModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
@@ -2133,6 +2473,8 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredInstallPrompt = e;
+      // Reveal the bottom CTA now that prompting is actually possible (Chromium).
+      reflectInstalledState();
       try {
         if (localStorage.getItem('jis-install-dismissed') === '1') return;
       } catch (err) {}
@@ -2140,8 +2482,55 @@
     });
     window.addEventListener('appinstalled', () => {
       $('#installBanner').classList.remove('show');
+      deferredInstallPrompt = null;
+      reflectInstalledState();
       toast(t('t.installed'));
     });
+  }
+
+  /** Detects standalone (PWA-installed) mode. */
+  function isAppInstalled() {
+    try {
+      if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+      if (window.matchMedia && window.matchMedia('(display-mode: window-controls-overlay)').matches) return true;
+    } catch (e) {}
+    if (window.navigator && window.navigator.standalone === true) return true;
+    return false;
+  }
+
+  /** Coarse iOS detection (incl. iPadOS reporting as Mac with touch). */
+  function isIOSLike() {
+    const ua = navigator.userAgent || '';
+    if (/iPad|iPhone|iPod/.test(ua)) return true;
+    if (ua.includes('Mac') && navigator.maxTouchPoints > 1) return true;
+    return false;
+  }
+
+  /**
+   * Updates the bottom install CTA visibility and per-platform hint.
+   * - Hidden when the app is already installed (standalone display-mode).
+   * - On iOS/iPadOS Safari the install prompt API doesn't exist, so the CTA
+   *   is always shown with iOS-specific instructions when not yet installed.
+   * - On Chromium the CTA is shown only after `beforeinstallprompt` fired
+   *   (so we don't tease users on browsers that can't actually install).
+   */
+  function reflectInstalledState() {
+    const cta = $('#installCta');
+    if (!cta) return;
+    const installed = isAppInstalled();
+    const ios = isIOSLike();
+    const canPrompt = !!deferredInstallPrompt;
+    // Visibility rules
+    const visible = !installed && (canPrompt || ios);
+    cta.hidden = !visible;
+    if (!visible) return;
+    // Per-platform hint
+    const hint = $('#installCtaHint');
+    if (hint) {
+      const key = ios ? 'cta.install_hint_ios' : 'cta.install_hint_and';
+      hint.setAttribute('data-i18n', key);
+      hint.textContent = t(key);
+    }
   }
 
   async function triggerInstall() {
@@ -2201,9 +2590,13 @@
     // PWA
     registerSW();
     bindInstallBanner();
+    reflectInstalledState();
 
     // Visitor counter
     initVisitorCounter();
+
+    // Bulletin board
+    initBoard();
   }
 
   function initVisitorCounter() {
@@ -2230,6 +2623,219 @@
         btn.setAttribute('aria-expanded', String(!shown));
       });
     }
+  }
+
+  /* =====================================================================
+     §10. POST BOARD (게시판)
+     - Firestore 전용 온라인 게시판 (Firebase Web SDK v12 Modular)
+     - 컬렉션: posts / 필드: title, content, authorId, createdAt, password
+     ===================================================================== */
+
+  const POSTS_COL = 'posts';          // Firestore 컬렉션 이름
+
+  const Board = {
+    fmtDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    },
+
+    /* ── Firestore 경로 헬퍼 ── */
+    _col()       { return window._fbFS.collection(window._fbDb, POSTS_COL); },
+    _doc(postId) { return window._fbFS.doc(window._fbDb, POSTS_COL, postId); },
+
+    /* ------------------------------------------------------------------
+     * load() — 게시글 목록을 최신순으로 반환
+     * ------------------------------------------------------------------ */
+    async load() {
+      const { getDocs, query, orderBy } = window._fbFS;
+      const snap = await getDocs(query(this._col(), orderBy('createdAt', 'desc')));
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    },
+
+    /* ------------------------------------------------------------------
+     * addPost() — 새 게시글 등록
+     * ------------------------------------------------------------------ */
+    async addPost(title, content, password) {
+      await window._fbFS.addDoc(this._col(), {
+        title,
+        content,
+        authorId:  'anonymous_user',
+        createdAt: new Date().toISOString(),
+        password
+      });
+    },
+
+    /* ------------------------------------------------------------------
+     * deletePost() — 비밀번호 확인 후 게시글 삭제
+     * ------------------------------------------------------------------ */
+    async deletePost(postId, password) {
+      const ref  = this._doc(postId);
+      const snap = await window._fbFS.getDoc(ref);
+      if (!snap.exists()) return false;
+      if (snap.data().password !== password) return false;
+      await window._fbFS.deleteDoc(ref);
+      return true;
+    }
+  };
+
+  async function renderBoardModal() {
+    const body = $('#boardBody');
+    if (!body) return;
+    body.textContent = '';
+
+    // ── 서버 연결 상태 표시기 ──────────────────────────────────────────────
+    const statusEl = $('#boardStatus');
+    function setStatus(state, label) {
+      if (!statusEl) return;
+      statusEl.className = `board-status board-status--${state}`;
+      statusEl.textContent = label;
+    }
+    setStatus('checking', '확인 중');
+
+    // ── Firebase 초기화 여부 확인 ───────────────────────────────────────────
+    if (!window._fbDb || !window._fbFS) {
+      setStatus('offline', '서버 연결 안됨');
+      body.appendChild(el('p', { class: 'board-empty' }, '❌ Firebase가 초기화되지 않았습니다. 새로고침 후 다시 시도해주세요.'));
+      return;
+    }
+
+    // ── Write form ─────────────────────────────────────────────────────
+    const writeSection   = el('div', { class: 'board-write-section' });
+    const writeToggleBtn = el('button', { class: 'btn btn-primary board-write-toggle', type: 'button' }, '✏️ 글 작성');
+    const writeForm      = el('div', { class: 'board-write-form' });
+
+    const titleInput   = el('input',    { type: 'text',     placeholder: '제목',            maxlength: '100',  class: 'board-input',    'aria-label': '제목' });
+    const contentInput = el('textarea', {                   placeholder: '내용을 입력하세요', maxlength: '5000', class: 'board-textarea', rows: '4', 'aria-label': '내용' });
+    const pwInput      = el('input',    { type: 'password', placeholder: '삭제용 비밀번호 (4자 이상)', maxlength: '30', class: 'board-input', 'aria-label': '삭제용 비밀번호' });
+    const submitBtn    = el('button',   { type: 'button',   class: 'btn btn-success' }, '등록');
+    const cancelBtn    = el('button',   { type: 'button',   class: 'btn btn-ghost'   }, '취소');
+
+    writeForm.append(titleInput, contentInput, pwInput, el('div', { class: 'board-btn-row' }, submitBtn, cancelBtn));
+
+    writeToggleBtn.addEventListener('click', () => {
+      const open = writeForm.classList.toggle('open');
+      writeToggleBtn.textContent = open ? '접기' : '✏️ 글 작성';
+      if (open) titleInput.focus();
+    });
+
+    submitBtn.addEventListener('click', async () => {
+      const title    = titleInput.value.trim();
+      const content  = contentInput.value.trim();
+      const password = pwInput.value.trim();
+      if (!title)            { toast('제목을 입력해주세요.');               titleInput.focus();   return; }
+      if (!content)          { toast('내용을 입력해주세요.');               contentInput.focus(); return; }
+      if (password.length < 4) { toast('비밀번호를 4자 이상 입력해주세요.'); pwInput.focus();      return; }
+      submitBtn.disabled = true;
+      submitBtn.textContent = '등록 중…';
+      try {
+        await Board.addPost(title, content, password);
+        toast('게시글이 등록되었습니다.');
+        await renderBoardModal();
+      } catch (e) {
+        toast('등록에 실패했습니다. 다시 시도해주세요.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '등록';
+      }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      writeForm.classList.remove('open');
+      writeToggleBtn.textContent = '✏️ 글 작성';
+    });
+
+    writeSection.append(writeToggleBtn, writeForm);
+    body.appendChild(writeSection);
+
+    // ── Loading indicator ────────────────────────────────────────────────
+    const loading = el('p', { class: 'board-empty' }, '⏳ 불러오는 중…');
+    body.appendChild(loading);
+
+    let posts;
+    try {
+      posts = await Board.load();
+      setStatus('online', '서버 연결됨');
+    } catch (e) {
+      setStatus('offline', '서버 연결 안됨');
+      loading.textContent = '❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요.';
+      return;
+    }
+    loading.remove();
+
+    if (!posts.length) {
+      body.appendChild(el('p', { class: 'board-empty' }, '아직 등록된 게시글이 없습니다.'));
+      return;
+    }
+
+    // ── Post rows ─────────────────────────────────────────────────────
+    posts.forEach(p => {
+      const wrap   = el('div', { class: 'cb-wrap' });
+      const row    = el('div', { class: 'cb-row' });
+      const delBtn = el('button', { class: 'icon-btn board-del', type: 'button', title: '게시글 삭제', 'aria-label': '게시글 삭제' }, '🗑');
+
+      row.append(
+        el('div', { class: 'cb-nick' }, p.title || '(제목 없음)'),
+        el('div', { class: 'cb-body' },
+          el('div', { class: 'cb-content' }, p.content),
+          el('div', { class: 'cb-meta' }, Board.fmtDate(p.createdAt))
+        ),
+        delBtn
+      );
+
+      delBtn.addEventListener('click', () => {
+        // 비밀번호 확인 인라인 팝업
+        wrap.querySelectorAll('.board-pw-confirm').forEach(e => e.remove());
+        const area  = el('div', { class: 'board-pw-confirm' });
+        const input = el('input',  { type: 'password', placeholder: '삭제용 비밀번호 입력', class: 'board-input board-pw-input' });
+        const okBtn = el('button', { type: 'button', class: 'btn btn-danger', style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '삭제');
+        const noBtn = el('button', { type: 'button', class: 'btn btn-ghost',  style: 'font-size:.8rem;padding:5px 12px;white-space:nowrap;flex-shrink:0;' }, '취소');
+        okBtn.addEventListener('click', async () => {
+          const pw = input.value.trim();
+          if (!pw) { input.focus(); return; }
+          try {
+            if (await Board.deletePost(p.id, pw)) {
+              toast('게시글이 삭제되었습니다.');
+              await renderBoardModal();
+            } else {
+              toast('비밀번호가 일치하지 않습니다.');
+            }
+          } catch { toast('삭제에 실패했습니다. 다시 시도해주세요.'); }
+        });
+        noBtn.addEventListener('click', () => area.remove());
+        area.appendChild(el('div', { class: 'board-pw-row' }, input, okBtn, noBtn));
+        wrap.appendChild(area);
+        input.focus();
+      });
+
+      wrap.appendChild(row);
+      body.appendChild(wrap);
+    });
+  }
+
+  function initBoard() {
+    const toggleBtn = $('#boardToggle');
+    const modal     = $('#boardModal');
+    const closeBtn  = $('#boardClose');
+    if (!toggleBtn || !modal) return;
+
+    function openBoard() {
+      renderBoardModal();
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    function closeBoard() {
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      toggleBtn.focus();
+    }
+
+    toggleBtn.addEventListener('click', openBoard);
+    closeBtn && closeBtn.addEventListener('click', closeBoard);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeBoard(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeBoard();
+    });
   }
 
   /* =====================================================================
