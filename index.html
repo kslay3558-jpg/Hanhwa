@@ -1360,43 +1360,48 @@
 
 </div>
 
-<!-- =====================================================================
-     Firebase Web SDK (Modular v12 — ES module CDN)
-     ※ Admin SDK(Java/Node.js)와 다름. 브라우저 전용 클라이언트 SDK.
-     ===================================================================== -->
-<!-- _fbDb 를 동기 선언해 app.js 가 로드될 때 undefined 가 되지 않게 함 -->
-<script>var _fbDb = null;</script>
-<script type="module">
-  /* ------------------------------------------------------------------
-   * Firebase 웹 앱 설정 (Firebase 콘솔 → 프로젝트 설정 → 내 앱 에서 복사)
-   * ⚠️  서비스 계정 private_key 는 여기에 절대 넣지 마세요.
-   *     apiKey 는 브라우저 전용 공개 키입니다.
-   * ------------------------------------------------------------------ */
-  import { initializeApp }   from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import { getAnalytics }    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-  import {
-    getFirestore, collection, getDocs, addDoc, deleteDoc,
-    doc, getDoc, query, orderBy
-  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
+<!-- Firebase SDK (compat v10) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
   const firebaseConfig = {
-    apiKey:            "AIzaSyDnCv8DYsUW9crhyUA4TeV-yBtO2P_4Fhw",
-    authDomain:        "guest-13bd6.firebaseapp.com",
-    projectId:         "guest-13bd6",
-    storageBucket:     "guest-13bd6.firebasestorage.app",
+    apiKey: "AIzaSyDnCv8DYsUW9crhyUA4TeV-yBtO2P_4Fhw",
+    authDomain: "guest-13bd6.firebaseapp.com",
+    projectId: "guest-13bd6",
+    storageBucket: "guest-13bd6.firebasestorage.app",
     messagingSenderId: "808898051744",
-    appId:             "1:808898051744:web:1cb162d3f329d5bdadd3c5",
-    measurementId:     "G-WTVVE493B0"
+    appId: "1:808898051744:web:a2280409728801ddadd3c5",
+    measurementId: "G-DNPPH99QBS"
   };
 
-  try {
-    const app = initializeApp(firebaseConfig);
-    getAnalytics(app);
-    window._fbDb = getFirestore(app);
-    window._fbFS = { collection, getDocs, addDoc, deleteDoc, doc, getDoc, query, orderBy };
-  } catch (e) {
-    console.warn('[Firebase] 초기화 실패 — 게시판은 오프라인 모드로 동작합니다.', e);
-  }
+  firebase.initializeApp(firebaseConfig);
+
+  // app.js의 Board 객체가 참조하는 전역 변수 노출
+  window._fbDb = firebase.firestore();
+
+  // app.js는 window._fbFS.collection(), window._fbFS.doc(), window._fbFS.addDoc(),
+  // window._fbFS.deleteDoc(), window._fbFS.getDocs(), window._fbFS.getDoc(),
+  // window._fbFS.query(), window._fbFS.orderBy() 형태로 호출하므로,
+  // compat SDK의 인스턴스 메서드를 래핑하여 제공
+  window._fbFS = {
+    collection: (db, col) => db.collection(col),
+    doc: (db, col, id) => db.collection(col).doc(id),
+    addDoc: (ref, data) => ref.add(data),
+    deleteDoc: (ref) => ref.delete(),
+    getDocs: (q) => q.get(),
+    // compat SDK에서 snap.exists는 프로퍼티이므로 모듈 방식(snap.exists())과
+    // 호환되도록 메서드로 감싸서 반환
+    getDoc: (ref) => ref.get().then(snap => ({
+      exists: () => snap.exists,
+      data: () => snap.data()
+    })),
+    query: (ref, ...constraints) => {
+      let q = ref;
+      for (const c of constraints) q = c(q);
+      return q;
+    },
+    orderBy: (field, dir) => (ref) => ref.orderBy(field, dir)
+  };
 </script>
 
 <script src="./app.js"></script>
