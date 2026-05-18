@@ -57,6 +57,13 @@
       --field-bg: #ffffff;
       --field-bg-2: #f8fafc;
       --sticky-bg: rgba(255,255,255,0.96);
+      --ink-on-accent: #f8fbff;
+      --header-ink: #f8fbff;
+      --svg-title-stroke: rgba(255, 255, 255, 0.92);
+      --svg-small-stroke: rgba(255, 255, 255, 0.96);
+      --svg-blue-text: #1d4ed8;
+      --svg-green-text: #047857;
+      --svg-red-text: #b91c1c;
       --hero-gradient:
         linear-gradient(135deg, rgba(30, 58, 138, 0.98), rgba(37, 99, 235, 0.96), rgba(6, 182, 212, 0.92));
     }
@@ -98,6 +105,13 @@
       --field-bg: #0f1828;
       --field-bg-2: #111a2e;
       --sticky-bg: rgba(15, 24, 40, 0.94);
+      --ink-on-accent: #f8fbff;
+      --header-ink: #f8fbff;
+      --svg-title-stroke: rgba(11, 18, 32, 0.65);
+      --svg-small-stroke: rgba(11, 18, 32, 0.72);
+      --svg-blue-text: #93c5fd;
+      --svg-green-text: #86efac;
+      --svg-red-text: #fca5a5;
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.38);
       --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.34);
       --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.46);
@@ -143,6 +157,13 @@
         --field-bg: #0f1828;
         --field-bg-2: #111a2e;
         --sticky-bg: rgba(15, 24, 40, 0.94);
+        --ink-on-accent: #f8fbff;
+        --header-ink: #f8fbff;
+        --svg-title-stroke: rgba(11, 18, 32, 0.65);
+        --svg-small-stroke: rgba(11, 18, 32, 0.72);
+        --svg-blue-text: #93c5fd;
+        --svg-green-text: #86efac;
+        --svg-red-text: #fca5a5;
         --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.38);
         --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.34);
         --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.46);
@@ -219,7 +240,7 @@
       position: relative;
       overflow: hidden;
       padding: 26px 22px;
-      color: var(--white);
+      color: var(--header-ink);
       background: var(--hero-gradient);
     }
 
@@ -277,7 +298,7 @@
       border: 1px solid rgba(255,255,255,0.24);
       border-radius: 14px;
       background: rgba(255,255,255,0.14);
-      color: var(--white);
+      color: var(--header-ink);
       text-decoration: none;
       font-size: 21px;
       box-shadow: var(--shadow-sm);
@@ -295,19 +316,22 @@
 
     .title {
       margin: 0;
+      color: var(--header-ink);
       font-size: clamp(26px, 5vw, 42px);
       font-weight: 950;
       line-height: 1.18;
       letter-spacing: -0.04em;
+      text-shadow: 0 2px 18px rgba(15, 23, 42, 0.2);
     }
 
     .subtitle {
       max-width: 860px;
       margin: 0;
-      color: rgba(239, 246, 255, 0.96);
+      color: rgba(248, 251, 255, 0.92);
       font-size: 15px;
       line-height: 1.65;
       font-weight: 600;
+      text-shadow: 0 1px 10px rgba(15, 23, 42, 0.18);
     }
 
     .content {
@@ -475,6 +499,11 @@
       font-size: 13px;
       font-weight: 950;
       fill: var(--slate-950);
+      stroke: var(--svg-title-stroke);
+      stroke-width: 3px;
+      paint-order: stroke fill;
+      stroke-linejoin: round;
+      letter-spacing: -0.01em;
     }
 
     .svg-small {
@@ -487,7 +516,23 @@
         sans-serif;
       font-size: 10.5px;
       font-weight: 800;
-      fill: var(--slate-500);
+      fill: var(--slate-700);
+      stroke: var(--svg-small-stroke);
+      stroke-width: 2.4px;
+      paint-order: stroke fill;
+      stroke-linejoin: round;
+    }
+
+    .svg-accent-blue {
+      fill: var(--svg-blue-text);
+    }
+
+    .svg-accent-green {
+      fill: var(--svg-green-text);
+    }
+
+    .svg-accent-red {
+      fill: var(--svg-red-text);
     }
 
     .save-badge,
@@ -712,7 +757,7 @@
     }
 
     .btn-primary {
-      color: var(--white);
+      color: var(--ink-on-accent);
       background: var(--blue-600);
       box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
     }
@@ -838,7 +883,7 @@
       width: fit-content;
       border-radius: 999px;
       background: var(--red-600);
-      color: var(--white);
+      color: var(--ink-on-accent);
       padding: 5px 10px;
       font-size: 11px;
       font-weight: 950;
@@ -912,7 +957,7 @@
       width: 30px;
       height: 30px;
       border-radius: 999px;
-      color: var(--white);
+      color: var(--ink-on-accent);
       font-size: 14px;
       font-weight: 950;
     }
@@ -1081,7 +1126,7 @@
               <a id="backToMain" class="header-link" href="./index.html" aria-label="Back to main" title="Back to main">🏠</a>
             </div>
           </div>
-          <h1 class="title">파이프 사선 커팅 & 컷백 계산기</h1>
+          <h1 class="title">파이프 사선 커팅 계산기</h1>
           <p class="subtitle">
             파이프 관경을 선택하고 수평 거리와 대각선 거리를 입력하면
             절단 각도, 컷백 거리(B), 실제 절단 길이를 현장 작업 순서와 함께 계산합니다.
@@ -1172,7 +1217,7 @@
                 <line x1="319" y1="226" x2="339" y2="226" stroke="#059669" stroke-width="2" />
                 <line x1="319" y1="78" x2="339" y2="78" stroke="#059669" stroke-width="2" />
 
-                <text x="186" y="278" text-anchor="middle" class="svg-title-text" fill="#2563eb">
+                <text x="186" y="278" text-anchor="middle" class="svg-title-text svg-accent-blue">
                   수평 거리 = <tspan id="svg_L">400</tspan> mm
                 </text>
 
@@ -1180,8 +1225,7 @@
                   x="352"
                   y="154"
                   text-anchor="middle"
-                  class="svg-title-text"
-                  fill="#059669"
+                  class="svg-title-text svg-accent-green"
                   transform="rotate(90 352 154)"
                 >
                   수직 거리 = <tspan id="svg_H">300</tspan> mm
@@ -1499,7 +1543,7 @@
                     stroke-linecap="round"
                   />
 
-                  <text id="cutLabel" x="289" y="263" text-anchor="middle" class="svg-small" fill="#dc2626">
+                  <text id="cutLabel" x="289" y="263" text-anchor="middle" class="svg-small svg-accent-red">
                     ③ 절단선
                   </text>
 
@@ -1507,18 +1551,18 @@
                   <line id="bBottomTick" x1="93" y1="322" x2="115" y2="322" stroke="#dc2626" stroke-width="3" />
                   <line id="bLine" x1="104" y1="245" x2="104" y2="322" stroke="#dc2626" stroke-width="3" />
 
-                  <text id="bLabel1" x="88" y="276" text-anchor="end" class="svg-title-text" fill="#dc2626">
+                  <text id="bLabel1" x="88" y="276" text-anchor="end" class="svg-title-text svg-accent-red">
                     ② 컷백 거리
                   </text>
-                  <text id="bLabel2" x="88" y="296" text-anchor="end" class="svg-title-text" fill="#dc2626">
+                  <text id="bLabel2" x="88" y="296" text-anchor="end" class="svg-title-text svg-accent-red">
                     B = <tspan id="svg_B">0.0</tspan> mm
                   </text>
 
                   <circle id="shortPoint" cx="125" cy="245" r="6" fill="#dc2626" />
                   <circle cx="255" cy="322" r="6" fill="#2563eb" />
 
-                  <text x="294" y="323" text-anchor="middle" class="svg-small" fill="#2563eb">긴쪽 기준</text>
-                  <text id="shortLabel" x="169" y="238" text-anchor="middle" class="svg-small" fill="#dc2626">짧은쪽 점</text>
+                  <text x="294" y="323" text-anchor="middle" class="svg-small svg-accent-blue">긴쪽 기준</text>
+                  <text id="shortLabel" x="169" y="238" text-anchor="middle" class="svg-small svg-accent-red">짧은쪽 점</text>
 
                   <line x1="125" y1="376" x2="255" y2="376" stroke="#64748b" stroke-width="2" />
                   <line x1="125" y1="368" x2="125" y2="384" stroke="#64748b" stroke-width="2" />
@@ -1535,7 +1579,7 @@
                     stroke="#059669"
                     stroke-width="3"
                   />
-                  <text x="210" y="307" text-anchor="middle" class="svg-title-text" fill="#059669">
+                  <text x="210" y="307" text-anchor="middle" class="svg-title-text svg-accent-green">
                     절단 각도 <tspan id="svg_A">16.7</tspan>°
                   </text>
                 </svg>
