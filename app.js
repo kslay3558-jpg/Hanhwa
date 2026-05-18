@@ -2768,7 +2768,8 @@
       setStatus('online', '서버 연결됨');
     } catch (e) {
       setStatus('offline', '서버 연결 안됨');
-      loading.textContent = '❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요.';
+      const msg = e && e.message ? `(${e.message})` : '';
+      loading.textContent = `❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요. ${msg}`;
       return;
     }
     loading.remove();
