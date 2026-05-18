@@ -884,6 +884,20 @@
   const $  = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  /**
+   * Safari 15 이하에서 scrollIntoView({ behavior: 'smooth' })가 동작하지 않을 수 있습니다.
+   * CSS scroll-behavior를 통해 폴리필합니다.
+   */
+  function smoothScrollIntoView(element, options = {}) {
+    if (typeof element.scrollIntoView === 'function') {
+      try {
+        element.scrollIntoView({ behavior: 'smooth', ...options });
+      } catch (e) {
+        element.scrollIntoView(false);
+      }
+    }
+  }
+
   /** Create element with optional attrs/children, escaping all text. */
   function el(tag, attrs = null, ...children) {
     const node = document.createElement(tag);
@@ -1441,7 +1455,7 @@
 
       // Scroll into view (mobile)
       if (window.matchMedia('(max-width: 1199px)').matches) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        smoothScrollIntoView(card, { block: 'start' });
       }
     },
 
@@ -2213,7 +2227,7 @@
       const r = el2.dataset.rating, s = parseInt(el2.dataset.size, 10);
       $('#rating').value = r; View.populateSizeSelect($('#size'), r);
       $('#size').value = s;
-      $('#size').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      smoothScrollIntoView($('#size'), { block: 'center' });
       $('#size').focus();
       toast(t('t.applied', { r, s }));
     },
@@ -2472,6 +2486,32 @@
     });
   }
 
+  /**
+   * iOS Safari에서 가상 키보드가 올라오면 window.innerHeight가 줄어들지 않아
+   * fixed position 요소(floating-bar 등)가 키보드에 덮입니다.
+   * visualViewport API를 사용해 floating-bar의 bottom offset을 보정합니다.
+   */
+  function bindVisualViewport() {
+    if (!window.visualViewport) return;
+    const floatingBar = $('#floatingBar');
+    if (!floatingBar) return;
+
+    function onViewportChange() {
+      const vv = window.visualViewport;
+      // 키보드가 올라왔을 때: layoutViewport 높이 - visualViewport 높이 - visualViewport offsetTop
+      const keyboardHeight = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      if (keyboardHeight > 0) {
+        // 키보드만큼 위로 올려서 floating-bar가 키보드 위에 표시되도록
+        floatingBar.style.setProperty('--kb-offset', keyboardHeight + 'px');
+      } else {
+        floatingBar.style.removeProperty('--kb-offset');
+      }
+    }
+
+    window.visualViewport.addEventListener('resize', onViewportChange);
+    window.visualViewport.addEventListener('scroll', onViewportChange);
+  }
+
   function bindInstallBanner() {
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -2712,6 +2752,9 @@
     registerSW();
     bindInstallBanner();
     reflectInstalledState();
+
+    // iOS Safari: 가상 키보드가 올라올 때 floating-bar가 키보드에 가리지 않도록 보정
+    bindVisualViewport();
 
     // Visitor counter
     initVisitorCounter();
