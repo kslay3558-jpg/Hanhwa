@@ -1076,9 +1076,9 @@
         <div class="header-inner">
           <div class="header-top">
             <div class="eyebrow">PIPE FIELD CALCULATOR</div>
-            <div class="header-actions" aria-label="페이지 도구">
-              <button id="themeToggle" class="header-link" type="button" aria-label="테마 전환" title="테마 전환">🌗</button>
-              <a class="header-link" href="./index.html" aria-label="메인으로 돌아가기 / Back to main" title="메인으로 돌아가기 / Back to main">🏠</a>
+            <div id="pageTools" class="header-actions" aria-label="Page tools">
+              <button id="themeToggle" class="header-link" type="button" aria-label="Toggle theme" title="Toggle theme">🌗</button>
+              <a id="backToMain" class="header-link" href="./index.html" aria-label="Back to main" title="Back to main">🏠</a>
             </div>
           </div>
           <h1 class="title">파이프 사선 커팅 & 컷백 계산기</h1>
@@ -1568,6 +1568,24 @@
     const STORAGE_KEY = "pipe_miter_calculator_production_v3";
     const THEME_KEY = "pipe_miter_calculator_theme";
     const VALID_THEMES = ["auto", "light", "dark"];
+    const PAGE_TEXT = {
+      ko: {
+        tools: "페이지 도구",
+        back: "메인으로 돌아가기"
+      },
+      en: {
+        tools: "Page tools",
+        back: "Back to main"
+      },
+      vi: {
+        tools: "Công cụ trang",
+        back: "Quay lại trang chính"
+      },
+      id: {
+        tools: "Alat halaman",
+        back: "Kembali ke halaman utama"
+      }
+    };
     const THEME_TEXT = {
       ko: {
         toggle: "테마 전환",
@@ -1630,6 +1648,12 @@
       return labels[key] || THEME_TEXT.ko[key] || key;
     }
 
+    function pageText(key) {
+      const lang = (document.documentElement.lang || "ko").split("-")[0];
+      const labels = PAGE_TEXT[lang] || PAGE_TEXT.ko;
+      return labels[key] || PAGE_TEXT.ko[key] || key;
+    }
+
     function applyTheme(theme) {
       const safeTheme = VALID_THEMES.includes(theme) ? theme : "auto";
       document.documentElement.dataset.theme = safeTheme;
@@ -1653,15 +1677,32 @@
     }
 
     function toggleTheme() {
-      const current = document.documentElement.dataset.theme || "auto";
+      const current = VALID_THEMES.includes(document.documentElement.dataset.theme)
+        ? document.documentElement.dataset.theme
+        : "auto";
       const currentIndex = VALID_THEMES.indexOf(current);
-      const next = currentIndex >= 0 ? VALID_THEMES[(currentIndex + 1) % VALID_THEMES.length] : "auto";
+      const next = VALID_THEMES[(currentIndex + 1) % VALID_THEMES.length];
       applyTheme(next);
 
       try {
         localStorage.setItem(THEME_KEY, next);
       } catch (error) {
         console.warn("Unable to save theme preference.", error);
+      }
+    }
+
+    function localizeHeaderActions() {
+      const pageTools = $("pageTools");
+      const backToMain = $("backToMain");
+
+      if (pageTools) {
+        pageTools.setAttribute("aria-label", pageText("tools"));
+      }
+
+      if (backToMain) {
+        const label = pageText("back");
+        backToMain.setAttribute("aria-label", label);
+        backToMain.setAttribute("title", label);
       }
     }
 
@@ -1942,6 +1983,7 @@
     }
 
     window.addEventListener("load", () => {
+      localizeHeaderActions();
       loadTheme();
       $("themeToggle").addEventListener("click", toggleTheme);
       loadValues();
