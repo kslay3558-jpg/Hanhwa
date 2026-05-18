@@ -174,6 +174,13 @@
       'btn.add_ub':           '＋ U-볼트 추가',
       'pitch.label':          '홀 간격',
       'pitch.none':           '홀 간격 데이터 없음 (수동 확인 필요)',
+      'guide.flange_od_aria': '플랜지 OD 측정 위치 보기',
+      'guide.ubolt_pitch_aria':'U-볼트 홀 센터 간격 보기',
+      'guide.flange_od_title':'플랜지 OD 측정 가이드',
+      'guide.ubolt_pitch_title':'U-볼트 홀 센터 간격 가이드',
+      'guide.flange_od_desc': 'OD(외경)는 플랜지 바깥쪽 끝에서 반대쪽 바깥쪽 끝까지 재는 전체 지름입니다.',
+      'guide.ubolt_pitch_desc':'홀 센터 간격(C-C)은 왼쪽 볼트 구멍 중심에서 오른쪽 볼트 구멍 중심까지의 거리입니다.',
+      'guide.close':          '확인',
       // Card 5: memo
       'card.memo':            '📝 추가 메모',
       'form.memo_label':      '자유 메모',
@@ -412,6 +419,13 @@
       'btn.add_ub':           '＋ Thêm bu lông U',
       'pitch.label':          'Khoảng cách lỗ',
       'pitch.none':           'Không có dữ liệu khoảng cách lỗ (cần kiểm tra thủ công)',
+      'guide.flange_od_aria': 'Xem vị trí đo OD mặt bích',
+      'guide.ubolt_pitch_aria':'Xem khoảng cách tâm lỗ bu lông U',
+      'guide.flange_od_title':'Hướng dẫn đo OD mặt bích',
+      'guide.ubolt_pitch_title':'Hướng dẫn khoảng cách tâm lỗ bu lông U',
+      'guide.flange_od_desc': 'OD là đường kính tổng thể, đo từ mép ngoài này sang mép ngoài đối diện của mặt bích.',
+      'guide.ubolt_pitch_desc':'Khoảng cách tâm lỗ (C-C) là khoảng cách từ tâm lỗ bu lông bên trái đến tâm lỗ bên phải.',
+      'guide.close':          'Đã hiểu',
       'card.memo':            '📝 Ghi chú thêm',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
@@ -638,6 +652,13 @@
       'btn.add_ub':           '＋ Tambah baut U',
       'pitch.label':          'Jarak lubang',
       'pitch.none':           'Data jarak lubang tidak tersedia (perlu cek manual)',
+      'guide.flange_od_aria': 'Lihat posisi ukur OD flensa',
+      'guide.ubolt_pitch_aria':'Lihat jarak pusat lubang baut U',
+      'guide.flange_od_title':'Panduan ukur OD flensa',
+      'guide.ubolt_pitch_title':'Panduan jarak pusat lubang baut U',
+      'guide.flange_od_desc': 'OD adalah diameter total, diukur dari sisi luar flensa ke sisi luar yang berlawanan.',
+      'guide.ubolt_pitch_desc':'Jarak pusat lubang (C-C) adalah jarak dari pusat lubang baut kiri ke pusat lubang baut kanan.',
+      'guide.close':          'Mengerti',
       'card.memo':            '📝 Catatan tambahan',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
@@ -2220,6 +2241,26 @@
     ModalCtl.close($('#tutorialModal'));
   }
 
+  const MEASURE_GUIDES = {
+    'flange-od': {
+      titleKey: 'guide.flange_od_title',
+      panelId: 'guidePanelFlangeOd'
+    },
+    'ubolt-pitch': {
+      titleKey: 'guide.ubolt_pitch_title',
+      panelId: 'guidePanelUboltPitch'
+    }
+  };
+
+  function actionOpenMeasureGuide(kind) {
+    const guide = MEASURE_GUIDES[kind] || MEASURE_GUIDES['flange-od'];
+    $('#measureGuideTitle').textContent = t(guide.titleKey);
+    $$('#measureGuideBody [data-guide-panel]').forEach(panel => {
+      panel.hidden = panel.id !== guide.panelId;
+    });
+    ModalCtl.open($('#measureGuideModal'));
+  }
+
   /** ----- Action router (event delegation) ----- */
   const actions = {
     'find-flange':       () => findFlange(),
@@ -2264,6 +2305,8 @@
     'undo':              () => { if (Store.undo()) { Store.save(); View.renderQueue(); toast(t('t.undo')); } },
     'redo':              () => { if (Store.redo()) { Store.save(); View.renderQueue(); toast(t('t.redo')); } },
     'theme-toggle':      actionToggleTheme,
+    'open-measure-guide':(el2) => actionOpenMeasureGuide(el2.dataset.guide),
+    'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
     'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
@@ -2425,6 +2468,7 @@
       // Guard: acc-head 버튼 자체에 포커스된 경우 Enter는 toggle 동작에 위임
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !inEditable) {
         if (e.target.classList.contains('acc-head')) return;
+        if (e.target.closest('.measure-help-btn')) return;
         const card = e.target.closest('.card');
         if (card) {
           // Only trigger if the accordion body is open (not inert/hidden)
@@ -2457,7 +2501,7 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
