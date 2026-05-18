@@ -3137,15 +3137,24 @@
       return NaN;
     }
 
-    const latestDataLine = [...lines].reverse().find(line => line && line[0] !== '#');
-    if (!latestDataLine) {
+    const dataLines = lines.filter(line => line && line[0] !== '#');
+    if (!dataLines.length) {
       console.warn('KMA temperature alert parse failed: no data line found');
       return NaN;
     }
 
-    const tokens = splitKmaLine(latestDataLine);
+    const targetDataLine = dataLines.find(line => {
+      const timeTokens = splitKmaLine(line);
+      return timeTokens.some(token => token === '12:00');
+    });
+    if (!targetDataLine) {
+      console.warn('[KMA] 12:00 데이터 줄을 찾지 못했습니다.');
+      return NaN;
+    }
+
+    const tokens = splitKmaLine(targetDataLine);
     if (!tokens.length) {
-      console.warn('KMA temperature alert parse failed: latest data line is empty');
+      console.warn('KMA temperature alert parse failed: 12:00 data line is empty');
       return NaN;
     }
 
