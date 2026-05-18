@@ -139,6 +139,13 @@
       gap: 12px;
     }
 
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
     .eyebrow {
       display: inline-flex;
       width: fit-content;
@@ -151,6 +158,27 @@
       font-size: 12px;
       font-weight: 900;
       letter-spacing: 0.04em;
+    }
+
+    .header-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.14);
+      color: var(--white);
+      text-decoration: none;
+      font-size: 21px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .header-link:hover {
+      background: rgba(255,255,255,0.22);
+      transform: translateY(-1px);
     }
 
     .title {
@@ -934,7 +962,10 @@
     <div class="app-shell">
       <header class="header">
         <div class="header-inner">
-          <div class="eyebrow">PIPE FIELD CALCULATOR</div>
+          <div class="header-top">
+            <div class="eyebrow">PIPE FIELD CALCULATOR</div>
+            <a class="header-link" href="./index.html" aria-label="메인으로 돌아가기" title="메인으로 돌아가기">🏠</a>
+          </div>
           <h1 class="title">파이프 사선 커팅 & 컷백 계산기</h1>
           <p class="subtitle">
             파이프 관경을 선택하고 수평 거리와 대각선 거리를 입력하면
