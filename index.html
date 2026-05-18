@@ -755,7 +755,8 @@
   .board-pw-confirm { margin-top: 8px; padding: 8px 10px; background: var(--c-danger-weak); border-radius: var(--r-sm); border: 1px solid var(--c-danger); }
   .board-pw-confirm .board-pw-row { display: flex; gap: 6px; align-items: center; }
   .board-pw-confirm .board-input { font-size: .82rem; padding: 5px 8px; }
-  .board-pw-input { flex: 1; min-width: 0; width: auto; }
+  .board-pw-input { flex: 1 1 0; min-width: 0; width: 0 !important; }
+  .board-pw-confirm .board-pw-row .btn { width: auto !important; min-height: 0 !important; padding: 5px 12px !important; font-size: .82rem !important; flex-shrink: 0; }
   .cb-wrap { margin-bottom: 8px; }
   .btn-danger { background: var(--c-danger); color: #fff; border: none; }
   .btn-danger:hover { background: #b91c1c; }
