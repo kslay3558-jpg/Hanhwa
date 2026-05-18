@@ -2061,7 +2061,8 @@
       } catch (error) {}
       const browserLang = (navigator.language || "ko").toLowerCase();
       if (browserLang.startsWith("vi")) return "vi";
-      if (browserLang.startsWith("id") || browserLang.startsWith("in")) return "id"; // support legacy Indonesian locale code "in"
+      // Support both current "id" and legacy "in" Indonesian locale codes used by some older browsers/OS locales.
+      if (browserLang.startsWith("id") || browserLang.startsWith("in")) return "id";
       return "ko";
     }
 
@@ -2375,7 +2376,9 @@
         return;
       }
 
-      const OD = PIPE_SIZES[$("pipeSize").value];
+      const selectedSize = PIPE_SIZES[$("pipeSize").value] ? $("pipeSize").value : state.selectedSize;
+      const OD = PIPE_SIZES[selectedSize] || PIPE_SIZES[DEFAULTS.pipeSize];
+      state.selectedSize = selectedSize;
       const { L, T, D1, D2, Gap } = inputs;
       const H = Math.sqrt((T * T) - (L * L));
       const angleRad = Math.acos(L / T);
