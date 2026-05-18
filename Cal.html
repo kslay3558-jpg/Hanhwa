@@ -1688,7 +1688,6 @@
       Gap: "0",
       roundMode: "0.1"
     };
-    const GUIDE_VALUE_TOKEN = "\uE000GUIDE_VALUE\uE001";
     const I18N = {
       ko: {
         docTitle: "파이프 사선 커팅 계산기",
@@ -1768,7 +1767,8 @@
         step1Title: "기준 직각선 표시",
         step1Text: "긴쪽 기준으로 파이프 둘레에 직각선을 먼저 표시합니다.",
         step2Title: "컷백 거리 표시",
-        step2Text: "반대편 위치에 {value} 만큼 올라간 위치를 표시합니다.",
+        step2TextPre: "반대편 위치에 ",
+        step2TextPost: " 만큼 올라간 위치를 표시합니다.",
         step3Title: "절단선 연결",
         step3Text: "기준선 끝점과 표시점을 연결하여 사선 절단선을 그립니다.",
         tutorialTitle: "파이프 마킹 튜토리얼",
@@ -1875,7 +1875,8 @@
         step1Title: "Đánh dấu đường vuông góc chuẩn",
         step1Text: "Đầu tiên hãy đánh dấu đường vuông góc quanh chu vi ống theo phía dài.",
         step2Title: "Đánh dấu khoảng lùi",
-        step2Text: "Đánh dấu vị trí nâng lên {value} ở phía đối diện.",
+        step2TextPre: "Đánh dấu vị trí nâng lên ",
+        step2TextPost: " ở phía đối diện.",
         step3Title: "Nối đường cắt",
         step3Text: "Nối đầu đường chuẩn với điểm đánh dấu để vẽ đường cắt chéo.",
         tutorialTitle: "Hướng dẫn đánh dấu ống",
@@ -1982,7 +1983,8 @@
         step1Title: "Tandai garis siku-siku acuan",
         step1Text: "Tandai dulu garis siku-siku mengelilingi pipa pada sisi panjang.",
         step2Title: "Tandai jarak cutback",
-        step2Text: "Tandai posisi yang naik {value} di sisi seberang.",
+        step2TextPre: "Tandai posisi yang naik ",
+        step2TextPost: " di sisi seberang.",
         step3Title: "Hubungkan garis potong",
         step3Text: "Hubungkan ujung garis acuan dan titik tanda untuk menggambar garis potong miring.",
         tutorialTitle: "Tutorial marking pipa",
@@ -2059,7 +2061,7 @@
       } catch (error) {}
       const browserLang = (navigator.language || "ko").toLowerCase();
       if (browserLang.startsWith("vi")) return "vi";
-      if (browserLang.startsWith("id") || browserLang.startsWith("in")) return "id";
+      if (browserLang.startsWith("id") || browserLang.startsWith("in")) return "id"; // support legacy Indonesian locale code "in"
       return "ko";
     }
 
@@ -2229,10 +2231,8 @@
       setHtml("svgODText", `${t("svgPipeOD")} = <tspan id="svg_OD">${currentText("svg_OD", PIPE_SIZES[DEFAULTS.pipeSize].toFixed(1))}</tspan> mm`);
       setHtml("svgAngleText", `${t("svgCutAngle")} <tspan id="svg_A">${currentText("svg_A", "0.0")}</tspan>°`);
 
-      const guideTemplate = t("step2Text", { value: GUIDE_VALUE_TOKEN });
-      const [guidePrefix = "", guideSuffix = ""] = guideTemplate.split(GUIDE_VALUE_TOKEN);
-      setText("step2TextPrefix", guidePrefix);
-      setText("step2TextSuffix", guideSuffix);
+      setText("step2TextPrefix", t("step2TextPre"));
+      setText("step2TextSuffix", t("step2TextPost"));
 
       applyTheme(document.documentElement.dataset.theme || "auto");
       $("langSelect").value = state.language;
