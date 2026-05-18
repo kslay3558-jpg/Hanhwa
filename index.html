@@ -733,6 +733,23 @@
   .cb-wrap { margin-bottom: 8px; }
   .btn-danger { background: var(--c-danger); color: #fff; border: none; }
   .btn-danger:hover { background: #b91c1c; }
+  /* Board server status indicator */
+  .board-status {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: .72rem; padding: 2px 9px; border-radius: 99px;
+    border: 1px solid var(--c-border); background: var(--c-surface-2);
+    color: var(--c-text-mute); flex-shrink: 0; white-space: nowrap; font-weight: 600;
+  }
+  .board-status::before {
+    content: ''; display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; flex-shrink: 0;
+  }
+  .board-status--checking::before { background: #9ca3af; }
+  .board-status--online { color: #15803d; }
+  .board-status--online::before { background: #22c55e; animation: statusPulse 2s infinite; }
+  .board-status--offline { color: var(--c-danger); }
+  .board-status--offline::before { background: var(--c-danger); }
+  @keyframes statusPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
   /* Floating bar */
   .floating-bar {
@@ -1334,6 +1351,7 @@
     <div class="modal-content">
       <div class="cart-drawer-header">
         <h2 id="boardTitle">💬 댓글 게시판</h2>
+        <span id="boardStatus" class="board-status board-status--checking" aria-live="polite">확인 중</span>
         <button class="icon-btn" type="button" id="boardClose" aria-label="닫기">✕</button>
       </div>
       <div id="boardBody"></div>

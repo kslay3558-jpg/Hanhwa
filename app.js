@@ -2685,6 +2685,15 @@
     if (!body) return;
     body.textContent = '';
 
+    // ── 서버 연결 상태 표시기 ──────────────────────────────────────────────
+    const statusEl = $('#boardStatus');
+    function setStatus(state, label) {
+      if (!statusEl) return;
+      statusEl.className = `board-status board-status--${state}`;
+      statusEl.textContent = label;
+    }
+    setStatus('checking', '확인 중');
+
     // ── Write form ─────────────────────────────────────────────────────
     const writeSection   = el('div', { class: 'board-write-section' });
     const writeToggleBtn = el('button', { class: 'btn btn-primary board-write-toggle', type: 'button' }, '✏️ 글 작성');
@@ -2739,7 +2748,9 @@
     let posts;
     try {
       posts = await Board.load();
+      setStatus('online', '서버 연결됨');
     } catch (e) {
+      setStatus('offline', '서버 연결 안됨');
       loading.textContent = '❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요.';
       return;
     }
