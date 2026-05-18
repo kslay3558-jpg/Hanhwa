@@ -91,6 +91,8 @@
   const HISTORY_LIMIT = 10;
   /** 외경 역산 검색 시 표시할 최대 허용 오차 (mm). 이 범위 내 후보를 모두 표시하고, 없으면 가장 가까운 5개를 표시한다. */
   const OD_SEARCH_RANGE = 20;
+  /** Firestore 게시판 로드 타임아웃 (ms). 이 시간 내 응답 없으면 연결 실패 처리. */
+  const FIRESTORE_TIMEOUT_MS = 5000;
 
   /* =====================================================================
      §1.5 I18N — Korean / Vietnamese / Indonesian
@@ -882,6 +884,20 @@
   const $  = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  /**
+   * Safari 15 이하에서 scrollIntoView({ behavior: 'smooth' })가 동작하지 않을 수 있습니다.
+   * CSS scroll-behavior를 통해 폴리필합니다.
+   */
+  function smoothScrollIntoView(element, options = {}) {
+    if (typeof element.scrollIntoView === 'function') {
+      try {
+        element.scrollIntoView({ behavior: 'smooth', ...options });
+      } catch (e) {
+        element.scrollIntoView(false);
+      }
+    }
+  }
+
   /** Create element with optional attrs/children, escaping all text. */
   function el(tag, attrs = null, ...children) {
     const node = document.createElement(tag);
@@ -1439,7 +1455,7 @@
 
       // Scroll into view (mobile)
       if (window.matchMedia('(max-width: 1199px)').matches) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        smoothScrollIntoView(card, { block: 'start' });
       }
     },
 
@@ -2211,7 +2227,7 @@
       const r = el2.dataset.rating, s = parseInt(el2.dataset.size, 10);
       $('#rating').value = r; View.populateSizeSelect($('#size'), r);
       $('#size').value = s;
-      $('#size').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      smoothScrollIntoView($('#size'), { block: 'center' });
       $('#size').focus();
       toast(t('t.applied', { r, s }));
     },
@@ -2459,6 +2475,7 @@
      ===================================================================== */
 
   let deferredInstallPrompt = null;
+  const MSG_ADDED_HOME = '🏠 홈 화면에 추가되었습니다!';
 
   function registerSW() {
     if (!('serviceWorker' in navigator)) return;
@@ -2467,6 +2484,32 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(() => { /* offline / unsupported */ });
     });
+  }
+
+  /**
+   * iOS Safari에서 가상 키보드가 올라오면 window.innerHeight가 줄어들지 않아
+   * fixed position 요소(floating-bar 등)가 키보드에 덮입니다.
+   * visualViewport API를 사용해 floating-bar의 bottom offset을 보정합니다.
+   */
+  function bindVisualViewport() {
+    if (!window.visualViewport) return;
+    const floatingBar = $('#floatingBar');
+    if (!floatingBar) return;
+
+    function onViewportChange() {
+      const vv = window.visualViewport;
+      // 키보드가 올라왔을 때: layoutViewport 높이 - visualViewport 높이 - visualViewport offsetTop
+      const keyboardHeight = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      if (keyboardHeight > 0) {
+        // 키보드만큼 위로 올려서 floating-bar가 키보드 위에 표시되도록
+        floatingBar.style.setProperty('--kb-offset', keyboardHeight + 'px');
+      } else {
+        floatingBar.style.removeProperty('--kb-offset');
+      }
+    }
+
+    window.visualViewport.addEventListener('resize', onViewportChange);
+    window.visualViewport.addEventListener('scroll', onViewportChange);
   }
 
   function bindInstallBanner() {
@@ -2484,7 +2527,7 @@
       $('#installBanner').classList.remove('show');
       deferredInstallPrompt = null;
       reflectInstalledState();
-      toast(t('t.installed'));
+      toast(MSG_ADDED_HOME);
     });
   }
 
@@ -2533,15 +2576,133 @@
     }
   }
 
+  /**
+   * iOS에서 "홈 화면에 추가" 단계별 가이드를 하단 슬라이드업 시트로 표시.
+   */
+  function showIOSInstallGuide() {
+    if (document.getElementById('iosInstallGuide')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'iosInstallGuide';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', '홈 화면에 추가 방법');
+    overlay.style.cssText = [
+      'position:fixed;inset:0;z-index:9100',
+      'display:flex;align-items:flex-end;justify-content:center',
+      'background:rgba(0,0,0,.52)'
+    ].join(';');
+
+    const sheet = document.createElement('div');
+    sheet.style.cssText = [
+      'background:var(--c-surface,#fff);color:var(--c-text,#111)',
+      'width:100%;max-width:480px',
+      'border-radius:20px 20px 0 0',
+      'padding:24px 22px calc(28px + env(safe-area-inset-bottom))',
+      'box-shadow:0 -4px 24px rgba(0,0,0,.18)',
+      'font-family:inherit',
+      'animation:_iosGuideUp .32s cubic-bezier(.34,1.56,.64,1)'
+    ].join(';');
+
+    const styleTag = document.createElement('style');
+    styleTag.textContent = '@keyframes _iosGuideUp{from{transform:translateY(100%)}to{transform:none}}';
+    sheet.appendChild(styleTag);
+
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:18px';
+
+    const title = document.createElement('strong');
+    title.style.cssText = 'font-size:1.05rem;flex:1';
+    title.textContent = '📱 홈 화면에 추가하기';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.setAttribute('aria-label', '닫기');
+    closeBtn.style.cssText = [
+      'background:none;border:none;padding:4px 6px',
+      'font-size:1.2rem;cursor:pointer;color:var(--c-text-mute,#888)',
+      'border-radius:6px;line-height:1'
+    ].join(';');
+    closeBtn.textContent = '✕';
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+    sheet.appendChild(header);
+
+    const steps = [
+      ['①', ['화면 하단 ', '공유 버튼 ⎋', ' 을 탭해요']],
+      ['②', ['"홈 화면에 추가"', ' 를 찾아 탭해요']],
+      ['③', ['오른쪽 위 ', '"추가"', ' 를 탭하면 완료! 🎉']]
+    ];
+    const ol = document.createElement('ol');
+    ol.style.cssText = 'margin:0 0 18px;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px';
+    steps.forEach(([num, parts]) => {
+      const li = document.createElement('li');
+      li.style.cssText = 'display:flex;align-items:flex-start;gap:12px;font-size:.95rem;line-height:1.5';
+      const badge = document.createElement('span');
+      badge.style.cssText = [
+        'flex-shrink:0;width:28px;height:28px;border-radius:50%',
+        'background:var(--c-primary,#2563eb);color:#fff',
+        'display:flex;align-items:center;justify-content:center',
+        'font-size:.8rem;font-weight:800;margin-top:1px'
+      ].join(';');
+      badge.textContent = num;
+      const text = document.createElement('span');
+      // Odd indices are bold, even indices are plain text
+      parts.forEach((part, i) => {
+        if (i % 2 === 1) {
+          const strong = document.createElement('strong');
+          strong.textContent = part;
+          text.appendChild(strong);
+        } else {
+          text.appendChild(document.createTextNode(part));
+        }
+      });
+      li.appendChild(badge);
+      li.appendChild(text);
+      ol.appendChild(li);
+    });
+    sheet.appendChild(ol);
+
+    const note = document.createElement('div');
+    note.style.cssText = [
+      'background:var(--c-surface-2,#f4f4f4);border-radius:10px',
+      'padding:10px 14px;font-size:.82rem',
+      'color:var(--c-text-sub,#555);display:flex;align-items:center;gap:8px'
+    ].join(';');
+    const noteIcon = document.createElement('span');
+    noteIcon.textContent = 'ℹ️';
+    const noteText = document.createElement('span');
+    noteText.textContent = 'Safari 브라우저에서만 홈 화면 추가가 가능합니다.';
+    note.appendChild(noteIcon);
+    note.appendChild(noteText);
+    sheet.appendChild(note);
+
+    overlay.appendChild(sheet);
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+  }
+
   async function triggerInstall() {
     if (!deferredInstallPrompt) {
-      toast(t('t.install_ios'));
+      if (isIOSLike()) {
+        showIOSInstallGuide();
+      } else {
+        toast(t('t.install_ios'));
+      }
       return;
     }
-    deferredInstallPrompt.prompt();
-    try { await deferredInstallPrompt.userChoice; } catch (e) {}
+    try {
+      deferredInstallPrompt.prompt();
+      const result = await deferredInstallPrompt.userChoice;
+      if (result && result.outcome === 'accepted') {
+        toast(MSG_ADDED_HOME);
+      }
+    } catch (e) {}
     deferredInstallPrompt = null;
     $('#installBanner').classList.remove('show');
+    reflectInstalledState();
   }
 
   /* =====================================================================
@@ -2592,11 +2753,17 @@
     bindInstallBanner();
     reflectInstalledState();
 
+    // iOS Safari: 가상 키보드가 올라올 때 floating-bar가 키보드에 가리지 않도록 보정
+    bindVisualViewport();
+
     // Visitor counter
     initVisitorCounter();
 
     // Bulletin board
     initBoard();
+
+    // KMA temperature alert
+    initTempAlert();
   }
 
   function initVisitorCounter() {
@@ -2647,10 +2814,15 @@
 
     /* ------------------------------------------------------------------
      * load() — 게시글 목록을 최신순으로 반환
+     * 5초 타임아웃: Firestore 연결이 응답 없이 대기하는 경우를 방지.
      * ------------------------------------------------------------------ */
     async load() {
       const { getDocs, query, orderBy } = window._fbFS;
-      const snap = await getDocs(query(this._col(), orderBy('createdAt', 'desc')));
+      const fetchSnap = getDocs(query(this._col(), orderBy('createdAt', 'desc')));
+      const timeout   = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Firestore 응답 시간 초과')), FIRESTORE_TIMEOUT_MS)
+      );
+      const snap = await Promise.race([fetchSnap, timeout]);
       return snap.docs.map(d => ({ id: d.id, ...d.data() }));
     },
 
@@ -2700,6 +2872,34 @@
       body.appendChild(el('p', { class: 'board-empty' }, '❌ Firebase가 초기화되지 않았습니다. 새로고침 후 다시 시도해주세요.'));
       return;
     }
+
+    // ── KakaoTalk 인앱 브라우저: Firestore 연결 불가 안내 ──────────────────
+    if (/KAKAOTALK/i.test(navigator.userAgent)) {
+      setStatus('offline', '외부 브라우저 필요');
+      const isAndroid = /Android/i.test(navigator.userAgent);
+      const msgDiv = el('div', { class: 'board-empty', style: 'line-height:1.9;text-align:center' });
+      msgDiv.appendChild(document.createTextNode('📱 카카오톡 브라우저에서는 게시판 서버에 연결할 수 없습니다.'));
+      msgDiv.appendChild(el('br'));
+      if (isAndroid) {
+        const intentUrl = 'intent://' + location.host + location.pathname + location.search
+          + '#Intent;scheme=' + location.protocol.replace(':', '')
+          + ';package=com.android.chrome'
+          + ';S.browser_fallback_url=' + encodeURIComponent(location.href) + ';end';
+        const link = el('a', {
+          href: intentUrl,
+          style: 'font-weight:700;color:var(--c-primary);text-decoration:underline'
+        }, '📲 크롬으로 열기');
+        msgDiv.appendChild(link);
+        msgDiv.appendChild(document.createTextNode(' 또는 우측 상단 ··· → 다른 브라우저로 열기'));
+      } else {
+        msgDiv.appendChild(document.createTextNode('우측 상단 ··· → 다른 브라우저로 열기를 눌러 사파리/크롬에서 이용해주세요.'));
+      }
+      body.appendChild(msgDiv);
+      return;
+    }
+
+    // 예상치 못한 예외가 발생해도 상태 표시기가 "확인 중"에 고착되지 않도록 감싸기
+    try {
 
     // ── Write form ─────────────────────────────────────────────────────
     const writeSection   = el('div', { class: 'board-write-section' });
@@ -2758,7 +2958,8 @@
       setStatus('online', '서버 연결됨');
     } catch (e) {
       setStatus('offline', '서버 연결 안됨');
-      loading.textContent = '❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요.';
+      const msg = e && e.message ? `(${e.message})` : '';
+      loading.textContent = `❌ 게시글을 불러오지 못했습니다. 네트워크를 확인해주세요. ${msg}`;
       return;
     }
     loading.remove();
@@ -2811,6 +3012,13 @@
       wrap.appendChild(row);
       body.appendChild(wrap);
     });
+
+    } catch (e) {
+      // 예상치 못한 오류 → 상태를 "서버 연결 안됨"으로 변경
+      setStatus('offline', '서버 연결 안됨');
+      body.textContent = '';
+      body.appendChild(el('p', { class: 'board-empty' }, '❌ 오류가 발생했습니다. 새로고침 후 다시 시도해주세요.'));
+    }
   }
 
   function initBoard() {
@@ -2820,7 +3028,7 @@
     if (!toggleBtn || !modal) return;
 
     function openBoard() {
-      renderBoardModal();
+      renderBoardModal().catch((err) => console.error('Board modal error:', err));
       modal.classList.add('show');
       modal.setAttribute('aria-hidden', 'false');
     }
@@ -2836,6 +3044,243 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('show')) closeBoard();
     });
+  }
+
+  /* =====================================================================
+     §11. KMA TEMPERATURE ALERT — 기상청 AWS 온도 알림
+     매일 12:03~12:15 에 기상청 294 관측소 분 데이터를 읽어
+     28°C 이상이면 Web Notification 으로 폰에 알림.
+     ===================================================================== */
+
+  const KMA_AWS_URL = 'http://www.kma.go.kr/cgi-bin/aws/nph-aws_txt_min?0&0&mindb_01m&294&a';
+  const KMA_AWS_FETCH_URL = 'https://corsproxy.io/?' + encodeURIComponent(KMA_AWS_URL);
+  const KMA_ALERT_THRESHOLD = 28;
+  const KMA_ALERT_START_MINUTES = 12 * 60 + 3;
+  const KMA_ALERT_END_MINUTES = 12 * 60 + 15;
+  const KMA_ALERT_TAG = 'kma-temp-alert';
+  const KMA_CHECK_INTERVAL_MS = 60 * 1000;
+  const KMA_FETCH_TIMEOUT_MS = 8000;
+  const KMA_MIN_VALID_TEMP = -50;
+  const KMA_MAX_VALID_TEMP = 60;
+
+  let kmaAlertTimer = 0;
+  let kmaAlertInFlight = false;
+  let kmaAlertIconPromise = null;
+
+  function pad2(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function getLocalDateKey(date = new Date()) {
+    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
+  }
+
+  function getKmaAlertSessionKey(date = new Date()) {
+    return `kma-alert-sent-${getLocalDateKey(date)}`;
+  }
+
+  function hasSentKmaAlertToday(date = new Date()) {
+    try {
+      return sessionStorage.getItem(getKmaAlertSessionKey(date)) === '1';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function markKmaAlertSent(date = new Date()) {
+    try {
+      sessionStorage.setItem(getKmaAlertSessionKey(date), '1');
+    } catch (e) {}
+  }
+
+  function isWithinKmaAlertWindow(date = new Date()) {
+    const minutes = date.getHours() * 60 + date.getMinutes();
+    return minutes >= KMA_ALERT_START_MINUTES && minutes <= KMA_ALERT_END_MINUTES;
+  }
+
+  function splitKmaLine(line) {
+    return String(line || '')
+      .trim()
+      .split(/[,\s]+/)
+      .map(token => token.trim())
+      .filter(Boolean);
+  }
+
+  function normalizeKmaToken(token) {
+    return String(token || '').toLowerCase().replace(/[^a-z가-힣]/g, '');
+  }
+
+  function coerceKmaTemperature(token) {
+    const value = Number.parseFloat(String(token));
+    return Number.isFinite(value) && value >= KMA_MIN_VALID_TEMP && value <= KMA_MAX_VALID_TEMP ? value : NaN;
+  }
+
+  function findKmaTemperatureColumn(lines) {
+    const keywords = new Set(['ta', 'temp', 'temperature', 'airtemp', '기온']);
+    for (const raw of lines) {
+      if (!raw || raw[0] !== '#') continue;
+      const tokens = splitKmaLine(raw.replace(/^#+\s*/, ''));
+      const index = tokens.findIndex(token => keywords.has(normalizeKmaToken(token)));
+      if (index !== -1) return index;
+    }
+    return -1;
+  }
+
+  function parseKmaTemperature(text) {
+    const lines = String(text || '')
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    if (!lines.length) {
+      console.warn('KMA temperature alert parse failed: empty response');
+      return NaN;
+    }
+
+    const dataLines = lines.filter(line => line && line[0] !== '#');
+    if (!dataLines.length) {
+      console.warn('KMA temperature alert parse failed: no data line found');
+      return NaN;
+    }
+
+    let targetDataLine = '';
+    let tokens = [];
+    for (const line of dataLines) {
+      const lineTokens = splitKmaLine(line);
+      if (lineTokens.some(token => token === '12:00')) {
+        targetDataLine = line;
+        tokens = lineTokens;
+        break;
+      }
+    }
+    if (!targetDataLine) {
+      console.warn('[KMA] 12:00 데이터 줄을 찾지 못했습니다.');
+      return NaN;
+    }
+
+    if (!tokens.length) {
+      console.warn('KMA temperature alert parse failed: 12:00 data line is empty');
+      return NaN;
+    }
+
+    const headerIndex = findKmaTemperatureColumn(lines);
+    if (headerIndex >= 0 && headerIndex < tokens.length) {
+      const byHeader = coerceKmaTemperature(tokens[headerIndex]);
+      if (Number.isFinite(byHeader)) return byHeader;
+    }
+
+    for (const token of tokens) {
+      if (!/[.+-]/.test(token)) continue;
+      const value = coerceKmaTemperature(token);
+      if (Number.isFinite(value)) return value;
+    }
+
+    for (const token of tokens) {
+      const value = coerceKmaTemperature(token);
+      if (Number.isFinite(value)) return value;
+    }
+
+    console.warn('KMA temperature alert parse failed: no valid temperature token');
+    return NaN;
+  }
+
+  async function getKmaAlertIcon() {
+    if (kmaAlertIconPromise) return kmaAlertIconPromise;
+    kmaAlertIconPromise = (async () => {
+      const manifestLink = document.querySelector('link[rel="manifest"]');
+      const href = manifestLink && manifestLink.getAttribute('href');
+      if (!href) return '';
+      try {
+        const manifestUrl = new URL(href, location.href);
+        const response = await fetch(manifestUrl.href, { cache: 'force-cache' });
+        if (!response.ok) return '';
+        const manifest = await response.json();
+        const iconSrc = manifest && Array.isArray(manifest.icons) && manifest.icons[0] && manifest.icons[0].src;
+        return iconSrc ? new URL(iconSrc, manifestUrl.href).href : '';
+      } catch (e) {
+        return '';
+      }
+    })();
+    return kmaAlertIconPromise;
+  }
+
+  async function requestNotificationPermission() {
+    if (typeof Notification === 'undefined') return;
+    if (Notification.permission === 'granted' || Notification.permission === 'denied') return;
+    try {
+      await Notification.requestPermission();
+    } catch (e) {
+      console.warn('KMA temperature alert permission request failed:', e);
+    }
+  }
+
+  async function notifyKmaTemperature(temp) {
+    if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
+      toast(`⚠️ 현재 기온 ${temp.toFixed(1)}°C이지만 브라우저 알림 권한이 없습니다.`, 4000);
+      return true;
+    }
+
+    try {
+      const options = {
+        body: `현재 기온 ${temp.toFixed(1)}°C — 28°C 이상입니다! (기상청 294 관측소)`,
+        tag: KMA_ALERT_TAG
+      };
+      const icon = await getKmaAlertIcon();
+      if (icon) options.icon = icon;
+      new Notification('🌡️ 기온 경보', options);
+      return true;
+    } catch (e) {
+      console.warn('KMA temperature alert notification failed:', e);
+      toast(`⚠️ 현재 기온 ${temp.toFixed(1)}°C이지만 브라우저 알림을 표시하지 못했습니다.`, 4000);
+      return true;
+    }
+  }
+
+  async function checkKmaTemperatureAlert(now = new Date()) {
+    if (kmaAlertInFlight) return;
+    if (!isWithinKmaAlertWindow(now)) return;
+    if (hasSentKmaAlertToday(now)) return;
+
+    kmaAlertInFlight = true;
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    const timeoutId = controller ? setTimeout(() => controller.abort(), KMA_FETCH_TIMEOUT_MS) : 0;
+    try {
+      const response = await fetch(KMA_AWS_FETCH_URL, {
+        cache: 'no-store',
+        ...(controller ? { signal: controller.signal } : {})
+      });
+      if (!response.ok) {
+        console.warn('KMA temperature alert fetch failed:', response.status, response.statusText);
+        return;
+      }
+
+      const text = await response.text();
+      const temp = parseKmaTemperature(text);
+      if (!Number.isFinite(temp)) return;
+      if (temp < KMA_ALERT_THRESHOLD) return;
+
+      const sent = await notifyKmaTemperature(temp);
+      if (sent) markKmaAlertSent(now);
+    } catch (e) {
+      console.warn('KMA temperature alert fetch failed:', e);
+    } finally {
+      if (timeoutId) clearTimeout(timeoutId);
+      kmaAlertInFlight = false;
+    }
+  }
+
+  function initTempAlert() {
+    requestNotificationPermission();
+
+    const tick = () => {
+      checkKmaTemperatureAlert().catch((e) => {
+        console.warn('KMA temperature alert check failed:', e);
+      });
+    };
+
+    tick();
+    if (kmaAlertTimer) clearInterval(kmaAlertTimer);
+    kmaAlertTimer = window.setInterval(tick, KMA_CHECK_INTERVAL_MS);
   }
 
   /* =====================================================================

@@ -9,6 +9,8 @@
 <meta name="color-scheme" content="light dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JIS 계산기">
+<link rel="apple-touch-icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%232563eb'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' dominant-baseline='middle' font-family='-apple-system,sans-serif' font-size='68' font-weight='800' fill='%23fff'%3EJIS%3C/text%3E%3C/svg%3E">
 <title>JIS 배관 자재 계산기 / JIS Pipe Material Calculator</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Ctext x='50%25' y='58%25' text-anchor='middle' dominant-baseline='middle' font-family='-apple-system,sans-serif' font-size='26' font-weight='800' fill='%23fff'%3EJIS%3C/text%3E%3C/svg%3E">
@@ -104,7 +106,7 @@
 
   *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body { margin: 0; padding: 0; }
-  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   body {
     font-family: var(--font-sans);
     background: var(--c-bg);
@@ -115,6 +117,8 @@
     overflow-wrap: anywhere;
     padding: 12px 12px calc(96px + env(safe-area-inset-bottom));
     min-height: 100dvh;
+    /* iOS Safari: 고정 요소가 있을 때 스크롤 성능 향상 */
+    -webkit-overflow-scrolling: touch;
     transition: background var(--m-base), color var(--m-base);
   }
   /* Typography scale */
@@ -260,10 +264,14 @@
   }
   @media (max-width: 480px) { .card { padding: 16px 14px 14px; } }
   .card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
+  /* color-mix() 폴백 패턴: Safari 15 이하 미지원 대비.
+     같은 속성을 두 번 선언해 지원 브라우저는 두 번째(color-mix) 값을 사용하고,
+     미지원 브라우저는 첫 번째(solid) 값을 유지합니다. */
   .card-head {
     display: flex; align-items: center; gap: 10px;
     margin-bottom: 14px;
     padding-bottom: 10px;
+    border-bottom: 1px solid var(--c-border);
     border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
   }
   .card-head h2 {
@@ -333,6 +341,7 @@
   .acc-head[aria-expanded="true"] .acc-chevron { transform: rotate(180deg); }
   /* Divider line shows only when expanded */
   .acc-head[aria-expanded="true"] {
+    border-bottom: 1px solid var(--c-border);
     border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
   }
   .acc-head[aria-expanded="false"] { border-bottom: 1px solid transparent; }
@@ -375,6 +384,13 @@
     transition: border-color var(--m-fast), box-shadow var(--m-fast), background var(--m-fast);
     -webkit-appearance: none; appearance: none;
   }
+  /* iOS Safari는 font-size < 16px인 입력 필드를 탭하면 페이지를 자동으로 줌-인합니다.
+     max()로 실제 렌더 크기를 16px 이상으로 보장해 줌 방지. */
+  @supports (font-size: max(1px, 1rem)) {
+    select, input[type=number], input[type=text], textarea {
+      font-size: max(16px, .9rem);
+    }
+  }
   select, input[type=number], input[type=text] { height: 40px; padding: 0 12px; }
   textarea { padding: 10px 12px; line-height: 1.5; resize: vertical; }
   select {
@@ -395,6 +411,7 @@
   :where(select, input, textarea, button, [tabindex]):focus-visible {
     outline: none;
     border-color: var(--c-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35); /* --c-primary(#2563eb) 35% 폴백 */
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-focus) 35%, transparent);
   }
 
@@ -479,6 +496,7 @@
   .switch input:checked + .slider { background: var(--c-primary); }
   .switch input:checked + .slider::before { transform: translateX(18px); }
   .switch input:focus-visible + .slider {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-focus) 35%, transparent);
   }
 
@@ -487,7 +505,8 @@
   /* Search results */
   .search-res {
     margin-top: 10px; padding: 12px; border-radius: var(--r-md);
-    background: var(--c-warn-weak); border: 1px solid color-mix(in srgb, var(--c-warn) 30%, transparent);
+    background: var(--c-warn-weak); border: 1px solid rgba(217, 119, 6, 0.3);
+    border: 1px solid color-mix(in srgb, var(--c-warn) 30%, transparent);
     font-size: .85rem; color: var(--c-text); line-height: 1.5; display: none;
   }
   .search-res.show { display: block; animation: fadeIn .25s var(--m-base); }
@@ -513,6 +532,8 @@
     display: flex; flex-direction: column; gap: 8px;
     max-height: min(60vh, 560px); overflow-y: auto; padding-right: 4px;
     margin-bottom: 12px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   .q-item {
     display: flex; flex-direction: row; align-items: center; gap: 8px;
@@ -580,6 +601,7 @@
   .result-box.show { display: block; animation: springIn .4s var(--m-spring); }
   .result-box .res-head {
     display: flex; align-items: center; gap: 8px;
+    border-bottom: 2px dashed rgba(5, 150, 105, 0.4);
     border-bottom: 2px dashed color-mix(in srgb, var(--c-success) 40%, transparent);
     padding-bottom: 12px; margin-bottom: 14px;
   }
@@ -596,7 +618,7 @@
   .res-flat-table td:first-child { text-align: center; }
   .res-flat-table td:last-child  { text-align: right; font-weight: 800; white-space: nowrap; }
   .res-flat-table tbody tr { transition: background var(--m-fast); }
-  .res-flat-table tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--c-surface-2) 70%, transparent); }
+  .res-flat-table tbody tr:nth-child(even) td { background: var(--c-surface-2); background: color-mix(in srgb, var(--c-surface-2) 70%, transparent); }
   .res-flat-table tbody tr:hover td { background: var(--c-primary-weak); }
   .res-flat-table tbody tr:last-child td { border-bottom: none; }
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
@@ -655,13 +677,14 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle {
+  #boardToggle, #tempLink {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
+    text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
 
   /* Board modal */
   .board-write-section { margin-bottom: 14px; }
@@ -754,6 +777,7 @@
   /* Floating bar */
   .floating-bar {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 900;
+    background: var(--c-surface);
     background: color-mix(in srgb, var(--c-surface) 92%, transparent);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border-top: 1px solid var(--c-border);
@@ -762,6 +786,8 @@
     transform: translateY(110%);
     transition: transform var(--m-spring);
     box-shadow: 0 -2px 10px rgba(0,0,0,.06);
+    /* iOS 키보드 오버레이 보정: visualViewport 이벤트로 --kb-offset을 설정 */
+    bottom: var(--kb-offset, 0px);
   }
   .floating-bar.show { transform: none; }
   .float-info { flex: 1; font-size: .9rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
@@ -806,6 +832,8 @@
     border-radius: var(--r-xl) var(--r-xl) 0 0;
     max-width: 600px; width: 100%; margin: 0 auto;
     max-height: 75vh; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     padding-bottom: calc(22px + env(safe-area-inset-bottom));
     transform: translateY(100%);
   }
@@ -854,12 +882,17 @@
     padding: 20px;
     opacity: 0; visibility: hidden; pointer-events: none;
     transition: opacity var(--m-base), visibility var(--m-base);
+    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
+    /* iOS Safari: 모달 뒤 페이지 스크롤 방지 */
+    overscroll-behavior: contain;
   }
   .modal.show { opacity: 1; visibility: visible; pointer-events: auto; }
   .modal-content {
     background: var(--c-surface); color: var(--c-text);
     width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     border-radius: var(--r-xl); padding: 22px;
     box-shadow: var(--e-4);
     transform: translateY(20px) scale(.98);
@@ -924,6 +957,7 @@
   }
   .install-cta[hidden] { display: none !important; }
   .install-cta:hover {
+    border-color: var(--c-primary);
     border-color: color-mix(in srgb, var(--c-primary) 50%, var(--c-border));
     box-shadow: var(--e-3);
   }
@@ -950,11 +984,13 @@
     border: none; border-radius: 999px;
     background: var(--c-primary); color: #fff;
     font-size: .82rem; font-weight: 700;
+    box-shadow: 0 2px 6px -1px rgba(37, 99, 235, 0.45);
     box-shadow: 0 2px 6px -1px color-mix(in srgb, var(--c-primary) 45%, transparent);
     transition: background var(--m-fast), transform var(--m-fast), box-shadow var(--m-fast);
   }
   .install-cta-btn:hover:not(:disabled) {
     background: var(--c-primary-strong);
+    box-shadow: 0 4px 10px -2px rgba(37, 99, 235, 0.55);
     box-shadow: 0 4px 10px -2px color-mix(in srgb, var(--c-primary) 55%, transparent);
   }
   .install-cta-btn:active:not(:disabled) { transform: scale(.96); }
@@ -1344,6 +1380,14 @@
     <button id="boardToggle" type="button" aria-label="댓글 게시판 열기" title="댓글 게시판">
       <span aria-hidden="true">💬</span>
     </button>
+    <a id="tempLink"
+       href="http://www.kma.go.kr/cgi-bin/aws/nph-aws_txt_min?0&amp;0&amp;mindb_01m&amp;294&amp;a"
+       target="_blank"
+       rel="noopener noreferrer"
+       title="기상청 294 관측소 온도 확인"
+       aria-label="기상청 온도 사이트 열기">
+      <span aria-hidden="true">🌡️</span>
+    </a>
   </div>
 
   <!-- 댓글 게시판 모달 -->
