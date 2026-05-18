@@ -3060,6 +3060,8 @@
   const KMA_ALERT_TAG = 'kma-temp-alert';
   const KMA_CHECK_INTERVAL_MS = 60 * 1000;
   const KMA_FETCH_TIMEOUT_MS = 8000;
+  const KMA_MIN_VALID_TEMP = -50;
+  const KMA_MAX_VALID_TEMP = 60;
 
   let kmaAlertTimer = 0;
   let kmaAlertInFlight = false;
@@ -3110,7 +3112,7 @@
 
   function coerceKmaTemperature(token) {
     const value = Number.parseFloat(String(token));
-    return Number.isFinite(value) && value >= -50 && value <= 60 ? value : NaN;
+    return Number.isFinite(value) && value >= KMA_MIN_VALID_TEMP && value <= KMA_MAX_VALID_TEMP ? value : NaN;
   }
 
   function findKmaTemperatureColumn(lines) {
@@ -3201,7 +3203,7 @@
   async function notifyKmaTemperature(temp) {
     if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
       toast(`⚠️ 현재 기온 ${temp.toFixed(1)}°C이지만 브라우저 알림 권한이 없습니다.`, 4000);
-      return false;
+      return true;
     }
 
     try {
@@ -3216,7 +3218,7 @@
     } catch (e) {
       console.warn('KMA temperature alert notification failed:', e);
       toast(`⚠️ 현재 기온 ${temp.toFixed(1)}°C이지만 브라우저 알림을 표시하지 못했습니다.`, 4000);
-      return false;
+      return true;
     }
   }
 
