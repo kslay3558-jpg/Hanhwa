@@ -677,13 +677,14 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle {
+  #boardToggle, #tempLink {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
+    text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
 
   /* Board modal */
   .board-write-section { margin-bottom: 14px; }
@@ -1379,6 +1380,14 @@
     <button id="boardToggle" type="button" aria-label="댓글 게시판 열기" title="댓글 게시판">
       <span aria-hidden="true">💬</span>
     </button>
+    <a id="tempLink"
+       href="http://www.kma.go.kr/cgi-bin/aws/nph-aws_txt_min?0&amp;0&amp;mindb_01m&amp;294&amp;a"
+       target="_blank"
+       rel="noopener noreferrer"
+       title="기상청 294 관측소 온도 확인"
+       aria-label="기상청 온도 사이트 열기">
+      <span aria-hidden="true">🌡️</span>
+    </a>
   </div>
 
   <!-- 댓글 게시판 모달 -->
