@@ -1567,6 +1567,7 @@
   <script>
     const STORAGE_KEY = "pipe_miter_calculator_production_v3";
     const THEME_KEY = "pipe_miter_calculator_theme";
+    const VALID_THEMES = ["auto", "light", "dark"];
     const THEME_TEXT = {
       ko: {
         toggle: "테마 전환",
@@ -1579,6 +1580,18 @@
         auto: "auto mode",
         light: "light mode",
         dark: "dark mode"
+      },
+      vi: {
+        toggle: "Đổi giao diện",
+        auto: "chế độ tự động",
+        light: "chế độ sáng",
+        dark: "chế độ tối"
+      },
+      id: {
+        toggle: "Ganti tema",
+        auto: "mode otomatis",
+        light: "mode terang",
+        dark: "mode gelap"
       }
     };
 
@@ -1618,7 +1631,7 @@
     }
 
     function applyTheme(theme) {
-      const safeTheme = ["auto", "light", "dark"].includes(theme) ? theme : "auto";
+      const safeTheme = VALID_THEMES.includes(theme) ? theme : "auto";
       document.documentElement.dataset.theme = safeTheme;
 
       const themeToggle = $("themeToggle");
@@ -1641,8 +1654,8 @@
 
     function toggleTheme() {
       const current = document.documentElement.dataset.theme || "auto";
-      const themeCycle = { auto: "light", light: "dark", dark: "auto" };
-      const next = themeCycle[current] || "auto";
+      const currentIndex = VALID_THEMES.indexOf(current);
+      const next = currentIndex >= 0 ? VALID_THEMES[(currentIndex + 1) % VALID_THEMES.length] : "auto";
       applyTheme(next);
 
       try {
