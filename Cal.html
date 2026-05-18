@@ -1613,7 +1613,8 @@
 
     function themeText(key) {
       const lang = (document.documentElement.lang || "ko").split("-")[0];
-      return (THEME_TEXT[lang] || THEME_TEXT.ko)[key];
+      const labels = THEME_TEXT[lang] || THEME_TEXT.ko;
+      return labels[key] || THEME_TEXT.ko[key] || key;
     }
 
     function applyTheme(theme) {
@@ -1633,20 +1634,21 @@
       try {
         applyTheme(localStorage.getItem(THEME_KEY) || "auto");
       } catch (error) {
-        console.warn("테마 설정을 불러오지 못했습니다.", error);
+        console.warn("Unable to load theme preference.", error);
         applyTheme("auto");
       }
     }
 
     function toggleTheme() {
       const current = document.documentElement.dataset.theme || "auto";
-      const next = current === "auto" ? "light" : current === "light" ? "dark" : "auto";
+      const themeCycle = { auto: "light", light: "dark", dark: "auto" };
+      const next = themeCycle[current] || "auto";
       applyTheme(next);
 
       try {
         localStorage.setItem(THEME_KEY, next);
       } catch (error) {
-        console.warn("테마 설정을 저장하지 못했습니다.", error);
+        console.warn("Unable to save theme preference.", error);
       }
     }
 
