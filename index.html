@@ -1343,23 +1343,25 @@
 </div>
 
 <!-- =====================================================================
-     Firebase Web SDK (compat build — 브라우저에서 직접 Firestore 사용)
+     Firebase Web SDK (Modular v12 — ES module CDN)
      ※ Admin SDK(Java/Node.js)와 다름. 브라우저 전용 클라이언트 SDK.
      ===================================================================== -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script>
+<!-- _fbDb 를 동기 선언해 app.js 가 로드될 때 undefined 가 되지 않게 함 -->
+<script>var _fbDb = null;</script>
+<script type="module">
   /* ------------------------------------------------------------------
-   * Firebase 웹 앱 설정
-   * 아래 값은 Firebase 콘솔에서 가져옵니다:
-   *   콘솔(console.firebase.google.com) → 프로젝트 선택
-   *   → 프로젝트 설정(톱니바퀴) → 일반 탭 → 하단 "내 앱" 섹션
-   *   → 웹 앱(</>)을 추가/선택 → firebaseConfig 복사
-   *
+   * Firebase 웹 앱 설정 (Firebase 콘솔 → 프로젝트 설정 → 내 앱 에서 복사)
    * ⚠️  서비스 계정 private_key 는 여기에 절대 넣지 마세요.
-   *     apiKey 는 서비스 계정 키가 아닌 웹 전용 공개 키입니다.
+   *     apiKey 는 브라우저 전용 공개 키입니다.
    * ------------------------------------------------------------------ */
-  const FIREBASE_CONFIG = {
+  import { initializeApp }   from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+  import { getAnalytics }    from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
+  import {
+    getFirestore, collection, getDocs, addDoc, deleteDoc,
+    doc, getDoc, query, orderBy
+  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
     apiKey:            "AIzaSyDnCv8DYsUW9crhyUA4TeV-yBtO2P_4Fhw",
     authDomain:        "guest-13bd6.firebaseapp.com",
     projectId:         "guest-13bd6",
@@ -1369,10 +1371,11 @@
     measurementId:     "G-WTVVE493B0"
   };
 
-  var _fbDb = null;
   try {
-    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
-    _fbDb = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    getAnalytics(app);
+    window._fbDb = getFirestore(app);
+    window._fbFS = { collection, getDocs, addDoc, deleteDoc, doc, getDoc, query, orderBy };
   } catch (e) {
     console.warn('[Firebase] 초기화 실패 — 게시판은 오프라인 모드로 동작합니다.', e);
   }

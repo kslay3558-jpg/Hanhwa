@@ -2639,7 +2639,8 @@
 
   /** Firestore 사용 가능 여부 */
   function _useFirestore() {
-    return typeof _fbDb !== 'undefined' && _fbDb !== null;
+    return typeof _fbDb !== 'undefined' && _fbDb !== null &&
+           typeof window._fbFS !== 'undefined' && window._fbFS !== null;
   }
 
   const Board = {
@@ -2652,8 +2653,8 @@
     },
 
     /* ── Firestore 경로 헬퍼 ── */
-    _col()         { return _fbDb.collection(COMMENTS_COL); },
-    _doc(commentId){ return _fbDb.collection(COMMENTS_COL).doc(commentId); },
+    _col()         { return window._fbFS.collection(_fbDb, COMMENTS_COL); },
+    _doc(commentId){ return window._fbFS.doc(_fbDb, COMMENTS_COL, commentId); },
 
     /* ── localStorage fallback ── */
     _lsLoad()      { try { return JSON.parse(localStorage.getItem(BOARD_KEY) || '[]'); } catch { return []; } },
@@ -2665,7 +2666,8 @@
     async load() {
       if (_useFirestore()) {
         try {
-          const snap = await this._col().orderBy('date', 'desc').get();
+          const { getDocs, query, orderBy } = window._fbFS;
+          const snap = await getDocs(query(this._col(), orderBy('date', 'desc')));
           return snap.docs.map(d => ({ id: d.id, ...d.data() }));
         } catch (e) {
           console.warn('[Board] Firestore 연결 실패, 로컬 저장소로 전환합니다.', e);
@@ -2687,7 +2689,7 @@
       };
       if (_useFirestore()) {
         try {
-          await this._col().add(data);
+          await window._fbFS.addDoc(this._col(), data);
           return;
         } catch (e) {
           console.warn('[Board] Firestore 쓰기 실패, 로컬에 저장합니다.', e);
@@ -2706,11 +2708,11 @@
       if (_useFirestore()) {
         try {
           const ref  = this._doc(commentId);
-          const snap = await ref.get();
-          if (!snap.exists) return false;
+          const snap = await window._fbFS.getDoc(ref);
+          if (!snap.exists()) return false;
           const c = snap.data();
           if (pw !== BOARD_MASTER && c.pw !== pw) return false;
-          await ref.delete();
+          await window._fbFS.deleteDoc(ref);
           return true;
         } catch (e) {
           console.warn('[Board] Firestore 삭제 실패, 로컬에서 시도합니다.', e);
