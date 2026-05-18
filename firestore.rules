@@ -4,34 +4,30 @@ service cloud.firestore {
 
     match /posts/{postId} {
 
-      // 1. 누구나 게시글 읽기 가능
+      // 1. 누구나 읽기 가능
       allow read: if true;
 
-      // 2. 로그인 없이 글쓰기 허용 (필드 유효성 검증)
+      // 2. 로그인 없이 글쓰기 허용 (비밀번호 필드 포함)
       allow create: if
-        // 필수 필드(제목, 내용, 작성자ID, 작성일)가 모두 있어야 함
-        request.resource.data.keys().hasAll(['title', 'content', 'authorId', 'createdAt'])
-        // 허용된 필드 외의 데이터 삽입 차단
-        && request.resource.data.keys().hasOnly(['title', 'content', 'authorId', 'createdAt'])
-        // 제목: 문자열, 1자 이상 100자 이하
+        request.resource.data.keys().hasAll(['title', 'content', 'authorId', 'createdAt', 'password'])
+        && request.resource.data.keys().hasOnly(['title', 'content', 'authorId', 'createdAt', 'password'])
         && request.resource.data.title is string
         && request.resource.data.title.size() > 0
         && request.resource.data.title.size() <= 100
-        // 내용: 문자열, 1자 이상 5000자 이하
         && request.resource.data.content is string
         && request.resource.data.content.size() > 0
         && request.resource.data.content.size() <= 5000
-        // 작성자ID: 문자열 (익명 고정값 허용)
         && request.resource.data.authorId is string
         && request.resource.data.authorId.size() > 0
-        // 작성일: 문자열 (ISO 8601)
-        && request.resource.data.createdAt is string
-        && request.resource.data.createdAt.size() > 0;
+        && request.resource.data.password is string
+        && request.resource.data.password.size() >= 4;  // 최소 4자리 비밀번호
 
-      // 3. 게시글 수정 불가 (앱에서 수정 기능 없음)
-      allow update: if false;
+      // 3. 수정: 비밀번호 필드 유지 허용 (내용만 변경)
+      allow update: if
+        request.resource.data.keys().hasOnly(['title', 'content', 'authorId', 'createdAt', 'password'])
+        && request.resource.data.password == resource.data.password; // 기존 비번 일치해야 수정
 
-      // 4. 삭제 허용 (로그인 없는 환경이므로 누구나 삭제 가능 — 추후 인증 도입 시 수정)
+      // 4. 삭제: 클라이언트에서 비밀번호 확인 후 삭제 (규칙에서 비밀번호 직접 비교 불가)
       allow delete: if true;
     }
 
