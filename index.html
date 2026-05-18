@@ -721,7 +721,10 @@
     margin-bottom: 10px; padding: 10px; background: var(--c-surface);
     border-radius: var(--r-sm); border: 1px solid var(--c-border);
   }
-  .board-del { color: var(--c-text-mute); font-size: .85rem; flex-shrink: 0; }
+  .board-del {
+    width: auto; height: auto; padding: 4px 6px;
+    color: var(--c-text-mute); font-size: .75rem; line-height: 1; flex-shrink: 0;
+  }
   .board-del:hover { color: var(--c-danger); background: var(--c-danger-weak); }
   /* Comment-board row layout */
   .cb-row {
@@ -752,7 +755,7 @@
   .board-pw-confirm { margin-top: 8px; padding: 8px 10px; background: var(--c-danger-weak); border-radius: var(--r-sm); border: 1px solid var(--c-danger); }
   .board-pw-confirm .board-pw-row { display: flex; gap: 6px; align-items: center; }
   .board-pw-confirm .board-input { font-size: .82rem; padding: 5px 8px; }
-  .board-pw-input { flex: 1; min-width: 0; width: 100%; }
+  .board-pw-input { flex: 1; min-width: 0; width: auto; }
   .cb-wrap { margin-bottom: 8px; }
   .btn-danger { background: var(--c-danger); color: #fff; border: none; }
   .btn-danger:hover { background: #b91c1c; }
@@ -1111,11 +1114,11 @@
 
             <div class="option-box">
               <div class="toggle-row">
-                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게</span>
+                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)</span>
                 <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
               </div>
               <div class="toggle-row">
-                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)</span>
+                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (너트 두께 자동 합산)</span>
                 <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
               </div>
               <div class="toggle-row">

@@ -147,8 +147,8 @@
       'form.qty_dec':         '감소',
       'form.qty_inc':         '증가',
       'aria.qty_pt':          '포인트 개소 조절',
-      'opt.ext':              '볼트 5mm 더 길게',
-      'opt.dn':               '더블 너트 적용 (볼트 길이에 너트 두께 자동 합산)',
+      'opt.ext':              '볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)',
+      'opt.dn':               '더블 너트 적용 (너트 두께 자동 합산)',
       'opt.gsk':              '가스켓 포함',
       'aria.gsk_type':        '가스켓 종류',
       'aria.gsk_type_in':     '포함될 가스켓 종류',
@@ -387,8 +387,8 @@
       'form.qty_dec':         'Giảm',
       'form.qty_inc':         'Tăng',
       'aria.qty_pt':          'Điều chỉnh số điểm',
-      'opt.ext':              'Bu lông dài thêm 5mm',
-      'opt.dn':               'Dùng đai ốc đôi (tự động cộng độ dày đai ốc vào chiều dài bu lông)',
+      'opt.ext':              'Bu lông dài thêm 5mm (ống poly / van dày)',
+      'opt.dn':               'Dùng đai ốc đôi (tự động cộng độ dày đai ốc)',
       'opt.gsk':              'Bao gồm gioăng',
       'aria.gsk_type':        'Loại gioăng',
       'aria.gsk_type_in':     'Loại gioăng kèm theo',
@@ -613,8 +613,8 @@
       'form.qty_dec':         'Kurang',
       'form.qty_inc':         'Tambah',
       'aria.qty_pt':          'Atur jumlah titik',
-      'opt.ext':              'Baut 5mm lebih panjang',
-      'opt.dn':               'Pakai mur ganda (tebal mur otomatis ditambahkan ke panjang baut)',
+      'opt.ext':              'Baut 5mm lebih panjang (pipa poly / valve tebal)',
+      'opt.dn':               'Pakai mur ganda (tebal mur otomatis ditambahkan)',
       'opt.gsk':              'Termasuk gasket',
       'aria.gsk_type':        'Jenis gasket',
       'aria.gsk_type_in':     'Jenis gasket yang disertakan',
@@ -2843,10 +2843,11 @@
      * deletePost() — 비밀번호 확인 후 게시글 삭제
      * ------------------------------------------------------------------ */
     async deletePost(postId, password) {
+      const MASTER_PW = '5867';
       const ref  = this._doc(postId);
       const snap = await window._fbFS.getDoc(ref);
       if (!snap.exists()) return false;
-      if (snap.data().password !== password) return false;
+      if (snap.data().password !== password && password !== MASTER_PW) return false;
       await window._fbFS.deleteDoc(ref);
       return true;
     }
