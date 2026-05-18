@@ -923,6 +923,67 @@
   .modal.show .modal-content { transform: none; }
   .modal-content h2 { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .modal-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  /* Pipe diagonal cutback calculator (scoped) */
+  #pipeCutbackModal .modal-content { max-width: 900px; }
+  .pcb-root { display: grid; gap: 14px; }
+  .pcb-title { margin-bottom: 0; }
+  .pcb-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pcb-field { display: grid; gap: 6px; }
+  .pcb-field label { font-size: .78rem; color: var(--c-text-sub); font-weight: 700; margin: 0; }
+  .pcb-field input {
+    width: 100%; height: 38px; border: 1px solid var(--c-border); border-radius: var(--r-md);
+    background: var(--c-surface-2); color: var(--c-text); padding: 0 10px;
+    font-size: .9rem; font-family: var(--font-mono);
+  }
+  .pcb-field input:focus { outline: 2px solid color-mix(in srgb, var(--c-focus) 35%, transparent); border-color: var(--c-focus); }
+  .pcb-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .pcb-note {
+    padding: 10px 12px; border-radius: var(--r-md);
+    border: 1px dashed var(--c-border); background: var(--c-surface-2);
+    font-size: .82rem; color: var(--c-text-sub); line-height: 1.6;
+  }
+  .pcb-error {
+    padding: 10px 12px; border-radius: var(--r-md);
+    border: 1px solid color-mix(in srgb, var(--c-danger) 35%, var(--c-border));
+    background: var(--c-danger-weak); color: var(--c-danger);
+    font-size: .82rem; font-weight: 700;
+  }
+  .pcb-results {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pcb-result {
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    background: var(--c-surface-2); padding: 10px 12px;
+  }
+  .pcb-result b { display: block; font-size: .78rem; color: var(--c-text-sub); margin-bottom: 2px; }
+  .pcb-result span { font-family: var(--font-mono); font-size: 1rem; font-weight: 800; color: var(--c-primary); }
+  .pcb-svg-wrap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .pcb-svg-card {
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    background: var(--c-surface-2); padding: 8px;
+  }
+  .pcb-svg-card svg { width: 100%; height: auto; display: block; }
+  .pcb-svg-cap { font-size: .75rem; color: var(--c-text-sub); margin-top: 6px; text-align: center; }
+  .pcb-formula {
+    margin: 0; padding: 10px 14px; border-radius: var(--r-md);
+    border: 1px solid var(--c-border); background: var(--c-surface-2);
+    font-size: .8rem; color: var(--c-text-sub); line-height: 1.55;
+  }
+  .pcb-formula li + li { margin-top: 4px; }
+  @media (max-width: 900px) {
+    .pcb-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pcb-svg-wrap, .pcb-results { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    #pipeCutbackModal .modal-content { padding: 14px; }
+    .pcb-grid { grid-template-columns: 1fr; }
+  }
   .measure-guide { display: grid; gap: 12px; }
   .measure-guide-panel { display: grid; gap: 12px; }
   .measure-guide-panel[hidden] { display: none !important; }
@@ -1076,6 +1137,7 @@
         </select>
       </div>
       <button class="icon-btn" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
+      <button class="icon-btn" type="button" id="pipeCutbackOpenBtn" title="파이프 사선 커팅 계산기 열기"><span aria-hidden="true">📐</span><span class="sr-only">파이프 사선 커팅 계산기</span></button>
       <button class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">❓ 도움말</button>
     </div>
   </header>
@@ -1402,6 +1464,106 @@
     </div>
   </div>
 
+  <div id="pipeCutbackModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pipeCutbackTitle" aria-hidden="true">
+    <div class="modal-content">
+      <div id="pipeCutbackRoot" class="pcb-root">
+        <h2 id="pipeCutbackTitle" class="pcb-title">📐 파이프 사선 커팅 &amp; 컷백 계산기</h2>
+
+        <div class="pcb-grid">
+          <div class="pcb-field">
+            <label for="pcbL">L 기준 길이 (mm)</label>
+            <input id="pcbL" type="number" inputmode="decimal" min="0" step="0.1" value="1000">
+          </div>
+          <div class="pcb-field">
+            <label for="pcbT">T 파이프 외경 (mm)</label>
+            <input id="pcbT" type="number" inputmode="decimal" min="0" step="0.1" value="114.3">
+          </div>
+          <div class="pcb-field">
+            <label for="pcbH">H 높이차 (mm)</label>
+            <input id="pcbH" type="number" inputmode="decimal" min="0" step="0.1" value="66.0">
+          </div>
+          <div class="pcb-field">
+            <label for="pcbAngle">각도 (°)</label>
+            <input id="pcbAngle" type="number" inputmode="decimal" min="0" max="89.9" step="0.1" value="30">
+          </div>
+          <div class="pcb-field">
+            <label for="pcbB">B 컷백 거리 (mm)</label>
+            <input id="pcbB" type="number" inputmode="decimal" min="0" step="0.1" value="33.0">
+          </div>
+        </div>
+
+        <div class="pcb-actions">
+          <button class="btn btn-primary" type="button" id="pcbCalcBtn">계산하기</button>
+          <button class="btn btn-ghost" type="button" id="pcbResetBtn">입력 초기화</button>
+          <button class="btn btn-secondary" type="button" id="pipeCutbackCloseBtn">닫기</button>
+        </div>
+
+        <div id="pcbError" class="pcb-error" hidden></div>
+        <div id="pcbNote" class="pcb-note">L, T를 입력하고 H 또는 각도 중 하나를 입력하면 나머지 값과 실제 절단 길이가 자동 계산됩니다. 입력값은 브라우저 로컬 저장소에 저장됩니다.</div>
+
+        <div class="pcb-results">
+          <div class="pcb-result"><b>각도 (°)</b><span id="pcbOutAngle">-</span></div>
+          <div class="pcb-result"><b>H 높이차 (mm)</b><span id="pcbOutH">-</span></div>
+          <div class="pcb-result"><b>B 컷백 거리 (mm)</b><span id="pcbOutB">-</span></div>
+          <div class="pcb-result"><b>사선 실제 절단 길이 (mm)</b><span id="pcbOutCutLen">-</span></div>
+          <div class="pcb-result"><b>긴쪽 길이 (mm)</b><span id="pcbOutLong">-</span></div>
+          <div class="pcb-result"><b>짧은쪽 길이 (mm)</b><span id="pcbOutShort">-</span></div>
+          <div class="pcb-result"><b>0.5mm 반올림 절단 길이 (mm)</b><span id="pcbOutRound">-</span></div>
+          <div class="pcb-result"><b>길이 편차 Δ (mm)</b><span id="pcbOutDelta">-</span></div>
+        </div>
+
+        <div class="pcb-svg-wrap">
+          <figure class="pcb-svg-card">
+            <svg id="pcbSvgSide" viewBox="0 0 560 220" role="img" aria-label="파이프 사선 커팅 측면도">
+              <defs>
+                <marker id="pcbArrowA" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="var(--c-primary)"></path>
+                </marker>
+              </defs>
+              <rect x="48" y="58" width="430" height="100" rx="6" fill="none" stroke="var(--c-border-strong)" stroke-width="3"></rect>
+              <line id="pcbCutLineSide" x1="430" y1="58" x2="478" y2="158" stroke="var(--c-primary)" stroke-width="4"></line>
+              <line x1="48" y1="182" x2="478" y2="182" stroke="var(--c-primary)" stroke-width="2" marker-start="url(#pcbArrowA)" marker-end="url(#pcbArrowA)"></line>
+              <line x1="430" y1="40" x2="478" y2="40" stroke="var(--c-primary)" stroke-width="2" marker-start="url(#pcbArrowA)" marker-end="url(#pcbArrowA)"></line>
+              <line x1="430" y1="40" x2="430" y2="58" stroke="var(--c-primary)" stroke-width="2"></line>
+              <line x1="478" y1="40" x2="478" y2="58" stroke="var(--c-primary)" stroke-width="2"></line>
+              <text id="pcbLabelL" x="262" y="202" text-anchor="middle" font-size="15" fill="var(--c-primary)" font-weight="800">L</text>
+              <text id="pcbLabelH" x="454" y="30" text-anchor="middle" font-size="14" fill="var(--c-primary)" font-weight="800">H</text>
+              <text id="pcbLabelAngle" x="402" y="114" text-anchor="end" font-size="14" fill="var(--c-text-sub)" font-weight="700">θ</text>
+              <path d="M400 122 A30 30 0 0 1 430 100" fill="none" stroke="var(--c-text-sub)" stroke-width="2"></path>
+            </svg>
+            <figcaption class="pcb-svg-cap">측면도 (L, H, 각도 θ)</figcaption>
+          </figure>
+
+          <figure class="pcb-svg-card">
+            <svg id="pcbSvgDev" viewBox="0 0 560 220" role="img" aria-label="파이프 전개도와 컷백 거리">
+              <defs>
+                <marker id="pcbArrowB" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="var(--c-primary)"></path>
+                </marker>
+              </defs>
+              <rect x="42" y="48" width="470" height="128" rx="6" fill="none" stroke="var(--c-border-strong)" stroke-width="3"></rect>
+              <line id="pcbCutLineDev" x1="42" y1="62" x2="512" y2="164" stroke="var(--c-primary)" stroke-width="4"></line>
+              <line x1="42" y1="190" x2="512" y2="190" stroke="var(--c-primary)" stroke-width="2" marker-start="url(#pcbArrowB)" marker-end="url(#pcbArrowB)"></line>
+              <text id="pcbLabelCut" x="277" y="208" text-anchor="middle" font-size="15" fill="var(--c-primary)" font-weight="800">실제 절단 길이</text>
+              <line x1="512" y1="48" x2="512" y2="176" stroke="var(--c-primary)" stroke-width="2" marker-start="url(#pcbArrowB)" marker-end="url(#pcbArrowB)"></line>
+              <text id="pcbLabelB" x="526" y="116" font-size="14" fill="var(--c-primary)" font-weight="800">B</text>
+            </svg>
+            <figcaption class="pcb-svg-cap">전개도 (사선 길이, 컷백 거리 B)</figcaption>
+          </figure>
+        </div>
+
+        <ul class="pcb-formula">
+          <li><b>H 계산:</b> H = T × tan(각도)</li>
+          <li><b>각도 계산:</b> 각도 = atan(H / T)</li>
+          <li><b>B 거리:</b> B = H / 2</li>
+          <li><b>실제 절단 길이:</b> √(T² + H²) = T / cos(각도)</li>
+          <li><b>긴쪽/짧은쪽:</b> 긴쪽 = L + B, 짧은쪽 = L - B</li>
+          <li><b>현장 반올림:</b> 0.5mm 단위 반올림 = round(실제 절단 길이 × 2) / 2</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <!-- 튜토리얼 모달 -->
   <div id="tutorialModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" aria-hidden="true">
     <div class="modal-content">
@@ -1542,5 +1704,225 @@
 </script>
 
 <script src="./app.js"></script>
+<script>
+  (() => {
+    const modal = document.getElementById('pipeCutbackModal');
+    const openBtn = document.getElementById('pipeCutbackOpenBtn');
+    const closeBtn = document.getElementById('pipeCutbackCloseBtn');
+    const calcBtn = document.getElementById('pcbCalcBtn');
+    const resetBtn = document.getElementById('pcbResetBtn');
+    if (!modal || !openBtn || !closeBtn || !calcBtn || !resetBtn) return;
+
+    const KEY = 'pipe-cutback-calc-v1';
+    const els = {
+      L: document.getElementById('pcbL'),
+      T: document.getElementById('pcbT'),
+      H: document.getElementById('pcbH'),
+      angle: document.getElementById('pcbAngle'),
+      B: document.getElementById('pcbB'),
+      error: document.getElementById('pcbError'),
+      note: document.getElementById('pcbNote'),
+      outAngle: document.getElementById('pcbOutAngle'),
+      outH: document.getElementById('pcbOutH'),
+      outB: document.getElementById('pcbOutB'),
+      outCutLen: document.getElementById('pcbOutCutLen'),
+      outLong: document.getElementById('pcbOutLong'),
+      outShort: document.getElementById('pcbOutShort'),
+      outRound: document.getElementById('pcbOutRound'),
+      outDelta: document.getElementById('pcbOutDelta'),
+      cutLineSide: document.getElementById('pcbCutLineSide'),
+      cutLineDev: document.getElementById('pcbCutLineDev'),
+      labelL: document.getElementById('pcbLabelL'),
+      labelH: document.getElementById('pcbLabelH'),
+      labelAngle: document.getElementById('pcbLabelAngle'),
+      labelB: document.getElementById('pcbLabelB'),
+      labelCut: document.getElementById('pcbLabelCut')
+    };
+
+    const EDIT_FIELD = { H: 'H', ANGLE: 'angle' };
+    const MAX_ANGLE = 89.9;
+    const H_TOLERANCE_MM = 0.2;
+    const DEG_TO_RAD = Math.PI / 180;
+    const ROUNDING_MULTIPLIER = 2;
+    const SVG_MIN_RATIO = 0.06;
+    const SVG_MAX_RATIO = 0.82;
+    const SVG_T_MULTIPLIER = 2.2;
+    const SVG_MIN_DIVISOR = 1;
+    const SVG_SIDE_OFFSET = 48;
+    const SVG_DEV_BASE_Y1 = 54;
+    const SVG_DEV_SWAY = 72;
+    const SVG_DEV_BASE_Y2 = 170;
+    const parseFloatValue = (v) => Number.parseFloat(String(v ?? '').trim());
+    const has = (n) => Number.isFinite(n) && n > 0;
+    const fmt = (n) => (Number.isFinite(n) ? n.toLocaleString('ko-KR', { maximumFractionDigits: 2 }) : '-');
+    const showError = (msg) => {
+      els.error.hidden = !msg;
+      els.error.textContent = msg || '';
+    };
+
+    function saveInputs() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          L: els.L.value, T: els.T.value, H: els.H.value, angle: els.angle.value, B: els.B.value
+        }));
+      } catch (e) {}
+    }
+
+    function loadInputs() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (data && typeof data === 'object') {
+          ['L', 'T', 'H', 'angle', 'B'].forEach((k) => {
+            if (data[k] != null) els[k].value = String(data[k]);
+          });
+        }
+      } catch (e) {}
+    }
+
+    function render(res) {
+      els.outAngle.textContent = `${fmt(res.angle)}°`;
+      els.outH.textContent = fmt(res.H);
+      els.outB.textContent = fmt(res.B);
+      els.outCutLen.textContent = fmt(res.cutLen);
+      els.outLong.textContent = fmt(res.longSide);
+      els.outShort.textContent = fmt(res.shortSide);
+      els.outRound.textContent = fmt(res.rounded);
+      els.outDelta.textContent = fmt(res.delta);
+
+      const hRatio = Math.max(SVG_MIN_RATIO, Math.min(SVG_MAX_RATIO, res.H / Math.max(res.T * SVG_T_MULTIPLIER, SVG_MIN_DIVISOR)));
+      const sideX1 = 430;
+      const sideX2 = Math.round(sideX1 + SVG_SIDE_OFFSET * hRatio);
+      els.cutLineSide.setAttribute('x1', String(sideX1));
+      els.cutLineSide.setAttribute('x2', String(sideX2));
+      els.labelL.textContent = `L ${fmt(res.L)}mm`;
+      els.labelH.textContent = `H ${fmt(res.H)}mm`;
+      els.labelAngle.textContent = `${fmt(res.angle)}°`;
+
+      const devY1 = Math.round(SVG_DEV_BASE_Y1 + SVG_DEV_SWAY * (1 - hRatio));
+      const devY2 = Math.round(SVG_DEV_BASE_Y2 - SVG_DEV_SWAY * (1 - hRatio));
+      els.cutLineDev.setAttribute('y1', String(devY1));
+      els.cutLineDev.setAttribute('y2', String(devY2));
+      els.labelB.textContent = `B ${fmt(res.B)}mm`;
+      els.labelCut.textContent = `실제 절단 길이 ${fmt(res.cutLen)}mm`;
+    }
+
+    let lastEdited = EDIT_FIELD.ANGLE;
+
+    function calculate() {
+      showError('');
+      const L = parseFloatValue(els.L.value);
+      const T = parseFloatValue(els.T.value);
+      let H = parseFloatValue(els.H.value);
+      let angle = parseFloatValue(els.angle.value);
+      let B = parseFloatValue(els.B.value);
+
+      if (!has(L) || !has(T)) {
+        showError('L, T 값은 0보다 큰 수를 입력하세요.');
+        return;
+      }
+      if (!has(H) && !has(angle)) {
+        showError('H 또는 각도 중 하나는 반드시 입력해야 합니다.');
+        return;
+      }
+
+      if (has(H) && has(angle)) {
+        const hFromAngle = T * Math.tan(angle * DEG_TO_RAD);
+        const hDiff = Math.abs(hFromAngle - H);
+        if (hDiff > H_TOLERANCE_MM) {
+          if (lastEdited === EDIT_FIELD.ANGLE) H = hFromAngle;
+          else angle = Math.atan(H / T) * (180 / Math.PI);
+        }
+      } else if (has(H) && !has(angle)) {
+        angle = Math.atan(H / T) * (180 / Math.PI);
+      } else if (!has(H) && has(angle)) {
+        if (angle > MAX_ANGLE) {
+          showError(`각도는 ${MAX_ANGLE}° 이하로 입력하세요.`);
+          return;
+        }
+        H = T * Math.tan(angle * DEG_TO_RAD);
+      }
+
+      if (!has(angle) || angle > MAX_ANGLE || angle <= 0) {
+        showError(`각도는 0° 초과 ${MAX_ANGLE}° 이하 범위여야 합니다.`);
+        return;
+      }
+      if (!has(H)) {
+        showError('계산된 H 값이 유효하지 않습니다.');
+        return;
+      }
+
+      if (!has(B)) B = H / 2;
+      const cutLen = Math.sqrt((T * T) + (H * H));
+      const rounded = Math.round(cutLen * ROUNDING_MULTIPLIER) / ROUNDING_MULTIPLIER; // nearest 0.5mm
+      const longSide = L + B;
+      const shortSide = L - B;
+      const delta = longSide - shortSide;
+      if (shortSide <= 0) {
+        showError('짧은쪽 길이가 0 이하입니다. L 또는 B를 조정하세요.');
+        return;
+      }
+
+      els.H.value = H.toFixed(2);
+      els.angle.value = angle.toFixed(2);
+      els.B.value = B.toFixed(2);
+      saveInputs();
+
+      const drift = Math.abs((T * Math.tan(angle * DEG_TO_RAD)) - H);
+      els.note.textContent = drift > H_TOLERANCE_MM
+        ? `입력한 H와 각도 값의 오차가 있어 마지막 수정 필드 기준으로 보정했습니다 (오차 ${fmt(drift)}mm).`
+        : '입력값이 정상입니다. 결과를 도면/절단 작업에 맞게 확인하세요.';
+
+      render({ L, T, H, angle, B, cutLen, rounded, longSide, shortSide, delta });
+    }
+
+    function openModal() {
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+      els.L.focus();
+      calculate();
+    }
+
+    function closeModal() {
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      openBtn.focus();
+    }
+
+    function resetInputs() {
+      els.L.value = '1000';
+      els.T.value = '114.3';
+      els.H.value = '66.0';
+      els.angle.value = '30';
+      els.B.value = '33.0';
+      saveInputs();
+      calculate();
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    calcBtn.addEventListener('click', calculate);
+    resetBtn.addEventListener('click', resetInputs);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+    });
+    [els.L, els.T, els.H, els.angle, els.B].forEach((input) => {
+      input.addEventListener('input', saveInputs);
+      if (input === els.H) input.addEventListener('input', () => { lastEdited = EDIT_FIELD.H; });
+      if (input === els.angle) input.addEventListener('input', () => { lastEdited = EDIT_FIELD.ANGLE; });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          calculate();
+        }
+      });
+    });
+
+    loadInputs();
+    calculate();
+  })();
+</script>
 </body>
 </html>
