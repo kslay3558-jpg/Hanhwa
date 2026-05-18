@@ -1391,7 +1391,7 @@
 
   try {
     const app = initializeApp(firebaseConfig);
-    getAnalytics(app);
+    try { getAnalytics(app); } catch (_) { /* Analytics 실패는 게시판 동작과 무관 */ }
     window._fbDb = getFirestore(app);
     window._fbFS = { collection, getDocs, addDoc, deleteDoc, doc, getDoc, query, orderBy };
   } catch (e) {

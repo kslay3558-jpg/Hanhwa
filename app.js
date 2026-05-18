@@ -2642,8 +2642,8 @@
     },
 
     /* ── Firestore 경로 헬퍼 ── */
-    _col()       { return window._fbFS.collection(_fbDb, POSTS_COL); },
-    _doc(postId) { return window._fbFS.doc(_fbDb, POSTS_COL, postId); },
+    _col()       { return window._fbFS.collection(window._fbDb, POSTS_COL); },
+    _doc(postId) { return window._fbFS.doc(window._fbDb, POSTS_COL, postId); },
 
     /* ------------------------------------------------------------------
      * load() — 게시글 목록을 최신순으로 반환
@@ -2693,6 +2693,13 @@
       statusEl.textContent = label;
     }
     setStatus('checking', '확인 중');
+
+    // ── Firebase 초기화 여부 확인 ───────────────────────────────────────────
+    if (!window._fbDb || !window._fbFS) {
+      setStatus('offline', '서버 연결 안됨');
+      body.appendChild(el('p', { class: 'board-empty' }, '❌ Firebase가 초기화되지 않았습니다. 새로고침 후 다시 시도해주세요.'));
+      return;
+    }
 
     // ── Write form ─────────────────────────────────────────────────────
     const writeSection   = el('div', { class: 'board-write-section' });
