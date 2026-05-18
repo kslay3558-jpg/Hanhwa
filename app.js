@@ -3143,16 +3143,21 @@
       return NaN;
     }
 
-    const targetDataLine = dataLines.find(line => {
-      const timeTokens = splitKmaLine(line);
-      return timeTokens.some(token => token === '12:00');
-    });
+    let targetDataLine = '';
+    let tokens = [];
+    for (const line of dataLines) {
+      const lineTokens = splitKmaLine(line);
+      if (lineTokens.some(token => token === '12:00')) {
+        targetDataLine = line;
+        tokens = lineTokens;
+        break;
+      }
+    }
     if (!targetDataLine) {
       console.warn('[KMA] 12:00 데이터 줄을 찾지 못했습니다.');
       return NaN;
     }
 
-    const tokens = splitKmaLine(targetDataLine);
     if (!tokens.length) {
       console.warn('KMA temperature alert parse failed: 12:00 data line is empty');
       return NaN;
