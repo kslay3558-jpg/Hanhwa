@@ -172,6 +172,21 @@
     cursor: pointer; font-size: 1rem; transition: background var(--m-fast), color var(--m-fast), transform var(--m-fast);
     touch-action: manipulation; white-space: nowrap;
   }
+  .pipe-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+  .pipe-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  .guide-icon .pipe-icon svg {
+    width: 24px;
+    height: 24px;
+  }
   a.icon-btn { text-decoration: none; }
   .icon-btn[data-action="open-tutorial"] { width: auto; padding: 0 10px; font-size: 0.8rem; font-weight: 600; }
   .help-btn { background: var(--c-primary) !important; color: #fff !important; border-color: var(--c-primary) !important; box-shadow: var(--e-1); }
@@ -1077,7 +1092,15 @@
         </select>
       </div>
       <button class="icon-btn" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
-      <a class="icon-btn" href="./Cal.html" data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc" title="파이프 사선 커팅 계산기 열기" aria-label="파이프 사선 커팅 계산기 열기">✂️</a>
+      <a class="icon-btn" href="./Cal.html" data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc" title="파이프 사선 커팅 계산기 열기" aria-label="파이프 사선 커팅 계산기 열기">
+        <span class="pipe-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+            <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+            <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
+          </svg>
+        </span>
+      </a>
       <button class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">❓ 도움말</button>
     </div>
   </header>
@@ -1442,8 +1465,16 @@
           <div class="guide-text"><h4 data-i18n="tut.s4_t">4. 결과 복사</h4><p data-i18n="tut.s4_d">집계 후 📋 복사 버튼(또는 Ctrl+C)으로 결과를 클립보드에 복사할 수 있습니다.</p></div>
         </div>
         <div class="guide-item">
-          <div class="guide-icon" aria-hidden="true">✂️</div>
-          <div class="guide-text"><h4 data-i18n="tut.s5_t">5. 파이프 커팅 계산기</h4><p data-i18n="tut.s5_d">상단 ✂️ 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.</p></div>
+          <div class="guide-icon" aria-hidden="true">
+            <span class="pipe-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+                <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+                <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
+              </svg>
+            </span>
+          </div>
+          <div class="guide-text"><h4 data-i18n="tut.s5_t">5. 파이프 커팅 계산기 바로가기</h4><p data-i18n="tut.s5_d">상단 파이프 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.</p></div>
         </div>
       </div>
       <div class="modal-actions">
