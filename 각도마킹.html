@@ -38,6 +38,8 @@
             --radius-sm: 10px;
             --motion: 180ms cubic-bezier(.4, 0, .2, 1);
             --stage-height: clamp(360px, 58vw, 520px);
+            --diagonal-rotation: -7deg;
+            --angle-card-width: 96%;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -80,7 +82,7 @@
                 linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent 24%),
                 var(--bg);
             color: var(--text);
-            padding: 20px;
+            padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
         }
 
         .app-shell {
@@ -285,12 +287,12 @@
         }
 
         .field-card.diagonal {
-            transform: rotate(-7deg);
+            transform: rotate(var(--diagonal-rotation));
             transform-origin: center;
         }
 
         .field-card.angle-card {
-            width: 96%;
+            width: var(--angle-card-width);
             margin-left: auto;
         }
 
@@ -936,6 +938,18 @@
             return digits > 0 ? fixed.replace(/\.?0+$/, '') : fixed;
         }
 
+        function validatePositive(value, label) {
+            if (value <= 0) throw new Error(`${label}은 0보다 커야 합니다.`);
+        }
+
+        function validateAngle(value) {
+            if (value <= 0 || value >= 90) throw new Error('각도는 0° 초과 90° 미만이어야 합니다.');
+        }
+
+        function validateHypotenuse(hypotenuse, side, sideName) {
+            if (hypotenuse <= side) throw new Error(`대각선은 ${sideName}보다 길어야 합니다.`);
+        }
+
         function updateStatus() {
             const count = userInputs.length;
             const ready = count === 2;
@@ -1028,35 +1042,35 @@
 
             try {
                 if (b !== undefined && h !== undefined) {
-                    if (b <= 0) throw new Error('밑변은 0보다 커야 합니다.');
-                    if (h <= 0) throw new Error('높이는 0보다 커야 합니다.');
+                    validatePositive(b, '밑변');
+                    validatePositive(h, '높이');
                     hyp = Math.sqrt((b * b) + (h * h));
                     a = toDeg(Math.atan(h / b));
                 } else if (b !== undefined && hyp !== undefined) {
-                    if (b <= 0) throw new Error('밑변은 0보다 커야 합니다.');
-                    if (hyp <= 0) throw new Error('대각선은 0보다 커야 합니다.');
-                    if (b >= hyp) throw new Error('대각선은 밑변보다 길어야 합니다.');
+                    validatePositive(b, '밑변');
+                    validatePositive(hyp, '대각선');
+                    validateHypotenuse(hyp, b, '밑변');
                     h = Math.sqrt((hyp * hyp) - (b * b));
                     a = toDeg(Math.acos(b / hyp));
                 } else if (b !== undefined && a !== undefined) {
-                    if (b <= 0) throw new Error('밑변은 0보다 커야 합니다.');
-                    if (a <= 0 || a >= 90) throw new Error('각도는 0° 초과 90° 미만이어야 합니다.');
+                    validatePositive(b, '밑변');
+                    validateAngle(a);
                     h = b * Math.tan(toRad(a));
                     hyp = b / Math.cos(toRad(a));
                 } else if (h !== undefined && hyp !== undefined) {
-                    if (h <= 0) throw new Error('높이는 0보다 커야 합니다.');
-                    if (hyp <= 0) throw new Error('대각선은 0보다 커야 합니다.');
-                    if (h >= hyp) throw new Error('대각선은 높이보다 길어야 합니다.');
+                    validatePositive(h, '높이');
+                    validatePositive(hyp, '대각선');
+                    validateHypotenuse(hyp, h, '높이');
                     b = Math.sqrt((hyp * hyp) - (h * h));
                     a = toDeg(Math.asin(h / hyp));
                 } else if (h !== undefined && a !== undefined) {
-                    if (h <= 0) throw new Error('높이는 0보다 커야 합니다.');
-                    if (a <= 0 || a >= 90) throw new Error('각도는 0° 초과 90° 미만이어야 합니다.');
+                    validatePositive(h, '높이');
+                    validateAngle(a);
                     b = h / Math.tan(toRad(a));
                     hyp = h / Math.sin(toRad(a));
                 } else if (hyp !== undefined && a !== undefined) {
-                    if (hyp <= 0) throw new Error('대각선은 0보다 커야 합니다.');
-                    if (a <= 0 || a >= 90) throw new Error('각도는 0° 초과 90° 미만이어야 합니다.');
+                    validatePositive(hyp, '대각선');
+                    validateAngle(a);
                     b = hyp * Math.cos(toRad(a));
                     h = hyp * Math.sin(toRad(a));
                 }
