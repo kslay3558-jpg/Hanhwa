@@ -707,7 +707,7 @@
     <main class="app-shell">
         <section class="hero">
             <div class="hero-content">
-                <span class="eyebrow">📐 도면 각도 마킹 · 프로덕트 업그레이드</span>
+                <span class="eyebrow">📐 도면 각도 마킹 — 프로덕트 업그레이드</span>
                 <div>
                     <h1>도면 각도 마킹 계산기</h1>
                     <p>높이, 밑변, 대각선, 각도 중 <strong>2개만 입력</strong>하면 나머지 치수를 즉시 계산합니다. SVG 도형 위에 직접 값을 입력하면서, 입력 상태와 단위 정보를 한 화면에서 직관적으로 확인할 수 있게 정리했습니다.</p>
@@ -841,7 +841,7 @@
                         <span class="legend-item"><span class="legend-swatch user"></span>직접 입력한 값</span>
                         <span class="legend-item"><span class="legend-swatch calc"></span>자동 계산된 값</span>
                     </div>
-                    <span class="helper-copy">숫자는 양수만 허용되며, 각도는 0° 초과 90° 미만이어야 합니다.</span>
+                    <span class="helper-copy" id="validation-copy"></span>
                 </div>
 
                 <div class="controls-row">
@@ -902,9 +902,11 @@
         const statusPill = document.getElementById('status-pill');
         const toast = document.getElementById('toast');
         const liveRegion = document.getElementById('live-region');
+        const validationCopy = document.getElementById('validation-copy');
         const segments = document.querySelectorAll('[data-segment]');
 
-        const TOAST_DURATION_MS = 2600;
+        const VALIDATION_COPY = '숫자는 양수만 허용되며, 각도는 0° 초과 90° 미만이어야 합니다.';
+        const TOAST_DURATION_MS = 2500;
 
         let userInputs = [];
         let toastTimer;
@@ -1096,6 +1098,7 @@
             clearCalculated();
         }
 
+        validationCopy.textContent = VALIDATION_COPY;
         updateVisualState();
     </script>
 </body>
