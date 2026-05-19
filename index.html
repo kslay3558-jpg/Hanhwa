@@ -152,9 +152,15 @@
     opacity: .85;
   }
   /* brand: 최소 200px flex-basis로 controls에 밀려 0px가 되는 현상 방지 */
-  .app-header .brand { flex: 1 1 200px; min-width: 0; }
+  .app-header .brand { flex: 1 1 200px; min-width: 0; padding-right: 52px; }
   .app-header .brand h1 { line-height: 1.2; }
   .app-header .brand p { color: var(--c-text-mute); font-size: .78rem; margin-top: 3px; font-weight: 500; }
+  .app-header .header-theme-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+  }
   /* controls: min-width 0으로 flex-shrink가 제대로 동작하게 함 */
   .app-header .controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-width: 0; }
 
@@ -1080,6 +1086,7 @@
       <h1 data-i18n="app.title">설비/배관 자재 계산기</h1>
       <p data-i18n="app.subtitle">JIS 규격 기반 · 오프라인 PWA</p>
     </div>
+    <button class="icon-btn header-theme-toggle" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
     <div class="controls" role="toolbar" data-i18n-attr="aria-label:app.toolbar" aria-label="앱 도구">
       <div class="lang-picker" data-i18n-attr="aria-label:tb.lang">
         <label class="sr-only" for="langSelect" data-i18n="tb.lang_select">언어 선택</label>
@@ -1089,7 +1096,6 @@
           <option value="id">🇮🇩 Bahasa Indonesia</option>
         </select>
       </div>
-      <button class="icon-btn" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
       <a class="icon-btn" href="./Cal.html" data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc" title="파이프 사선 커팅 계산기 열기" aria-label="파이프 사선 커팅 계산기 열기">
         <span class="pipe-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none">
