@@ -204,17 +204,16 @@
     background: var(--c-surface-2);
     border: 1px solid var(--c-border);
     border-radius: 999px;
-    padding: 0 4px 0 10px;
+    padding: 0 4px 0 8px;
     height: 36px;
     transition: border-color var(--m-fast);
   }
   .lang-picker:hover, .lang-picker:focus-within { border-color: var(--c-focus); }
-  .lang-picker .lp-icon { font-size: .95rem; pointer-events: none; }
   .lang-picker select {
     appearance: none; -webkit-appearance: none;
     background: transparent; border: none; outline: none;
     color: var(--c-text); font-weight: 700; font-size: .82rem;
-    padding: 0 22px 0 6px; height: 34px; cursor: pointer;
+    padding: 0 22px 0 8px; height: 34px; cursor: pointer;
     background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
                       linear-gradient(135deg, currentColor 50%, transparent 50%);
     background-position: calc(100% - 12px) 14px, calc(100% - 7px) 14px;
@@ -1083,7 +1082,6 @@
     </div>
     <div class="controls" role="toolbar" data-i18n-attr="aria-label:app.toolbar" aria-label="앱 도구">
       <div class="lang-picker" data-i18n-attr="aria-label:tb.lang">
-        <span class="lp-icon" aria-hidden="true">🌐</span>
         <label class="sr-only" for="langSelect" data-i18n="tb.lang_select">언어 선택</label>
         <select id="langSelect" data-action="lang-change" data-i18n-attr="aria-label:tb.lang_select" aria-label="언어 선택">
           <option value="ko">🇰🇷 한국어</option>
