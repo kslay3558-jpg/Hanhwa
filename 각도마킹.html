@@ -7,7 +7,6 @@
     <meta name="color-scheme" content="light dark">
     <title>도면 각도 마킹 계산기</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&display=swap');
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
         :root {
@@ -960,7 +959,8 @@
         }
 
         function formatResult(value, digits) {
-            return value.toFixed(digits).replace(/\.0+$|(?<=\.[0-9]*[1-9])0+$/g, '');
+            const fixed = value.toFixed(digits);
+            return fixed.includes('.') ? fixed.replace(/\.?0+$/, '') : fixed;
         }
 
         function setSvgValue(key, displayValue, stateClass = '') {
