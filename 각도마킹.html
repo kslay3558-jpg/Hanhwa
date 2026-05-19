@@ -931,7 +931,7 @@
         const liveRegion = document.getElementById('live-region');
         const segments = document.querySelectorAll('[data-segment]');
 
-        const TOAST_DURATION = 2600;
+        const TOAST_DURATION_MS = 2600;
 
         let userInputs = [];
         let toastTimer;
@@ -951,13 +951,13 @@
             window.clearTimeout(toastTimer);
             toast.textContent = message;
             toast.classList.add('show');
-            toastTimer = window.setTimeout(() => toast.classList.remove('show'), TOAST_DURATION);
+            toastTimer = window.setTimeout(() => toast.classList.remove('show'), TOAST_DURATION_MS);
         }
 
         function parseValue(value) {
             if (value === '') return undefined;
             const parsed = parseFloat(value);
-            return Number.isFinite(parsed) ? parsed : NaN;
+            return Number.isFinite(parsed) ? parsed : undefined;
         }
 
         function formatResult(value, digits) {
