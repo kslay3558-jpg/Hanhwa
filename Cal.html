@@ -1471,7 +1471,7 @@
                     stroke-linecap="round"
                   />
 
-                  <text id="cutLabel" x="289" y="263" text-anchor="middle" class="svg-small svg-accent-red">
+                  <text id="tutorialCutLabel" x="289" y="263" text-anchor="middle" class="svg-small svg-accent-red">
                     ③ 절단선
                   </text>
 
@@ -2014,7 +2014,7 @@
         tutorialStep2: "tutorialStep2",
         tutorialStep3: "tutorialStep3",
         tutorialBaseLine: "tutorialBaseLine",
-        cutLabel: "tutorialCutLine",
+        tutorialCutLabel: "tutorialCutLine",
         bLabel1: "tutorialBLabel",
         longReferenceLabel: "tutorialLongRef",
         shortLabel: "tutorialShortPoint",
@@ -2068,7 +2068,7 @@
         try {
           localStorage.setItem(LANG_KEY, state.language);
         } catch (error) {
-          // Ignore storage save failures and continue with the in-memory language state.
+          // Ignore storage save failures; the selected language still applies now, but it will not persist across reloads.
         }
       }
       applyLanguage();
@@ -2095,6 +2095,7 @@
     function formatNumber(value) {
       const unit = getRoundUnit();
       const rounded = roundBy(value, unit);
+      // Whole-millimeter rounding is shown as an integer, while finer rounding keeps one decimal place.
       return unit >= 1 ? rounded.toFixed(0) : rounded.toFixed(1);
     }
 
@@ -2162,7 +2163,7 @@
       $("bLine").setAttribute("y2", bottomY);
       $("shortPoint").setAttribute("cy", topY);
       $("shortLabel").setAttribute("y", topY - 8);
-      $("cutLabel").setAttribute("y", topY + 18);
+      $("tutorialCutLabel").setAttribute("y", topY + 18);
 
       const midY = (topY + bottomY) / 2;
       $("bLabel1").setAttribute("y", midY - 8);
