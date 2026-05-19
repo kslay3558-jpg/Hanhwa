@@ -885,7 +885,7 @@
         const segments = document.querySelectorAll('[data-segment]');
 
         const VALIDATION_COPY = '숫자는 양수만 허용되며, 각도는 0° 초과 90° 미만이어야 합니다.';
-        const TOAST_DURATION_MS = 2500;
+        const TOAST_DURATION_MS = 3000;
 
         let userInputs = [];
         let toastTimer;
@@ -929,6 +929,10 @@
 
         function validateHypotenuse(hypotenuse, side, sideName) {
             if (hypotenuse <= side) throw new Error(`대각선은 ${sideName}보다 길어야 합니다.`);
+        }
+
+        function derivePythagoreanSide(hypotenuse, knownSide) {
+            return Math.sqrt((hypotenuse * hypotenuse) - (knownSide * knownSide));
         }
 
         function updateStatus() {
@@ -1011,7 +1015,7 @@
             const values = {};
             for (const key of userInputs) {
                 values[key] = parseValue(fields[key].input.value);
-                if (!Number.isFinite(values[key])) {
+                if (values[key] === undefined) {
                     throwCalculationError('유효한 숫자를 입력해 주세요.');
                     return;
                 }
@@ -1025,13 +1029,13 @@
                 if (b !== undefined && h !== undefined) {
                     validatePositive(b, '밑변');
                     validatePositive(h, '높이');
-                    hyp = Math.sqrt((b * b) + (h * h));
+                    hyp = Math.hypot(b, h);
                     a = toDeg(Math.atan(h / b));
                 } else if (b !== undefined && hyp !== undefined) {
                     validatePositive(b, '밑변');
                     validatePositive(hyp, '대각선');
                     validateHypotenuse(hyp, b, '밑변');
-                    h = Math.sqrt((hyp * hyp) - (b * b));
+                    h = derivePythagoreanSide(hyp, b);
                     a = toDeg(Math.acos(b / hyp));
                 } else if (b !== undefined && a !== undefined) {
                     validatePositive(b, '밑변');
@@ -1042,7 +1046,7 @@
                     validatePositive(h, '높이');
                     validatePositive(hyp, '대각선');
                     validateHypotenuse(hyp, h, '높이');
-                    b = Math.sqrt((hyp * hyp) - (h * h));
+                    b = derivePythagoreanSide(hyp, h);
                     a = toDeg(Math.asin(h / hyp));
                 } else if (h !== undefined && a !== undefined) {
                     validatePositive(h, '높이');
