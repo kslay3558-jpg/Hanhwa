@@ -1893,7 +1893,7 @@
         const saved = localStorage.getItem(LANG_KEY);
         if (saved && I18N[saved]) return saved;
       } catch (error) {
-        // Ignore storage read failures and fall back to browser language detection.
+        // Ignore storage load failures and fall back to browser language detection.
       }
       const browserLang = (navigator.language || "ko").toLowerCase();
       if (browserLang.startsWith("vi")) return "vi";
@@ -2068,7 +2068,7 @@
         try {
           localStorage.setItem(LANG_KEY, state.language);
         } catch (error) {
-          // Ignore storage write failures and continue with the in-memory language state.
+          // Ignore storage save failures and continue with the in-memory language state.
         }
       }
       applyLanguage();
