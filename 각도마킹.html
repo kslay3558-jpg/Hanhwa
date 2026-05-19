@@ -642,29 +642,38 @@
 
         @media (max-width: 720px) {
             body {
-                padding: 12px;
+                padding: 8px;
             }
 
-            .hero,
+            .hero {
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+
             .content {
-                padding-left: 18px;
-                padding-right: 18px;
+                padding-left: 6px;
+                padding-right: 6px;
             }
 
             .panel-head {
                 align-items: flex-start;
                 flex-direction: column;
+                padding-left: 14px;
+                padding-right: 14px;
             }
 
             .calc-stage {
-                min-height: clamp(620px, 100dvh - 220px, 760px);
-                padding: 16px;
+                margin: 6px;
+                padding: 10px;
+                min-height: unset;
+                aspect-ratio: 600 / 440;
+                border-radius: 18px;
             }
 
             .triangle-svg {
-                inset: 10px;
-                width: calc(100% - 20px);
-                height: calc(100% - 20px);
+                inset: 6px;
+                width: calc(100% - 12px);
+                height: calc(100% - 12px);
             }
 
             .field-name {
@@ -684,6 +693,17 @@
             .controls-row .button {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .stage-footer {
+                margin-left: 14px;
+                margin-right: 14px;
+            }
+
+            .controls-row,
+            .note-grid {
+                padding-left: 14px;
+                padding-right: 14px;
             }
         }
     </style>
