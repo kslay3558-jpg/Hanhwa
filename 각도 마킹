@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>직관형 직각삼각형 계산기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .calc-container {
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        /* SVG & Input Overlay Container */
+        .triangle-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3; /* 캔버스 비율 확보 */
+            margin: 20px 0;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px dashed #cbd5e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .triangle-svg {
+            width: 80%;
+            height: 80%;
+            overflow: visible;
+        }
+
+        /* 삼각형 선 스타일 */
+        .tri-line {
+            stroke: #3b82f6;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: rgba(59, 130, 246, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* 입력창 스타일 */
+        .floating-input-wrapper {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translate(-50%, -50%); /* 중앙 정렬용 */
+            z-index: 10;
+        }
+
+        .floating-input {
+            width: 70px;
+            height: 36px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+            background-color: white;
+            color: #1e293b;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            -moz-appearance: textfield; /* Firefox 화살표 제거 */
+        }
+        
+        /* Webkit 화살표 제거 */
+        .floating-input::-webkit-outer-spin-button,
+        .floating-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .floating-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            width: 80px; /* 포커스 시 살짝 커짐 */
+        }
+
+        .unit-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            margin-top: 2px;
+            background: rgba(255,255,255,0.8);
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+
+        /* 상태별 입력창 색상 */
+        .input-user {
+            border-color: #3b82f6 !important;
+            color: #1d4ed8 !important;
+            background-color: #eff6ff;
+        }
+
+        .input-calc {
+            border-color: #10b981 !important;
+            color: #047857 !important;
+            background-color: #ecfdf5;
+        }
+
+        /* 입력창 위치 (반응형 대응을 위해 % 사용) */
+        #wrap-height { top: 50%; left: 10%; }
+        #wrap-base { top: 90%; left: 50%; }
+        #wrap-hypo { top: 45%; left: 55%; transform: translate(-50%, -50%) rotate(0deg); }
+        #wrap-angle { top: 80%; left: 80%; }
+
+        /* 토스트 알림 */
+        #toast {
+            position: fixed;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ef4444;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 50;
+        }
+        #toast.show {
+            bottom: 30px;
+            opacity: 1;
+        }
+
+        /* 모바일 최적화 버튼 */
+        .btn-reset {
+            background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+            border: 1px solid #cbd5e1;
+            color: #475569;
+            font-weight: 600;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+        .btn-reset:active {
+            background: #cbd5e1;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calc-container">
+        <div class="text-center mb-2">
+            <h1 class="text-2xl font-extrabold text-slate-800 tracking-tight">도면 마킹 계산기</h1>
+            <p class="text-sm text-slate-500 mt-1">도면의 빈칸 중 <span class="font-bold text-blue-600">2개</span>만 입력하세요.</p>
+        </div>
+
+        <div class="flex justify-center gap-4 mb-4 text-xs font-bold">
+            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-100 border-2 border-blue-500 rounded inline-block"></span> 입력값</div>
+            <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-100 border-2 border-green-500 rounded inline-block"></span> 계산됨</div>
+        </div>
+
+        <div class="triangle-wrapper" id="tri-container">
+            <!-- 고정된 직각삼각형 SVG 배경 -->
+            <svg class="triangle-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                <!-- 직각 표시 -->
+                <path d="M 10 90 L 15 90 L 15 85" fill="none" stroke="#94a3b8" stroke-width="1.5" />
+                <!-- 각도 표시 (호) -->
+                <path d="M 85 90 A 15 15 0 0 0 77 81" fill="none" stroke="#f59e0b" stroke-width="2" />
+                <!-- 메인 삼각형 -->
+                <polygon points="10,90 90,90 10,10" class="tri-line" id="main-tri"/>
+            </svg>
+
+            <!-- 공중에 떠있는 입력창들 (Absolute Positioning) -->
+            <!-- 높이 (좌측) -->
+            <div class="floating-input-wrapper" id="wrap-height">
+                <input type="number" id="inp-h" class="floating-input" placeholder="높이" inputmode="decimal">
+                <span class="unit-label">mm</span>
+            </div>
+
+            <!-- 밑변 (하단) -->
+            <div class="floating-input-wrapper" id="wrap-base">
+                <input type="number" id="inp-b" class="floating-input" placeholder="밑변" inputmode="decimal">
+                <span class="unit-label">mm</span>
+            </div>
+
+            <!-- 빗변 (대각선) -->
+            <div class="floating-input-wrapper" id="wrap-hypo">
+                <input type="number" id="inp-hyp" class="floating-input" placeholder="대각선" inputmode="decimal">
+                <span class="unit-label">mm</span>
+            </div>
+
+            <!-- 각도 (우측 하단) -->
+            <div class="floating-input-wrapper" id="wrap-angle">
+                <input type="number" id="inp-a" class="floating-input" placeholder="각도" inputmode="decimal">
+                <span class="unit-label">° (도)</span>
+            </div>
+        </div>
+
+        <button class="btn-reset" onclick="resetAll()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline-block w-5 h-5 mr-1 align-text-bottom" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            전체 지우기
+        </button>
+    </div>
+
+    <!-- 에러 알림창 -->
+    <div id="toast">오류입니다.</div>
+
+    <script>
+        const els = {
+            b: document.getElementById('inp-b'),
+            h: document.getElementById('inp-h'),
+            hyp: document.getElementById('inp-hyp'),
+            a: document.getElementById('inp-a')
+        };
+        
+        let userInputs = []; // 사용자가 직접 입력한 순서 기록
+
+        // 모든 입력창에 이벤트 리스너 달기
+        Object.keys(els).forEach(key => {
+            els[key].addEventListener('input', function(e) {
+                handleInput(key, this.value);
+            });
+            // 클릭(포커스) 시 내용을 쉽게 지울 수 있도록 전체 선택
+            els[key].addEventListener('focus', function() {
+                this.select();
+            });
+        });
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        function handleInput(key, val) {
+            // 값이 비워지면 목록에서 제거
+            if (val === '') {
+                userInputs = userInputs.filter(k => k !== key);
+                els[key].classList.remove('input-user');
+                clearCalculated();
+                return;
+            }
+
+            // 새롭게 입력된 경우
+            if (!userInputs.includes(key)) {
+                userInputs.push(key);
+                // 3개가 입력되려고 하면 가장 처음 입력한 것을 취소시킴
+                if (userInputs.length > 2) {
+                    const removedKey = userInputs.shift();
+                    els[removedKey].value = '';
+                    els[removedKey].classList.remove('input-user');
+                }
+            }
+
+            // 스타일 적용
+            Object.keys(els).forEach(k => {
+                if (userInputs.includes(k)) {
+                    els[k].classList.add('input-user');
+                    els[k].classList.remove('input-calc');
+                } else {
+                    els[k].classList.remove('input-user');
+                }
+            });
+
+            // 2개가 모이면 계산 실행
+            if (userInputs.length === 2) {
+                calculate();
+            } else {
+                clearCalculated(); // 1개일 땐 나머지 계산 결과 지우기
+            }
+        }
+
+        function clearCalculated() {
+            Object.keys(els).forEach(k => {
+                if (!userInputs.includes(k)) {
+                    els[k].value = '';
+                    els[k].classList.remove('input-calc');
+                }
+            });
+        }
+
+        function resetAll() {
+            userInputs = [];
+            Object.keys(els).forEach(k => {
+                els[k].value = '';
+                els[k].classList.remove('input-user', 'input-calc');
+            });
+        }
+
+        function calculate() {
+            // 입력값 파싱
+            const vals = {};
+            userInputs.forEach(k => {
+                vals[k] = parseFloat(els[k].value);
+            });
+
+            let b = vals.b;     // 밑변
+            let h = vals.h;     // 높이
+            let hyp = vals.hyp; // 빗변
+            let a = vals.a;     // 각도
+
+            const rad = (deg) => deg * (Math.PI / 180);
+            const deg = (rad) => rad * (180 / Math.PI);
+
+            try {
+                // 어떤 2개가 입력되었는지에 따라 나머지 계산
+                if (b !== undefined && h !== undefined) {
+                    if (b <= 0 || h <= 0) throw "0보다 커야 합니다.";
+                    hyp = Math.sqrt(b*b + h*h);
+                    a = deg(Math.atan(h/b));
+                }
+                else if (b !== undefined && hyp !== undefined) {
+                    if (b <= 0 || hyp <= 0) throw "0보다 커야 합니다.";
+                    if (b >= hyp) throw "대각선이 밑변보다 길어야 합니다.";
+                    h = Math.sqrt(hyp*hyp - b*b);
+                    a = deg(Math.acos(b/hyp));
+                }
+                else if (b !== undefined && a !== undefined) {
+                    if (b <= 0) throw "밑변은 0보다 커야 합니다.";
+                    if (a <= 0 || a >= 90) throw "각도는 0~90도 사이여야 합니다.";
+                    h = b * Math.tan(rad(a));
+                    hyp = b / Math.cos(rad(a));
+                }
+                else if (h !== undefined && hyp !== undefined) {
+                    if (h <= 0 || hyp <= 0) throw "0보다 커야 합니다.";
+                    if (h >= hyp) throw "대각선이 높이보다 길어야 합니다.";
+                    b = Math.sqrt(hyp*hyp - h*h);
+                    a = deg(Math.asin(h/hyp));
+                }
+                else if (h !== undefined && a !== undefined) {
+                    if (h <= 0) throw "높이는 0보다 커야 합니다.";
+                    if (a <= 0 || a >= 90) throw "각도는 0~90도 사이여야 합니다.";
+                    b = h / Math.tan(rad(a));
+                    hyp = h / Math.sin(rad(a));
+                }
+                else if (hyp !== undefined && a !== undefined) {
+                    if (hyp <= 0) throw "대각선은 0보다 커야 합니다.";
+                    if (a <= 0 || a >= 90) throw "각도는 0~90도 사이여야 합니다.";
+                    b = hyp * Math.cos(rad(a));
+                    h = hyp * Math.sin(rad(a));
+                }
+
+                // 결과 출력 (사용자가 입력하지 않은 칸에만)
+                setResult('b', b, 1);
+                setResult('h', h, 1);
+                setResult('hyp', hyp, 1);
+                setResult('a', a, 2); // 각도는 소수점 2자리
+
+            } catch (err) {
+                showToast(err);
+                clearCalculated();
+            }
+        }
+
+        function setResult(key, val, fixed) {
+            if (!userInputs.includes(key)) {
+                els[key].value = val.toFixed(fixed);
+                els[key].classList.add('input-calc');
+            }
+        }
+    </script>
+</body>
+</html>
