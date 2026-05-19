@@ -681,7 +681,7 @@
             }
 
             .calc-stage {
-                min-height: 610px;
+                min-height: clamp(560px, 100dvh - 260px, 680px);
                 padding: 18px;
             }
 
@@ -713,7 +713,7 @@
     <main class="app-shell">
         <section class="hero">
             <div class="hero-content">
-                <span class="eyebrow">📐 Angle Marking · Product Upgrade</span>
+                <span class="eyebrow">📐 도면 각도 마킹 · 프로덕트 업그레이드</span>
                 <div>
                     <h1>도면 각도 마킹 계산기</h1>
                     <p>높이, 밑변, 대각선, 각도 중 <strong>2개만 입력</strong>하면 나머지 치수를 즉시 계산합니다. SVG 도면, 입력 상태, 단위 정보까지 한 화면에서 직관적으로 확인할 수 있게 정리했습니다.</p>
@@ -931,6 +931,8 @@
         const liveRegion = document.getElementById('live-region');
         const segments = document.querySelectorAll('[data-segment]');
 
+        const TOAST_DURATION = 2600;
+
         let userInputs = [];
         let toastTimer;
 
@@ -949,7 +951,7 @@
             window.clearTimeout(toastTimer);
             toast.textContent = message;
             toast.classList.add('show');
-            toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2600);
+            toastTimer = window.setTimeout(() => toast.classList.remove('show'), TOAST_DURATION);
         }
 
         function parseValue(value) {
