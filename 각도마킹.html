@@ -787,25 +787,25 @@
 
                         <g class="svg-chip" id="svg-chip-h" transform="translate(20 145)">
                             <rect width="92" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">HEIGHT</text>
+                            <text x="14" y="19" class="svg-chip-sub">높이</text>
                             <text x="14" y="33" class="svg-chip-text" id="svg-value-h">높이</text>
                         </g>
 
                         <g class="svg-chip" id="svg-chip-b" transform="translate(176 300)">
                             <rect width="112" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">BASE</text>
+                            <text x="14" y="19" class="svg-chip-sub">밑변</text>
                             <text x="14" y="33" class="svg-chip-text" id="svg-value-b">밑변</text>
                         </g>
 
                         <g class="svg-chip" id="svg-chip-hyp" transform="translate(244 84) rotate(37)">
                             <rect width="126" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">HYPOTENUSE</text>
+                            <text x="14" y="19" class="svg-chip-sub">대각선</text>
                             <text x="14" y="33" class="svg-chip-text" id="svg-value-hyp">대각선</text>
                         </g>
 
                         <g class="svg-chip" id="svg-chip-a" transform="translate(332 210)">
                             <rect width="88" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">ANGLE</text>
+                            <text x="14" y="19" class="svg-chip-sub">각도</text>
                             <text x="14" y="33" class="svg-chip-text" id="svg-value-a">각도</text>
                         </g>
                     </svg>
@@ -954,7 +954,7 @@
 
         function parseValue(value) {
             if (value === '') return undefined;
-            const parsed = Number.parseFloat(value);
+            const parsed = parseFloat(value);
             return Number.isFinite(parsed) ? parsed : NaN;
         }
 
