@@ -273,36 +273,49 @@
             z-index: 1;
         }
 
+        .svg-foreign-input {
+            overflow: visible;
+        }
+
         .field-card {
-            position: absolute;
-            width: min(148px, 28vw);
+            width: 100%;
+            height: 100%;
             display: grid;
-            gap: 6px;
-            transform: translate(-50%, -50%);
-            z-index: 2;
+            gap: 3px;
+        }
+
+        .field-card.diagonal {
+            transform: rotate(-7deg);
+            transform-origin: center;
+        }
+
+        .field-card.angle-card {
+            width: 96%;
+            margin-left: auto;
         }
 
         .field-label-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 8px;
-            padding: 0 4px;
+            gap: 5px;
+            padding: 0 3px;
         }
 
         .field-name {
-            font-size: 0.84rem;
+            font-size: 0.68rem;
             font-weight: 800;
             color: var(--text-sub);
+            letter-spacing: -0.02em;
         }
 
         .unit-chip {
-            padding: 4px 8px;
+            padding: 2px 6px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid rgba(148, 163, 184, 0.24);
-            font-size: 0.73rem;
-            font-weight: 700;
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            font-size: 0.58rem;
+            font-weight: 800;
             color: var(--text-soft);
             backdrop-filter: blur(10px);
         }
@@ -311,33 +324,34 @@
             position: relative;
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.75);
-            border: 1px solid rgba(148, 163, 184, 0.28);
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
+            min-height: 42px;
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.26);
+            border-radius: 13px;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
             transition: transform var(--motion), border-color var(--motion), box-shadow var(--motion), background var(--motion);
             overflow: hidden;
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(14px);
         }
 
         .field-card.is-active .field-body {
-            transform: translateY(-1px);
-            border-color: rgba(37, 99, 235, 0.42);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
+            transform: translateY(-1px) scale(1.02);
+            border-color: rgba(37, 99, 235, 0.44);
+            box-shadow: 0 14px 24px rgba(37, 99, 235, 0.18);
         }
 
         .field-card.is-user .field-body {
-            background: rgba(239, 246, 255, 0.92);
+            background: rgba(239, 246, 255, 0.96);
             border-color: rgba(37, 99, 235, 0.34);
         }
 
         .field-card.is-calc .field-body {
-            background: rgba(236, 253, 245, 0.92);
+            background: rgba(236, 253, 245, 0.96);
             border-color: rgba(5, 150, 105, 0.34);
         }
 
         .field-accent {
-            width: 8px;
+            width: 6px;
             align-self: stretch;
             background: linear-gradient(180deg, var(--line-strong), transparent);
             transition: background var(--motion);
@@ -357,10 +371,10 @@
             border: 0;
             background: transparent;
             color: var(--text);
-            font-size: 1rem;
+            font-size: 0.86rem;
             font-weight: 800;
             text-align: center;
-            padding: 16px 12px;
+            padding: 10px 8px;
             outline: none;
             -moz-appearance: textfield;
         }
@@ -375,11 +389,6 @@
             -webkit-appearance: none;
             margin: 0;
         }
-
-        #wrap-height { top: 48%; left: 11%; }
-        #wrap-base { top: 93%; left: 51%; }
-        #wrap-hypo { top: 25%; left: 55%; }
-        #wrap-angle { top: 74%; left: 82%; }
 
         .stage-footer {
             margin: 0 18px 18px;
@@ -435,7 +444,7 @@
         .button {
             appearance: none;
             border: 0;
-            border-radius: 14px;
+            border-radius: 13px;
             padding: 14px 18px;
             font: inherit;
             font-weight: 800;
@@ -564,10 +573,20 @@
             stroke-width: 2.5;
         }
 
+        .svg-angle-fill {
+            fill: rgba(245, 158, 11, 0.16);
+        }
+
         .svg-angle-arc {
             fill: none;
-            stroke: rgba(245, 158, 11, 0.95);
-            stroke-width: 4.5;
+            stroke: rgba(245, 158, 11, 0.96);
+            stroke-width: 5;
+            stroke-linecap: round;
+        }
+
+        .svg-angle-ray {
+            stroke: rgba(245, 158, 11, 0.52);
+            stroke-width: 2.5;
             stroke-linecap: round;
         }
 
@@ -578,16 +597,12 @@
             fill: var(--warning);
         }
 
-        .svg-axis-label,
-        .svg-chip-text {
-            font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', sans-serif;
-            user-select: none;
-        }
-
         .svg-axis-label {
+            font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', sans-serif;
             font-size: 16px;
             font-weight: 700;
             fill: var(--text-soft);
+            user-select: none;
         }
 
         .svg-segment {
@@ -622,45 +637,19 @@
             stroke: rgba(245, 158, 11, 0.95);
         }
 
-        .svg-chip rect {
-            fill: rgba(255, 255, 255, 0.86);
-            stroke: rgba(148, 163, 184, 0.26);
-            stroke-width: 1.5;
-        }
-
-        .svg-chip-text {
-            font-size: 14px;
-            font-weight: 800;
-            fill: var(--text);
-        }
-
-        .svg-chip-sub {
-            font-size: 11px;
-            font-weight: 700;
-            fill: var(--text-soft);
-        }
-
-        .svg-chip.is-user rect {
-            fill: rgba(239, 246, 255, 0.96);
-            stroke: rgba(37, 99, 235, 0.3);
-        }
-
-        .svg-chip.is-calc rect {
-            fill: rgba(236, 253, 245, 0.96);
-            stroke: rgba(5, 150, 105, 0.3);
-        }
-
-        .svg-chip.is-user .svg-chip-text { fill: var(--primary-strong); }
-        .svg-chip.is-calc .svg-chip-text { fill: var(--success); }
-
         @media (max-width: 880px) {
             .meta-grid,
             .note-grid {
                 grid-template-columns: 1fr;
             }
 
-            .field-card {
-                width: min(144px, 32vw);
+            .field-name {
+                font-size: 0.64rem;
+            }
+
+            .floating-input {
+                font-size: 0.82rem;
+                padding: 10px 7px;
             }
         }
 
@@ -691,16 +680,19 @@
                 height: calc(100% - 28px);
             }
 
-            .field-card {
-                width: calc(100% - 44px);
-                max-width: none;
-                transform: none;
+            .field-name {
+                font-size: 0.58rem;
             }
 
-            #wrap-height { top: 18px; left: 22px; }
-            #wrap-hypo { top: 98px; left: 22px; }
-            #wrap-base { bottom: 22px; left: 22px; top: auto; }
-            #wrap-angle { top: auto; bottom: 102px; left: 22px; }
+            .unit-chip {
+                font-size: 0.52rem;
+                padding: 2px 5px;
+            }
+
+            .floating-input {
+                font-size: 0.72rem;
+                padding: 8px 5px;
+            }
 
             .controls-row .button {
                 width: 100%;
@@ -716,7 +708,7 @@
                 <span class="eyebrow">📐 도면 각도 마킹 · 프로덕트 업그레이드</span>
                 <div>
                     <h1>도면 각도 마킹 계산기</h1>
-                    <p>높이, 밑변, 대각선, 각도 중 <strong>2개만 입력</strong>하면 나머지 치수를 즉시 계산합니다. SVG 도면, 입력 상태, 단위 정보까지 한 화면에서 직관적으로 확인할 수 있게 정리했습니다.</p>
+                    <p>높이, 밑변, 대각선, 각도 중 <strong>2개만 입력</strong>하면 나머지 치수를 즉시 계산합니다. SVG 도형 위에 직접 값을 입력하면서, 입력 상태와 단위 정보를 한 화면에서 직관적으로 확인할 수 있게 정리했습니다.</p>
                 </div>
                 <div class="meta-grid">
                     <div class="meta-card">
@@ -724,12 +716,12 @@
                         <span>최근 입력한 2개 항목을 기준으로 계산하며, 3번째 입력 시 가장 오래된 사용자 입력을 자동으로 정리합니다.</span>
                     </div>
                     <div class="meta-card">
-                        <strong>도면 중심 UI</strong>
-                        <span>삼각형 구조, 각도 마킹, 축 라벨, 보조선과 함께 입력 위치가 시각적으로 연결되도록 SVG를 개선했습니다.</span>
+                        <strong>도형 직접 입력 UI</strong>
+                        <span>입력창이 SVG 도형 위에 직접 놓이도록 재배치하고, 각도 마킹과 치수 정보가 즉시 읽히도록 구성했습니다.</span>
                     </div>
                     <div class="meta-card">
                         <strong>현장 사용성 강화</strong>
-                        <span>모바일에서도 카드형 입력이 유지되며, 계산값/직접입력값 상태가 색상으로 즉시 구분됩니다.</span>
+                        <span>모바일에서도 SVG 위 입력 경험을 유지하면서, 계산값/직접입력값 상태를 색상으로 바로 구분할 수 있습니다.</span>
                     </div>
                 </div>
             </div>
@@ -740,7 +732,7 @@
                 <div class="panel-head">
                     <div>
                         <h2 id="calc-panel-title">직각삼각형 치수 계산</h2>
-                        <p>입력 박스를 클릭하면 해당 구간이 SVG에서 강조됩니다. 각도는 우측 하단의 내부 각 기준입니다.</p>
+                        <p>도형 위 입력창에 직접 입력하면 해당 구간이 강조됩니다. 각도 마킹은 우측 하단 내부각 기준으로 다시 정리했습니다.</p>
                     </div>
                     <div class="status-pill" id="status-pill" aria-live="polite">
                         <span class="status-dot" aria-hidden="true"></span>
@@ -771,11 +763,14 @@
                         <line x1="90" y1="290" x2="390" y2="290" class="svg-segment base" data-segment="b"></line>
                         <line x1="90" y1="290" x2="90" y2="60" class="svg-segment height" data-segment="h"></line>
                         <line x1="90" y1="60" x2="390" y2="290" class="svg-segment hyp" data-segment="hyp"></line>
-                        <path d="M 350 290 A 40 40 0 0 0 317 264" class="svg-segment angle" data-segment="a"></path>
+                        <path d="M 332 290 A 58 58 0 0 0 344.1 254.7" class="svg-segment angle" data-segment="a"></path>
 
                         <rect x="90" y="260" width="28" height="28" class="svg-right-mark"></rect>
-                        <path d="M 350 290 A 40 40 0 0 0 317 264" class="svg-angle-arc"></path>
-                        <text x="318" y="257" class="svg-angle-text">θ</text>
+                        <path d="M 336 290 A 54 54 0 0 0 347 257 L 390 290 Z" class="svg-angle-fill"></path>
+                        <line x1="390" y1="290" x2="336" y2="290" class="svg-angle-ray"></line>
+                        <line x1="390" y1="290" x2="347" y2="257" class="svg-angle-ray"></line>
+                        <path d="M 336 290 A 54 54 0 0 0 347 257" class="svg-angle-arc"></path>
+                        <text x="351" y="274" class="svg-angle-text">θ</text>
 
                         <line x1="60" y1="290" x2="60" y2="60" class="svg-dim-line"></line>
                         <line x1="90" y1="320" x2="390" y2="320" class="svg-dim-line"></line>
@@ -785,74 +780,58 @@
                         <text x="207" y="345" class="svg-axis-label">밑변 B</text>
                         <text x="224" y="120" class="svg-axis-label" transform="rotate(37 224 120)">대각선 L</text>
 
-                        <g class="svg-chip" id="svg-chip-h" transform="translate(20 145)">
-                            <rect width="92" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">높이</text>
-                            <text x="14" y="33" class="svg-chip-text" id="svg-value-h">높이</text>
-                        </g>
+                        <foreignObject x="20" y="146" width="102" height="66" class="svg-foreign-input">
+                            <div xmlns="http://www.w3.org/1999/xhtml" class="field-card" id="wrap-height" data-field="h">
+                                <div class="field-label-row">
+                                    <span class="field-name">높이</span>
+                                    <span class="unit-chip">mm</span>
+                                </div>
+                                <label class="field-body" for="inp-h">
+                                    <span class="field-accent" aria-hidden="true"></span>
+                                    <input type="number" id="inp-h" class="floating-input" placeholder="높이" inputmode="decimal" step="any" aria-label="높이 입력" />
+                                </label>
+                            </div>
+                        </foreignObject>
 
-                        <g class="svg-chip" id="svg-chip-b" transform="translate(176 300)">
-                            <rect width="112" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">밑변</text>
-                            <text x="14" y="33" class="svg-chip-text" id="svg-value-b">밑변</text>
-                        </g>
+                        <foreignObject x="194" y="292" width="114" height="66" class="svg-foreign-input">
+                            <div xmlns="http://www.w3.org/1999/xhtml" class="field-card" id="wrap-base" data-field="b">
+                                <div class="field-label-row">
+                                    <span class="field-name">밑변</span>
+                                    <span class="unit-chip">mm</span>
+                                </div>
+                                <label class="field-body" for="inp-b">
+                                    <span class="field-accent" aria-hidden="true"></span>
+                                    <input type="number" id="inp-b" class="floating-input" placeholder="밑변" inputmode="decimal" step="any" aria-label="밑변 입력" />
+                                </label>
+                            </div>
+                        </foreignObject>
 
-                        <g class="svg-chip" id="svg-chip-hyp" transform="translate(244 84) rotate(37)">
-                            <rect width="126" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">대각선</text>
-                            <text x="14" y="33" class="svg-chip-text" id="svg-value-hyp">대각선</text>
-                        </g>
+                        <foreignObject x="230" y="74" width="122" height="66" class="svg-foreign-input">
+                            <div xmlns="http://www.w3.org/1999/xhtml" class="field-card diagonal" id="wrap-hypo" data-field="hyp">
+                                <div class="field-label-row">
+                                    <span class="field-name">대각선</span>
+                                    <span class="unit-chip">mm</span>
+                                </div>
+                                <label class="field-body" for="inp-hyp">
+                                    <span class="field-accent" aria-hidden="true"></span>
+                                    <input type="number" id="inp-hyp" class="floating-input" placeholder="대각선" inputmode="decimal" step="any" aria-label="대각선 입력" />
+                                </label>
+                            </div>
+                        </foreignObject>
 
-                        <g class="svg-chip" id="svg-chip-a" transform="translate(332 210)">
-                            <rect width="88" height="44" rx="14"></rect>
-                            <text x="14" y="19" class="svg-chip-sub">각도</text>
-                            <text x="14" y="33" class="svg-chip-text" id="svg-value-a">각도</text>
-                        </g>
+                        <foreignObject x="356" y="202" width="96" height="66" class="svg-foreign-input">
+                            <div xmlns="http://www.w3.org/1999/xhtml" class="field-card angle-card" id="wrap-angle" data-field="a">
+                                <div class="field-label-row">
+                                    <span class="field-name">각도</span>
+                                    <span class="unit-chip">°</span>
+                                </div>
+                                <label class="field-body" for="inp-a">
+                                    <span class="field-accent" aria-hidden="true"></span>
+                                    <input type="number" id="inp-a" class="floating-input" placeholder="각도" inputmode="decimal" step="any" aria-label="각도 입력" />
+                                </label>
+                            </div>
+                        </foreignObject>
                     </svg>
-
-                    <div class="field-card" id="wrap-height" data-field="h">
-                        <div class="field-label-row">
-                            <span class="field-name">높이</span>
-                            <span class="unit-chip">mm</span>
-                        </div>
-                        <label class="field-body" for="inp-h">
-                            <span class="field-accent" aria-hidden="true"></span>
-                            <input type="number" id="inp-h" class="floating-input" placeholder="높이 입력" inputmode="decimal" step="any" aria-label="높이 입력">
-                        </label>
-                    </div>
-
-                    <div class="field-card" id="wrap-base" data-field="b">
-                        <div class="field-label-row">
-                            <span class="field-name">밑변</span>
-                            <span class="unit-chip">mm</span>
-                        </div>
-                        <label class="field-body" for="inp-b">
-                            <span class="field-accent" aria-hidden="true"></span>
-                            <input type="number" id="inp-b" class="floating-input" placeholder="밑변 입력" inputmode="decimal" step="any" aria-label="밑변 입력">
-                        </label>
-                    </div>
-
-                    <div class="field-card" id="wrap-hypo" data-field="hyp">
-                        <div class="field-label-row">
-                            <span class="field-name">대각선</span>
-                            <span class="unit-chip">mm</span>
-                        </div>
-                        <label class="field-body" for="inp-hyp">
-                            <span class="field-accent" aria-hidden="true"></span>
-                            <input type="number" id="inp-hyp" class="floating-input" placeholder="대각선 입력" inputmode="decimal" step="any" aria-label="대각선 입력">
-                        </label>
-                    </div>
-
-                    <div class="field-card" id="wrap-angle" data-field="a">
-                        <div class="field-label-row">
-                            <span class="field-name">각도</span>
-                            <span class="unit-chip">°</span>
-                        </div>
-                        <label class="field-body" for="inp-a">
-                            <span class="field-accent" aria-hidden="true"></span>
-                            <input type="number" id="inp-a" class="floating-input" placeholder="각도 입력" inputmode="decimal" step="any" aria-label="각도 입력">
-                        </label>
-                    </div>
                 </div>
 
                 <div class="stage-footer">
@@ -865,13 +844,13 @@
 
                 <div class="controls-row">
                     <button class="button button-primary" id="reset-button" type="button">전체 지우기</button>
-                    <span class="helper-copy">포커스 시 전체 선택되므로 현장 입력 장비에서도 빠르게 수정할 수 있습니다.</span>
+                    <span class="helper-copy">도형 위 입력창을 바로 수정할 수 있어 현장 입력 속도를 높였습니다.</span>
                 </div>
 
                 <div class="note-grid">
                     <article class="note-card">
                         <strong>추천 입력 조합</strong>
-                        <p>밑변 + 높이, 밑변 + 각도처럼 실제 도면에 가장 먼저 확보되는 값 2개를 입력하면 나머지를 바로 확인할 수 있습니다.</p>
+                        <p>도형 위에서 보이는 위치 그대로 2개 값만 넣으면 나머지 치수가 즉시 계산되어 도면 해석 흐름이 자연스럽습니다.</p>
                     </article>
                     <article class="note-card">
                         <strong>입력 오류 방지</strong>
@@ -890,8 +869,6 @@
             b: {
                 input: document.getElementById('inp-b'),
                 wrapper: document.getElementById('wrap-base'),
-                svgChip: document.getElementById('svg-chip-b'),
-                svgValue: document.getElementById('svg-value-b'),
                 placeholder: '밑변',
                 unit: 'mm',
                 digits: 1
@@ -899,8 +876,6 @@
             h: {
                 input: document.getElementById('inp-h'),
                 wrapper: document.getElementById('wrap-height'),
-                svgChip: document.getElementById('svg-chip-h'),
-                svgValue: document.getElementById('svg-value-h'),
                 placeholder: '높이',
                 unit: 'mm',
                 digits: 1
@@ -908,8 +883,6 @@
             hyp: {
                 input: document.getElementById('inp-hyp'),
                 wrapper: document.getElementById('wrap-hypo'),
-                svgChip: document.getElementById('svg-chip-hyp'),
-                svgValue: document.getElementById('svg-value-hyp'),
                 placeholder: '대각선',
                 unit: 'mm',
                 digits: 1
@@ -917,8 +890,6 @@
             a: {
                 input: document.getElementById('inp-a'),
                 wrapper: document.getElementById('wrap-angle'),
-                svgChip: document.getElementById('svg-chip-a'),
-                svgValue: document.getElementById('svg-value-a'),
                 placeholder: '각도',
                 unit: '°',
                 digits: 2
@@ -962,29 +933,7 @@
 
         function formatResult(value, digits) {
             const fixed = value.toFixed(digits);
-            return fixed.includes('.') ? fixed.replace(/\.?0+$/, '') : fixed;
-        }
-
-        function setSvgValue(key, displayValue, stateClass = '') {
-            const meta = fields[key];
-            meta.svgValue.textContent = displayValue;
-            meta.svgChip.classList.remove('is-user', 'is-calc');
-            if (stateClass) meta.svgChip.classList.add(stateClass);
-        }
-
-        function refreshSvgLabels() {
-            Object.entries(fields).forEach(([key, meta]) => {
-                const value = meta.input.value;
-                let stateClass = '';
-                if (meta.input.classList.contains('is-user')) stateClass = 'is-user';
-                if (meta.input.classList.contains('is-calc')) stateClass = 'is-calc';
-
-                if (value !== '') {
-                    setSvgValue(key, `${value}${meta.unit}`, stateClass);
-                } else {
-                    setSvgValue(key, meta.placeholder, '');
-                }
-            });
+            return digits > 0 ? fixed.replace(/\.?0+$/, '') : fixed;
         }
 
         function updateStatus() {
@@ -1010,7 +959,6 @@
                 segment.classList.toggle('is-active', segment.dataset.segment === activeKey);
             });
 
-            refreshSvgLabels();
             updateStatus();
         }
 
@@ -1080,11 +1028,13 @@
 
             try {
                 if (b !== undefined && h !== undefined) {
-                    if (b <= 0 || h <= 0) throw new Error('길이는 0보다 커야 합니다.');
+                    if (b <= 0) throw new Error('밑변은 0보다 커야 합니다.');
+                    if (h <= 0) throw new Error('높이는 0보다 커야 합니다.');
                     hyp = Math.sqrt((b * b) + (h * h));
                     a = toDeg(Math.atan(h / b));
                 } else if (b !== undefined && hyp !== undefined) {
-                    if (b <= 0 || hyp <= 0) throw new Error('길이는 0보다 커야 합니다.');
+                    if (b <= 0) throw new Error('밑변은 0보다 커야 합니다.');
+                    if (hyp <= 0) throw new Error('대각선은 0보다 커야 합니다.');
                     if (b >= hyp) throw new Error('대각선은 밑변보다 길어야 합니다.');
                     h = Math.sqrt((hyp * hyp) - (b * b));
                     a = toDeg(Math.acos(b / hyp));
@@ -1094,7 +1044,8 @@
                     h = b * Math.tan(toRad(a));
                     hyp = b / Math.cos(toRad(a));
                 } else if (h !== undefined && hyp !== undefined) {
-                    if (h <= 0 || hyp <= 0) throw new Error('길이는 0보다 커야 합니다.');
+                    if (h <= 0) throw new Error('높이는 0보다 커야 합니다.');
+                    if (hyp <= 0) throw new Error('대각선은 0보다 커야 합니다.');
                     if (h >= hyp) throw new Error('대각선은 높이보다 길어야 합니다.');
                     b = Math.sqrt((hyp * hyp) - (h * h));
                     a = toDeg(Math.asin(h / hyp));
@@ -1132,7 +1083,6 @@
         }
 
         updateVisualState();
-        refreshSvgLabels();
     </script>
 </body>
 </html>
