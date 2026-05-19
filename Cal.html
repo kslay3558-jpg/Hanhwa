@@ -1200,7 +1200,7 @@
                 <line x1="319" y1="226" x2="339" y2="226" stroke="#059669" stroke-width="2" />
                 <line x1="319" y1="78" x2="339" y2="78" stroke="#059669" stroke-width="2" />
 
-                <text id="svgLabelLText" x="186" y="278" text-anchor="middle" class="svg-title-text svg-accent-blue">
+                <text id="svgLabelL" x="186" y="278" text-anchor="middle" class="svg-title-text svg-accent-blue">
                   수평 거리 = <tspan id="svg_L">400</tspan> mm
                 </text>
 
@@ -1208,7 +1208,7 @@
                   x="352"
                   y="154"
                   text-anchor="middle"
-                  id="svgLabelHText"
+                  id="svgLabelH"
                   class="svg-title-text svg-accent-green"
                   transform="rotate(90 352 154)"
                 >
@@ -1219,7 +1219,7 @@
                   x="178"
                   y="132"
                   text-anchor="middle"
-                  id="svgLabelTText"
+                  id="svgLabelT"
                   class="svg-title-text"
                   transform="rotate(-33 178 132)"
                 >
@@ -1919,7 +1919,7 @@
       try {
         applyTheme(localStorage.getItem(THEME_KEY) || "auto");
       } catch (error) {
-        console.warn("Unable to load theme preference.", error);
+        console.warn("Unable to load theme preference; defaulting to auto mode for this session.", error);
         applyTheme("auto");
       }
     }
@@ -1934,7 +1934,7 @@
       try {
         localStorage.setItem(THEME_KEY, next);
       } catch (error) {
-        console.warn("Unable to save theme preference.", error);
+        console.warn("Unable to save theme preference; the selected theme will only apply for this session.", error);
       }
     }
 
@@ -2045,9 +2045,9 @@
       setAttr("mainPanel", "aria-label", t("resultArea"));
       setAttr("stickyPanel", "aria-label", t("stickyAria"));
 
-      setHtml("svgLabelLText", `${t("svgHorizontal")} = <tspan id="svg_L">${currentText("svg_L", DEFAULTS.L)}</tspan> mm`);
-      setHtml("svgLabelHText", `${t("svgVertical")} = <tspan id="svg_H">300</tspan> mm`);
-      setHtml("svgLabelTText", `${t("svgDiagonal")} = <tspan id="svg_T">${currentText("svg_T", DEFAULTS.T)}</tspan> mm`);
+      setHtml("svgLabelL", `${t("svgHorizontal")} = <tspan id="svg_L">${currentText("svg_L", DEFAULTS.L)}</tspan> mm`);
+      setHtml("svgLabelH", `${t("svgVertical")} = <tspan id="svg_H">300</tspan> mm`);
+      setHtml("svgLabelT", `${t("svgDiagonal")} = <tspan id="svg_T">${currentText("svg_T", DEFAULTS.T)}</tspan> mm`);
       setText("svgStartCenter", t("svgStartCenter"));
       setText("svgEndCenter", t("svgEndCenter"));
       setHtml("bLabel2", `B = <tspan id="svg_B">${currentText("svg_B", "0.0")}</tspan> mm`);
