@@ -191,7 +191,7 @@
       'btn.add_gsk':          '＋ 가스켓 추가',
       // Card 4: U-bolt
       'card.ubolt':           '⚓ U-볼트 추가',
-      'card.gas_pipe':        '🛢 가스 파이프 테이블(검토안)',
+      'card.gas_pipe':        '🛢 가스 파이프 참고표',
       'form.qty_set':         '수량 (Set)',
       'aria.qty_ub':          'U-볼트 수량 조절',
       'aria.qty_ub_in':       'U-볼트 수량',
@@ -209,7 +209,7 @@
       'guide.close':          '확인',
       // Card 5: memo
       'card.memo':            '📝 추가 메모',
-      'gas.desc':             '첨부 표 기준 검토용 데이터를 정리했습니다. 볼트 길이는 원본값에 +10 후 5mm 단위로 올림한 적용 길이를 함께 표시합니다.',
+      'gas.desc':             '첨부 표 기준 참고 데이터를 정리했습니다. 플랜지 두께, 볼트 사이즈/갯수와 함께 볼트 길이 적용값을 표시합니다.',
       'gas.rule':             '변환 규칙: 원본 길이 + 10 → 5mm 단위 올림',
       'gas.col.size':         '사이즈',
       'gas.col.flange':       '플랜지 두께',
@@ -217,15 +217,6 @@
       'gas.col.bolt_count':   '볼트 갯수',
       'gas.col.src_len':      '원본 볼트 길이',
       'gas.col.final_len':    '적용 볼트 길이',
-      'gas.draft_title':      '논의용 초안',
-      'gas.draft.manage_title':'데이터 관리',
-      'gas.draft.manage_body':'현재 구조에서는 app.js 상수로 함께 관리하는 정적 데이터 방식이 가장 단순하고 배포 부담이 적습니다.',
-      'gas.draft.format_title':'테이블 형식',
-      'gas.draft.format_body':'원본 길이와 변환 길이를 같이 저장해 검증과 UI 표시를 동시에 지원하는 형식이 적합합니다.',
-      'gas.draft.edit_title': '관리자 수정 필요',
-      'gas.draft.edit_body':  '초기에는 관리자/사용자 수정 없이 고정 테이블로 두고, 변경 빈도가 생길 때 DB 또는 CSV 분리를 검토하는 방향이 적합합니다.',
-      'gas.draft.link_title': '연동 방향',
-      'gas.draft.link_body':  '우선은 FE static data로 빠르게 반영하고, 추후 백엔드 기준정보가 필요해지면 동일 키 구조로 API/DB로 옮기는 방향을 권장합니다.',
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
@@ -459,7 +450,7 @@
       'aria.qty_gsk_in':      'Số gioăng',
       'btn.add_gsk':          '＋ Thêm gioăng',
       'card.ubolt':           '⚓ Thêm Bu lông U',
-      'card.gas_pipe':        '🛢 Bảng ống gas (bản nháp)',
+      'card.gas_pipe':        '🛢 Bảng tham khảo ống gas',
       'form.qty_set':         'Số lượng (bộ)',
       'aria.qty_ub':          'Điều chỉnh số bu lông U',
       'aria.qty_ub_in':       'Số bu lông U',
@@ -476,7 +467,7 @@
       'guide.ubolt_pitch_desc':'Khoảng cách tâm lỗ (C-C) là khoảng cách từ tâm lỗ bu lông bên trái đến tâm lỗ bên phải.',
       'guide.close':          'Đã hiểu',
       'card.memo':            '📝 Ghi chú thêm',
-      'gas.desc':             'Đã sắp xếp dữ liệu tham khảo từ bảng đính kèm. Chiều dài bu lông hiển thị cả giá trị gốc và giá trị áp dụng sau khi cộng 10 rồi làm tròn lên theo bội số 5mm.',
+      'gas.desc':             'Đã sắp xếp dữ liệu tham khảo từ bảng đính kèm. Hiển thị độ dày mặt bích, cỡ/số lượng bu lông và chiều dài bu lông áp dụng.',
       'gas.rule':             'Quy tắc đổi: chiều dài gốc + 10 → làm tròn lên theo 5mm',
       'gas.col.size':         'Kích thước',
       'gas.col.flange':       'Độ dày mặt bích',
@@ -484,15 +475,6 @@
       'gas.col.bolt_count':   'Số lượng bu lông',
       'gas.col.src_len':      'Chiều dài gốc',
       'gas.col.final_len':    'Chiều dài áp dụng',
-      'gas.draft_title':      'Bản nháp trao đổi',
-      'gas.draft.manage_title':'Quản lý dữ liệu',
-      'gas.draft.manage_body':'Với cấu trúc hiện tại, cách đơn giản nhất là quản lý dữ liệu tĩnh cùng trong hằng số app.js để giảm chi phí triển khai.',
-      'gas.draft.format_title':'Định dạng bảng',
-      'gas.draft.format_body':'Nên lưu cả chiều dài gốc và chiều dài đã chuyển đổi để vừa kiểm tra vừa hiển thị UI.',
-      'gas.draft.edit_title': 'Nhu cầu chỉnh sửa quản trị',
-      'gas.draft.edit_body':  'Ban đầu nên giữ dạng bảng cố định không cho quản trị/người dùng sửa; nếu tần suất thay đổi tăng thì cân nhắc DB hoặc CSV riêng.',
-      'gas.draft.link_title': 'Hướng liên kết',
-      'gas.draft.link_body':  'Trước mắt nên áp dụng bằng FE static data, sau này nếu cần dữ liệu chuẩn phía backend thì có thể chuyển cùng cấu trúc khóa sang API/DB.',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
       'card.queue':           '📋 Hàng chờ đăng ký',
@@ -715,7 +697,7 @@
       'aria.qty_gsk_in':      'Jumlah gasket',
       'btn.add_gsk':          '＋ Tambah gasket',
       'card.ubolt':           '⚓ Tambah Baut U',
-      'card.gas_pipe':        '🛢 Tabel pipa gas (draf)',
+      'card.gas_pipe':        '🛢 Tabel referensi pipa gas',
       'form.qty_set':         'Jumlah (Set)',
       'aria.qty_ub':          'Atur jumlah baut U',
       'aria.qty_ub_in':       'Jumlah baut U',
@@ -732,7 +714,7 @@
       'guide.ubolt_pitch_desc':'Jarak pusat lubang (C-C) adalah jarak dari pusat lubang baut kiri ke pusat lubang baut kanan.',
       'guide.close':          'Mengerti',
       'card.memo':            '📝 Catatan tambahan',
-      'gas.desc':             'Data referensi dari tabel lampiran sudah dirangkum. Panjang baut menampilkan nilai asli dan nilai terapan setelah ditambah 10 lalu dibulatkan ke atas ke kelipatan 5mm.',
+      'gas.desc':             'Data referensi dari tabel lampiran sudah dirangkum. Tabel menampilkan tebal flange, ukuran/jumlah baut, dan panjang baut terapan.',
       'gas.rule':             'Aturan konversi: panjang asli + 10 → bulatkan ke atas per 5mm',
       'gas.col.size':         'Ukuran',
       'gas.col.flange':       'Tebal flange',
@@ -740,15 +722,6 @@
       'gas.col.bolt_count':   'Jumlah baut',
       'gas.col.src_len':      'Panjang baut asli',
       'gas.col.final_len':    'Panjang baut terapan',
-      'gas.draft_title':      'Draf diskusi',
-      'gas.draft.manage_title':'Manajemen data',
-      'gas.draft.manage_body':'Pada struktur saat ini, data statis di konstanta app.js adalah pilihan paling sederhana dengan beban deploy paling kecil.',
-      'gas.draft.format_title':'Format tabel',
-      'gas.draft.format_body':'Sebaiknya simpan panjang asli dan panjang hasil konversi bersama agar validasi dan tampilan UI sama-sama didukung.',
-      'gas.draft.edit_title': 'Kebutuhan edit admin',
-      'gas.draft.edit_body':  'Awalnya lebih cocok memakai tabel tetap tanpa edit admin/pengguna; bila perubahan makin sering, baru pertimbangkan DB atau CSV terpisah.',
-      'gas.draft.link_title': 'Arah integrasi',
-      'gas.draft.link_body':  'Mulai dulu dengan FE static data, lalu jika data master backend dibutuhkan nanti struktur kunci yang sama bisa dipindahkan ke API/DB.',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
       'card.queue':           '📋 Antrean pendaftaran',
@@ -1359,8 +1332,7 @@
 
     renderGasPipeTable() {
       const wrap = $('#gasPipeTableWrap');
-      const draft = $('#gasPipeDraft');
-      if (!wrap || !draft) return;
+      if (!wrap) return;
 
       const thead = el('thead', null,
         el('tr', null,
@@ -1389,15 +1361,6 @@
       wrap.appendChild(el('div', { class: 'gas-rule' }, t('gas.rule')));
       wrap.appendChild(el('div', { class: 'gas-table-scroll' },
         el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
-      ));
-
-      draft.textContent = '';
-      draft.appendChild(el('h3', null, t('gas.draft_title')));
-      draft.appendChild(el('ul', { class: 'gas-draft-list' },
-        el('li', null, el('b', null, `${t('gas.draft.manage_title')}: `), t('gas.draft.manage_body')),
-        el('li', null, el('b', null, `${t('gas.draft.format_title')}: `), t('gas.draft.format_body')),
-        el('li', null, el('b', null, `${t('gas.draft.edit_title')}: `), t('gas.draft.edit_body')),
-        el('li', null, el('b', null, `${t('gas.draft.link_title')}: `), t('gas.draft.link_body'))
       ));
     },
 
