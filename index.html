@@ -662,6 +662,25 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
+  .gas-note, .gas-rule {
+    font-size: .82rem; line-height: 1.6; color: var(--c-text-sub);
+    background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: var(--r-md);
+    padding: 10px 12px;
+  }
+  .gas-rule {
+    margin-top: 8px; color: var(--c-primary-strong);
+    background: var(--c-primary-weak); border-color: color-mix(in srgb, var(--c-primary) 28%, var(--c-border));
+  }
+  .gas-table-scroll { margin-top: 10px; overflow-x: auto; }
+  .gas-pipe-table { min-width: 640px; }
+  .gas-draft {
+    margin-top: 14px; padding: 12px; border-radius: var(--r-md);
+    border: 1px dashed var(--c-border-strong); background: var(--c-surface-2);
+  }
+  .gas-draft h3 { margin-bottom: 10px; }
+  .gas-draft-list { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+  .gas-draft-list li { color: var(--c-text-sub); font-size: .84rem; line-height: 1.55; }
+  .gas-draft-list b { color: var(--c-text); }
 
   /* Category pill tags */
   .res-cat-tag {
@@ -1280,7 +1299,21 @@
         </div>
       </div>
 
-      <!-- 5. 메모 (기본 닫힘) -->
+      <!-- 5. 가스 파이프 테이블 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
+          <h2 data-i18n="card.gas_pipe">🛢 가스 파이프 테이블(검토안)</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div id="gasPipeTableWrap"></div>
+            <div id="gasPipeDraft" class="gas-draft"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. 메모 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
           <h2 data-i18n="card.memo">📝 추가 메모</h2>
