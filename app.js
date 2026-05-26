@@ -2609,7 +2609,7 @@
     'open-pipe-calc':    () => { window.location.href = './Cal.html'; },
     'open-angle-mark':   () => ModalCtl.open($('#angleMarkModal')),
     'close-angle-mark':  () => ModalCtl.close($('#angleMarkModal')),
-    'close-pipe-calc':   () => { PipeCalc.saveForm(); ModalCtl.close($('#pipeCalcModal')); },
+    'close-pipe-calc':   () => ModalCtl.close($('#pipeCalcModal')),
     'pc-size-change':    () => { PipeCalc.updateOdHint(); PipeCalc.saveForm(); },
     'pc-calc':           () => PipeCalc.calculate(),
     'pc-reset':          () => PipeCalc.reset(),
@@ -2827,7 +2827,7 @@
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
           else if (m.id === 'measureGuideModal') ModalCtl.close($('#measureGuideModal'));
-          else if (m.id === 'pipeCalcModal') { PipeCalc.saveForm(); ModalCtl.close(m); }
+          else if (m.id === 'pipeCalcModal') ModalCtl.close(m);
           else ModalCtl.close(m);
         }
       });
