@@ -2873,12 +2873,47 @@
   }
 
   const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const TOUR_ACCORDION_BODY_IDS = ['accBodyFind', 'accBodyFlange', 'accBodyGasket', 'accBodyUbolt', 'accBodyGasPipe', 'accBodyMemo'];
+  function setAccordionExpanded(bodyId, shouldOpen) {
+    if (!bodyId) return;
+    const body = document.getElementById(bodyId);
+    const head = document.querySelector(`.acc-head[aria-controls="${bodyId}"]`);
+    if (!body || !head) return;
+    head.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    if (shouldOpen) {
+      body.removeAttribute('aria-hidden');
+      body.removeAttribute('inert');
+    } else {
+      body.setAttribute('aria-hidden', 'true');
+      body.setAttribute('inert', '');
+    }
+  }
+  function getAccordionStateSnapshot() {
+    return TOUR_ACCORDION_BODY_IDS.reduce((states, bodyId) => {
+      const body = document.getElementById(bodyId);
+      states[bodyId] = !!(body && body.getAttribute('aria-hidden') !== 'true');
+      return states;
+    }, {});
+  }
+  function restoreAccordionStateSnapshot(snapshot) {
+    if (!snapshot) return;
+    TOUR_ACCORDION_BODY_IDS.forEach(bodyId => {
+      if (Object.prototype.hasOwnProperty.call(snapshot, bodyId)) {
+        setAccordionExpanded(bodyId, !!snapshot[bodyId]);
+      }
+    });
+  }
+  function syncTutorialAccordion(activeBodyId) {
+    TOUR_ACCORDION_BODY_IDS.forEach(bodyId => {
+      setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
+    });
+  }
   const TOUR_STEPS = [
-    { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
-    { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
-    { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
-    { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
-    { selector: '[data-action="add-bolt"]',    icon: '➕', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' },
+    { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d', accordionBodyId: 'accBodyFind' },
+    { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d', accordionBodyId: 'accBodyFind' },
+    { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d', accordionBodyId: 'accBodyFlange' },
+    { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d', accordionBodyId: 'accBodyFlange' },
+    { selector: '[data-action="add-bolt"]',    icon: '➕', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d', accordionBodyId: 'accBodyFlange' },
     { selector: '#queueCard',                  icon: '📋', titleKey: 'tut.tour6_t', descKey: 'tut.tour6_d' },
     { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
     { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
@@ -2889,6 +2924,7 @@
   const TourCtl = {
     index: 0,
     activeTarget: null,
+    savedAccordionState: null,
     isOpen() {
       const overlay = $('#quickTourOverlay');
       return !!(overlay && !overlay.hidden);
@@ -2902,6 +2938,7 @@
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.index = 0;
+      this.savedAccordionState = getAccordionStateSnapshot();
       this.clearTarget();
       overlay.hidden = false;
       overlay.classList.add('show');
@@ -2912,6 +2949,8 @@
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.clearTarget();
+      restoreAccordionStateSnapshot(this.savedAccordionState);
+      this.savedAccordionState = null;
       overlay.classList.remove('show');
       overlay.hidden = true;
       overlay.setAttribute('aria-hidden', 'true');
@@ -2920,6 +2959,7 @@
     render() {
       const step = TOUR_STEPS[this.index];
       if (!step) return;
+      syncTutorialAccordion(step.accordionBodyId);
       const target = $(step.selector);
       this.clearTarget();
       if (target) {
