@@ -2,12 +2,13 @@
  * 캐시 우선(cache-first) 전략으로 오프라인 동작 보장.
  * 새 버전 배포 시 CACHE_NAME의 버전을 올려 강제 갱신.
  */
-const CACHE_NAME = 'jis-calc-v3.20.0';
+const CACHE_NAME = 'jis-calc-v3.21.0';
 const ASSETS = [
   './',
   './index.html',
   './app.js',
   './manifest.webmanifest',
+  './Cal.html',
   './각도마킹.html'
 ];
 const ASSET_URLS = new Set(ASSETS.map((asset) => new URL(asset, self.location).href));

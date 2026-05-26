@@ -2606,11 +2606,7 @@
     'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
-    'open-pipe-calc':    () => {
-      PipeCalc.initSizeSelect();
-      PipeCalc.loadSaved();
-      ModalCtl.open($('#pipeCalcModal'));
-    },
+    'open-pipe-calc':    () => { window.location.href = './Cal.html'; },
     'open-angle-mark':   () => ModalCtl.open($('#angleMarkModal')),
     'close-angle-mark':  () => ModalCtl.close($('#angleMarkModal')),
     'close-pipe-calc':   () => { PipeCalc.saveForm(); ModalCtl.close($('#pipeCalcModal')); },
