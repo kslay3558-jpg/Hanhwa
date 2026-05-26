@@ -2960,6 +2960,25 @@
       this.activeAccordionHead.classList.remove('tour-parent-highlight');
       this.activeAccordionHead = null;
     },
+    getPanelAnchorRect(target) {
+      const headerRect = this.activeAccordionHead instanceof Element
+        ? this.activeAccordionHead.getBoundingClientRect()
+        : null;
+      const targetRect = target instanceof Element
+        ? target.getBoundingClientRect()
+        : null;
+      if (headerRect && targetRect) {
+        return {
+          top: Math.min(headerRect.top, targetRect.top),
+          right: Math.max(headerRect.right, targetRect.right),
+          bottom: Math.max(headerRect.bottom, targetRect.bottom),
+          left: Math.min(headerRect.left, targetRect.left),
+          width: Math.max(headerRect.right, targetRect.right) - Math.min(headerRect.left, targetRect.left),
+          height: Math.max(headerRect.bottom, targetRect.bottom) - Math.min(headerRect.top, targetRect.top)
+        };
+      }
+      return targetRect || headerRect;
+    },
     positionPanel(target) {
       const panel = $('#quickTourOverlay .tour-panel');
       if (!panel) return;
@@ -2968,26 +2987,26 @@
       panel.style.top = '';
       panel.style.bottom = '';
       panel.style.transform = '';
-      if (!target || !(target instanceof Element)) {
+      const anchorRect = this.getPanelAnchorRect(target);
+      if (!anchorRect) {
         panel.style.left = '50%';
-        panel.style.top = `calc(20px + env(safe-area-inset-top))`;
+        panel.style.bottom = `calc(20px + env(safe-area-inset-bottom))`;
         panel.style.transform = 'translateX(-50%)';
         return;
       }
       const margin = 12;
       const gap = 14;
-      const rect = target.getBoundingClientRect();
       const panelRect = panel.getBoundingClientRect();
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
       const panelWidth = Math.min(panelRect.width || 440, viewportWidth - margin * 2);
       const maxLeft = Math.max(margin, viewportWidth - panelWidth - margin);
-      const preferredLeft = rect.left + (rect.width / 2) - (panelWidth / 2);
+      const preferredLeft = anchorRect.left + (anchorRect.width / 2) - (panelWidth / 2);
       const left = Math.min(maxLeft, Math.max(margin, preferredLeft));
       const safeTop = margin + 8;
       const safeBottom = viewportHeight - panelRect.height - margin - 8;
-      const belowTop = rect.bottom + gap;
-      const aboveTop = rect.top - panelRect.height - gap;
+      const belowTop = anchorRect.bottom + gap;
+      const aboveTop = anchorRect.top - panelRect.height - gap;
       const top = belowTop <= safeBottom ? belowTop : Math.max(safeTop, Math.min(safeBottom, aboveTop));
       panel.style.left = `${left}px`;
       panel.style.top = `${Math.max(safeTop, top)}px`;
@@ -3002,6 +3021,7 @@
         this.positionPanel(fallbackTarget || this.activeTarget || this.activeAccordionHead);
       };
       if (delay > 0) {
+        this.positionPanel(fallbackTarget || this.activeTarget || this.activeAccordionHead);
         this.panelPositionTimer = setTimeout(reposition, delay);
         return;
       }
