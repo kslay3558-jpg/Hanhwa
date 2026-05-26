@@ -694,14 +694,14 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle, #tempLink, #notifPermBtn, #pipeCalcBtn {
+  #boardToggle, #tempLink, #notifPermBtn, #pipeCalcBtn, #angleMarkBtn {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
     text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover, #pipeCalcBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover, #pipeCalcBtn:hover, #angleMarkBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
   #notifPermBtn[hidden] { display: none; }
 
   /* Board modal */
@@ -1197,6 +1197,23 @@
   .pc-btn-row { display: flex; gap: 8px; margin-top: 14px; align-items: stretch; }
   .pc-btn-row .btn-primary { flex: 1; }
   .pc-btn-row .btn-ghost { flex: 0 0 auto; width: auto; padding: 0 16px; }
+
+  /* ==========================================================================
+     Angle marking calculator modal (am-*)
+     ========================================================================== */
+  .am-modal-content { max-width: 1080px; }
+  .am-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .am-header h2 { flex: 1; min-width: 0; margin: 0; }
+  .am-frame-wrap {
+    border: 1px solid var(--c-border); border-radius: var(--r-md);
+    overflow: hidden; background: var(--c-surface-2);
+  }
+  .am-frame {
+    display: block; width: 100%; height: min(78vh, 820px);
+    border: 0; background: #fff;
+  }
 
 </style>
 </head>
@@ -1778,6 +1795,26 @@
     </div><!-- /.modal-content -->
   </div><!-- /#pipeCalcModal -->
 
+  <!-- =============================== 각도 마킹 계산기 모달 =============================== -->
+  <div id="angleMarkModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="amTitle" aria-hidden="true">
+    <div class="modal-content am-modal-content">
+      <div class="am-header">
+        <h2 id="amTitle" data-i18n="am.title">📐 각도 마킹 계산기</h2>
+        <button class="icon-btn" type="button" data-action="close-angle-mark" aria-label="닫기">✕</button>
+      </div>
+      <div class="am-frame-wrap">
+        <iframe
+          id="angleMarkFrame"
+          class="am-frame"
+          src="각도마킹.html"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          title="각도 마킹 계산기">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
   <!-- 페이지 최하단: 내 폰에 설치하기 (컴팩트 푸터 카드) -->
   <aside id="installCta" class="install-cta" hidden data-i18n-attr="aria-label:cta.install_aria" aria-label="내 폰에 설치하기">
     <span class="install-cta-icon" aria-hidden="true">📱</span>
@@ -1814,6 +1851,11 @@
       data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc"
       title="파이프 사선 커팅 계산기" aria-label="파이프 사선 커팅 계산기">
       <span aria-hidden="true">🧮</span>
+    </button>
+    <button id="angleMarkBtn" type="button" data-action="open-angle-mark"
+      data-i18n-attr="title:tb.angle_mark,aria-label:tb.angle_mark"
+      title="각도 마킹 계산기" aria-label="각도 마킹 계산기">
+      <span aria-hidden="true">📐</span>
     </button>
     <button id="notifPermBtn" type="button" title="온도 알람 알림 허용" aria-label="알람 허용하기" hidden>
       <span aria-hidden="true">🔔</span>

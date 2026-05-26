@@ -364,6 +364,8 @@
       // Pipe miter cut calculator
       'tb.pipe_calc':         '파이프 사선 커팅 계산기',
       'tb.pipe_calc_btn':     '⛏ 커팅',
+      'tb.angle_mark':        '각도 마킹 계산기',
+      'am.title':             '📐 각도 마킹 계산기',
       'pc.title':             '🔧 파이프 사선 커팅 계산기',
       'pc.subtitle':          'JIS 배관 오프셋 · 미터 컷 마킹 계산',
       'pc.size_label':        '배관 사이즈 (JIS)',
@@ -643,6 +645,8 @@
       // Pipe miter cut calculator
       'tb.pipe_calc':         'Máy tính cắt xiên ống',
       'tb.pipe_calc_btn':     '⛏ Cắt xiên',
+      'tb.angle_mark':        'Máy tính đánh dấu góc',
+      'am.title':             '📐 Máy tính đánh dấu góc',
       'pc.title':             '🔧 Máy tính Cắt xiên ống',
       'pc.subtitle':          'Tính offset JIS · Đánh dấu miter cut',
       'pc.size_label':        'Cỡ ống (JIS)',
@@ -922,6 +926,8 @@
       // Pipe miter cut calculator
       'tb.pipe_calc':         'Kalkulator potong miring pipa',
       'tb.pipe_calc_btn':     '⛏ Potong',
+      'tb.angle_mark':        'Kalkulator penandaan sudut',
+      'am.title':             '📐 Kalkulator penandaan sudut',
       'pc.title':             '🔧 Kalkulator Potong Miring Pipa',
       'pc.subtitle':          'Hitung offset pipa JIS · Marking miter cut',
       'pc.size_label':        'Ukuran pipa (JIS)',
@@ -2605,6 +2611,8 @@
       PipeCalc.loadSaved();
       ModalCtl.open($('#pipeCalcModal'));
     },
+    'open-angle-mark':   () => ModalCtl.open($('#angleMarkModal')),
+    'close-angle-mark':  () => ModalCtl.close($('#angleMarkModal')),
     'close-pipe-calc':   () => { PipeCalc.saveForm(); ModalCtl.close($('#pipeCalcModal')); },
     'pc-size-change':    () => { PipeCalc.updateOdHint(); PipeCalc.saveForm(); },
     'pc-calc':           () => PipeCalc.calculate(),
@@ -2817,7 +2825,7 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#pipeCalcModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#pipeCalcModal'), $('#angleMarkModal')].forEach(m => {
       if (!m) return;
       m.addEventListener('click', (e) => {
         if (e.target === m) {
