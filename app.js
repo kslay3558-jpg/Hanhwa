@@ -93,19 +93,22 @@
     return roundUpToFive(sourceLength + 10);
   }
 
-  const GAS_PIPE_TABLE = [
-    { size: 15, flangeThickness: 14, boltSize: 'M12', boltCount: 4, sourceBoltLength: 42 },
-    { size: 20, flangeThickness: 16, boltSize: 'M12', boltCount: 4, sourceBoltLength: 48 },
-    { size: 25, flangeThickness: 16, boltSize: 'M16', boltCount: 4, sourceBoltLength: 60 },
-    { size: 32, flangeThickness: 18, boltSize: 'M16', boltCount: 4, sourceBoltLength: 70 },
-    { size: 40, flangeThickness: 18, boltSize: 'M16', boltCount: 4, sourceBoltLength: 78 },
-    { size: 50, flangeThickness: 18, boltSize: 'M16', boltCount: 8, sourceBoltLength: 89 },
-    { size: 65, flangeThickness: 20, boltSize: 'M16', boltCount: 8, sourceBoltLength: 108 },
-    { size: 80, flangeThickness: 20, boltSize: 'M16', boltCount: 8, sourceBoltLength: 127 },
-    { size: 100, flangeThickness: 22, boltSize: 'M16', boltCount: 8, sourceBoltLength: 149 },
-    { size: 125, flangeThickness: 24, boltSize: 'M20', boltCount: 8, sourceBoltLength: 185 },
-    { size: 150, flangeThickness: 24, boltSize: 'M20', boltCount: 8, sourceBoltLength: 216 }
-  ].map(row => ({ ...row, boltLength: convertGasPipeBoltLength(row.sourceBoltLength) }));
+  const GAS_PIPE_FLANGE_THICKNESS = {
+    15: 14, 20: 16, 25: 16, 32: 18, 40: 18,
+    50: 20, 65: 22, 80: 22, 100: 24, 125: 26, 150: 26
+  };
+  const GAS_PIPE_SIZES = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150];
+  const GAS_PIPE_TABLE = GAS_PIPE_SIZES.map((size) => {
+    const [boltSize, sourceBoltLength, boltCount] = DATA["10K"][size];
+    return {
+      size,
+      flangeThickness: GAS_PIPE_FLANGE_THICKNESS[size],
+      boltSize,
+      boltCount,
+      sourceBoltLength,
+      boltLength: convertGasPipeBoltLength(sourceBoltLength)
+    };
+  });
   const STORAGE_KEY = 'jis-calc-state-v2';
   const TUTORIAL_KEY = 'jis-calc-hide-tutorial';
   const THEME_KEY = 'jis-calc-theme';
