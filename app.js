@@ -2906,6 +2906,7 @@
     });
   }
   function syncTutorialAccordion(bodyIds, activeBodyId) {
+    if (!activeBodyId) return;
     bodyIds.forEach(bodyId => {
       setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
     });
