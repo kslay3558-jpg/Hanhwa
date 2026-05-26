@@ -2890,23 +2890,23 @@
       body.setAttribute('inert', '');
     }
   }
-  function getAccordionStateSnapshot() {
-    return getTutorialAccordionBodyIds().reduce((states, bodyId) => {
+  function getAccordionStateSnapshot(bodyIds) {
+    return bodyIds.reduce((states, bodyId) => {
       const body = document.getElementById(bodyId);
       states[bodyId] = !!(body && body.getAttribute('aria-hidden') !== 'true');
       return states;
     }, {});
   }
-  function restoreAccordionStateSnapshot(snapshot) {
+  function restoreAccordionStateSnapshot(bodyIds, snapshot) {
     if (!snapshot) return;
-    getTutorialAccordionBodyIds().forEach(bodyId => {
-      if (Object.prototype.hasOwnProperty.call(snapshot, bodyId)) {
+    bodyIds.forEach(bodyId => {
+      if (Object.hasOwn(snapshot, bodyId)) {
         setAccordionExpanded(bodyId, !!snapshot[bodyId]);
       }
     });
   }
-  function syncTutorialAccordion(activeBodyId) {
-    getTutorialAccordionBodyIds().forEach(bodyId => {
+  function syncTutorialAccordion(bodyIds, activeBodyId) {
+    bodyIds.forEach(bodyId => {
       setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
     });
   }
@@ -2926,6 +2926,7 @@
   const TourCtl = {
     index: 0,
     activeTarget: null,
+    accordionBodyIds: [],
     savedAccordionState: null,
     isOpen() {
       const overlay = $('#quickTourOverlay');
@@ -2940,7 +2941,8 @@
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.index = 0;
-      this.savedAccordionState = getAccordionStateSnapshot();
+      this.accordionBodyIds = getTutorialAccordionBodyIds();
+      this.savedAccordionState = getAccordionStateSnapshot(this.accordionBodyIds);
       this.clearTarget();
       overlay.hidden = false;
       overlay.classList.add('show');
@@ -2951,7 +2953,8 @@
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.clearTarget();
-      restoreAccordionStateSnapshot(this.savedAccordionState);
+      restoreAccordionStateSnapshot(this.accordionBodyIds, this.savedAccordionState);
+      this.accordionBodyIds = [];
       this.savedAccordionState = null;
       overlay.classList.remove('show');
       overlay.hidden = true;
@@ -2961,7 +2964,7 @@
     render() {
       const step = TOUR_STEPS[this.index];
       if (!step) return;
-      syncTutorialAccordion(step.accordionBodyId);
+      syncTutorialAccordion(this.accordionBodyIds, step.accordionBodyId);
       const target = $(step.selector);
       this.clearTarget();
       if (target) {
