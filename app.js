@@ -2910,6 +2910,12 @@
       setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
     });
   }
+  function resolveStepAccordionBodyId(step, target) {
+    if (step && step.accordionBodyId) return step.accordionBodyId;
+    if (!target || !(target instanceof Element)) return null;
+    const parentAccordion = target.closest('.acc-body');
+    return parentAccordion && parentAccordion.id ? parentAccordion.id : null;
+  }
   const TOUR_STEPS = [
     { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
     { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d', accordionBodyId: 'accBodyFind' },
@@ -2964,8 +2970,9 @@
     render() {
       const step = TOUR_STEPS[this.index];
       if (!step) return;
-      syncTutorialAccordion(this.accordionBodyIds, step.accordionBodyId);
       const target = $(step.selector);
+      const activeAccordionBodyId = resolveStepAccordionBodyId(step, target);
+      syncTutorialAccordion(this.accordionBodyIds, activeAccordionBodyId);
       this.clearTarget();
       if (target) {
         this.activeTarget = target;
