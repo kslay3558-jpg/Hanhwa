@@ -1025,12 +1025,15 @@
     z-index: 3501;
     outline: 3px solid var(--c-primary);
     outline-offset: 2px;
-    box-shadow: 0 0 0 8px rgba(37, 99, 235, .28);
+    box-shadow: 0 0 0 8px var(--c-primary-weak);
     border-radius: 10px;
     transition: outline-color var(--m-fast), box-shadow var(--m-fast);
   }
   @media (max-width: 520px) {
     .tour-panel { width: calc(100vw - 20px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tour-target-highlight { transition: none; }
   }
 
   /* Install banner */
