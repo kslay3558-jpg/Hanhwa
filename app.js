@@ -117,6 +117,7 @@
   const TUTORIAL_KEY = 'jis-calc-hide-tutorial';
   const THEME_KEY = 'jis-calc-theme';
   const LANG_KEY = 'jis-calc-lang';
+  const PIPE_CALC_KEY = 'jis-pipe-calc-v1';
   const HISTORY_LIMIT = 10;
   /** 외경 역산 검색 시 표시할 최대 허용 오차 (mm). 이 범위 내 후보를 모두 표시하고, 없으면 가장 가까운 5개를 표시한다. */
   const OD_SEARCH_RANGE = 20;
@@ -408,7 +409,51 @@
       'x.fname_suffix':       '_자재집계',
       'x.share_title':        'JIS 자재 집계',
       'vis.today':            '오늘 방문자:',
-      'vis.unit':             '명'
+      'vis.unit':             '명',
+      // Pipe miter cut calculator
+      'tb.pipe_calc':         '파이프 사선 커팅 계산기',
+      'tb.pipe_calc_btn':     '⛏ 커팅',
+      'pc.title':             '🔧 파이프 사선 커팅 계산기',
+      'pc.subtitle':          'JIS 배관 오프셋 · 미터 컷 마킹 계산',
+      'pc.size_label':        '배관 사이즈 (JIS)',
+      'pc.od_hint':           'OD: {od} mm',
+      'pc.horiz':             '수평 거리 L (mm)',
+      'pc.diag':              '사선 거리 D (mm)',
+      'pc.horiz_ph':          '예: 300',
+      'pc.diag_ph':           '예: 500',
+      'pc.adv_toggle':        '⚙ 심화 옵션 (공제값)',
+      'pc.ded1':              '공제값 1 (단부 1)',
+      'pc.ded2':              '공제값 2 (단부 2)',
+      'pc.weld_gap':          '총 용접 갭',
+      'pc.calc':              '🧮 계산하기',
+      'pc.reset':             '초기화',
+      'pc.r_title':           '📐 계산 결과',
+      'pc.r.diag_ref':        '사선 참조 길이 (D)',
+      'pc.r.cut_length':      '실제 커팅 길이',
+      'pc.r.angle':           '커팅 각도 (θ)',
+      'pc.r.od':              '적용 외경 (OD)',
+      'pc.r.vert':            '수직 거리 (H)',
+      'pc.r.cutback':         '컷백 거리 (B)',
+      'pc.r.long':            '장변 (Long side)',
+      'pc.r.short':           '단변 (Short side)',
+      'pc.tut_toggle':        '📖 사용 방법 보기',
+      'pc.tut_toggle_close':  '📖 사용 방법 닫기',
+      'pc.tut.offset_title':  '오프셋 구조도',
+      'pc.tut.mark_title':    '파이프 마킹 가이드',
+      'pc.tut.step1':         '배관 사이즈를 선택하면 외경(OD)이 자동 설정됩니다.',
+      'pc.tut.step2':         '수평 거리(L)와 사선 거리(D)를 mm 단위로 입력하세요.',
+      'pc.tut.step3':         '[계산하기]를 누르면 수직 거리(H), 컷 각도, 컷백(B), 장/단변을 계산합니다.',
+      'pc.tut.step4':         '파이프에 기준선을 그은 후, 장변·단변 치수로 마킹하여 사선 커팅을 진행하세요.',
+      'pc.tut.svg.baseline':  '기준선',
+      'pc.tut.svg.short':     '단변',
+      'pc.tut.svg.long':      '장변',
+      'pc.err.horiz':         '⚠️ 수평 거리 L은 0보다 커야 합니다.',
+      'pc.err.diag':          '⚠️ 사선 거리 D는 0보다 커야 합니다.',
+      'pc.err.diag_lt':       '⚠️ 사선 거리 D는 수평 거리 L보다 커야 합니다.',
+      'pc.err.ded_neg':       '⚠️ 공제값은 음수가 될 수 없습니다.',
+      'pc.err.weld_neg':      '⚠️ 용접 갭은 음수가 될 수 없습니다.',
+      'pc.err.cut_neg':       '⚠️ 공제 후 커팅 길이가 0 이하입니다. 공제값을 줄여주세요.',
+      'pc.err.short_neg':     '⚠️ 단변 길이가 0 이하입니다. 각도가 너무 크거나 공제값이 너무 큽니다.'
     },
 
     vi: {
@@ -664,7 +709,51 @@
       'x.fname_suffix':       '_tonghop_vattu',
       'x.share_title':        'Tổng hợp Vật tư JIS',
       'vis.today':            'Khách hôm nay:',
-      'vis.unit':             'người'
+      'vis.unit':             'người',
+      // Pipe miter cut calculator
+      'tb.pipe_calc':         'Máy tính cắt xiên ống',
+      'tb.pipe_calc_btn':     '⛏ Cắt xiên',
+      'pc.title':             '🔧 Máy tính Cắt xiên ống',
+      'pc.subtitle':          'Tính offset JIS · Đánh dấu miter cut',
+      'pc.size_label':        'Cỡ ống (JIS)',
+      'pc.od_hint':           'OD: {od} mm',
+      'pc.horiz':             'Khoảng cách ngang L (mm)',
+      'pc.diag':              'Khoảng cách chéo D (mm)',
+      'pc.horiz_ph':          'VD: 300',
+      'pc.diag_ph':           'VD: 500',
+      'pc.adv_toggle':        '⚙ Tùy chọn nâng cao (khấu trừ)',
+      'pc.ded1':              'Khấu trừ 1 (đầu 1)',
+      'pc.ded2':              'Khấu trừ 2 (đầu 2)',
+      'pc.weld_gap':          'Tổng khe hở hàn',
+      'pc.calc':              '🧮 Tính toán',
+      'pc.reset':             'Xóa',
+      'pc.r_title':           '📐 Kết quả',
+      'pc.r.diag_ref':        'Chiều dài tham chiếu chéo (D)',
+      'pc.r.cut_length':      'Chiều dài cắt thực tế',
+      'pc.r.angle':           'Góc cắt (θ)',
+      'pc.r.od':              'OD áp dụng',
+      'pc.r.vert':            'Khoảng cách đứng (H)',
+      'pc.r.cutback':         'Cutback (B)',
+      'pc.r.long':            'Cạnh dài (Long side)',
+      'pc.r.short':           'Cạnh ngắn (Short side)',
+      'pc.tut_toggle':        '📖 Xem hướng dẫn',
+      'pc.tut_toggle_close':  '📖 Đóng hướng dẫn',
+      'pc.tut.offset_title':  'Sơ đồ offset',
+      'pc.tut.mark_title':    'Hướng dẫn đánh dấu ống',
+      'pc.tut.step1':         'Chọn cỡ ống — OD sẽ tự động điền.',
+      'pc.tut.step2':         'Nhập khoảng cách ngang (L) và chéo (D) theo mm.',
+      'pc.tut.step3':         'Nhấn [Tính toán] để xem H, góc cắt, cutback B, cạnh dài/ngắn.',
+      'pc.tut.step4':         'Vẽ gợi trên ống, đánh dấu cạnh dài & ngắn, rồi thực hiện cắt xiên.',
+      'pc.tut.svg.baseline':  'Gợi',
+      'pc.tut.svg.short':     'Ngắn',
+      'pc.tut.svg.long':      'Dài',
+      'pc.err.horiz':         '⚠️ Khoảng cách ngang L phải lớn hơn 0.',
+      'pc.err.diag':          '⚠️ Khoảng cách chéo D phải lớn hơn 0.',
+      'pc.err.diag_lt':       '⚠️ D phải lớn hơn L.',
+      'pc.err.ded_neg':       '⚠️ Giá trị khấu trừ không được âm.',
+      'pc.err.weld_neg':      '⚠️ Khe hở hàn không được âm.',
+      'pc.err.cut_neg':       '⚠️ Chiều dài cắt sau khấu trừ ≤ 0. Hãy giảm khấu trừ.',
+      'pc.err.short_neg':     '⚠️ Cạnh ngắn ≤ 0. Góc quá lớn hoặc khấu trừ quá nhiều.'
     },
 
     id: {
@@ -920,7 +1009,51 @@
       'x.fname_suffix':       '_rekap_material',
       'x.share_title':        'Rekap Material JIS',
       'vis.today':            'Pengunjung hari ini:',
-      'vis.unit':             'orang'
+      'vis.unit':             'orang',
+      // Pipe miter cut calculator
+      'tb.pipe_calc':         'Kalkulator potong miring pipa',
+      'tb.pipe_calc_btn':     '⛏ Potong',
+      'pc.title':             '🔧 Kalkulator Potong Miring Pipa',
+      'pc.subtitle':          'Hitung offset pipa JIS · Marking miter cut',
+      'pc.size_label':        'Ukuran pipa (JIS)',
+      'pc.od_hint':           'OD: {od} mm',
+      'pc.horiz':             'Jarak horizontal L (mm)',
+      'pc.diag':              'Jarak diagonal D (mm)',
+      'pc.horiz_ph':          'Cth: 300',
+      'pc.diag_ph':           'Cth: 500',
+      'pc.adv_toggle':        '⚙ Opsi lanjutan (deduksi)',
+      'pc.ded1':              'Deduksi 1 (ujung 1)',
+      'pc.ded2':              'Deduksi 2 (ujung 2)',
+      'pc.weld_gap':          'Total celah las',
+      'pc.calc':              '🧮 Hitung',
+      'pc.reset':             'Reset',
+      'pc.r_title':           '📐 Hasil',
+      'pc.r.diag_ref':        'Panjang referensi diagonal (D)',
+      'pc.r.cut_length':      'Panjang potong aktual',
+      'pc.r.angle':           'Sudut potong (θ)',
+      'pc.r.od':              'OD terapan',
+      'pc.r.vert':            'Jarak vertikal (H)',
+      'pc.r.cutback':         'Cutback (B)',
+      'pc.r.long':            'Sisi panjang (Long side)',
+      'pc.r.short':           'Sisi pendek (Short side)',
+      'pc.tut_toggle':        '📖 Lihat panduan',
+      'pc.tut_toggle_close':  '📖 Tutup panduan',
+      'pc.tut.offset_title':  'Diagram offset',
+      'pc.tut.mark_title':    'Panduan marking pipa',
+      'pc.tut.step1':         'Pilih ukuran pipa — OD akan terisi otomatis.',
+      'pc.tut.step2':         'Masukkan jarak horizontal (L) dan diagonal (D) dalam mm.',
+      'pc.tut.step3':         'Tekan [Hitung] untuk mendapat H, sudut, cutback B, dan sisi panjang/pendek.',
+      'pc.tut.step4':         'Gambar garis dasar di pipa, tandai sisi panjang & pendek, lalu potong miring.',
+      'pc.tut.svg.baseline':  'Garis dasar',
+      'pc.tut.svg.short':     'Pendek',
+      'pc.tut.svg.long':      'Panjang',
+      'pc.err.horiz':         '⚠️ Jarak horizontal L harus lebih dari 0.',
+      'pc.err.diag':          '⚠️ Jarak diagonal D harus lebih dari 0.',
+      'pc.err.diag_lt':       '⚠️ D harus lebih besar dari L.',
+      'pc.err.ded_neg':       '⚠️ Nilai deduksi tidak boleh negatif.',
+      'pc.err.weld_neg':      '⚠️ Celah las tidak boleh negatif.',
+      'pc.err.cut_neg':       '⚠️ Panjang potong setelah deduksi ≤ 0. Kurangi nilai deduksi.',
+      'pc.err.short_neg':     '⚠️ Sisi pendek ≤ 0. Sudut terlalu besar atau deduksi terlalu banyak.'
     }
   };
 
@@ -1746,6 +1879,156 @@
     }
   };
 
+  /* =====================================================================
+     §5.5 PIPE MITER CUT CALCULATOR — JIS 파이프 사선 커팅 계산기
+     ===================================================================== */
+
+  const PIPE_OD_MAP = {
+    '15A': 21.7, '20A': 27.2, '25A': 34.0, '32A': 42.7, '40A': 48.6,
+    '50A': 60.5, '65A': 76.3, '80A': 89.1, '100A': 114.3,
+    '125A': 139.8, '150A': 165.2, '200A': 216.3
+  };
+  const PIPE_SIZES = ['15A','20A','25A','32A','40A','50A','65A','80A','100A','125A','150A','200A'];
+  /** Field IDs and their default values for the pipe calc form. */
+  const PC_FIELDS = [
+    ['#pcHoriz', ''], ['#pcDiag', ''], ['#pcDed1', '0'], ['#pcDed2', '0'], ['#pcWeld', '0']
+  ];
+
+  const PipeCalc = {
+    /** Populate the pipe size dropdown and restore persisted size selection. */
+    initSizeSelect() {
+      const sel = $('#pcSize');
+      if (!sel) return;
+      const saved = this._loadRaw();
+      sel.innerHTML = '';
+      for (const s of PIPE_SIZES) {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = `${s}  (OD ${PIPE_OD_MAP[s]} mm)`;
+        sel.appendChild(opt);
+      }
+      if (saved && saved.size && PIPE_SIZES.includes(saved.size)) sel.value = saved.size;
+      this.updateOdHint();
+    },
+
+    /** Update the OD hint text below the size dropdown. */
+    updateOdHint() {
+      const sel = $('#pcSize');
+      const hint = $('#pcOdHint');
+      if (!sel || !hint) return;
+      const od = PIPE_OD_MAP[sel.value];
+      hint.textContent = od ? t('pc.od_hint', { od }) : '';
+    },
+
+    /** Return raw saved data or null. */
+    _loadRaw() {
+      try { return JSON.parse(localStorage.getItem(PIPE_CALC_KEY) || 'null'); } catch (e) { return null; }
+    },
+
+    /** Restore persisted form values (called after initSizeSelect). */
+    loadSaved() {
+      const saved = this._loadRaw();
+      if (!saved) return;
+      const setVal = (id, v) => { const el2 = $(id); if (el2 && v != null) el2.value = v; };
+      setVal('#pcHoriz', saved.horiz);
+      setVal('#pcDiag',  saved.diag);
+      setVal('#pcDed1',  saved.ded1);
+      setVal('#pcDed2',  saved.ded2);
+      setVal('#pcWeld',  saved.weld);
+      this.updateOdHint();
+    },
+
+    /** Persist current form values. */
+    saveForm() {
+      try {
+        localStorage.setItem(PIPE_CALC_KEY, JSON.stringify({
+          size:  ($('#pcSize')  || {}).value || '50A',
+          horiz: ($('#pcHoriz') || {}).value || '',
+          diag:  ($('#pcDiag')  || {}).value || '',
+          ded1:  ($('#pcDed1')  || {}).value || '0',
+          ded2:  ($('#pcDed2')  || {}).value || '0',
+          weld:  ($('#pcWeld')  || {}).value || '0'
+        }));
+      } catch (e) {}
+    },
+
+    /** Run the miter-cut calculation and render results. */
+    calculate() {
+      const errEl = $('#pcError');
+      const resEl = $('#pcResult');
+      if (!errEl || !resEl) return;
+      errEl.hidden = true;
+      resEl.hidden = true;
+
+      const L    = parseFloat(($('#pcHoriz') || {}).value);
+      const D    = parseFloat(($('#pcDiag')  || {}).value);
+      const ded1 = parseFloat(($('#pcDed1')  || {}).value) || 0;
+      const ded2 = parseFloat(($('#pcDed2')  || {}).value) || 0;
+      const weld = parseFloat(($('#pcWeld')  || {}).value) || 0;
+      const sizeName = ($('#pcSize') || {}).value || '50A';
+      const OD = PIPE_OD_MAP[sizeName] || 0;
+
+      const showErr = (key) => { errEl.textContent = t(key); errEl.hidden = false; };
+
+      if (!Number.isFinite(L) || L <= 0)          { showErr('pc.err.horiz');    return; }
+      if (!Number.isFinite(D) || D <= 0)          { showErr('pc.err.diag');     return; }
+      if (D <= L)                                  { showErr('pc.err.diag_lt');  return; }
+      if (ded1 < 0 || ded2 < 0)                   { showErr('pc.err.ded_neg');  return; }
+      if (weld < 0)                                { showErr('pc.err.weld_neg'); return; }
+
+      const cutLength = D - ded1 - ded2 - weld;
+      if (cutLength <= 0) { showErr('pc.err.cut_neg'); return; }
+
+      const H        = Math.sqrt(D * D - L * L);
+      const thetaRad = Math.atan2(H, L);
+      const thetaDeg = thetaRad * 180 / Math.PI;
+      const B        = (OD / 2) * Math.tan(thetaRad);
+      const longSide  = cutLength + B;
+      const shortSide = cutLength - B;
+
+      if (shortSide <= 0) { showErr('pc.err.short_neg'); return; }
+
+      this.saveForm();
+
+      // Render result grid
+      const fmt = (v, dp = 1) => v.toFixed(dp);
+      const grid = $('#pcResultGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const rows = [
+        { key: 'pc.r.diag_ref',  val: `${fmt(D)} mm` },
+        { key: 'pc.r.cut_length',val: `${fmt(cutLength)} mm` },
+        { key: 'pc.r.angle',     val: `${fmt(thetaDeg, 2)}°` },
+        { key: 'pc.r.od',        val: `${OD} mm` },
+        { key: 'pc.r.vert',      val: `${fmt(H)} mm` },
+        { key: 'pc.r.cutback',   val: `${fmt(B)} mm` },
+        { key: 'pc.r.long',      val: `${fmt(longSide)} mm`,  hl: true },
+        { key: 'pc.r.short',     val: `${fmt(shortSide)} mm`, hl: true }
+      ];
+      for (const row of rows) {
+        grid.appendChild(
+          el('div', { class: 'pc-res-row' + (row.hl ? ' pc-res-row--hl' : '') },
+            el('span', { class: 'pc-res-label' }, t(row.key)),
+            el('span', { class: 'pc-res-val' }, row.val)
+          )
+        );
+      }
+      resEl.hidden = false;
+    },
+
+    /** Reset the form back to defaults. */
+    reset() {
+      PC_FIELDS.forEach(function(pair) {
+        const el2 = $(pair[0]); if (el2) el2.value = pair[1];
+      });
+      const errEl = $('#pcError'); if (errEl) errEl.hidden = true;
+      const resEl = $('#pcResult'); if (resEl) resEl.hidden = true;
+      this.updateOdHint();
+      try { localStorage.removeItem(PIPE_CALC_KEY); } catch (e) {}
+    }
+  };
+
+
   /** ----- Search (외경 역산) with debounce — tolerance 없이 가장 가까운 후보 표시 ----- */
   function findFlange() {
     const raw = $('#searchOD').value.trim();
@@ -2482,6 +2765,31 @@
     'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
     'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
     'close-tutorial':    closeTutorial,
+    'open-pipe-calc':    () => {
+      PipeCalc.initSizeSelect();
+      PipeCalc.loadSaved();
+      ModalCtl.open($('#pipeCalcModal'));
+    },
+    'close-pipe-calc':   () => { PipeCalc.saveForm(); ModalCtl.close($('#pipeCalcModal')); },
+    'pc-size-change':    () => { PipeCalc.updateOdHint(); PipeCalc.saveForm(); },
+    'pc-calc':           () => PipeCalc.calculate(),
+    'pc-reset':          () => PipeCalc.reset(),
+    'pc-tut-toggle':     (el2) => {
+      const body = $('#pcTutBody');
+      if (!body) return;
+      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
+      el2.setAttribute('aria-expanded', String(willOpen));
+      body.hidden = !willOpen;
+      el2.setAttribute('data-i18n', willOpen ? 'pc.tut_toggle_close' : 'pc.tut_toggle');
+      el2.textContent = t(willOpen ? 'pc.tut_toggle_close' : 'pc.tut_toggle');
+    },
+    'pc-adv-toggle':     (el2) => {
+      const body = $('#pcAdvBody');
+      if (!body) return;
+      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
+      el2.setAttribute('aria-expanded', String(willOpen));
+      body.hidden = !willOpen;
+    },
     'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
     'close-cart':        () => { ModalCtl.close($('#cartModal')); },
     'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
@@ -2573,7 +2881,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change'].includes(name)) {
+      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change', 'pc-size-change'].includes(name)) {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -2678,11 +2986,13 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#pipeCalcModal')].forEach(m => {
+      if (!m) return;
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
           else if (m.id === 'measureGuideModal') ModalCtl.close($('#measureGuideModal'));
+          else if (m.id === 'pipeCalcModal') { PipeCalc.saveForm(); ModalCtl.close(m); }
           else ModalCtl.close(m);
         }
       });
@@ -2690,6 +3000,12 @@
 
     // Drag-reorder
     bindDrag();
+
+    // Pipe calc: persist form values on input change
+    PC_FIELDS.forEach(function(pair) {
+      const el2 = $(pair[0]);
+      if (el2) el2.addEventListener('change', function() { PipeCalc.saveForm(); });
+    });
   }
 
   /* =====================================================================
