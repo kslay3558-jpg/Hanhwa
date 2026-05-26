@@ -2748,7 +2748,7 @@
     { selector: '[data-action="open-tutorial"]', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
     { selector: '#searchOD', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
     { selector: '[data-action="add-bolt"]', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
-    { selector: '#queueCard .action-row [data-action="calculate"]', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
+    { selector: '#btnCalculateMain', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
     { selector: '#resultCard', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' }
   ];
 
@@ -2791,7 +2791,16 @@
       if (target) {
         this.activeTarget = target;
         target.classList.add('tour-target-highlight');
-        smoothScrollIntoView(target, { block: 'center', inline: 'nearest' });
+        const reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        if (reduceMotion) {
+          try {
+            target.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+          } catch (e) {
+            target.scrollIntoView(false);
+          }
+        } else {
+          smoothScrollIntoView(target, { block: 'center', inline: 'nearest' });
+        }
       }
       $('#tourStep').textContent = t('tut.tour_step', { cur: this.index + 1, total: TOUR_STEPS.length });
       $('#tourTitle').textContent = t(step.titleKey);
@@ -3049,7 +3058,7 @@
       }
       if (TourCtl.isOpen()) {
         if (e.key === 'Escape') { e.preventDefault(); TourCtl.close(); return; }
-        if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); TourCtl.next(); return; }
+        if (e.key === 'ArrowRight') { e.preventDefault(); TourCtl.next(); return; }
         if (e.key === 'ArrowLeft') { e.preventDefault(); TourCtl.prev(); return; }
       }
 

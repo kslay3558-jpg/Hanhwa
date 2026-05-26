@@ -1002,7 +1002,7 @@
     background: rgba(15, 23, 42, .72);
     opacity: 0; pointer-events: none; transition: opacity var(--m-base);
   }
-  .tour-overlay.show { opacity: 1; pointer-events: none; }
+  .tour-overlay.show { opacity: 1; pointer-events: auto; }
   .tour-panel {
     position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom));
     transform: translateX(-50%);
@@ -1538,7 +1538,7 @@
         </div>
         <div id="qBody" class="queue-list" aria-live="polite" aria-relevant="additions removals"></div>
         <div class="action-row">
-          <button class="btn btn-success" data-action="calculate"><span data-i18n="btn.calc">🧮 최종 집계</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.ctrl_enter">(Ctrl+Enter)</small></button>
+          <button id="btnCalculateMain" class="btn btn-success" data-action="calculate"><span data-i18n="btn.calc">🧮 최종 집계</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.ctrl_enter">(Ctrl+Enter)</small></button>
           <button class="btn btn-ghost" data-action="clear-all" data-i18n="btn.clear">초기화</button>
         </div>
       </div>
