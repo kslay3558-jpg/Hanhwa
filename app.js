@@ -2610,9 +2610,6 @@
     'open-pipe-calc':    () => { window.location.href = './Cal.html'; },
     'open-angle-mark':   () => ModalCtl.open($('#angleMarkModal')),
     'close-angle-mark':  () => ModalCtl.close($('#angleMarkModal')),
-    'pc-size-change':    () => { PipeCalc.updateOdHint(); PipeCalc.saveForm(); },
-    'pc-calc':           () => PipeCalc.calculate(),
-    'pc-reset':          () => PipeCalc.reset(),
     'pc-tut-toggle':     (el2) => {
       const body = $('#pcTutBody');
       if (!body) return;
@@ -2718,7 +2715,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change' || name === 'lang-change' || name === 'pc-size-change') {
+      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change' || name === 'lang-change') {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -2821,7 +2818,7 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#pipeCalcModal'), $('#angleMarkModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#angleMarkModal')].forEach(m => {
       if (!m) return;
       m.addEventListener('click', (e) => {
         if (e.target === m) {
