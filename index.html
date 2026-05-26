@@ -1291,10 +1291,10 @@
         </div>
       </div>
 
-      <!-- 5. 가스파이프 프리셋 (기본 닫힘) -->
+      <!-- 5. 가스파이프 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
-          <h2 data-i18n="card.gas_pipe">🛢 가스파이프 프리셋</h2>
+          <h2 data-i18n="card.gas_pipe">🛢 가스파이프</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
@@ -1303,10 +1303,28 @@
               <div class="field">
                 <label for="gasPipePreset" data-i18n="form.gas_pipe_preset">가스파이프 프리셋</label>
                 <select id="gasPipePreset" data-action="gas-preset-change"></select>
-                <p class="help" data-i18n="gas.help">250A부터 1500A까지 제공된 가스파이프 프리셋을 선택할 수 있습니다.</p>
+                <p class="help" data-i18n="gas.help">가스켓 없이 볼트만 추가합니다. 입력 수량은 볼트 EA 기준으로 합산됩니다.</p>
+              </div>
+              <div class="field">
+                <label for="gasQty" data-i18n="form.qty_ea">수량 (EA)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gas" aria-label="가스파이프 볼트 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="gasQty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="gasQty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gas_in" aria-label="가스파이프 볼트 수량">
+                  <button type="button" data-action="qty-inc" data-target="gasQty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="option-box" style="margin-top:10px;">
+              <div class="toggle-row">
+                <span class="toggle-title" data-i18n="opt.gas_washer">와셔 추가 +5mm</span>
+                <label class="switch">
+                  <input type="checkbox" id="optGasWasher" data-action="gas-washer-change">
+                  <span class="slider"></span>
+                </label>
               </div>
             </div>
             <div id="gasPipeTableWrap"></div>
+            <button class="btn btn-secondary" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
           </div>
         </div>
       </div>
