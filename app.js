@@ -2793,7 +2793,7 @@
     { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
     { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
   ];
-  /** Delay (ms) to briefly show the selected language chip before the tour starts (short enough to keep flow snappy). */
+  /** Delay (ms) to briefly show selected language feedback before tour start; 450ms keeps it noticeable but still snappy. */
   const LANG_SELECTION_FEEDBACK_DELAY = 450;
 
   const TourCtl = {
@@ -2840,7 +2840,7 @@
           try {
             target.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
           } catch (e) {
-            console.warn('Failed to scroll with options, using simple scroll instead:', e);
+            console.warn('Browser does not support scrollIntoView options, falling back to basic scroll:', e);
             target.scrollIntoView();
           }
         } else {
