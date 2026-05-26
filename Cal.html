@@ -1926,6 +1926,12 @@
       return el ? el.textContent : fallback;
     }
 
+    function currentNumericText(id, fallback = 0) {
+      const fallbackString = String(fallback);
+      const value = parseFloat(currentText(id, fallbackString));
+      return Number.isFinite(value) ? String(value) : fallbackString;
+    }
+
     function t(key, params) {
       const labels = I18N[state.language] || I18N.ko;
       let value = labels[key] ?? I18N.ko[key] ?? key;
@@ -2095,14 +2101,14 @@
       setAttr("mainPanel", "aria-label", t("resultArea"));
       setAttr("stickyPanel", "aria-label", t("stickyAria"));
 
-      setHtml("svgLabelL", `${t("svgHorizontal")} = <tspan id="svg_L">${currentText("svg_L", DEFAULTS.L)}</tspan> mm`);
+      setHtml("svgLabelL", `${t("svgHorizontal")} = <tspan id="svg_L">${currentNumericText("svg_L", DEFAULTS.L)}</tspan> mm`);
       setHtml("svgLabelH", `${t("svgVertical")} = <tspan id="svg_H">300</tspan> mm`);
-      setHtml("svgLabelT", `${t("svgDiagonal")} = <tspan id="svg_T">${currentText("svg_T", DEFAULTS.T)}</tspan> mm`);
+      setHtml("svgLabelT", `${t("svgDiagonal")} = <tspan id="svg_T">${currentNumericText("svg_T", DEFAULTS.T)}</tspan> mm`);
       setText("svgStartCenter", t("svgStartCenter"));
       setText("svgEndCenter", t("svgEndCenter"));
-      setHtml("bLabel2", `B = <tspan id="svg_B">${currentText("svg_B", "0.0")}</tspan> mm`);
-      setHtml("svgODText", `${t("svgPipeOD")} = <tspan id="svg_OD">${currentText("svg_OD", PIPE_SIZES[DEFAULTS.pipeSize].toFixed(1))}</tspan> mm`);
-      setHtml("svgAngleText", `${t("svgCutAngle")} <tspan id="svg_A">${currentText("svg_A", "0.0")}</tspan>°`);
+      setHtml("bLabel2", `B = <tspan id="svg_B">${currentNumericText("svg_B", "0.0")}</tspan> mm`);
+      setHtml("svgODText", `${t("svgPipeOD")} = <tspan id="svg_OD">${currentNumericText("svg_OD", PIPE_SIZES[DEFAULTS.pipeSize].toFixed(1))}</tspan> mm`);
+      setHtml("svgAngleText", `${t("svgCutAngle")} <tspan id="svg_A">${currentNumericText("svg_A", "0.0")}</tspan>°`);
 
       setText("step2TextPrefix", t("step2TextPre"));
       setText("step2TextSuffix", t("step2TextPost"));
