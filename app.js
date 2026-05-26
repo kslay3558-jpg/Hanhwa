@@ -2940,9 +2940,15 @@
     activeAccordionHead: null,
     accordionBodyIds: [],
     savedAccordionState: null,
+    panelPositionTimer: null,
     isOpen() {
       const overlay = $('#quickTourOverlay');
       return !!(overlay && !overlay.hidden);
+    },
+    clearPanelPositionTimer() {
+      if (!this.panelPositionTimer) return;
+      clearTimeout(this.panelPositionTimer);
+      this.panelPositionTimer = null;
     },
     clearTarget() {
       if (!this.activeTarget) return;
@@ -2953,6 +2959,53 @@
       if (!this.activeAccordionHead) return;
       this.activeAccordionHead.classList.remove('tour-parent-highlight');
       this.activeAccordionHead = null;
+    },
+    positionPanel(target) {
+      const panel = $('#quickTourOverlay .tour-panel');
+      if (!panel) return;
+      panel.style.left = '';
+      panel.style.right = '';
+      panel.style.top = '';
+      panel.style.bottom = '';
+      panel.style.transform = '';
+      if (!target || !(target instanceof Element)) {
+        panel.style.left = '50%';
+        panel.style.top = `calc(20px + env(safe-area-inset-top))`;
+        panel.style.transform = 'translateX(-50%)';
+        return;
+      }
+      const margin = 12;
+      const gap = 14;
+      const rect = target.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const panelWidth = Math.min(panelRect.width || 440, viewportWidth - margin * 2);
+      const maxLeft = Math.max(margin, viewportWidth - panelWidth - margin);
+      const preferredLeft = rect.left + (rect.width / 2) - (panelWidth / 2);
+      const left = Math.min(maxLeft, Math.max(margin, preferredLeft));
+      const safeTop = margin + 8;
+      const safeBottom = viewportHeight - panelRect.height - margin - 8;
+      const belowTop = rect.bottom + gap;
+      const aboveTop = rect.top - panelRect.height - gap;
+      const top = belowTop <= safeBottom ? belowTop : Math.max(safeTop, Math.min(safeBottom, aboveTop));
+      panel.style.left = `${left}px`;
+      panel.style.top = `${Math.max(safeTop, top)}px`;
+      panel.style.transform = 'none';
+    },
+    queuePanelPositionUpdate(target, delay = 0) {
+      this.clearPanelPositionTimer();
+      const fallbackTarget = target || this.activeTarget || this.activeAccordionHead;
+      const reposition = () => {
+        this.panelPositionTimer = null;
+        if (!this.isOpen()) return;
+        this.positionPanel(fallbackTarget || this.activeTarget || this.activeAccordionHead);
+      };
+      if (delay > 0) {
+        this.panelPositionTimer = setTimeout(reposition, delay);
+        return;
+      }
+      requestAnimationFrame(reposition);
     },
     start() {
       const overlay = $('#quickTourOverlay');
@@ -2975,6 +3028,15 @@
       restoreAccordionStateSnapshot(this.accordionBodyIds, this.savedAccordionState);
       this.accordionBodyIds = [];
       this.savedAccordionState = null;
+      this.clearPanelPositionTimer();
+      const panel = $('#quickTourOverlay .tour-panel');
+      if (panel) {
+        panel.style.left = '';
+        panel.style.right = '';
+        panel.style.top = '';
+        panel.style.bottom = '';
+        panel.style.transform = '';
+      }
       overlay.classList.remove('show');
       overlay.hidden = true;
       overlay.setAttribute('aria-hidden', 'true');
@@ -3032,6 +3094,7 @@
         prevBtn.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
       }
       if (nextBtn) nextBtn.textContent = this.index === TOUR_STEPS.length - 1 ? t('tut.tour_done') : t('tut.tour_next');
+      this.queuePanelPositionUpdate(target || this.activeAccordionHead, target && !REDUCE_MOTION_QUERY.matches ? 260 : 0);
     },
     next() {
       if (this.index >= TOUR_STEPS.length - 1) {
@@ -3214,6 +3277,18 @@
   }
 
   function bindGlobalEvents() {
+    document.addEventListener('click', (e) => {
+      if (!TourCtl.isOpen()) return;
+      const panel = e.target.closest('#quickTourOverlay .tour-panel');
+      const actionButton = e.target.closest('[data-action="tour-prev"], [data-action="tour-next"], [data-action="tour-close"]');
+      if (actionButton) return;
+      if (panel || !e.target.closest('[data-action="open-tutorial"]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        TourCtl.next();
+      }
+    }, true);
+
     // Click delegation
     document.addEventListener('click', (e) => {
       const target = e.target.closest('[data-action]');
@@ -3241,6 +3316,11 @@
 
     // Search debounced
     $('#searchOD').addEventListener('input', debouncedFindFlange);
+
+    window.addEventListener('resize', () => {
+      if (!TourCtl.isOpen()) return;
+      TourCtl.queuePanelPositionUpdate();
+    });
 
     // Memo autosave
     $('#memoInput').addEventListener('input', debounce(() => {

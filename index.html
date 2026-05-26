@@ -1071,7 +1071,7 @@
   }
   .tour-overlay.show { opacity: 1; pointer-events: auto; }
   .tour-panel {
-    position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom));
+    position: fixed; left: 50%; top: calc(20px + env(safe-area-inset-top));
     transform: translateX(-50%);
     width: min(94vw, 440px);
     background: var(--c-surface);
@@ -1108,12 +1108,16 @@
     transition: outline-color var(--m-fast), box-shadow var(--m-fast);
   }
   .acc-head.tour-parent-highlight {
-    background: var(--c-primary-weak);
-    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c-primary) 45%, transparent);
+    background: color-mix(in srgb, var(--c-primary) 22%, var(--c-surface));
+    border-color: color-mix(in srgb, var(--c-primary) 48%, var(--c-border));
+    box-shadow:
+      0 10px 24px color-mix(in srgb, var(--c-primary) 18%, transparent),
+      inset 0 0 0 2px color-mix(in srgb, var(--c-primary) 78%, white);
   }
   .acc-head.tour-parent-highlight h2,
   .acc-head.tour-parent-highlight .acc-chevron {
     color: var(--c-primary);
+    text-shadow: 0 0 1px color-mix(in srgb, var(--c-primary) 30%, transparent);
   }
   .acc-head.tour-parent-highlight::before { opacity: 1; }
   @media (max-width: 520px) {
