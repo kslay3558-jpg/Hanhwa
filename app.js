@@ -345,23 +345,32 @@
       'tut.s5_d':             '상단 파이프 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.',
       'tut.confirm':          '확인했어요, 시작할게요!',
       'tut.hide':             '다시 보지 않기',
-      'tut.start_tour':       '클릭형 튜토리얼 시작',
+      'tut.start_tour':       '▶ 클릭형 튜토리얼 시작',
+      'tut.lang_pg_title':    '🌐 언어를 먼저 선택해주세요',
+      'tut.lang_pg_desc':     '원하는 언어를 고르면 앱 전체가 해당 언어로 표시됩니다.',
+      'tut.lang_pg_next':     '다음 →',
       'tut.tour_prev':        '이전',
       'tut.tour_next':        '다음',
-      'tut.tour_done':        '완료',
+      'tut.tour_done':        '완료 ✓',
       'tut.tour_close':       '종료',
-      'tut.tour_step':        '단계 {cur} / {total}',
+      'tut.tour_step':        '{cur} / {total}',
       'tut.tour1_t':          '도움말 버튼',
-      'tut.tour1_d':          '상단 ❓ 도움말 버튼을 누르면 언제든 가이드를 다시 열 수 있습니다.',
-      'tut.tour2_t':          '플랜지 외경 입력',
-      'tut.tour2_d':          '측정한 OD(mm)를 입력하면 해당 규격 후보를 빠르게 찾을 수 있습니다.',
-      'tut.tour3_t':          '포인트 추가',
-      'tut.tour3_d':          '압력등급/호칭경/옵션을 설정한 뒤 [＋ 포인트 추가]로 대기열에 담습니다.',
-      'tut.tour4_t':          '최종 집계 버튼',
-      'tut.tour4_d':          '대기열에 담은 항목을 [최종 집계]로 한 번에 합산합니다.',
-      'tut.tour5_t':          '집계 결과 영역',
-      'tut.tour5_d':          '집계가 끝나면 이 영역에 결과가 표시되고 복사/저장 기능을 사용할 수 있습니다.',
-      'tut.tour_finished':    '✅ 클릭형 튜토리얼이 완료되었습니다.',
+      'tut.tour1_d':          '상단 ❓ 도움말 버튼을 누르면 언제든지 이 가이드를 다시 열 수 있습니다.',
+      'tut.tour2_t':          '플랜지 외경(OD) 역산',
+      'tut.tour2_d':          '플랜지의 외경(mm)을 입력하면 해당하는 JIS 규격 후보를 바로 찾아줍니다.',
+      'tut.tour3_t':          '압력등급 · 호칭경 선택',
+      'tut.tour3_d':          '압력등급(5K/10K/16K/30K)과 호칭경(A)을 선택해주세요. 볼트 규격이 자동으로 결정됩니다.',
+      'tut.tour4_t':          '볼트 옵션 설정',
+      'tut.tour4_d':          '볼트 연장(+5mm), 더블너트 적용, 가스켓 포함 여부를 토글로 간단하게 설정할 수 있습니다.',
+      'tut.tour5_t':          '포인트 추가',
+      'tut.tour5_d':          '규격과 옵션을 설정한 뒤 [＋ 포인트 추가] 버튼(또는 Enter)으로 대기열에 담습니다.',
+      'tut.tour6_t':          '대기열 · 현장 관리',
+      'tut.tour6_d':          '담은 자재들이 여기 표시됩니다. 수량을 바로 수정하거나 항목을 삭제할 수 있습니다.',
+      'tut.tour7_t':          '최종 집계',
+      'tut.tour7_d':          '대기열 항목을 [최종 집계] 또는 Ctrl+Enter로 동일 규격을 자동 병합해 합산합니다.',
+      'tut.tour8_t':          '결과 복사 · 저장',
+      'tut.tour8_d':          '집계 결과를 📋 복사 또는 이미지 저장으로 바로 공유할 수 있습니다.',
+      'tut.tour_finished':    '✅ 튜토리얼 완료! 이제 자재를 담아보세요.',
       // Toasts
       't.added':              '✅ 추가됨 · 대기열 {n}건',
       't.added_g':            '✅ 가스켓 추가 · {n}건',
@@ -666,23 +675,32 @@
       'tut.s5_d':             'Nhấn biểu tượng ống ở thanh trên để chuyển sang máy tính cắt chéo ống.',
       'tut.confirm':          'Đã hiểu, bắt đầu!',
       'tut.hide':             'Không hiển thị lại',
-      'tut.start_tour':       'Bắt đầu hướng dẫn từng bước',
+      'tut.start_tour':       '▶ Bắt đầu hướng dẫn từng bước',
+      'tut.lang_pg_title':    '🌐 Hãy chọn ngôn ngữ trước',
+      'tut.lang_pg_desc':     'Chọn ngôn ngữ để hiển thị toàn bộ ứng dụng theo ngôn ngữ đó.',
+      'tut.lang_pg_next':     'Tiếp theo →',
       'tut.tour_prev':        'Trước',
       'tut.tour_next':        'Tiếp',
-      'tut.tour_done':        'Hoàn tất',
+      'tut.tour_done':        'Hoàn tất ✓',
       'tut.tour_close':       'Thoát',
-      'tut.tour_step':        'Bước {cur} / {total}',
+      'tut.tour_step':        '{cur} / {total}',
       'tut.tour1_t':          'Nút trợ giúp',
-      'tut.tour1_d':          'Nhấn nút ❓ để mở lại hướng dẫn bất cứ lúc nào.',
-      'tut.tour2_t':          'Nhập OD mặt bích',
-      'tut.tour2_d':          'Nhập OD(mm) đã đo để tìm nhanh quy cách phù hợp.',
-      'tut.tour3_t':          'Thêm điểm',
-      'tut.tour3_d':          'Thiết lập áp lực/kích cỡ/tùy chọn rồi nhấn [＋ Thêm điểm] vào hàng chờ.',
-      'tut.tour4_t':          'Nút tổng hợp cuối',
-      'tut.tour4_d':          'Nhấn [Tổng hợp cuối] để cộng dồn tất cả vật tư trong hàng chờ.',
-      'tut.tour5_t':          'Khu vực kết quả',
-      'tut.tour5_d':          'Sau khi tổng hợp, kết quả xuất hiện ở đây và có thể sao chép/lưu.',
-      'tut.tour_finished':    '✅ Đã hoàn tất hướng dẫn từng bước.',
+      'tut.tour1_d':          'Nhấn nút ❓ ở trên để mở lại hướng dẫn này bất cứ lúc nào.',
+      'tut.tour2_t':          'Tra cứu OD mặt bích',
+      'tut.tour2_d':          'Nhập OD (mm) đã đo, ứng dụng sẽ tự tìm quy cách JIS phù hợp.',
+      'tut.tour3_t':          'Chọn áp suất · kích cỡ',
+      'tut.tour3_d':          'Chọn cấp áp (5K/10K/16K/30K) và đường kính danh nghĩa (A). Bu lông sẽ được tính tự động.',
+      'tut.tour4_t':          'Tùy chọn bu lông',
+      'tut.tour4_d':          'Bật/tắt dài thêm (+5mm), đai ốc đôi, và kèm gioăng bằng công tắc.',
+      'tut.tour5_t':          'Thêm điểm',
+      'tut.tour5_d':          'Sau khi thiết lập, nhấn [＋ Thêm điểm] hoặc Enter để thêm vào hàng chờ.',
+      'tut.tour6_t':          'Hàng chờ · Dự án',
+      'tut.tour6_d':          'Vật tư đã thêm hiển thị ở đây. Có thể sửa số lượng hoặc xóa từng mục.',
+      'tut.tour7_t':          'Tổng hợp cuối',
+      'tut.tour7_d':          'Nhấn [Tổng hợp cuối] hoặc Ctrl+Enter để gộp và cộng dồn tất cả vật tư.',
+      'tut.tour8_t':          'Sao chép · Lưu kết quả',
+      'tut.tour8_d':          'Sao chép kết quả bằng 📋 hoặc lưu ảnh để chia sẻ ngay.',
+      'tut.tour_finished':    '✅ Hướng dẫn hoàn tất! Hãy bắt đầu thêm vật tư.',
       't.added':              '✅ Đã thêm · Hàng chờ {n}',
       't.added_g':            '✅ Đã thêm gioăng · {n}',
       't.added_u':            '✅ Đã thêm bu lông U · {n}',
@@ -983,23 +1001,32 @@
       'tut.s5_d':             'Tekan ikon pipa di bagian atas untuk pindah ke kalkulator potong miring pipa.',
       'tut.confirm':          'Mengerti, mulai sekarang!',
       'tut.hide':             'Jangan tampilkan lagi',
-      'tut.start_tour':       'Mulai tutorial klik',
+      'tut.start_tour':       '▶ Mulai tutorial klik',
+      'tut.lang_pg_title':    '🌐 Pilih bahasa terlebih dahulu',
+      'tut.lang_pg_desc':     'Pilih bahasa agar seluruh aplikasi tampil dalam bahasa tersebut.',
+      'tut.lang_pg_next':     'Selanjutnya →',
       'tut.tour_prev':        'Sebelumnya',
       'tut.tour_next':        'Berikutnya',
-      'tut.tour_done':        'Selesai',
+      'tut.tour_done':        'Selesai ✓',
       'tut.tour_close':       'Tutup',
-      'tut.tour_step':        'Langkah {cur} / {total}',
+      'tut.tour_step':        '{cur} / {total}',
       'tut.tour1_t':          'Tombol bantuan',
-      'tut.tour1_d':          'Tekan tombol ❓ untuk membuka panduan lagi kapan saja.',
-      'tut.tour2_t':          'Input OD flensa',
-      'tut.tour2_d':          'Masukkan OD(mm) hasil ukur untuk mencari spesifikasi yang cocok.',
-      'tut.tour3_t':          'Tambah poin',
-      'tut.tour3_d':          'Atur rating/ukuran/opsi lalu tekan [＋ Tambah poin] ke antrean.',
-      'tut.tour4_t':          'Tombol rekap akhir',
-      'tut.tour4_d':          'Tekan [Rekap akhir] untuk menjumlahkan semua item dalam antrean.',
-      'tut.tour5_t':          'Area hasil',
-      'tut.tour5_d':          'Setelah rekap, hasil tampil di area ini dan bisa disalin/disimpan.',
-      'tut.tour_finished':    '✅ Tutorial klik selesai.',
+      'tut.tour1_d':          'Tekan tombol ❓ di atas untuk membuka panduan ini kapan saja.',
+      'tut.tour2_t':          'Cari OD flensa',
+      'tut.tour2_d':          'Masukkan OD (mm) yang diukur, aplikasi akan mencari spesifikasi JIS yang sesuai.',
+      'tut.tour3_t':          'Pilih rating · ukuran',
+      'tut.tour3_d':          'Pilih rating tekanan (5K/10K/16K/30K) dan ukuran nominal (A). Baut akan otomatis ditentukan.',
+      'tut.tour4_t':          'Opsi baut',
+      'tut.tour4_d':          'Aktifkan perpanjangan (+5mm), mur ganda, dan gasket menggunakan sakelar.',
+      'tut.tour5_t':          'Tambah poin',
+      'tut.tour5_d':          'Setelah pengaturan, tekan [＋ Tambah poin] atau Enter untuk masukkan ke antrean.',
+      'tut.tour6_t':          'Antrean · Proyek',
+      'tut.tour6_d':          'Material yang ditambahkan tampil di sini. Ubah jumlah atau hapus item dengan mudah.',
+      'tut.tour7_t':          'Rekap akhir',
+      'tut.tour7_d':          'Tekan [Rekap akhir] atau Ctrl+Enter untuk menggabungkan dan menjumlahkan semua material.',
+      'tut.tour8_t':          'Salin · Simpan hasil',
+      'tut.tour8_d':          'Salin hasil dengan 📋 atau simpan gambar untuk langsung berbagi.',
+      'tut.tour_finished':    '✅ Tutorial selesai! Mulai tambahkan material.',
       't.added':              '✅ Ditambahkan · Antrean {n}',
       't.added_g':            '✅ Gasket ditambahkan · {n}',
       't.added_u':            '✅ Baut U ditambahkan · {n}',
@@ -2730,10 +2757,26 @@
   }
 
   /** ----- Tutorial ----- */
+  function showTutPage(pageId) {
+    $$('#tutorialModal .tut-page').forEach(p => p.classList.toggle('active', p.id === pageId));
+    const titleEl = document.getElementById('tutorialTitle');
+    if (titleEl && pageId === 'tutPageLang') {
+      titleEl.textContent = t('tut.lang_pg_title');
+    }
+    // Sync lang chip selected state on page 1
+    if (pageId === 'tutPageLang') {
+      $$('#tutPageLang .tut-lang-chip-big').forEach(b => {
+        b.classList.toggle('selected', b.dataset.lang === Lang.current);
+        b.setAttribute('aria-pressed', b.dataset.lang === Lang.current ? 'true' : 'false');
+      });
+    }
+  }
+
   function maybeShowTutorial() {
     let seen = false;
     try { seen = localStorage.getItem(TUTORIAL_KEY) === 'true'; } catch (e) {}
     if (!seen) {
+      showTutPage('tutPageLang');
       ModalCtl.open($('#tutorialModal'));
     }
   }
@@ -2745,11 +2788,14 @@
   }
 
   const TOUR_STEPS = [
-    { selector: '#btnHelpTutorial', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
-    { selector: '#searchOD', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
-    { selector: '[data-action="add-bolt"]', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
-    { selector: '#btnCalculateMain', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
-    { selector: '#resultCard', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' }
+    { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
+    { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
+    { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
+    { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
+    { selector: '[data-action="add-bolt"]',    icon: '➕', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' },
+    { selector: '#queueCard',                  icon: '📋', titleKey: 'tut.tour6_t', descKey: 'tut.tour6_d' },
+    { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
+    { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
   ];
   const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -2805,8 +2851,19 @@
         }
       }
       $('#tourStep').textContent = t('tut.tour_step', { cur: this.index + 1, total: TOUR_STEPS.length });
+      const iconEl = $('#tourIcon');
+      if (iconEl) iconEl.textContent = step.icon || '';
       $('#tourTitle').textContent = t(step.titleKey);
       $('#tourDesc').textContent = t(step.descKey);
+      const dotsEl = $('#tourDots');
+      if (dotsEl) {
+        dotsEl.innerHTML = '';
+        TOUR_STEPS.forEach((_, i) => {
+          const d = document.createElement('span');
+          d.className = 'tour-dot' + (i === this.index ? ' active' : '');
+          dotsEl.appendChild(d);
+        });
+      }
       const prevBtn = $('[data-action="tour-prev"]');
       const nextBtn = $('[data-action="tour-next"]');
       if (prevBtn) {
@@ -2902,8 +2959,20 @@
     'theme-toggle':      actionToggleTheme,
     'open-measure-guide':(el2) => actionOpenMeasureGuide(el2.dataset.guide),
     'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
-    'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
+    'open-tutorial':     () => { showTutPage('tutPageGuide'); ModalCtl.open($('#tutorialModal')); },
     'close-tutorial':    closeTutorial,
+    'tut-next-page':     () => showTutPage('tutPageGuide'),
+    'tut-lang-pick':     (el2) => {
+      actionLangChange(el2.dataset.lang);
+      // Sync selected state visually
+      $$('#tutPageLang .tut-lang-chip-big').forEach(b => {
+        const sel = b.dataset.lang === el2.dataset.lang;
+        b.classList.toggle('selected', sel);
+        b.setAttribute('aria-pressed', sel ? 'true' : 'false');
+      });
+      // Auto-advance to guide page after brief visual feedback
+      setTimeout(() => showTutPage('tutPageGuide'), 450);
+    },
     'start-tutorial-tour':() => { closeTutorial(); TourCtl.start(); },
     'tour-next':         () => TourCtl.next(),
     'tour-prev':         () => TourCtl.prev(),

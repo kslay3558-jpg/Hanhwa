@@ -1006,26 +1006,36 @@
   .tour-panel {
     position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom));
     transform: translateX(-50%);
-    width: min(94vw, 420px);
+    width: min(94vw, 440px);
     background: var(--c-surface);
     color: var(--c-text);
     border: 1px solid var(--c-border);
     border-radius: var(--r-lg);
     box-shadow: var(--e-4);
-    padding: 14px;
+    padding: 14px 16px 16px;
     pointer-events: auto;
   }
-  .tour-step { font-size: .76rem; color: var(--c-primary); font-weight: 800; margin-bottom: 4px; }
-  .tour-panel h3 { font-size: .95rem; margin: 0 0 6px; color: var(--c-text); }
-  .tour-panel p { font-size: .84rem; color: var(--c-text-sub); line-height: 1.5; margin: 0; }
-  .tour-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .tour-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .tour-step-icon { font-size: 1.35rem; flex: 0 0 auto; }
+  .tour-step-meta { flex: 1; min-width: 0; }
+  .tour-step { font-size: .73rem; color: var(--c-primary); font-weight: 800; }
+  .tour-panel h3 { font-size: .93rem; margin: 0; color: var(--c-text); font-weight: 700; }
+  .tour-panel p { font-size: .84rem; color: var(--c-text-sub); line-height: 1.55; margin: 0 0 12px; }
+  .tour-dots { display: flex; gap: 5px; margin: 8px 0 12px; justify-content: center; }
+  .tour-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--c-border-strong); transition: background var(--m-fast), transform var(--m-fast);
+  }
+  .tour-dot.active {
+    background: var(--c-primary); transform: scale(1.4);
+  }
+  .tour-actions { display: flex; gap: 8px; }
   .tour-actions .btn { flex: 1; min-height: 36px; }
   .tour-target-highlight {
     position: relative;
     z-index: 3501;
-    outline: 3px solid var(--c-primary);
-    outline-style: dashed;
-    outline-offset: 2px;
+    outline: 3px dashed var(--c-primary);
+    outline-offset: 3px;
     box-shadow: 0 0 0 8px var(--c-primary-weak);
     border-radius: 10px;
     transition: outline-color var(--m-fast), box-shadow var(--m-fast);
@@ -1035,7 +1045,35 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .tour-target-highlight { transition: none; }
+    .tour-dot { transition: none; }
   }
+
+  /* Tutorial modal two-page layout */
+  .tut-page { display: none; }
+  .tut-page.active { display: block; }
+  .tut-lang-pg { text-align: center; padding: 6px 0 8px; }
+  .tut-lang-pg h2 { font-size: 1.1rem; margin-bottom: 6px; }
+  .tut-lang-pg p { font-size: .85rem; color: var(--c-text-sub); margin-bottom: 18px; line-height: 1.5; }
+  .tut-lang-chips-big { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .tut-lang-chip-big {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    background: var(--c-surface-2); border: 2px solid var(--c-border);
+    border-radius: var(--r-md); cursor: pointer;
+    font-size: .95rem; font-weight: 700;
+    transition: border-color var(--m-fast), background var(--m-fast), transform var(--m-fast);
+    text-align: left; width: 100%;
+  }
+  .tut-lang-chip-big:hover, .tut-lang-chip-big:focus-visible {
+    border-color: var(--c-primary); background: var(--c-primary-weak);
+  }
+  .tut-lang-chip-big.selected {
+    border-color: var(--c-primary); background: var(--c-primary-weak);
+    transform: scale(1.02);
+  }
+  .tut-lang-chip-big .flag { font-size: 1.5rem; line-height: 1; }
+  .tut-lang-chip-big .lang-native { font-size: .9rem; }
+  .tut-lang-chip-big .lang-local { font-size: .75rem; color: var(--c-text-mute); font-weight: 400; }
 
   /* Install banner */
   .install-banner {
@@ -1375,7 +1413,7 @@
             </div>
             <div id="dataWarn" class="search-res" role="status" aria-live="polite"></div>
 
-            <div class="option-box">
+            <div id="flangeOptionBox" class="option-box">
               <div class="toggle-row">
                 <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)</span>
                 <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
@@ -1673,66 +1711,100 @@
   <!-- 튜토리얼 모달 -->
   <div id="tutorialModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle" aria-hidden="true">
     <div class="modal-content">
-      <h2 id="tutorialTitle" data-i18n="tut.title">🎉 사용 가이드</h2>
 
-      <!-- 언어 선택 / Language picker (외국인 노동자용) -->
-      <div class="tut-lang-row" role="group" data-i18n-attr="aria-label:tb.lang_select" aria-label="언어 선택">
-        <div class="tut-lang-label" data-i18n="tut.lang_label">🌐 언어 / Language / Ngôn ngữ / Bahasa</div>
-        <button type="button" class="tut-lang-chip" data-action="lang-pick" data-lang="ko" aria-pressed="false">
-          <span class="flag" aria-hidden="true">🇰🇷</span><span>한국어</span>
-        </button>
-        <button type="button" class="tut-lang-chip" data-action="lang-pick" data-lang="vi" aria-pressed="false">
-          <span class="flag" aria-hidden="true">🇻🇳</span><span>Tiếng Việt</span>
-        </button>
-        <button type="button" class="tut-lang-chip" data-action="lang-pick" data-lang="id" aria-pressed="false">
-          <span class="flag" aria-hidden="true">🇮🇩</span><span>Bahasa Indonesia</span>
-        </button>
+      <!-- ─── Page 1: Language selection ─── -->
+      <div id="tutPageLang" class="tut-page active">
+        <div class="tut-lang-pg">
+          <h2 id="tutorialTitle" data-i18n="tut.lang_pg_title">🌐 언어를 선택해주세요</h2>
+          <p data-i18n="tut.lang_pg_desc">원하는 언어를 고르면 앱 전체가 해당 언어로 표시됩니다.</p>
+        </div>
+        <div class="tut-lang-chips-big">
+          <button type="button" class="tut-lang-chip-big" data-action="tut-lang-pick" data-lang="ko" aria-pressed="false">
+            <span class="flag" aria-hidden="true">🇰🇷</span>
+            <span><span class="lang-native">한국어</span><br><span class="lang-local">Korean</span></span>
+          </button>
+          <button type="button" class="tut-lang-chip-big" data-action="tut-lang-pick" data-lang="vi" aria-pressed="false">
+            <span class="flag" aria-hidden="true">🇻🇳</span>
+            <span><span class="lang-native">Tiếng Việt</span><br><span class="lang-local">Vietnamese · 베트남어</span></span>
+          </button>
+          <button type="button" class="tut-lang-chip-big" data-action="tut-lang-pick" data-lang="id" aria-pressed="false">
+            <span class="flag" aria-hidden="true">🇮🇩</span>
+            <span><span class="lang-native">Bahasa Indonesia</span><br><span class="lang-local">Indonesian · 인도네시아어</span></span>
+          </button>
+        </div>
+        <button class="btn btn-primary" style="width:100%;" data-action="tut-next-page" data-i18n="tut.lang_pg_next">다음 →</button>
       </div>
 
-      <p class="guide-intro"><span data-i18n="tut.intro_pre">도면의 배관 자재를 </span><b data-i18n="tut.intro_em">장바구니처럼 추가</b><span data-i18n="tut.intro_post">하면, 전체 필요 수량을 자동으로 합산하는 스마트 계산기입니다.</span></p>
-      <div class="guide-list">
-        <div class="guide-item">
-          <div class="guide-icon" aria-hidden="true">🛒</div>
-          <div class="guide-text"><h4 data-i18n="tut.s1_t">1. 자재 담기</h4><p><span data-i18n="tut.s1_d_pre">규격을 선택하고 </span><b data-i18n="tut.s1_d_em">[＋ 추가]</b><span data-i18n="tut.s1_d_post"> 또는 Enter 키로 대기열에 담아주세요.</span></p></div>
+      <!-- ─── Page 2: Guide content ─── -->
+      <div id="tutPageGuide" class="tut-page">
+        <h2 id="tutorialTitleGuide" data-i18n="tut.title">🎉 사용 가이드</h2>
+
+        <!-- 언어 선택 / Language picker (외국인 노동자용) -->
+        <div class="tut-lang-row" role="group" data-i18n-attr="aria-label:tb.lang_select" aria-label="언어 선택">
+          <div class="tut-lang-label" data-i18n="tut.lang_label">🌐 언어 / Language / Ngôn ngữ / Bahasa</div>
+          <button type="button" class="tut-lang-chip" data-action="lang-pick" data-lang="ko" aria-pressed="false">
+            <span class="flag" aria-hidden="true">🇰🇷</span><span>한국어</span>
+          </button>
+          <button type="button" class="tut-lang-chip" data-action="lang-pick" data-lang="vi" aria-pressed="false">
+            <span class="flag" aria-hidden="true">🇻🇳</span><span>Tiếng Việt</span>
+          </button>
+          <button type="button" class="tut-lang-chip" data-action="lang-pick" data-lang="id" aria-pressed="false">
+            <span class="flag" aria-hidden="true">🇮🇩</span><span>Bahasa Indonesia</span>
+          </button>
         </div>
-        <div class="guide-item">
-          <div class="guide-icon" aria-hidden="true">🧠</div>
-          <div class="guide-text"><h4 data-i18n="tut.s2_t">2. JIS 자동 산출</h4><p data-i18n="tut.s2_d">플랜지 규격만 넣으면 볼트 굵기·길이·수량이 자동 계산됩니다 (더블너트 시 너트 두께가 볼트 길이에 자동 합산).</p></div>
-        </div>
-        <div class="guide-item">
-          <div class="guide-icon" aria-hidden="true">🧮</div>
-          <div class="guide-text"><h4 data-i18n="tut.s3_t">3. 합산 집계</h4><p><span data-i18n="tut.s3_d_pre"></span><b data-i18n="tut.s3_d_em">[최종 집계]</b><span data-i18n="tut.s3_d_post"> 또는 Ctrl+Enter 로 동일 규격을 자동 병합합니다.</span></p></div>
-        </div>
-        <div class="guide-item">
-          <div class="guide-icon" aria-hidden="true">📋</div>
-          <div class="guide-text"><h4 data-i18n="tut.s4_t">4. 결과 복사</h4><p data-i18n="tut.s4_d">집계 후 📋 복사 버튼(또는 Ctrl+C)으로 결과를 클립보드에 복사할 수 있습니다.</p></div>
-        </div>
-        <div class="guide-item">
-          <div class="guide-icon" aria-hidden="true">
-            <span class="pipe-icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
-                <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
-                <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
-              </svg>
-            </span>
+
+        <p class="guide-intro"><span data-i18n="tut.intro_pre">도면의 배관 자재를 </span><b data-i18n="tut.intro_em">장바구니처럼 추가</b><span data-i18n="tut.intro_post">하면, 전체 필요 수량을 자동으로 합산하는 스마트 계산기입니다.</span></p>
+        <div class="guide-list">
+          <div class="guide-item">
+            <div class="guide-icon" aria-hidden="true">🛒</div>
+            <div class="guide-text"><h4 data-i18n="tut.s1_t">1. 자재 담기</h4><p><span data-i18n="tut.s1_d_pre">규격을 선택하고 </span><b data-i18n="tut.s1_d_em">[＋ 추가]</b><span data-i18n="tut.s1_d_post"> 또는 Enter 키로 대기열에 담아주세요.</span></p></div>
           </div>
-          <div class="guide-text"><h4 data-i18n="tut.s5_t">5. 파이프 커팅 계산기 바로가기</h4><p data-i18n="tut.s5_d">상단 파이프 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.</p></div>
+          <div class="guide-item">
+            <div class="guide-icon" aria-hidden="true">🧠</div>
+            <div class="guide-text"><h4 data-i18n="tut.s2_t">2. JIS 자동 산출</h4><p data-i18n="tut.s2_d">플랜지 규격만 넣으면 볼트 굵기·길이·수량이 자동 계산됩니다 (더블너트 시 너트 두께가 볼트 길이에 자동 합산).</p></div>
+          </div>
+          <div class="guide-item">
+            <div class="guide-icon" aria-hidden="true">🧮</div>
+            <div class="guide-text"><h4 data-i18n="tut.s3_t">3. 합산 집계</h4><p><span data-i18n="tut.s3_d_pre"></span><b data-i18n="tut.s3_d_em">[최종 집계]</b><span data-i18n="tut.s3_d_post"> 또는 Ctrl+Enter 로 동일 규격을 자동 병합합니다.</span></p></div>
+          </div>
+          <div class="guide-item">
+            <div class="guide-icon" aria-hidden="true">📋</div>
+            <div class="guide-text"><h4 data-i18n="tut.s4_t">4. 결과 복사</h4><p data-i18n="tut.s4_d">집계 후 📋 복사 버튼(또는 Ctrl+C)으로 결과를 클립보드에 복사할 수 있습니다.</p></div>
+          </div>
+          <div class="guide-item">
+            <div class="guide-icon" aria-hidden="true">
+              <span class="pipe-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+                  <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+                  <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
+                </svg>
+              </span>
+            </div>
+            <div class="guide-text"><h4 data-i18n="tut.s5_t">5. 파이프 커팅 계산기 바로가기</h4><p data-i18n="tut.s5_d">상단 파이프 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.</p></div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-secondary" data-action="start-tutorial-tour" data-i18n="tut.start_tour">클릭형 튜토리얼 시작</button>
+          <button class="btn btn-primary" data-action="close-tutorial" data-i18n="tut.confirm">확인했어요, 시작할게요!</button>
+          <label class="check-wrap"><input type="checkbox" id="chkHideTutorial"> <span data-i18n="tut.hide">다시 보지 않기</span></label>
         </div>
       </div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" data-action="start-tutorial-tour" data-i18n="tut.start_tour">클릭형 튜토리얼 시작</button>
-        <button class="btn btn-primary" data-action="close-tutorial" data-i18n="tut.confirm">확인했어요, 시작할게요!</button>
-        <label class="check-wrap"><input type="checkbox" id="chkHideTutorial"> <span data-i18n="tut.hide">다시 보지 않기</span></label>
-      </div>
+
     </div>
   </div>
 
   <div id="quickTourOverlay" class="tour-overlay" aria-hidden="true" hidden>
     <div class="tour-panel" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourDesc">
-      <div id="tourStep" class="tour-step">1 / 1</div>
-      <h3 id="tourTitle">튜토리얼</h3>
+      <div class="tour-header">
+        <span id="tourIcon" class="tour-step-icon" aria-hidden="true">❓</span>
+        <div class="tour-step-meta">
+          <div id="tourStep" class="tour-step">1 / 1</div>
+          <h3 id="tourTitle">튜토리얼</h3>
+        </div>
+      </div>
       <p id="tourDesc">설명</p>
+      <div id="tourDots" class="tour-dots" aria-hidden="true"></div>
       <div class="tour-actions">
         <button class="btn btn-ghost" type="button" data-action="tour-prev" data-i18n="tut.tour_prev">이전</button>
         <button class="btn btn-primary" type="button" data-action="tour-next" data-i18n="tut.tour_next">다음</button>
