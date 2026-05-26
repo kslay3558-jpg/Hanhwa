@@ -1963,7 +1963,7 @@
     flushed: false,
     markInput() {
       this.inputCount += 1;
-      if (this.firstInputMs === null) this.firstInputMs = Math.max(0, Date.now() - this.sessionStart);
+      if (this.firstInputMs === null) this.firstInputMs = Date.now() - this.sessionStart;
     },
     markInvalidInput() {
       this.invalidInputCount += 1;
@@ -1980,14 +1980,16 @@
         firstInputMs: this.firstInputMs,
         inputCount: this.inputCount,
         invalidInputCount: this.invalidInputCount,
-        invalidRate: this.inputCount > 0 ? +(this.invalidInputCount / this.inputCount).toFixed(4) : 0,
+        invalidRate: this.inputCount > 0 ? Number((this.invalidInputCount / this.inputCount).toFixed(4)) : 0,
         maxScrollY: this.maxScrollY
       };
       try {
         const list = JSON.parse(localStorage.getItem(UX_METRICS_KEY) || '[]');
         list.push(payload);
         localStorage.setItem(UX_METRICS_KEY, JSON.stringify(list.slice(-UX_METRICS_MAX_HISTORY)));
-      } catch (e) {}
+      } catch (e) {
+        // storage unavailable or blocked; skip metrics persistence safely
+      }
     },
     bind() {
       if (this.bound) return;
