@@ -2979,31 +2979,6 @@
     'tour-next':         () => TourCtl.next(),
     'tour-prev':         () => TourCtl.prev(),
     'tour-close':        () => TourCtl.close(),
-    'open-pipe-calc':    () => {
-      PipeCalc.initSizeSelect();
-      PipeCalc.loadSaved();
-      ModalCtl.open($('#pipeCalcModal'));
-    },
-    'close-pipe-calc':   () => { PipeCalc.saveForm(); ModalCtl.close($('#pipeCalcModal')); },
-    'pc-size-change':    () => { PipeCalc.updateOdHint(); PipeCalc.saveForm(); },
-    'pc-calc':           () => PipeCalc.calculate(),
-    'pc-reset':          () => PipeCalc.reset(),
-    'pc-tut-toggle':     (el2) => {
-      const body = $('#pcTutBody');
-      if (!body) return;
-      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
-      el2.setAttribute('aria-expanded', String(willOpen));
-      body.hidden = !willOpen;
-      el2.setAttribute('data-i18n', willOpen ? 'pc.tut_toggle_close' : 'pc.tut_toggle');
-      el2.textContent = t(willOpen ? 'pc.tut_toggle_close' : 'pc.tut_toggle');
-    },
-    'pc-adv-toggle':     (el2) => {
-      const body = $('#pcAdvBody');
-      if (!body) return;
-      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
-      el2.setAttribute('aria-expanded', String(willOpen));
-      body.hidden = !willOpen;
-    },
     'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
     'close-cart':        () => { ModalCtl.close($('#cartModal')); },
     'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
@@ -3096,7 +3071,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change', 'pc-size-change'].includes(name)) {
+      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change'].includes(name)) {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -3206,13 +3181,12 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#pipeCalcModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
       if (!m) return;
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
           else if (m.id === 'measureGuideModal') ModalCtl.close($('#measureGuideModal'));
-          else if (m.id === 'pipeCalcModal') { PipeCalc.saveForm(); ModalCtl.close(m); }
           else ModalCtl.close(m);
         }
       });
@@ -3221,11 +3195,6 @@
     // Drag-reorder
     bindDrag();
 
-    // Pipe calc: persist form values on input change
-    PC_FIELDS.forEach(function(pair) {
-      const el2 = $(pair[0]);
-      if (el2) el2.addEventListener('change', function() { PipeCalc.saveForm(); });
-    });
   }
 
   /* =====================================================================
