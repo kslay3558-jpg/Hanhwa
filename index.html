@@ -996,6 +996,43 @@
   .guide-text h4 { margin-bottom: 4px; color: var(--c-text); }
   .guide-text p { font-size: .82rem; color: var(--c-text-sub); line-height: 1.5; }
 
+  /* Click tutorial overlay */
+  .tour-overlay {
+    position: fixed; inset: 0; z-index: 3400;
+    background: rgba(15, 23, 42, .72);
+    opacity: 0; pointer-events: none; transition: opacity var(--m-base);
+  }
+  .tour-overlay.show { opacity: 1; pointer-events: none; }
+  .tour-panel {
+    position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: min(94vw, 420px);
+    background: var(--c-surface);
+    color: var(--c-text);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    box-shadow: var(--e-4);
+    padding: 14px;
+    pointer-events: auto;
+  }
+  .tour-step { font-size: .76rem; color: var(--c-primary); font-weight: 800; margin-bottom: 4px; }
+  .tour-panel h3 { font-size: .95rem; margin: 0 0 6px; color: var(--c-text); }
+  .tour-panel p { font-size: .84rem; color: var(--c-text-sub); line-height: 1.5; margin: 0; }
+  .tour-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .tour-actions .btn { flex: 1; min-height: 36px; }
+  .tour-target-highlight {
+    position: relative !important;
+    z-index: 3501 !important;
+    outline: 3px solid var(--c-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, .28);
+    border-radius: 10px;
+    transition: outline-color var(--m-fast), box-shadow var(--m-fast);
+  }
+  @media (max-width: 520px) {
+    .tour-panel { width: calc(100vw - 20px); }
+  }
+
   /* Install banner */
   .install-banner {
     position: fixed; left: 12px; right: 12px; bottom: 80px; z-index: 950;
@@ -1680,8 +1717,22 @@
         </div>
       </div>
       <div class="modal-actions">
+        <button class="btn btn-secondary" data-action="start-tutorial-tour" data-i18n="tut.start_tour">클릭형 튜토리얼 시작</button>
         <button class="btn btn-primary" data-action="close-tutorial" data-i18n="tut.confirm">확인했어요, 시작할게요!</button>
         <label class="check-wrap"><input type="checkbox" id="chkHideTutorial"> <span data-i18n="tut.hide">다시 보지 않기</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div id="quickTourOverlay" class="tour-overlay" aria-hidden="true" hidden>
+    <div class="tour-panel" role="dialog" aria-modal="true" aria-labelledby="tourTitle" aria-describedby="tourDesc">
+      <div id="tourStep" class="tour-step">1 / 1</div>
+      <h3 id="tourTitle">튜토리얼</h3>
+      <p id="tourDesc">설명</p>
+      <div class="tour-actions">
+        <button class="btn btn-ghost" type="button" data-action="tour-prev" data-i18n="tut.tour_prev">이전</button>
+        <button class="btn btn-primary" type="button" data-action="tour-next" data-i18n="tut.tour_next">다음</button>
+        <button class="btn btn-secondary" type="button" data-action="tour-close" data-i18n="tut.tour_close">종료</button>
       </div>
     </div>
   </div>
