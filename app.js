@@ -1253,7 +1253,7 @@
     if (!row) return null;
     let len = row.boltLength;
     if (opts.washerExtra) len += 5;
-    // Gas pipe preset quantity already represents the final bolt EA count, unlike flange points that multiply by hole count, so bC remains 1.
+    // Gas pipe preset quantity already represents the final individual bolt count, unlike flange points that multiply by hole count, so bC is set to 1.
     return { type: 'bolt', s, qty, ext: !!opts.washerExtra, doubleNut: false, gasPipe: true, bS: row.boltSize, bL: len, bC: 1 };
   }
 
