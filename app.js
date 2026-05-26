@@ -1815,8 +1815,8 @@
       card.appendChild(head);
 
       const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
-      const isMobile = window.matchMedia('(max-width: 640px)').matches;
-      if (isMobile && rowCount >= 8) {
+      const isMobile = window.matchMedia(`(max-width: ${MOBILE_RESULT_SUMMARY_BREAKPOINT}px)`).matches;
+      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_THRESHOLD) {
         const summaryCard = el('div', { class: 'res-summary-card' },
           el('h3', null, t('r.summary_title')),
           el('div', { class: 'res-summary-row' },
@@ -1949,7 +1949,10 @@
   let lastExportText = '';
   let lastExportCSV  = '';
   let editingIndex   = -1;
+  const MOBILE_RESULT_SUMMARY_BREAKPOINT = 640;
+  const MOBILE_RESULT_SUMMARY_THRESHOLD = 8;
   const UX_METRICS_KEY = 'jis-ux-metrics-v1';
+  const UX_METRICS_MAX_HISTORY = 30;
   const UX = {
     sessionStart: Date.now(),
     firstInputMs: null,
@@ -1960,7 +1963,7 @@
     flushed: false,
     markInput() {
       this.inputCount += 1;
-      if (this.firstInputMs == null) this.firstInputMs = Math.max(0, Date.now() - this.sessionStart);
+      if (this.firstInputMs === null) this.firstInputMs = Math.max(0, Date.now() - this.sessionStart);
     },
     markInvalidInput() {
       this.invalidInputCount += 1;
@@ -1983,7 +1986,7 @@
       try {
         const list = JSON.parse(localStorage.getItem(UX_METRICS_KEY) || '[]');
         list.push(payload);
-        localStorage.setItem(UX_METRICS_KEY, JSON.stringify(list.slice(-30)));
+        localStorage.setItem(UX_METRICS_KEY, JSON.stringify(list.slice(-UX_METRICS_MAX_HISTORY)));
       } catch (e) {}
     },
     bind() {
