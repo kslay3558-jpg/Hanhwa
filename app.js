@@ -1411,10 +1411,7 @@
       );
 
       wrap.textContent = '';
-      wrap.appendChild(el('div', { class: 'gas-note' }, t('gas.desc')));
-      wrap.appendChild(el('div', { class: 'gas-rule' }, t('gas.rule')));
-      wrap.appendChild(el('div', { class: 'gas-note gas-note-sub' }, t('gas.help')));
-      wrap.appendChild(el('div', { class: 'gas-table-scroll' },
+      wrap.appendChild(el('div', { class: 'gas-table-scroll gas-pipe-table-wrap' },
         el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
       ));
     },

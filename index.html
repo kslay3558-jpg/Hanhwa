@@ -662,18 +662,24 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
-  .gas-note, .gas-rule {
-    font-size: .82rem; line-height: 1.6; color: var(--c-text-sub);
-    background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: var(--r-md);
-    padding: 10px 12px;
+  .gas-pipe-form.col-2 { grid-template-columns: minmax(0, 1.5fr) minmax(132px, .75fr); }
+  .gas-pipe-form .field { min-width: 0; }
+  .gas-pipe-option-box { margin-top: 0; margin-bottom: 10px; }
+  .gas-pipe-option-box .toggle-row { padding: 12px 0; }
+  .gas-pipe-table-wrap { margin-top: 2px; }
+  .gas-table-scroll { overflow-x: auto; }
+  .gas-pipe-table { min-width: 0; table-layout: fixed; }
+  .gas-pipe-table th, .gas-pipe-table td { padding: 8px 10px; }
+  .gas-pipe-add-btn { width: 100%; margin-top: 12px; }
+  @media (max-width: 640px) {
+    .gas-pipe-form.col-2 { grid-template-columns: 1fr; gap: 12px; }
+    .gas-pipe-form .field label { margin-bottom: 6px; }
+    .gas-pipe-option-box { margin-bottom: 12px; }
+    .gas-pipe-table th, .gas-pipe-table td { font-size: .8rem; }
   }
-  .gas-rule {
-    margin-top: 8px; color: var(--c-primary-strong);
-    background: var(--c-primary-weak); border-color: color-mix(in srgb, var(--c-primary) 28%, var(--c-border));
+  @media (max-width: 380px) {
+    .gas-pipe-table th, .gas-pipe-table td { padding: 7px 8px; font-size: .76rem; }
   }
-  .gas-note-sub { margin-top: 8px; }
-  .gas-table-scroll { margin-top: 10px; overflow-x: auto; }
-  .gas-pipe-table { min-width: 640px; }
   /* Category pill tags */
   .res-cat-tag {
     display: inline-block; padding: 3px 8px; border-radius: 999px;
@@ -1299,11 +1305,10 @@
         </button>
         <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
           <div class="acc-body-inner">
-            <div class="form-grid col-2">
+            <div class="form-grid col-2 gas-pipe-form">
               <div class="field">
                 <label for="gasPipePreset" data-i18n="form.gas_pipe_preset">가스파이프 프리셋</label>
                 <select id="gasPipePreset" data-action="gas-preset-change"></select>
-                <p class="help" data-i18n="gas.help">가스켓 없이 볼트만 추가합니다. 입력 수량은 볼트 EA 기준으로 합산됩니다.</p>
               </div>
               <div class="field">
                 <label for="gasQty" data-i18n="form.qty_ea">수량 (EA)</label>
@@ -1314,7 +1319,7 @@
                 </div>
               </div>
             </div>
-            <div class="option-box" style="margin-top:10px;">
+            <div class="option-box gas-pipe-option-box">
               <div class="toggle-row">
                 <span class="toggle-title" data-i18n="opt.gas_washer">와셔 추가 +5mm</span>
                 <label class="switch">
@@ -1324,7 +1329,7 @@
               </div>
             </div>
             <div id="gasPipeTableWrap"></div>
-            <button class="btn btn-secondary" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
+            <button class="btn btn-primary gas-pipe-add-btn" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
           </div>
         </div>
       </div>
