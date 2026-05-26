@@ -487,10 +487,10 @@
       'form.gas_pipe_preset': 'Preset ống gas',
       'aria.qty_gas':         'Điều chỉnh số bu lông ống gas',
       'aria.qty_gas_in':      'Số bu lông ống gas',
-      'opt.gas_washer':       'Thêm long đền +5mm',
+      'opt.gas_washer':       'Thêm vòng đệm +5mm',
       'btn.add_gas_bolt':     '＋ Thêm bu lông ống gas',
       'gas.desc':             'Khi chọn kích thước trong preset ống gas, bạn có thể xem ngay quy cách và chiều dài bu lông rồi thêm vào hàng chờ như giỏ hàng.',
-      'gas.rule':             'Chiều dài bu lông cơ bản đã bỏ phần cộng thêm 5mm. Nếu chọn thêm long đền, chiều dài sẽ cộng lại 5mm.',
+      'gas.rule':             'Chiều dài bu lông cơ bản đã bỏ phần cộng thêm 5mm. Nếu chọn thêm vòng đệm, chiều dài sẽ cộng lại 5mm.',
       'gas.help':             'Chỉ thêm bu lông, không thêm gioăng. Số lượng nhập sẽ được cộng theo đơn vị EA.',
       'gas.col.size':         'Kích thước',
       'gas.col.flange':       'Độ dày mặt bích',
@@ -1124,7 +1124,7 @@
    * @property {string=} r       — rating (5K/10K/16K/30K)
    * @property {number=} s       — size A
    * @property {number}  qty
-   * @property {boolean=} ext, doubleNut, auto, gasPipe
+   * @property {boolean=} ext, doubleNut, auto, gasPipe — gasPipe=true when the bolt item comes from the gas pipe preset flow
    * @property {string=} bS, gtype
    * @property {number=} bL, bC
    * @property {number=} pitch
@@ -1253,6 +1253,7 @@
     if (!row) return null;
     let len = row.boltLength;
     if (opts.washerExtra) len += 5;
+    // Gas pipe preset quantity is entered directly as bolt EA, so one queued unit equals one bolt.
     return { type: 'bolt', s, qty, ext: !!opts.washerExtra, doubleNut: false, gasPipe: true, bS: row.boltSize, bL: len, bC: 1 };
   }
 
