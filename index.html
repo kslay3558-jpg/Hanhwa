@@ -1107,10 +1107,20 @@
     border-radius: 10px;
     transition: outline-color var(--m-fast), box-shadow var(--m-fast);
   }
+  .acc-head.tour-parent-highlight {
+    background: var(--c-primary-weak);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--c-primary) 45%, transparent);
+  }
+  .acc-head.tour-parent-highlight h2,
+  .acc-head.tour-parent-highlight .acc-chevron {
+    color: var(--c-primary);
+  }
+  .acc-head.tour-parent-highlight::before { opacity: 1; }
   @media (max-width: 520px) {
     .tour-panel { width: calc(100vw - 20px); }
   }
   @media (prefers-reduced-motion: reduce) {
+    .acc-head.tour-parent-highlight { transition: none; }
     .tour-target-highlight { transition: none; }
     .tour-dot { transition: none; }
   }

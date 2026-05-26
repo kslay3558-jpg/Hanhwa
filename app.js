@@ -2879,7 +2879,7 @@
   function setAccordionExpanded(bodyId, shouldOpen) {
     if (!bodyId) return;
     const body = document.getElementById(bodyId);
-    const head = document.querySelector(`.acc-head[aria-controls="${bodyId}"]`);
+    const head = getAccordionHead(bodyId);
     if (!body || !head) return;
     head.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
     if (shouldOpen) {
@@ -2911,6 +2911,10 @@
       setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
     });
   }
+  function getAccordionHead(bodyId) {
+    if (!bodyId) return null;
+    return document.querySelector(`.acc-head[aria-controls="${bodyId}"]`);
+  }
   function resolveStepAccordionBodyId(step, target) {
     if (step && step.accordionBodyId) return step.accordionBodyId;
     if (!target || !(target instanceof Element)) return null;
@@ -2933,6 +2937,7 @@
   const TourCtl = {
     index: 0,
     activeTarget: null,
+    activeAccordionHead: null,
     accordionBodyIds: [],
     savedAccordionState: null,
     isOpen() {
@@ -2944,6 +2949,11 @@
       this.activeTarget.classList.remove('tour-target-highlight');
       this.activeTarget = null;
     },
+    clearAccordionHeadHighlight() {
+      if (!this.activeAccordionHead) return;
+      this.activeAccordionHead.classList.remove('tour-parent-highlight');
+      this.activeAccordionHead = null;
+    },
     start() {
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
@@ -2951,6 +2961,7 @@
       this.accordionBodyIds = getTutorialAccordionBodyIds();
       this.savedAccordionState = getAccordionStateSnapshot(this.accordionBodyIds);
       this.clearTarget();
+      this.clearAccordionHeadHighlight();
       overlay.hidden = false;
       overlay.classList.add('show');
       overlay.setAttribute('aria-hidden', 'false');
@@ -2960,6 +2971,7 @@
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.clearTarget();
+      this.clearAccordionHeadHighlight();
       restoreAccordionStateSnapshot(this.accordionBodyIds, this.savedAccordionState);
       this.accordionBodyIds = [];
       this.savedAccordionState = null;
@@ -2975,6 +2987,14 @@
       const activeAccordionBodyId = resolveStepAccordionBodyId(step, target);
       syncTutorialAccordion(this.accordionBodyIds, activeAccordionBodyId);
       this.clearTarget();
+      this.clearAccordionHeadHighlight();
+      if (activeAccordionBodyId) {
+        const activeHead = getAccordionHead(activeAccordionBodyId);
+        if (activeHead) {
+          this.activeAccordionHead = activeHead;
+          activeHead.classList.add('tour-parent-highlight');
+        }
+      }
       if (target) {
         this.activeTarget = target;
         target.classList.add('tour-target-highlight');
