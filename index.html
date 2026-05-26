@@ -45,6 +45,7 @@
     --r-md: 10px;
     --r-lg: 14px;
     --r-xl: 20px;
+    --gas-qty-min-width: 132px;
 
     --e-1: 0 1px 2px rgba(15,23,42,.05), 0 1px 1px rgba(15,23,42,.04);
     --e-2: 0 2px 6px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
@@ -152,9 +153,15 @@
     opacity: .85;
   }
   /* brand: 최소 200px flex-basis로 controls에 밀려 0px가 되는 현상 방지 */
-  .app-header .brand { flex: 1 1 200px; min-width: 0; }
+  .app-header .brand { flex: 1 1 200px; min-width: 0; padding-right: 52px; }
   .app-header .brand h1 { line-height: 1.2; }
   .app-header .brand p { color: var(--c-text-mute); font-size: .78rem; margin-top: 3px; font-weight: 500; }
+  .app-header .header-theme-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 1;
+  }
   /* controls: min-width 0으로 flex-shrink가 제대로 동작하게 함 */
   .app-header .controls { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; min-width: 0; }
 
@@ -172,6 +179,22 @@
     cursor: pointer; font-size: 1rem; transition: background var(--m-fast), color var(--m-fast), transform var(--m-fast);
     touch-action: manipulation; white-space: nowrap;
   }
+  .pipe-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+  }
+  .pipe-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+  .guide-icon .pipe-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  a.icon-btn { text-decoration: none; }
   .icon-btn[data-action="open-tutorial"] { width: auto; padding: 0 10px; font-size: 0.8rem; font-weight: 600; }
   .help-btn { background: var(--c-primary) !important; color: #fff !important; border-color: var(--c-primary) !important; box-shadow: var(--e-1); }
   .help-btn:hover { background: var(--c-primary-strong, #1d4ed8) !important; filter: brightness(1.08); }
@@ -188,17 +211,16 @@
     background: var(--c-surface-2);
     border: 1px solid var(--c-border);
     border-radius: 999px;
-    padding: 0 4px 0 10px;
+    padding: 0 4px 0 8px;
     height: 36px;
     transition: border-color var(--m-fast);
   }
   .lang-picker:hover, .lang-picker:focus-within { border-color: var(--c-focus); }
-  .lang-picker .lp-icon { font-size: .95rem; pointer-events: none; }
   .lang-picker select {
     appearance: none; -webkit-appearance: none;
     background: transparent; border: none; outline: none;
     color: var(--c-text); font-weight: 700; font-size: .82rem;
-    padding: 0 22px 0 6px; height: 34px; cursor: pointer;
+    padding: 0 22px 0 8px; height: 34px; cursor: pointer;
     background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
                       linear-gradient(135deg, currentColor 50%, transparent 50%);
     background-position: calc(100% - 12px) 14px, calc(100% - 7px) 14px;
@@ -641,7 +663,24 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
-
+  .gas-pipe-form.col-2 { grid-template-columns: minmax(0, 1.5fr) minmax(var(--gas-qty-min-width), .75fr); }
+  .gas-pipe-form .field { min-width: 0; }
+  .gas-pipe-option-box { margin-top: 0; margin-bottom: 10px; }
+  .gas-pipe-option-box .toggle-row { padding: 12px 0; }
+  .gas-pipe-table-wrap { margin-top: 2px; }
+  .gas-table-scroll { overflow-x: auto; }
+  .gas-pipe-table { min-width: 0; table-layout: fixed; }
+  .gas-pipe-table th, .gas-pipe-table td { padding: 8px 10px; }
+  .gas-pipe-add-btn { width: 100%; margin-top: 12px; }
+  @media (max-width: 640px) {
+    .gas-pipe-form.col-2 { grid-template-columns: 1fr; gap: 12px; }
+    .gas-pipe-form .field label { margin-bottom: 6px; }
+    .gas-pipe-option-box { margin-bottom: 12px; }
+    .gas-pipe-table th, .gas-pipe-table td { font-size: .8rem; }
+  }
+  @media (max-width: 380px) {
+    .gas-pipe-table th, .gas-pipe-table td { padding: 7px 8px; font-size: .76rem; }
+  }
   /* Category pill tags */
   .res-cat-tag {
     display: inline-block; padding: 3px 8px; border-radius: 999px;
@@ -1208,9 +1247,9 @@
       <h1 data-i18n="app.title">설비/배관 자재 계산기</h1>
       <p data-i18n="app.subtitle">JIS 규격 기반 · 오프라인 PWA</p>
     </div>
+    <button class="icon-btn header-theme-toggle" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
     <div class="controls" role="toolbar" data-i18n-attr="aria-label:app.toolbar" aria-label="앱 도구">
       <div class="lang-picker" data-i18n-attr="aria-label:tb.lang">
-        <span class="lp-icon" aria-hidden="true">🌐</span>
         <label class="sr-only" for="langSelect" data-i18n="tb.lang_select">언어 선택</label>
         <select id="langSelect" data-action="lang-change" data-i18n-attr="aria-label:tb.lang_select" aria-label="언어 선택">
           <option value="ko">🇰🇷 한국어</option>
@@ -1218,7 +1257,15 @@
           <option value="id">🇮🇩 Bahasa Indonesia</option>
         </select>
       </div>
-      <button class="icon-btn" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
+      <a class="icon-btn" href="./Cal.html" data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc" title="파이프 사선 커팅 계산기 열기" aria-label="파이프 사선 커팅 계산기 열기">
+        <span class="pipe-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+            <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+            <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
+          </svg>
+        </span>
+      </a>
       <button class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">❓ 도움말</button>
     </div>
   </header>
@@ -1394,7 +1441,44 @@
         </div>
       </div>
 
-      <!-- 5. 메모 (기본 닫힘) -->
+      <!-- 5. 가스파이프 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
+          <h2 data-i18n="card.gas_pipe">🛢 가스파이프</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-2 gas-pipe-form">
+              <div class="field">
+                <label for="gasPipePreset" data-i18n="form.gas_pipe_preset">가스파이프 프리셋</label>
+                <select id="gasPipePreset" data-action="gas-preset-change"></select>
+              </div>
+              <div class="field">
+                <label for="gasQty" data-i18n="form.qty_ea">수량 (EA)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gas" aria-label="가스파이프 볼트 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="gasQty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="gasQty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gas_in" aria-label="가스파이프 볼트 수량">
+                  <button type="button" data-action="qty-inc" data-target="gasQty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="option-box gas-pipe-option-box">
+              <div class="toggle-row">
+                <span class="toggle-title" data-i18n="opt.gas_washer">와셔 추가 +5mm</span>
+                <label class="switch">
+                  <input type="checkbox" id="optGasWasher" data-action="gas-washer-change">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            <div id="gasPipeTableWrap"></div>
+            <button class="btn btn-primary gas-pipe-add-btn" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. 메모 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
           <h2 data-i18n="card.memo">📝 추가 메모</h2>
@@ -1581,6 +1665,18 @@
         <div class="guide-item">
           <div class="guide-icon" aria-hidden="true">📋</div>
           <div class="guide-text"><h4 data-i18n="tut.s4_t">4. 결과 복사</h4><p data-i18n="tut.s4_d">집계 후 📋 복사 버튼(또는 Ctrl+C)으로 결과를 클립보드에 복사할 수 있습니다.</p></div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon" aria-hidden="true">
+            <span class="pipe-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+                <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
+                <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
+              </svg>
+            </span>
+          </div>
+          <div class="guide-text"><h4 data-i18n="tut.s5_t">5. 파이프 커팅 계산기 바로가기</h4><p data-i18n="tut.s5_d">상단 파이프 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.</p></div>
         </div>
       </div>
       <div class="modal-actions">
