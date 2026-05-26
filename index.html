@@ -671,6 +671,56 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
+  .res-summary-card {
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-surface-2);
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .res-summary-card h3 {
+    font-size: .82rem; color: var(--c-text-sub);
+    margin-bottom: 8px;
+  }
+  .res-summary-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .res-summary-total {
+    font-size: 1rem; font-weight: 800; color: var(--c-text);
+    white-space: nowrap;
+  }
+  .res-summary-tags {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .res-detail {
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-surface);
+    margin-bottom: 4px;
+    overflow: hidden;
+  }
+  .res-detail summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--c-text-sub);
+    padding: 10px 12px;
+    background: var(--c-surface-2);
+    border-bottom: 1px solid transparent;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .res-detail summary::-webkit-details-marker { display: none; }
+  .res-detail summary::before {
+    content: '▸';
+    font-size: .76rem;
+    transition: transform var(--m-fast);
+  }
+  .res-detail[open] summary::before { transform: rotate(90deg); }
+  .res-detail[open] summary { border-bottom-color: var(--c-border); }
+  .res-detail .res-flat-wrapper { border: none; border-radius: 0; margin-bottom: 0; }
   .gas-pipe-form.col-2 { grid-template-columns: minmax(0, 1.5fr) minmax(var(--gas-qty-min-width), .75fr); }
   .gas-pipe-form .field { min-width: 0; }
   .gas-pipe-option-box { margin-top: 0; margin-bottom: 10px; }

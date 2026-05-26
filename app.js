@@ -293,6 +293,9 @@
       'r.col_qty_sheet':      '수량(장)',
       'r.col_qty_set':        '수량(Set)',
       'r.no_rows':            '내역 없음',
+      'r.summary_title':      '요약',
+      'r.summary_items':      '항목 {n}개',
+      'r.detail_toggle':      '상세 내역 보기',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
       'r.memo_title':         '📝 추가 메모',
@@ -626,6 +629,9 @@
       'r.col_qty_sheet':      'SL (tấm)',
       'r.col_qty_set':        'SL (bộ)',
       'r.no_rows':            'Không có dữ liệu',
+      'r.summary_title':      'Tóm tắt',
+      'r.summary_items':      '{n} mục',
+      'r.detail_toggle':      'Xem chi tiết',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(không có pitch)',
       'r.memo_title':         '📝 Ghi chú thêm',
@@ -950,6 +956,9 @@
       'r.col_qty_sheet':      'Jml (lbr)',
       'r.col_qty_set':        'Jml (set)',
       'r.no_rows':            'Tidak ada data',
+      'r.summary_title':      'Ringkasan',
+      'r.summary_items':      '{n} item',
+      'r.detail_toggle':      'Lihat detail',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(pitch tdk diketahui)',
       'r.memo_title':         '📝 Catatan tambahan',
@@ -1805,7 +1814,30 @@
       );
       card.appendChild(head);
 
-      card.appendChild(this._flatList(agg));
+      const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
+      const isMobile = window.matchMedia('(max-width: 640px)').matches;
+      if (isMobile && rowCount >= 8) {
+        const summaryCard = el('div', { class: 'res-summary-card' },
+          el('h3', null, t('r.summary_title')),
+          el('div', { class: 'res-summary-row' },
+            el('div', { class: 'res-summary-total' }, t('r.summary_items', { n: rowCount })),
+            el('div', { class: 'res-summary-tags' },
+              agg.sB.length ? el('span', { class: 'res-cat-tag res-cat-tag-bolt' }, `${t('r.tag_bolt')} ${agg.sB.length}`) : null,
+              agg.sN.length ? el('span', { class: 'res-cat-tag res-cat-tag-nut' }, `${t('r.tag_nut')} ${agg.sN.length}`) : null,
+              agg.sG.length ? el('span', { class: 'res-cat-tag res-cat-tag-gsk' }, `${t('r.tag_gsk')} ${agg.sG.length}`) : null,
+              agg.sU.length ? el('span', { class: 'res-cat-tag res-cat-tag-ub' }, `${t('r.tag_ub')} ${agg.sU.length}`) : null
+            )
+          )
+        );
+        const detail = el('details', { class: 'res-detail' },
+          el('summary', null, t('r.detail_toggle')),
+          this._flatList(agg)
+        );
+        card.appendChild(summaryCard);
+        card.appendChild(detail);
+      } else {
+        card.appendChild(this._flatList(agg));
+      }
 
       if (memo && memo.trim()) {
         const memoBox = el('div', { style: 'margin-top:12px;' },
@@ -1917,6 +1949,57 @@
   let lastExportText = '';
   let lastExportCSV  = '';
   let editingIndex   = -1;
+  const UX_METRICS_KEY = 'jis-ux-metrics-v1';
+  const UX = {
+    sessionStart: Date.now(),
+    firstInputMs: null,
+    inputCount: 0,
+    invalidInputCount: 0,
+    maxScrollY: 0,
+    bound: false,
+    flushed: false,
+    markInput() {
+      this.inputCount += 1;
+      if (this.firstInputMs == null) this.firstInputMs = Math.max(0, Date.now() - this.sessionStart);
+    },
+    markInvalidInput() {
+      this.invalidInputCount += 1;
+    },
+    updateScrollDepth() {
+      const y = Math.max(0, window.scrollY || window.pageYOffset || 0);
+      if (y > this.maxScrollY) this.maxScrollY = y;
+    },
+    flush() {
+      if (this.flushed) return;
+      this.flushed = true;
+      const payload = {
+        ts: new Date().toISOString(),
+        firstInputMs: this.firstInputMs,
+        inputCount: this.inputCount,
+        invalidInputCount: this.invalidInputCount,
+        invalidRate: this.inputCount > 0 ? +(this.invalidInputCount / this.inputCount).toFixed(4) : 0,
+        maxScrollY: this.maxScrollY
+      };
+      try {
+        const list = JSON.parse(localStorage.getItem(UX_METRICS_KEY) || '[]');
+        list.push(payload);
+        localStorage.setItem(UX_METRICS_KEY, JSON.stringify(list.slice(-30)));
+      } catch (e) {}
+    },
+    bind() {
+      if (this.bound) return;
+      this.bound = true;
+      document.addEventListener('input', (e) => {
+        const tEl = e.target;
+        if (!tEl || !(tEl instanceof Element)) return;
+        if (tEl.matches('input, select, textarea')) this.markInput();
+      }, true);
+      window.addEventListener('scroll', () => this.updateScrollDepth(), { passive: true });
+      window.addEventListener('pagehide', () => this.flush());
+      window.addEventListener('beforeunload', () => this.flush());
+      this.updateScrollDepth();
+    }
+  };
 
   /** ----- Modal / focus trap ----- */
   const ModalCtl = {
@@ -3091,7 +3174,10 @@
     document.addEventListener('input', (e) => {
       if (e.target.matches('input[type=number][min="1"]')) {
         const v = parseInt(e.target.value, 10);
-        if (e.target.value !== '' && (!Number.isFinite(v) || v < 1)) e.target.value = 1;
+        if (e.target.value !== '' && (!Number.isFinite(v) || v < 1)) {
+          UX.markInvalidInput();
+          e.target.value = 1;
+        }
       }
     });
 
@@ -3492,6 +3578,7 @@
 
     // Events
     bindGlobalEvents();
+    UX.bind();
 
     // Tutorial
     setTimeout(maybeShowTutorial, 200);
