@@ -347,7 +347,6 @@
       'tut.hide':             '다시 보지 않기',
       'tut.lang_pg_title':    '🌐 언어를 먼저 선택해주세요',
       'tut.lang_pg_desc':     '원하는 언어를 고르면 앱 전체가 해당 언어로 표시됩니다.',
-      'tut.lang_pg_next':     '다음 →',
       'tut.tour_prev':        '이전',
       'tut.tour_next':        '다음',
       'tut.tour_done':        '완료 ✓',
@@ -676,7 +675,6 @@
       'tut.hide':             'Không hiển thị lại',
       'tut.lang_pg_title':    '🌐 Hãy chọn ngôn ngữ trước',
       'tut.lang_pg_desc':     'Chọn ngôn ngữ để hiển thị toàn bộ ứng dụng theo ngôn ngữ đó.',
-      'tut.lang_pg_next':     'Tiếp theo →',
       'tut.tour_prev':        'Trước',
       'tut.tour_next':        'Tiếp',
       'tut.tour_done':        'Hoàn tất ✓',
@@ -1001,7 +999,6 @@
       'tut.hide':             'Jangan tampilkan lagi',
       'tut.lang_pg_title':    '🌐 Pilih bahasa terlebih dahulu',
       'tut.lang_pg_desc':     'Pilih bahasa agar seluruh aplikasi tampil dalam bahasa tersebut.',
-      'tut.lang_pg_next':     'Selanjutnya →',
       'tut.tour_prev':        'Sebelumnya',
       'tut.tour_next':        'Berikutnya',
       'tut.tour_done':        'Selesai ✓',
@@ -2778,7 +2775,8 @@
     }
   }
   function closeTutorial() {
-    if ($('#chkHideTutorial').checked) {
+    const hideTutorialChk = $('#chkHideTutorial');
+    if (hideTutorialChk && hideTutorialChk.checked) {
       try { localStorage.setItem(TUTORIAL_KEY, 'true'); } catch (e) {}
     }
     ModalCtl.close($('#tutorialModal'));
@@ -2795,7 +2793,7 @@
     { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
     { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
   ];
-  /** Delay (ms) for visual feedback on language chip selection before automatically advancing from the language selection page to the guide page. */
+  /** Delay (ms) for visual feedback on language chip selection before starting the interactive tutorial. */
   const LANG_SELECTION_FEEDBACK_DELAY = 450;
 
   const TourCtl = {
@@ -2960,7 +2958,6 @@
     'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
     'open-tutorial':     () => { TourCtl.start(); },
     'close-tutorial':    closeTutorial,
-    'tut-next-page':     () => showTutPage('tutPageGuide'),
     'tut-lang-pick':     (el2) => {
       actionLangChange(el2.dataset.lang);
       // Sync selected state visually
@@ -2969,8 +2966,12 @@
         b.classList.toggle('selected', sel);
         b.setAttribute('aria-pressed', sel ? 'true' : 'false');
       });
-      // Auto-advance to guide page after brief visual feedback
-      setTimeout(() => showTutPage('tutPageGuide'), LANG_SELECTION_FEEDBACK_DELAY);
+      // Save tutorial as seen and start interactive tour after brief visual feedback
+      setTimeout(() => {
+        try { localStorage.setItem(TUTORIAL_KEY, 'true'); } catch (e) {}
+        ModalCtl.close($('#tutorialModal'));
+        TourCtl.start();
+      }, LANG_SELECTION_FEEDBACK_DELAY);
     },
     'tour-next':         () => TourCtl.next(),
     'tour-prev':         () => TourCtl.prev(),
