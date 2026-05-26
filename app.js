@@ -85,6 +85,34 @@
     { r:"30K", s:250,od:485 }, { r:"30K",s:300,od:560 }, { r:"30K",s:350,od:620 }
   ];
 
+  const GAS_PIPE_TABLE = [
+    { size: 250, flangeThickness: 22, boltSize: 'M20', boltLength: 75 },
+    { size: 300, flangeThickness: 22, boltSize: 'M20', boltLength: 75 },
+    { size: 350, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
+    { size: 400, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
+    { size: 450, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
+    { size: 500, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
+    { size: 550, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 600, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 650, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 700, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 750, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 800, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 850, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
+    { size: 900, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 950, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1000, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1050, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1100, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1150, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1200, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1250, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1300, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1350, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
+    { size: 1400, flangeThickness: 20, boltSize: 'M22', boltLength: 75 },
+    { size: 1450, flangeThickness: 20, boltSize: 'M24', boltLength: 75 },
+    { size: 1500, flangeThickness: 20, boltSize: 'M24', boltLength: 75 }
+  ];
   const STORAGE_KEY = 'jis-calc-state-v2';
   const TUTORIAL_KEY = 'jis-calc-hide-tutorial';
   const THEME_KEY = 'jis-calc-theme';
@@ -170,7 +198,9 @@
       'btn.add_gsk':          '＋ 가스켓 추가',
       // Card 4: U-bolt
       'card.ubolt':           '⚓ U-볼트 추가',
+      'card.gas_pipe':        '🛢 가스파이프',
       'form.qty_set':         '수량 (Set)',
+      'form.qty_ea':          '수량 (EA)',
       'aria.qty_ub':          'U-볼트 수량 조절',
       'aria.qty_ub_in':       'U-볼트 수량',
       'btn.add_ub':           '＋ U-볼트 추가',
@@ -187,6 +217,18 @@
       'guide.close':          '확인',
       // Card 5: memo
       'card.memo':            '📝 추가 메모',
+      'form.gas_pipe_preset': '가스파이프 프리셋',
+      'aria.qty_gas':         '가스파이프 볼트 수량 조절',
+      'aria.qty_gas_in':      '가스파이프 볼트 수량',
+      'opt.gas_washer':       '와셔 추가 +5mm',
+      'btn.add_gas_bolt':     '＋ 가스파이프 볼트 추가',
+      'gas.desc':             '가스파이프 프리셋에서 사이즈를 선택하면 볼트 규격과 길이를 바로 확인하고 장바구니처럼 추가할 수 있습니다.',
+      'gas.rule':             '기본 볼트 길이는 기존 값에서 5mm를 제외한 값입니다. 와셔 추가를 체크하면 5mm가 다시 더해집니다.',
+      'gas.help':             '가스켓 없이 볼트만 추가합니다. 입력 수량은 볼트 EA 기준으로 합산됩니다.',
+      'gas.col.size':         '사이즈',
+      'gas.col.flange':       '플랜지 두께',
+      'gas.col.bolt_size':    '볼트 사이즈',
+      'gas.col.bolt_length':  '볼트 길이',
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
@@ -199,6 +241,7 @@
       'q.flange':             '플랜지',
       'q.gasket':             '가스켓',
       'q.ubolt':              'U-볼트',
+      'q.gas_pipe':           '가스파이프',
       'q.qty_aria':           '수량 조절',
       'q.qty_dec':            '수량 감소',
       'q.qty_inc':            '수량 증가',
@@ -215,6 +258,7 @@
       'q.pitch_unknown':      '홀 간격 정보 없음',
       'q.aria_label':         '{title} {n}개 — Delete 키로 삭제 가능',
       'q.bolt_desc':          '{bS} × {bL}L · {bC}공/pt',
+      'q.gas_bolt_desc':      '{bS} × {bL}L',
       'unit.count':           '{n}건',
       // Result panel
       'r.empty_t':            '아직 집계 결과가 없습니다',
@@ -304,7 +348,9 @@
       't.added':              '✅ 추가됨 · 대기열 {n}건',
       't.added_g':            '✅ 가스켓 추가 · {n}건',
       't.added_u':            '✅ U-볼트 추가 · {n}건',
+      't.added_gas':          '✅ 가스파이프 볼트 추가 · 대기열 {n}건',
       't.no_data_bolt':       '⚠️ {r} {s}A 데이터가 없습니다. 다른 사이즈를 선택해주세요.',
+      't.no_data_gas':        '⚠️ 가스파이프 {s}A 데이터가 없습니다. 다른 사이즈를 선택해주세요.',
       't.no_data_gsk':        '⚠️ {r} {s}A 가스켓 데이터 없음',
       't.no_items':           '⚠️ 등록된 자재가 없습니다.',
       't.copy_ok':            '✨ 복사 완료!',
@@ -420,7 +466,9 @@
       'aria.qty_gsk_in':      'Số gioăng',
       'btn.add_gsk':          '＋ Thêm gioăng',
       'card.ubolt':           '⚓ Thêm Bu lông U',
+      'card.gas_pipe':        '🛢 Ống gas',
       'form.qty_set':         'Số lượng (bộ)',
+      'form.qty_ea':          'Số lượng (cái)',
       'aria.qty_ub':          'Điều chỉnh số bu lông U',
       'aria.qty_ub_in':       'Số bu lông U',
       'btn.add_ub':           '＋ Thêm bu lông U',
@@ -436,6 +484,18 @@
       'guide.ubolt_pitch_desc':'Khoảng cách tâm lỗ (C-C) là khoảng cách từ tâm lỗ bu lông bên trái đến tâm lỗ bên phải.',
       'guide.close':          'Đã hiểu',
       'card.memo':            '📝 Ghi chú thêm',
+      'form.gas_pipe_preset': 'Preset ống gas',
+      'aria.qty_gas':         'Điều chỉnh số bu lông ống gas',
+      'aria.qty_gas_in':      'Số bu lông ống gas',
+      'opt.gas_washer':       'Thêm vòng đệm kim loại +5mm',
+      'btn.add_gas_bolt':     '＋ Thêm bu lông ống gas',
+      'gas.desc':             'Khi chọn kích thước trong preset ống gas, bạn có thể xem ngay quy cách và chiều dài bu lông rồi thêm vào hàng chờ như giỏ hàng.',
+      'gas.rule':             'Chiều dài bu lông cơ bản đã bỏ phần cộng thêm 5mm. Nếu chọn thêm vòng đệm kim loại, chiều dài sẽ cộng lại 5mm.',
+      'gas.help':             'Chỉ thêm bu lông, không thêm gioăng. Số lượng nhập sẽ được cộng theo đơn vị EA.',
+      'gas.col.size':         'Kích thước',
+      'gas.col.flange':       'Độ dày mặt bích',
+      'gas.col.bolt_size':    'Cỡ bu lông',
+      'gas.col.bolt_length':  'Chiều dài bu lông',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
       'card.queue':           '📋 Hàng chờ đăng ký',
@@ -447,6 +507,7 @@
       'q.flange':             'Mặt bích',
       'q.gasket':             'Gioăng',
       'q.ubolt':              'Bu lông U',
+      'q.gas_pipe':           'Ống gas',
       'q.qty_aria':           'Điều chỉnh số lượng',
       'q.qty_dec':            'Giảm số lượng',
       'q.qty_inc':            'Tăng số lượng',
@@ -463,6 +524,7 @@
       'q.pitch_unknown':      'Không có thông tin khoảng cách lỗ',
       'q.aria_label':         '{title} {n} — nhấn Delete để xóa',
       'q.bolt_desc':          '{bS} × {bL}L · {bC} lỗ/điểm',
+      'q.gas_bolt_desc':      '{bS} × {bL}L',
       'unit.count':           '{n}',
       'r.empty_t':            'Chưa có kết quả tổng hợp',
       'r.empty_d':            'Hãy thêm vật tư vào hàng chờ rồi nhấn nút [Tổng hợp cuối].',
@@ -545,7 +607,9 @@
       't.added':              '✅ Đã thêm · Hàng chờ {n}',
       't.added_g':            '✅ Đã thêm gioăng · {n}',
       't.added_u':            '✅ Đã thêm bu lông U · {n}',
+      't.added_gas':          '✅ Đã thêm bu lông ống gas · Hàng chờ {n}',
       't.no_data_bolt':       '⚠️ Không có dữ liệu cho {r} {s}A. Hãy chọn cỡ khác.',
+      't.no_data_gas':        '⚠️ Không có dữ liệu ống gas {s}A. Hãy chọn cỡ khác.',
       't.no_data_gsk':        '⚠️ Không có dữ liệu gioăng {r} {s}A',
       't.no_items':           '⚠️ Chưa có vật tư nào.',
       't.copy_ok':            '✨ Đã sao chép!',
@@ -658,7 +722,9 @@
       'aria.qty_gsk_in':      'Jumlah gasket',
       'btn.add_gsk':          '＋ Tambah gasket',
       'card.ubolt':           '⚓ Tambah Baut U',
-      'form.qty_set':         'Jumlah (set)',
+      'card.gas_pipe':        '🛢 Pipa gas',
+      'form.qty_set':         'Jumlah (Set)',
+      'form.qty_ea':          'Jumlah (pcs)',
       'aria.qty_ub':          'Atur jumlah baut U',
       'aria.qty_ub_in':       'Jumlah baut U',
       'btn.add_ub':           '＋ Tambah baut U',
@@ -674,6 +740,18 @@
       'guide.ubolt_pitch_desc':'Jarak pusat lubang (C-C) adalah jarak dari pusat lubang baut kiri ke pusat lubang baut kanan.',
       'guide.close':          'Mengerti',
       'card.memo':            '📝 Catatan tambahan',
+      'form.gas_pipe_preset': 'Preset pipa gas',
+      'aria.qty_gas':         'Atur jumlah baut pipa gas',
+      'aria.qty_gas_in':      'Jumlah baut pipa gas',
+      'opt.gas_washer':       'Tambah washer +5mm',
+      'btn.add_gas_bolt':     '＋ Tambah baut pipa gas',
+      'gas.desc':             'Saat ukuran preset pipa gas dipilih, spesifikasi dan panjang baut langsung tampil dan bisa ditambahkan ke antrean seperti keranjang.',
+      'gas.rule':             'Panjang baut dasar sudah dikurangi 5mm dari nilai sebelumnya. Jika opsi washer dipilih, 5mm akan ditambahkan kembali.',
+      'gas.help':             'Hanya baut yang ditambahkan, tanpa gasket. Jumlah input dihitung sebagai EA.',
+      'gas.col.size':         'Ukuran',
+      'gas.col.flange':       'Tebal flange',
+      'gas.col.bolt_size':    'Ukuran baut',
+      'gas.col.bolt_length':  'Panjang baut',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
       'card.queue':           '📋 Antrean pendaftaran',
@@ -685,6 +763,7 @@
       'q.flange':             'Flensa',
       'q.gasket':             'Gasket',
       'q.ubolt':              'Baut U',
+      'q.gas_pipe':           'Pipa gas',
       'q.qty_aria':           'Atur jumlah',
       'q.qty_dec':            'Kurangi jumlah',
       'q.qty_inc':            'Tambah jumlah',
@@ -701,6 +780,7 @@
       'q.pitch_unknown':      'Info jarak lubang tidak tersedia',
       'q.aria_label':         '{title} {n} — tekan Delete untuk hapus',
       'q.bolt_desc':          '{bS} × {bL}L · {bC} lubang/titik',
+      'q.gas_bolt_desc':      '{bS} × {bL}L',
       'unit.count':           '{n}',
       'r.empty_t':            'Belum ada hasil rekap',
       'r.empty_d':            'Tambahkan material ke antrean lalu tekan tombol [Rekap akhir].',
@@ -783,7 +863,9 @@
       't.added':              '✅ Ditambahkan · Antrean {n}',
       't.added_g':            '✅ Gasket ditambahkan · {n}',
       't.added_u':            '✅ Baut U ditambahkan · {n}',
+      't.added_gas':          '✅ Baut pipa gas ditambahkan · Antrean {n}',
       't.no_data_bolt':       '⚠️ Tidak ada data {r} {s}A. Pilih ukuran lain.',
+      't.no_data_gas':        '⚠️ Tidak ada data pipa gas {s}A. Pilih ukuran lain.',
       't.no_data_gsk':        '⚠️ Tidak ada data gasket {r} {s}A',
       't.no_items':           '⚠️ Belum ada material terdaftar.',
       't.copy_ok':            '✨ Tersalin!',
@@ -1042,7 +1124,7 @@
    * @property {string=} r       — rating (5K/10K/16K/30K)
    * @property {number=} s       — size A
    * @property {number}  qty
-   * @property {boolean=} ext, doubleNut, auto
+   * @property {boolean=} ext, doubleNut, auto, gasPipe — gasPipe=true when the bolt item comes from the gas pipe preset flow
    * @property {string=} bS, gtype
    * @property {number=} bL, bC
    * @property {number=} pitch
@@ -1166,6 +1248,15 @@
     return { type: 'ubolt', s, qty, pitch: UBOLT_PITCH[s] || null };
   }
 
+  function buildGasPipeBoltItem(s, qty, opts) {
+    const row = GAS_PIPE_TABLE.find(item => item.size === s);
+    if (!row) return null;
+    let len = row.boltLength;
+    if (opts.washerExtra) len += 5;
+    // Gas pipe preset quantity already represents the final individual bolt count, unlike flange points that multiply by hole count, so bC is set to 1.
+    return { type: 'bolt', s, qty, ext: !!opts.washerExtra, doubleNut: false, gasPipe: true, bS: row.boltSize, bL: len, bC: 1 };
+  }
+
   /** Aggregate the queue into bolt/nut/gasket/ubolt maps. */
   function aggregate(queue) {
     const bM = {}, nM = {}, gM = {}, uM = {};
@@ -1259,6 +1350,17 @@
       for (const s of USIZES) selectEl.appendChild(el('option', { value: s }, s + 'A'));
     },
 
+    populateGasPipePresetSelect(selectEl) {
+      if (!selectEl) return;
+      const prev = parseInt(selectEl.value, 10);
+      selectEl.textContent = '';
+      for (const row of GAS_PIPE_TABLE) {
+        selectEl.appendChild(el('option', { value: row.size }, `${row.size}A`));
+      }
+      const nextValue = GAS_PIPE_TABLE.some(row => row.size === prev) ? prev : GAS_PIPE_TABLE[0]?.size;
+      if (nextValue != null) selectEl.value = String(nextValue);
+    },
+
     populateProjectSelect(selectEl) {
       if (!selectEl) return;
       selectEl.textContent = '';
@@ -1280,6 +1382,38 @@
       } else {
         node.appendChild(document.createTextNode(t('pitch.none')));
       }
+    },
+
+    renderGasPipeTable() {
+      const wrap = $('#gasPipeTableWrap');
+      if (!wrap) return;
+      const selectedSize = parseInt($('#gasPipePreset')?.value, 10);
+      const washerExtra = !!$('#optGasWasher')?.checked;
+      const row = GAS_PIPE_TABLE.find((item) => item.size === selectedSize) || GAS_PIPE_TABLE[0];
+      if (!row) return;
+      const boltLength = row.boltLength + (washerExtra ? 5 : 0);
+
+      const thead = el('thead', null,
+        el('tr', null,
+          el('th', null, t('gas.col.size')),
+          el('th', null, t('gas.col.flange')),
+          el('th', null, t('gas.col.bolt_size')),
+          el('th', null, t('gas.col.bolt_length'))
+        )
+      );
+      const tbody = el('tbody', null,
+        el('tr', null,
+          el('td', null, `${row.size}A`),
+          el('td', null, `${row.flangeThickness} mm`),
+          el('td', null, row.boltSize),
+          el('td', null, `${boltLength} mm`)
+        )
+      );
+
+      wrap.textContent = '';
+      wrap.appendChild(el('div', { class: 'gas-table-scroll gas-pipe-table-wrap' },
+        el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
+      ));
     },
 
     /**
@@ -1366,8 +1500,13 @@
       queue.forEach((q, i) => {
         let title = '', desc = '';
         if (q.type === 'bolt') {
-          title = `${q.r} ${q.s}A ${t('q.flange')}`;
-          desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
+          if (q.gasPipe) {
+            title = `${t('q.gas_pipe')} ${q.s}A`;
+            desc  = t('q.gas_bolt_desc', { bS: q.bS, bL: q.bL });
+          } else {
+            title = `${q.r} ${q.s}A ${t('q.flange')}`;
+            desc  = t('q.bolt_desc', { bS: q.bS, bL: q.bL, bC: q.bC });
+          }
         } else if (q.type === 'gasket') {
           title = `${q.r} ${q.s}A ${t('q.gasket')}`;
           desc  = Lang.tGType(q.gtype);
@@ -1399,7 +1538,7 @@
       const tags = [];
 
       if (q.type === 'bolt') {
-        title = `${q.r} ${q.s}A`;
+        title = q.gasPipe ? `${t('q.gas_pipe')} ${q.s}A` : `${q.r} ${q.s}A`;
         if (q.ext) tags.push({ label: '+5mm', kind: 'blue' });
         if (q.doubleNut) tags.push({ label: t('q.tag_dn'), kind: 'blue' });
       } else if (q.type === 'gasket') {
@@ -1711,6 +1850,20 @@
     Store.save();
     View.renderQueue();
     toast(t('t.added_u', { n: Store.queue.length }));
+  }
+
+  function actionAddGasPipeBolt() {
+    const s = parseInt($('#gasPipePreset').value, 10);
+    const qty = toPosInt($('#gasQty').value);
+    const washerExtra = $('#optGasWasher').checked;
+    const item = buildGasPipeBoltItem(s, qty, { washerExtra });
+    if (!item) { toast(t('t.no_data_gas', { s })); return; }
+    Store.snapshot();
+    Store.queue.push(item);
+    $('#gasQty').value = 1;
+    Store.save();
+    View.renderQueue();
+    toast(t('t.added_gas', { n: Store.queue.length }));
   }
 
   function showDataWarn(msg) {
@@ -2292,11 +2445,14 @@
     'rating-change':     () => View.populateSizeSelect($('#size'), $('#rating').value),
     'grating-change':    () => View.populateSizeSelect($('#gsize'), $('#grating').value),
     'usize-change':      () => View.updatePitchInfo(parseInt($('#usize').value, 10)),
+    'gas-preset-change': () => View.renderGasPipeTable(),
+    'gas-washer-change': () => View.renderGasPipeTable(),
     'qty-inc':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = toPosInt(inp.value) + 1; },
     'qty-dec':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = Math.max(1, toPosInt(inp.value) - 1); },
     'add-bolt':          actionAddBolt,
     'add-gasket':        actionAddGasket,
     'add-ubolt':         actionAddUbolt,
+    'add-gas-bolt':      actionAddGasPipeBolt,
     'calculate':         actionCalculate,
     'clear-all':         () => {
       if (Store.queue.length && !window.confirm(t('p.clear_confirm'))) return;
@@ -2371,7 +2527,9 @@
     View.populateSizeSelect($('#size'),  $('#rating').value);
     View.populateSizeSelect($('#gsize'), $('#grating').value);
     View.populateUSizeSelect($('#usize'));
+    View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
+    View.renderGasPipeTable();
     View.populateProjectSelect($('#projectSelect'));
     View.renderQueue();
     // Re-render result if currently shown
@@ -2415,7 +2573,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change' || name === 'lang-change') {
+      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change'].includes(name)) {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -2481,7 +2639,7 @@
         if (!inEditable) { e.preventDefault(); actions.redo(); } return;
       }
 
-      // Enter in flange/gasket/ubolt area → add
+      // Enter in flange/gasket/ubolt/gas area → add
       // Guard: acc-head 버튼 자체에 포커스된 경우 Enter는 toggle 동작에 위임
       if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !inEditable) {
         if (e.target.classList.contains('acc-head')) return;
@@ -2494,6 +2652,7 @@
           if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); return; }
           if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); return; }
           if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); return; }
+          if (card.querySelector('[data-action="add-gas-bolt"]')) { e.preventDefault(); actionAddGasPipeBolt(); return; }
           if (card.querySelector('[data-action="find-flange"]')) { e.preventDefault(); findFlange(); return; }
         }
       }
@@ -2506,6 +2665,7 @@
           if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); }
           else if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); }
           else if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); }
+          else if (card.querySelector('[data-action="add-gas-bolt"]')) { e.preventDefault(); actionAddGasPipeBolt(); }
           else if (card.querySelector('[data-action="find-flange"]')) { e.preventDefault(); findFlange(); }
         }
       }
@@ -2807,7 +2967,9 @@
     View.populateSizeSelect($('#size'), $('#rating').value);
     View.populateSizeSelect($('#gsize'), $('#grating').value);
     View.populateUSizeSelect($('#usize'));
+    View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
+    View.renderGasPipeTable();
     View.populateProjectSelect($('#projectSelect'));
 
     // Sync language UI to current selection

@@ -45,6 +45,7 @@
     --r-md: 10px;
     --r-lg: 14px;
     --r-xl: 20px;
+    --gas-qty-min-width: 132px;
 
     --e-1: 0 1px 2px rgba(15,23,42,.05), 0 1px 1px rgba(15,23,42,.04);
     --e-2: 0 2px 6px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
@@ -662,7 +663,24 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
-
+  .gas-pipe-form.col-2 { grid-template-columns: minmax(0, 1.5fr) minmax(var(--gas-qty-min-width), .75fr); }
+  .gas-pipe-form .field { min-width: 0; }
+  .gas-pipe-option-box { margin-top: 0; margin-bottom: 10px; }
+  .gas-pipe-option-box .toggle-row { padding: 12px 0; }
+  .gas-pipe-table-wrap { margin-top: 2px; }
+  .gas-table-scroll { overflow-x: auto; }
+  .gas-pipe-table { min-width: 0; table-layout: fixed; }
+  .gas-pipe-table th, .gas-pipe-table td { padding: 8px 10px; }
+  .gas-pipe-add-btn { width: 100%; margin-top: 12px; }
+  @media (max-width: 640px) {
+    .gas-pipe-form.col-2 { grid-template-columns: 1fr; gap: 12px; }
+    .gas-pipe-form .field label { margin-bottom: 6px; }
+    .gas-pipe-option-box { margin-bottom: 12px; }
+    .gas-pipe-table th, .gas-pipe-table td { font-size: .8rem; }
+  }
+  @media (max-width: 380px) {
+    .gas-pipe-table th, .gas-pipe-table td { padding: 7px 8px; font-size: .76rem; }
+  }
   /* Category pill tags */
   .res-cat-tag {
     display: inline-block; padding: 3px 8px; border-radius: 999px;
@@ -1280,7 +1298,44 @@
         </div>
       </div>
 
-      <!-- 5. 메모 (기본 닫힘) -->
+      <!-- 5. 가스파이프 (기본 닫힘) -->
+      <div class="card acc-card">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
+          <h2 data-i18n="card.gas_pipe">🛢 가스파이프</h2>
+          <span class="acc-chevron" aria-hidden="true">▾</span>
+        </button>
+        <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
+          <div class="acc-body-inner">
+            <div class="form-grid col-2 gas-pipe-form">
+              <div class="field">
+                <label for="gasPipePreset" data-i18n="form.gas_pipe_preset">가스파이프 프리셋</label>
+                <select id="gasPipePreset" data-action="gas-preset-change"></select>
+              </div>
+              <div class="field">
+                <label for="gasQty" data-i18n="form.qty_ea">수량 (EA)</label>
+                <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gas" aria-label="가스파이프 볼트 수량 조절">
+                  <button type="button" data-action="qty-dec" data-target="gasQty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
+                  <input type="number" id="gasQty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gas_in" aria-label="가스파이프 볼트 수량">
+                  <button type="button" data-action="qty-inc" data-target="gasQty" data-i18n-attr="aria-label:form.qty_inc" aria-label="증가">+</button>
+                </div>
+              </div>
+            </div>
+            <div class="option-box gas-pipe-option-box">
+              <div class="toggle-row">
+                <span class="toggle-title" data-i18n="opt.gas_washer">와셔 추가 +5mm</span>
+                <label class="switch">
+                  <input type="checkbox" id="optGasWasher" data-action="gas-washer-change">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+            <div id="gasPipeTableWrap"></div>
+            <button class="btn btn-primary gas-pipe-add-btn" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. 메모 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
           <h2 data-i18n="card.memo">📝 추가 메모</h2>

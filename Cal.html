@@ -754,6 +754,43 @@
       background: var(--slate-200);
     }
 
+    .bottom-home-wrap {
+      margin-top: 18px;
+    }
+
+    .bottom-home-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 58px;
+      border: 1px solid var(--blue-100);
+      border-radius: var(--radius-xl);
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--blue-50), var(--surface-solid));
+      color: var(--blue-900);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 950;
+      box-shadow: var(--shadow-sm);
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+    }
+
+    .bottom-home-link:hover {
+      background: linear-gradient(135deg, var(--blue-100), var(--surface-solid));
+      transform: translateY(-1px);
+    }
+
+    .bottom-home-link:active {
+      transform: translateY(1px);
+    }
+
+    .bottom-home-link-icon {
+      flex: 0 0 auto;
+      font-size: 20px;
+      line-height: 1;
+    }
+
     .notice {
       margin-top: 16px;
       border: 1px solid var(--amber-100);
@@ -1513,6 +1550,13 @@
                 </svg>
               </div>
             </section>
+
+            <div class="bottom-home-wrap">
+              <a id="bottomHomeLink" class="bottom-home-link" href="./index.html" aria-label="Back to main" title="Back to main">
+                <span class="bottom-home-link-icon" aria-hidden="true">🏠</span>
+                <span id="bottomHomeText">메인으로 돌아가기</span>
+              </a>
+            </div>
           </main>
         </div>
       </div>
@@ -1645,6 +1689,7 @@
         tutorialBLabel: "② 컷백 거리",
         tutorialLongRef: "긴쪽 기준",
         tutorialShortPoint: "짧은쪽 점",
+        bottomHomeText: "메인으로 돌아가기",
         svgPipeOD: "파이프 외경",
         svgCutAngle: "절단 각도",
         stickyAria: "모바일 핵심 결과",
@@ -1740,6 +1785,7 @@
         tutorialBLabel: "② Khoảng lùi",
         tutorialLongRef: "Chuẩn phía dài",
         tutorialShortPoint: "Điểm phía ngắn",
+        bottomHomeText: "Về trang chính",
         svgPipeOD: "Đường kính ngoài ống",
         svgCutAngle: "Góc cắt",
         stickyAria: "Kết quả chính trên di động",
@@ -1835,6 +1881,7 @@
         tutorialBLabel: "② Jarak cutback",
         tutorialLongRef: "Acuan sisi panjang",
         tutorialShortPoint: "Titik sisi pendek",
+        bottomHomeText: "Kembali ke halaman utama",
         svgPipeOD: "Diameter luar pipa",
         svgCutAngle: "Sudut potong",
         stickyAria: "Hasil inti seluler",
@@ -2018,6 +2065,7 @@
         bLabel1: "tutorialBLabel",
         longReferenceLabel: "tutorialLongRef",
         shortLabel: "tutorialShortPoint",
+        bottomHomeText: "bottomHomeText",
         stickyCutLabel: "stickyCutLabel",
         stickyAngleLabel: "stickyAngleLabel",
         stickyBLabel: "stickyBLabel",
@@ -2038,6 +2086,8 @@
       setAttr("pageTools", "aria-label", t("pageTools"));
       setAttr("backToMain", "aria-label", t("back"));
       setAttr("backToMain", "title", t("back"));
+      setAttr("bottomHomeLink", "aria-label", t("back"));
+      setAttr("bottomHomeLink", "title", t("back"));
       setAttr("langSelect", "aria-label", t("langSelect"));
       setAttr("topGuideSvg", "aria-label", t("topGuideSvgAria"));
       setAttr("tutorialSvg", "aria-label", t("tutorialSvgAria"));
