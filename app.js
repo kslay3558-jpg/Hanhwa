@@ -487,10 +487,10 @@
       'form.gas_pipe_preset': 'Preset ống gas',
       'aria.qty_gas':         'Điều chỉnh số bu lông ống gas',
       'aria.qty_gas_in':      'Số bu lông ống gas',
-      'opt.gas_washer':       'Thêm vòng đệm +5mm',
+      'opt.gas_washer':       'Thêm vòng đệm kim loại +5mm',
       'btn.add_gas_bolt':     '＋ Thêm bu lông ống gas',
       'gas.desc':             'Khi chọn kích thước trong preset ống gas, bạn có thể xem ngay quy cách và chiều dài bu lông rồi thêm vào hàng chờ như giỏ hàng.',
-      'gas.rule':             'Chiều dài bu lông cơ bản đã bỏ phần cộng thêm 5mm. Nếu chọn thêm vòng đệm, chiều dài sẽ cộng lại 5mm.',
+      'gas.rule':             'Chiều dài bu lông cơ bản đã bỏ phần cộng thêm 5mm. Nếu chọn thêm vòng đệm kim loại, chiều dài sẽ cộng lại 5mm.',
       'gas.help':             'Chỉ thêm bu lông, không thêm gioăng. Số lượng nhập sẽ được cộng theo đơn vị EA.',
       'gas.col.size':         'Kích thước',
       'gas.col.flange':       'Độ dày mặt bích',
@@ -1253,7 +1253,7 @@
     if (!row) return null;
     let len = row.boltLength;
     if (opts.washerExtra) len += 5;
-    // Gas pipe preset quantity is entered directly as bolt EA, so one queued unit equals one bolt.
+    // Gas pipe preset quantity is entered directly as bolt EA, and bC stays 1 because qty already means the number of bolts to aggregate.
     return { type: 'bolt', s, qty, ext: !!opts.washerExtra, doubleNut: false, gasPipe: true, bS: row.boltSize, bL: len, bC: 1 };
   }
 
