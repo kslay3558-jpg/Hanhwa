@@ -1815,8 +1815,8 @@
       card.appendChild(head);
 
       const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
-      const isMobile = window.matchMedia(`(max-width: ${MOBILE_RESULT_SUMMARY_BREAKPOINT}px)`).matches;
-      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_THRESHOLD) {
+      const isMobile = window.matchMedia(`(max-width: ${MOBILE_RESULT_SUMMARY_BREAKPOINT_PX}px)`).matches;
+      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_MIN_ROWS) {
         const summaryCard = el('div', { class: 'res-summary-card' },
           el('h3', null, t('r.summary_title')),
           el('div', { class: 'res-summary-row' },
@@ -1949,8 +1949,8 @@
   let lastExportText = '';
   let lastExportCSV  = '';
   let editingIndex   = -1;
-  const MOBILE_RESULT_SUMMARY_BREAKPOINT = 640;
-  const MOBILE_RESULT_SUMMARY_THRESHOLD = 8;
+  const MOBILE_RESULT_SUMMARY_BREAKPOINT_PX = 640;
+  const MOBILE_RESULT_SUMMARY_MIN_ROWS = 8;
   const UX_METRICS_KEY = 'jis-ux-metrics-v1';
   const UX_METRICS_MAX_HISTORY = 30;
   const UX = {
@@ -1969,7 +1969,7 @@
       this.invalidInputCount += 1;
     },
     updateScrollDepth() {
-      const y = Math.max(0, window.scrollY || window.pageYOffset || 0);
+      const y = Math.max(0, window.scrollY || window.pageYOffset);
       if (y > this.maxScrollY) this.maxScrollY = y;
     },
     flush() {
@@ -1980,7 +1980,7 @@
         firstInputMs: this.firstInputMs,
         inputCount: this.inputCount,
         invalidInputCount: this.invalidInputCount,
-        invalidRate: this.inputCount > 0 ? Number((this.invalidInputCount / this.inputCount).toFixed(4)) : 0,
+        invalidRate: this.inputCount > 0 ? Math.round((this.invalidInputCount / this.inputCount) * 10000) / 10000 : 0,
         maxScrollY: this.maxScrollY
       };
       try {
@@ -1995,9 +1995,9 @@
       if (this.bound) return;
       this.bound = true;
       document.addEventListener('input', (e) => {
-        const tEl = e.target;
-        if (!tEl || !(tEl instanceof Element)) return;
-        if (tEl.matches('input, select, textarea')) this.markInput();
+        const targetElement = e.target;
+        if (!targetElement || !(targetElement instanceof Element)) return;
+        if (targetElement.matches('input, select, textarea')) this.markInput();
       }, true);
       window.addEventListener('scroll', () => this.updateScrollDepth(), { passive: true });
       window.addEventListener('pagehide', () => this.flush());
