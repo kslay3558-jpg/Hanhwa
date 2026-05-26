@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="auto">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#2563eb" />
-  <title>파이프 사선 커팅 & 컷백 계산기</title>
+  <meta name="color-scheme" content="light dark" />
+  <title>파이프 사선 커팅 계산기</title>
 
   <style>
     :root {
+      color-scheme: light dark;
       --blue-900: #1e3a8a;
       --blue-800: #1e40af;
       --blue-700: #1d4ed8;
@@ -49,6 +51,125 @@
       --radius-xl: 18px;
       --radius-2xl: 24px;
       --radius-3xl: 30px;
+      --surface: rgba(255, 255, 255, 0.86);
+      --surface-solid: #ffffff;
+      --surface-muted: rgba(248, 250, 252, 0.78);
+      --field-bg: #ffffff;
+      --field-bg-2: #f8fafc;
+      --sticky-bg: rgba(255,255,255,0.96);
+      --ink-on-accent: #f8fbff;
+      --header-ink: #f8fbff;
+      --svg-title-stroke: rgba(255, 255, 255, 0.92);
+      --svg-small-stroke: rgba(255, 255, 255, 0.96);
+      --svg-blue-text: #1d4ed8;
+      --svg-green-text: #047857;
+      --svg-red-text: #b91c1c;
+      --hero-gradient:
+        linear-gradient(135deg, rgba(30, 58, 138, 0.98), rgba(37, 99, 235, 0.96), rgba(6, 182, 212, 0.92));
+    }
+
+    [data-theme="dark"] {
+      --blue-900: #dbeafe;
+      --blue-800: #bfdbfe;
+      --blue-700: #93c5fd;
+      --blue-600: #60a5fa;
+      --blue-500: #3b82f6;
+      --blue-100: rgba(96, 165, 250, 0.24);
+      --blue-50: rgba(30, 58, 138, 0.28);
+      --green-700: #86efac;
+      --green-600: #34d399;
+      --green-100: rgba(52, 211, 153, 0.22);
+      --green-50: rgba(6, 78, 59, 0.42);
+      --red-700: #fca5a5;
+      --red-600: #f87171;
+      --red-100: rgba(248, 113, 113, 0.22);
+      --red-50: rgba(127, 29, 29, 0.38);
+      --amber-700: #fcd34d;
+      --amber-100: rgba(251, 191, 36, 0.24);
+      --amber-50: rgba(120, 53, 15, 0.34);
+      --slate-950: #f8fafc;
+      --slate-900: #f1f5f9;
+      --slate-800: #e2e8f0;
+      --slate-700: #cbd5e1;
+      --slate-600: #94a3b8;
+      --slate-500: #94a3b8;
+      --slate-400: #64748b;
+      --slate-300: #475569;
+      --slate-200: #334155;
+      --slate-100: #1e293b;
+      --slate-50: #0b1220;
+      --white: #111a2e;
+      --surface: rgba(17, 26, 46, 0.88);
+      --surface-solid: #111a2e;
+      --surface-muted: rgba(15, 24, 40, 0.78);
+      --field-bg: #0f1828;
+      --field-bg-2: #111a2e;
+      --sticky-bg: rgba(15, 24, 40, 0.94);
+      --ink-on-accent: #f8fbff;
+      --header-ink: #f8fbff;
+      --svg-title-stroke: rgba(11, 18, 32, 0.65);
+      --svg-small-stroke: rgba(11, 18, 32, 0.72);
+      --svg-blue-text: #93c5fd;
+      --svg-green-text: #86efac;
+      --svg-red-text: #fca5a5;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.38);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.34);
+      --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.46);
+      --hero-gradient:
+        linear-gradient(135deg, rgba(11, 18, 32, 0.98), rgba(30, 64, 175, 0.9), rgba(14, 116, 144, 0.78));
+    }
+
+    @media (prefers-color-scheme: dark) {
+      [data-theme="auto"] {
+        --blue-900: #dbeafe;
+        --blue-800: #bfdbfe;
+        --blue-700: #93c5fd;
+        --blue-600: #60a5fa;
+        --blue-500: #3b82f6;
+        --blue-100: rgba(96, 165, 250, 0.24);
+        --blue-50: rgba(30, 58, 138, 0.28);
+        --green-700: #86efac;
+        --green-600: #34d399;
+        --green-100: rgba(52, 211, 153, 0.22);
+        --green-50: rgba(6, 78, 59, 0.42);
+        --red-700: #fca5a5;
+        --red-600: #f87171;
+        --red-100: rgba(248, 113, 113, 0.22);
+        --red-50: rgba(127, 29, 29, 0.38);
+        --amber-700: #fcd34d;
+        --amber-100: rgba(251, 191, 36, 0.24);
+        --amber-50: rgba(120, 53, 15, 0.34);
+        --slate-950: #f8fafc;
+        --slate-900: #f1f5f9;
+        --slate-800: #e2e8f0;
+        --slate-700: #cbd5e1;
+        --slate-600: #94a3b8;
+        --slate-500: #94a3b8;
+        --slate-400: #64748b;
+        --slate-300: #475569;
+        --slate-200: #334155;
+        --slate-100: #1e293b;
+        --slate-50: #0b1220;
+        --white: #111a2e;
+        --surface: rgba(17, 26, 46, 0.88);
+        --surface-solid: #111a2e;
+        --surface-muted: rgba(15, 24, 40, 0.78);
+        --field-bg: #0f1828;
+        --field-bg-2: #111a2e;
+        --sticky-bg: rgba(15, 24, 40, 0.94);
+        --ink-on-accent: #f8fbff;
+        --header-ink: #f8fbff;
+        --svg-title-stroke: rgba(11, 18, 32, 0.65);
+        --svg-small-stroke: rgba(11, 18, 32, 0.72);
+        --svg-blue-text: #93c5fd;
+        --svg-green-text: #86efac;
+        --svg-red-text: #fca5a5;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.38);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.34);
+        --shadow-lg: 0 22px 60px rgba(0, 0, 0, 0.46);
+        --hero-gradient:
+          linear-gradient(135deg, rgba(11, 18, 32, 0.98), rgba(30, 64, 175, 0.9), rgba(14, 116, 144, 0.78));
+      }
     }
 
     * {
@@ -74,9 +195,10 @@
         sans-serif;
       color: var(--slate-900);
       background:
-        radial-gradient(circle at top left, rgba(37, 99, 235, 0.15), transparent 32%),
-        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.12), transparent 34%),
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.16), transparent 32%),
         var(--slate-50);
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     button,
@@ -109,17 +231,17 @@
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.82);
       border-radius: var(--radius-3xl);
-      background: rgba(255, 255, 255, 0.82);
+      background: var(--surface);
       box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(16px);
     }
 
     .header {
       position: relative;
       overflow: hidden;
       padding: 26px 22px;
-      color: var(--white);
-      background:
-        linear-gradient(135deg, rgba(30, 58, 138, 0.98), rgba(37, 99, 235, 0.96), rgba(6, 182, 212, 0.92));
+      color: var(--header-ink);
+      background: var(--hero-gradient);
     }
 
     .header::before {
@@ -139,40 +261,112 @@
       gap: 12px;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      width: fit-content;
+    .header-top {
+      display: flex;
       align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .header-actions {
+      display: flex;
       gap: 8px;
-      padding: 5px 11px;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .header-lang {
+      min-width: 148px;
+      min-height: 42px;
+      padding: 8px 36px 8px 12px;
       border: 1px solid rgba(255,255,255,0.24);
-      border-radius: 999px;
+      border-radius: 14px;
+      background-color: rgba(255,255,255,0.14);
+      color: var(--header-ink);
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, currentColor 50%),
+        linear-gradient(135deg, currentColor 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 50%,
+        calc(100% - 12px) 50%;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+    }
+
+    .header-lang option {
+      color: var(--slate-950);
+    }
+
+    .header-lang:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.6);
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.16);
+    }
+
+    .header-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 14px;
       background: rgba(255,255,255,0.14);
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 0.04em;
+      color: var(--header-ink);
+      text-decoration: none;
+      font-size: 21px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .header-link:hover {
+      background: rgba(255,255,255,0.22);
+      transform: translateY(-1px);
+    }
+
+    button.header-link {
+      padding: 0;
     }
 
     .title {
       margin: 0;
+      color: var(--header-ink);
       font-size: clamp(26px, 5vw, 42px);
       font-weight: 950;
       line-height: 1.18;
       letter-spacing: -0.04em;
+      text-shadow: 0 2px 18px rgba(15, 23, 42, 0.2);
     }
 
     .subtitle {
       max-width: 860px;
       margin: 0;
-      color: rgba(239, 246, 255, 0.96);
+      color: rgba(248, 251, 255, 0.92);
       font-size: 15px;
       line-height: 1.65;
       font-weight: 600;
+      text-shadow: 0 1px 10px rgba(15, 23, 42, 0.18);
     }
 
     .content {
       padding: 18px;
-      background: rgba(248, 250, 252, 0.74);
+      background: var(--surface-muted);
     }
 
     .section {
@@ -222,7 +416,7 @@
     .card {
       border: 1px solid var(--slate-200);
       border-radius: var(--radius-2xl);
-      background: var(--white);
+      background: var(--surface-solid);
       box-shadow: var(--shadow-md);
     }
 
@@ -314,7 +508,7 @@
 
     .svg-wrap {
       border-radius: var(--radius-2xl);
-      background: var(--slate-50);
+      background: var(--field-bg-2);
       padding: 10px;
     }
 
@@ -335,6 +529,11 @@
       font-size: 13px;
       font-weight: 950;
       fill: var(--slate-950);
+      stroke: var(--svg-title-stroke);
+      stroke-width: 3px;
+      paint-order: stroke fill;
+      stroke-linejoin: round;
+      letter-spacing: -0.01em;
     }
 
     .svg-small {
@@ -347,7 +546,23 @@
         sans-serif;
       font-size: 10.5px;
       font-weight: 800;
-      fill: var(--slate-500);
+      fill: var(--slate-700);
+      stroke: var(--svg-small-stroke);
+      stroke-width: 2.4px;
+      paint-order: stroke fill;
+      stroke-linejoin: round;
+    }
+
+    .svg-accent-blue {
+      fill: var(--svg-blue-text);
+    }
+
+    .svg-accent-green {
+      fill: var(--svg-green-text);
+    }
+
+    .svg-accent-red {
+      fill: var(--svg-red-text);
     }
 
     .save-badge,
@@ -417,7 +632,7 @@
       border: 1px solid var(--slate-300);
       border-radius: var(--radius-xl);
       outline: none;
-      background: var(--white);
+      background: var(--field-bg);
       color: var(--slate-950);
       font-size: 18px;
       font-weight: 900;
@@ -448,7 +663,7 @@
       border: 1px solid var(--blue-100);
       border-radius: var(--radius-2xl);
       padding: 15px;
-      background: linear-gradient(135deg, var(--blue-50), #fff);
+      background: linear-gradient(135deg, var(--blue-50), var(--surface-solid));
     }
 
     .applied-size-label {
@@ -499,57 +714,6 @@
       font-weight: 750;
     }
 
-    .advanced {
-      border: 1px solid var(--slate-200);
-      border-radius: var(--radius-2xl);
-      background: var(--slate-50);
-      padding: 14px;
-    }
-
-    .advanced > summary {
-      list-style: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .advanced > summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .advanced-title {
-      margin: 0;
-      color: var(--slate-800);
-      font-size: 14px;
-      font-weight: 950;
-    }
-
-    .advanced-desc {
-      margin: 3px 0 0;
-      color: var(--slate-500);
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .advanced-chip {
-      flex: 0 0 auto;
-      border-radius: 999px;
-      background: var(--white);
-      padding: 6px 9px;
-      color: var(--slate-500);
-      font-size: 11px;
-      font-weight: 950;
-      border: 1px solid var(--slate-200);
-    }
-
-    .advanced-content {
-      display: grid;
-      gap: 14px;
-      margin-top: 15px;
-    }
-
     .button-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -572,7 +736,7 @@
     }
 
     .btn-primary {
-      color: var(--white);
+      color: var(--ink-on-accent);
       background: var(--blue-600);
       box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
     }
@@ -588,6 +752,43 @@
 
     .btn-secondary:hover {
       background: var(--slate-200);
+    }
+
+    .bottom-home-wrap {
+      margin-top: 18px;
+    }
+
+    .bottom-home-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 58px;
+      border: 1px solid var(--blue-100);
+      border-radius: var(--radius-xl);
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--blue-50), var(--surface-solid));
+      color: var(--blue-900);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 950;
+      box-shadow: var(--shadow-sm);
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+    }
+
+    .bottom-home-link:hover {
+      background: linear-gradient(135deg, var(--blue-100), var(--surface-solid));
+      transform: translateY(-1px);
+    }
+
+    .bottom-home-link:active {
+      transform: translateY(1px);
+    }
+
+    .bottom-home-link-icon {
+      flex: 0 0 auto;
+      font-size: 20px;
+      line-height: 1;
     }
 
     .notice {
@@ -698,7 +899,7 @@
       width: fit-content;
       border-radius: 999px;
       background: var(--red-600);
-      color: var(--white);
+      color: var(--ink-on-accent);
       padding: 5px 10px;
       font-size: 11px;
       font-weight: 950;
@@ -772,7 +973,7 @@
       width: 30px;
       height: 30px;
       border-radius: 999px;
-      color: var(--white);
+      color: var(--ink-on-accent);
       font-size: 14px;
       font-weight: 950;
     }
@@ -814,7 +1015,7 @@
       right: 0;
       bottom: 0;
       border-top: 1px solid var(--slate-200);
-      background: rgba(255,255,255,0.96);
+      background: var(--sticky-bg);
       box-shadow: 0 -18px 40px rgba(15,23,42,0.12);
       backdrop-filter: blur(12px);
       padding: 10px;
@@ -934,9 +1135,20 @@
     <div class="app-shell">
       <header class="header">
         <div class="header-inner">
-          <div class="eyebrow">PIPE FIELD CALCULATOR</div>
-          <h1 class="title">파이프 사선 커팅 & 컷백 계산기</h1>
-          <p class="subtitle">
+          <div class="header-top">
+            <div id="pageTools" class="header-actions" aria-label="Page tools">
+              <label id="langSelectLabel" class="sr-only" for="langSelect">언어 선택</label>
+              <select id="langSelect" class="header-lang" aria-label="언어 선택">
+                <option value="ko">🇰🇷 한국어</option>
+                <option value="vi">🇻🇳 Tiếng Việt</option>
+                <option value="id">🇮🇩 Bahasa Indonesia</option>
+              </select>
+              <button id="themeToggle" class="header-link" type="button" aria-label="Toggle theme" title="Toggle theme">🌗</button>
+              <a id="backToMain" class="header-link" href="./index.html" aria-label="Back to main" title="Back to main">🏠</a>
+            </div>
+          </div>
+          <h1 id="pageTitle" class="title">파이프 사선 커팅 계산기</h1>
+          <p id="pageSubtitle" class="subtitle">
             파이프 관경을 선택하고 수평 거리와 대각선 거리를 입력하면
             절단 각도, 컷백 거리(B), 실제 절단 길이를 현장 작업 순서와 함께 계산합니다.
           </p>
@@ -948,22 +1160,21 @@
         <section class="section card hero-guide" aria-labelledby="topGuideTitle">
           <div class="guide-grid">
             <div class="guide-note">
-              <span class="guide-callout">먼저 확인하세요</span>
+              <span id="guideCallout" class="guide-callout">먼저 확인하세요</span>
               <h2 id="topGuideTitle" class="guide-title">배관 오프셋 거리 기준</h2>
-              <p class="guide-text">
-                입력 전에 <strong>수평 거리</strong>, <strong>수직 거리</strong>, <strong>대각선 거리</strong>가
-                어떤 관계인지 먼저 확인하면 계산 기준을 헷갈리지 않습니다.
+              <p id="guideText" class="guide-text">
+                입력 전에 수평 거리, 수직 거리, 대각선 거리의 관계를 먼저 확인하면 계산 기준을 헷갈리지 않습니다.
                 수직 거리(H)는 입력값이 아니라 자동 계산값입니다.
               </p>
               <ul class="guide-list">
-                <li><span class="guide-index">1</span><span><strong>수평 거리</strong>: 시작 중심과 도착 중심의 가로 거리</span></li>
-                <li><span class="guide-index">2</span><span><strong>대각선 거리</strong>: 실제 중심선 연결 길이</span></li>
-                <li><span class="guide-index">3</span><span><strong>수직 거리(H)</strong>: 수평/대각선 거리로부터 자동 계산</span></li>
+                <li><span class="guide-index">1</span><span id="guideItemL">수평 거리: 시작 중심과 도착 중심의 가로 거리</span></li>
+                <li><span class="guide-index">2</span><span id="guideItemT">대각선 거리: 실제 중심선 연결 길이</span></li>
+                <li><span class="guide-index">3</span><span id="guideItemH">수직 거리(H): 수평/대각선 거리로부터 자동 계산</span></li>
               </ul>
             </div>
 
             <div class="svg-wrap">
-              <svg viewBox="0 0 380 315" role="img" aria-label="배관 오프셋 구조도">
+              <svg id="topGuideSvg" viewBox="0 0 380 315" role="img" aria-label="배관 오프셋 구조도">
                 <defs>
                   <marker id="arrowBlue" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
                     <path d="M0,0 L0,6 L6,3 z" fill="#2563eb"></path>
@@ -1026,7 +1237,7 @@
                 <line x1="319" y1="226" x2="339" y2="226" stroke="#059669" stroke-width="2" />
                 <line x1="319" y1="78" x2="339" y2="78" stroke="#059669" stroke-width="2" />
 
-                <text x="186" y="278" text-anchor="middle" class="svg-title-text" fill="#2563eb">
+                <text id="svgLabelL" x="186" y="278" text-anchor="middle" class="svg-title-text svg-accent-blue">
                   수평 거리 = <tspan id="svg_L">400</tspan> mm
                 </text>
 
@@ -1034,8 +1245,8 @@
                   x="352"
                   y="154"
                   text-anchor="middle"
-                  class="svg-title-text"
-                  fill="#059669"
+                  id="svgLabelH"
+                  class="svg-title-text svg-accent-green"
                   transform="rotate(90 352 154)"
                 >
                   수직 거리 = <tspan id="svg_H">300</tspan> mm
@@ -1045,14 +1256,15 @@
                   x="178"
                   y="132"
                   text-anchor="middle"
+                  id="svgLabelT"
                   class="svg-title-text"
                   transform="rotate(-33 178 132)"
                 >
                   대각선 거리 = <tspan id="svg_T">500</tspan> mm
                 </text>
 
-                <text x="45" y="228" text-anchor="end" class="svg-small">시작 중심</text>
-                <text x="300" y="46" text-anchor="middle" class="svg-small">도착 중심</text>
+                <text id="svgStartCenter" x="45" y="228" text-anchor="end" class="svg-small">시작 중심</text>
+                <text id="svgEndCenter" x="300" y="46" text-anchor="middle" class="svg-small">도착 중심</text>
               </svg>
             </div>
           </div>
@@ -1060,23 +1272,23 @@
 
         <!-- 입력 / 결과 -->
         <div class="layout">
-          <aside class="sidebar card panel" aria-label="입력 영역">
+          <aside id="inputPanel" class="sidebar card panel" aria-label="입력 영역">
             <div class="section-head">
               <div>
-                <h2 class="section-title">입력값 설정</h2>
-                <p class="section-desc">현장 기준값을 입력하세요.</p>
+                <h2 id="inputTitle" class="section-title">입력값 설정</h2>
+                <p id="inputDesc" class="section-desc">현장 기준값을 입력하세요.</p>
               </div>
               <span id="saveBadge" class="save-badge">자동 저장</span>
             </div>
 
             <div id="errorBox" class="error-box" role="alert" aria-live="assertive">
-              <p class="error-title">입력값을 확인하세요</p>
+              <p id="errorTitle" class="error-title">입력값을 확인하세요</p>
               <p id="errorText" class="error-text"></p>
             </div>
 
             <form class="form-grid" onsubmit="event.preventDefault(); calculate();">
               <div class="field">
-                <label for="pipeSize" class="label">파이프 관경</label>
+                <label id="pipeSizeLabel" for="pipeSize" class="label">파이프 관경</label>
                 <select id="pipeSize" class="select" onchange="onPipeSizeChange()">
                   <option value="15A">15A · 외경 21.7 mm</option>
                   <option value="20A">20A · 외경 27.2 mm</option>
@@ -1091,11 +1303,11 @@
                   <option value="150A">150A · 외경 165.2 mm</option>
                   <option value="200A">200A · 외경 216.3 mm</option>
                 </select>
-                <p class="help">15A부터 200A까지 JIS PIPE 외경 기준으로 자동 적용됩니다.</p>
+                <p id="pipeSizeHelp" class="help">15A부터 200A까지 JIS PIPE 외경 기준으로 자동 적용됩니다.</p>
               </div>
 
               <div class="applied-size" aria-live="polite">
-                <p class="applied-size-label">적용 관경 / 외경</p>
+                <p id="appliedSizeLabel" class="applied-size-label">적용 관경 / 외경</p>
                 <p class="applied-size-value">
                   <span id="selectedSize">100A</span>
                   <span class="muted">/</span>
@@ -1104,7 +1316,7 @@
               </div>
 
               <div class="field">
-                <label for="input_L" class="label">수평 거리</label>
+                <label id="inputLLabel" for="input_L" class="label">수평 거리</label>
                 <input
                   id="input_L"
                   class="input"
@@ -1115,11 +1327,11 @@
                   value="400"
                   oninput="calculate()"
                 />
-                <p class="help">시작 중심점과 도착 중심점 사이의 수평 방향 거리입니다.</p>
+                <p id="inputLHelp" class="help">시작 중심점과 도착 중심점 사이의 수평 방향 거리입니다.</p>
               </div>
 
               <div class="field">
-                <label for="input_T" class="label">대각선 거리</label>
+                <label id="inputTLabel" for="input_T" class="label">대각선 거리</label>
                 <input
                   id="input_T"
                   class="input"
@@ -1130,152 +1342,95 @@
                   value="500"
                   oninput="calculate()"
                 />
-                <p class="help">실제 연결되는 중심선 거리입니다. 수평 거리보다 작을 수 없습니다.</p>
+                <p id="inputTHelp" class="help">실제 연결되는 중심선 거리입니다. 수평 거리보다 작을 수 없습니다.</p>
               </div>
 
-              <details class="advanced">
-                <summary>
-                  <div>
-                    <p class="advanced-title">고급 옵션</p>
-                    <p class="advanced-desc">감면 길이와 총 용접 갭이 필요한 경우만 사용</p>
-                  </div>
-                  <span class="advanced-chip">열기 / 닫기</span>
-                </summary>
-
-                <div class="advanced-content">
-                  <div class="field">
-                    <label for="input_D1" class="label">감면 길이 1</label>
-                    <input
-                      id="input_D1"
-                      class="input"
-                      type="number"
-                      inputmode="decimal"
-                      min="0"
-                      step="0.1"
-                      value="0"
-                      oninput="calculate()"
-                    />
-                    <p class="help">한쪽 부속, 플랜지, 엘보 등의 감면 길이가 있으면 입력합니다.</p>
-                  </div>
-
-                  <div class="field">
-                    <label for="input_D2" class="label">감면 길이 2</label>
-                    <input
-                      id="input_D2"
-                      class="input"
-                      type="number"
-                      inputmode="decimal"
-                      min="0"
-                      step="0.1"
-                      value="0"
-                      oninput="calculate()"
-                    />
-                    <p class="help">반대쪽 감면 길이가 있으면 입력합니다. 없으면 0으로 둡니다.</p>
-                  </div>
-
-                  <div class="field">
-                    <label for="input_Gap" class="label">총 용접 갭</label>
-                    <input
-                      id="input_Gap"
-                      class="input"
-                      type="number"
-                      inputmode="decimal"
-                      min="0"
-                      step="0.1"
-                      value="0"
-                      oninput="calculate()"
-                    />
-                    <p class="help">양쪽 갭을 합산한 총값입니다. 예: 3mm씩 2곳이면 6 입력.</p>
-                  </div>
-                </div>
-              </details>
-
               <div class="field">
-                <label for="roundMode" class="label">표시 반올림</label>
+                <label id="roundModeLabel" for="roundMode" class="label">표시 반올림</label>
                 <select id="roundMode" class="select" onchange="calculate()">
-                  <option value="0.1">0.1 mm 단위</option>
-                  <option value="1">1 mm 단위</option>
-                  <option value="5">5 mm 단위</option>
+                  <option id="roundOption01" value="0.1">0.1 mm 단위</option>
+                  <option id="roundOption1" value="1">1 mm 단위</option>
+                  <option id="roundOption5" value="5">5 mm 단위</option>
                 </select>
               </div>
 
               <div class="button-row">
-                <button type="submit" class="btn btn-primary">계산하기</button>
-                <button type="button" class="btn btn-secondary" onclick="resetValues()">초기화</button>
+                <button id="calculateButton" type="submit" class="btn btn-primary">계산하기</button>
+                <button id="resetButton" type="button" class="btn btn-secondary" onclick="resetValues()">초기화</button>
               </div>
             </form>
 
             <div class="notice">
-              <p class="notice-title">현장 팁</p>
-              <p class="notice-text">
+              <p id="noticeTitle" class="notice-title">현장 팁</p>
+              <p id="noticeText" class="notice-text">
                 먼저 긴쪽 기준으로 직각선을 긋고, 반대편에서 컷백 거리(B)만큼 표시한 뒤 두 점을 연결하면 됩니다.
               </p>
             </div>
           </aside>
 
-          <main class="main" aria-label="결과 영역">
+          <main id="mainPanel" class="main" aria-label="결과 영역">
             <section aria-labelledby="resultTitle">
               <div class="section-head">
                 <div>
                   <h2 id="resultTitle" class="section-title">계산 결과</h2>
-                  <p class="section-desc">현장 마킹에 바로 사용할 수 있는 핵심값입니다.</p>
+                  <p id="resultDesc" class="section-desc">현장 마킹에 바로 사용할 수 있는 핵심값입니다.</p>
                 </div>
                 <span id="statusBadge" class="status-badge status-ok" aria-live="polite">계산 정상</span>
               </div>
 
               <div class="results-grid" aria-live="polite">
                 <article class="card result-card bar-slate">
-                  <p class="result-label slate">대각선 기준 길이</p>
+                  <p id="resDiagonalLabel" class="result-label slate">대각선 기준 길이</p>
                   <p id="res_diagonal" class="result-value">
                     0.0 <span class="unit">mm</span>
                   </p>
-                  <p class="result-help">입력한 실제 중심선 거리</p>
+                  <p id="resDiagonalHelp" class="result-help">입력한 실제 중심선 거리</p>
                 </article>
 
                 <article class="card result-card bar-blue">
-                  <p class="result-label blue">실제 절단 길이</p>
+                  <p id="resCutLabel" class="result-label blue">실제 절단 길이</p>
                   <p id="res_cut" class="result-value">
                     0.0 <span class="unit">mm</span>
                   </p>
-                  <p class="result-help">감면 길이와 총 용접 갭 반영</p>
+                  <p id="resCutHelp" class="result-help">감면 길이와 총 용접 갭 반영</p>
                 </article>
 
                 <article class="card result-card bar-green">
-                  <p class="result-label green">절단 각도</p>
+                  <p id="resAngleLabel" class="result-label green">절단 각도</p>
                   <p id="res_angle" class="result-value">
                     0.0 <span class="unit">°</span>
                   </p>
-                  <p class="result-help">수평 기준 절단 각도</p>
+                  <p id="resAngleHelp" class="result-help">수평 기준 절단 각도</p>
                 </article>
 
                 <article class="card result-card bar-red">
-                  <span class="key-badge">마킹 핵심</span>
-                  <p class="result-label red">컷백 거리 (B)</p>
+                  <span id="resBKeyBadge" class="key-badge">마킹 핵심</span>
+                  <p id="resBLabel" class="result-label red">컷백 거리 (B)</p>
                   <p id="res_B" class="result-value red">
                     0.0 <span class="unit unit-red">mm</span>
                   </p>
-                  <p class="result-help">반대편에 표시할 높이 차이</p>
+                  <p id="resBHelp" class="result-help">반대편에 표시할 높이 차이</p>
                 </article>
               </div>
 
               <div class="details-grid">
                 <article class="card detail-card">
-                  <p class="detail-label">수직 거리</p>
+                  <p id="detailHLabel" class="detail-label">수직 거리</p>
                   <p id="detail_H" class="detail-value">0.0 mm</p>
                 </article>
 
                 <article class="card detail-card">
-                  <p class="detail-label">적용 외경</p>
+                  <p id="detailODLabel" class="detail-label">적용 외경</p>
                   <p id="detail_OD" class="detail-value">114.3 mm</p>
                 </article>
 
                 <article class="card detail-card">
-                  <p class="detail-label">긴쪽 참고 길이</p>
+                  <p id="detailLongLabel" class="detail-label">긴쪽 참고 길이</p>
                   <p id="detail_long" class="detail-value">0.0 mm</p>
                 </article>
 
                 <article class="card detail-card">
-                  <p class="detail-label">짧은쪽 참고 길이</p>
+                  <p id="detailShortLabel" class="detail-label">짧은쪽 참고 길이</p>
                   <p id="detail_short" class="detail-value">0.0 mm</p>
                 </article>
               </div>
@@ -1283,23 +1438,23 @@
 
             <section class="card work-guide" aria-labelledby="guideTitle">
               <h2 id="guideTitle" class="section-title">현장 작업 순서</h2>
-              <p class="section-desc">처음 사용하는 작업자도 따라 할 수 있도록 순서화했습니다.</p>
+              <p id="workGuideDesc" class="section-desc">처음 사용하는 작업자도 따라 할 수 있도록 순서화했습니다.</p>
 
               <div class="steps">
                 <article class="step blue">
                   <span class="step-dot blue">1</span>
                   <div>
-                    <p class="step-title blue">기준 직각선 표시</p>
-                    <p class="step-text blue">긴쪽 기준으로 파이프 둘레에 직각선을 먼저 표시합니다.</p>
+                    <p id="step1Title" class="step-title blue">기준 직각선 표시</p>
+                    <p id="step1Text" class="step-text blue">긴쪽 기준으로 파이프 둘레에 직각선을 먼저 표시합니다.</p>
                   </div>
                 </article>
 
                 <article class="step red">
                   <span class="step-dot red">2</span>
                   <div>
-                    <p class="step-title red">컷백 거리 표시</p>
-                    <p class="step-text red">
-                      반대편 위치에 <strong id="guide_B">B = 0.0 mm</strong> 만큼 올라간 위치를 표시합니다.
+                    <p id="step2Title" class="step-title red">컷백 거리 표시</p>
+                    <p id="step2Text" class="step-text red">
+                      <span id="step2TextPrefix">반대편 위치에 </span><strong id="guide_B">B = 0.0 mm</strong><span id="step2TextSuffix"> 만큼 올라간 위치를 표시합니다.</span>
                     </p>
                   </div>
                 </article>
@@ -1307,8 +1462,8 @@
                 <article class="step green">
                   <span class="step-dot green">3</span>
                   <div>
-                    <p class="step-title green">절단선 연결</p>
-                    <p class="step-text green">기준선 끝점과 표시점을 연결하여 사선 절단선을 그립니다.</p>
+                    <p id="step3Title" class="step-title green">절단선 연결</p>
+                    <p id="step3Text" class="step-text green">기준선 끝점과 표시점을 연결하여 사선 절단선을 그립니다.</p>
                   </div>
                 </article>
               </div>
@@ -1318,32 +1473,32 @@
               <div class="section-head">
                 <div>
                   <h2 id="tutorialTitle" class="section-title">파이프 마킹 튜토리얼</h2>
-                  <p class="section-desc">컷백 거리(B)를 이용한 실제 사선 마킹</p>
+                  <p id="tutorialDesc" class="section-desc">컷백 거리(B)를 이용한 실제 사선 마킹</p>
                 </div>
               </div>
 
               <div class="svg-wrap">
-                <svg viewBox="0 0 380 430" role="img" aria-label="파이프 사선 마킹 튜토리얼">
+                <svg id="tutorialSvg" viewBox="0 0 380 430" role="img" aria-label="파이프 사선 마킹 튜토리얼">
                   <rect x="20" y="20" width="340" height="386" rx="26" fill="#f8fafc" />
 
                   <circle cx="58" cy="50" r="13" fill="#2563eb" />
                   <text x="58" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="900">1</text>
-                  <text x="78" y="55" class="svg-small">긴쪽 기준 직각선 표시</text>
+                  <text id="tutorialStep1" x="78" y="55" class="svg-small">긴쪽 기준 직각선 표시</text>
 
                   <circle cx="58" cy="78" r="13" fill="#dc2626" />
                   <text x="58" y="83" text-anchor="middle" fill="white" font-size="12" font-weight="900">2</text>
-                  <text x="78" y="83" class="svg-small">반대편 컷백 거리(B) 표시</text>
+                  <text id="tutorialStep2" x="78" y="83" class="svg-small">반대편 컷백 거리(B) 표시</text>
 
                   <circle cx="58" cy="106" r="13" fill="#059669" />
                   <text x="58" y="111" text-anchor="middle" fill="white" font-size="12" font-weight="900">3</text>
-                  <text x="78" y="111" class="svg-small">두 점 연결 후 절단</text>
+                  <text id="tutorialStep3" x="78" y="111" class="svg-small">두 점 연결 후 절단</text>
 
                   <path d="M 125 145 L 125 322" stroke="#111827" stroke-width="5" stroke-linecap="round" />
                   <path d="M 255 145 L 255 322" stroke="#111827" stroke-width="5" stroke-linecap="round" />
                   <rect x="125" y="145" width="130" height="177" fill="rgba(148, 163, 184, 0.08)" />
 
                   <path d="M 125 322 L 255 322" stroke="#64748b" stroke-width="3" stroke-dasharray="7 6" />
-                  <text x="197" y="347" text-anchor="middle" class="svg-small">① 기준 직각선</text>
+                  <text id="tutorialBaseLine" x="197" y="347" text-anchor="middle" class="svg-small">① 기준 직각선</text>
 
                   <path
                     id="svg_slant"
@@ -1353,7 +1508,7 @@
                     stroke-linecap="round"
                   />
 
-                  <text id="cutLabel" x="289" y="263" text-anchor="middle" class="svg-small" fill="#dc2626">
+                  <text id="tutorialCutLabel" x="289" y="263" text-anchor="middle" class="svg-small svg-accent-red">
                     ③ 절단선
                   </text>
 
@@ -1361,24 +1516,24 @@
                   <line id="bBottomTick" x1="93" y1="322" x2="115" y2="322" stroke="#dc2626" stroke-width="3" />
                   <line id="bLine" x1="104" y1="245" x2="104" y2="322" stroke="#dc2626" stroke-width="3" />
 
-                  <text id="bLabel1" x="88" y="276" text-anchor="end" class="svg-title-text" fill="#dc2626">
+                  <text id="bLabel1" x="88" y="276" text-anchor="end" class="svg-title-text svg-accent-red">
                     ② 컷백 거리
                   </text>
-                  <text id="bLabel2" x="88" y="296" text-anchor="end" class="svg-title-text" fill="#dc2626">
+                  <text id="bLabel2" x="88" y="296" text-anchor="end" class="svg-title-text svg-accent-red">
                     B = <tspan id="svg_B">0.0</tspan> mm
                   </text>
 
                   <circle id="shortPoint" cx="125" cy="245" r="6" fill="#dc2626" />
                   <circle cx="255" cy="322" r="6" fill="#2563eb" />
 
-                  <text x="294" y="323" text-anchor="middle" class="svg-small" fill="#2563eb">긴쪽 기준</text>
-                  <text id="shortLabel" x="169" y="238" text-anchor="middle" class="svg-small" fill="#dc2626">짧은쪽 점</text>
+                  <text id="longReferenceLabel" x="294" y="323" text-anchor="middle" class="svg-small svg-accent-blue">긴쪽 기준</text>
+                  <text id="shortLabel" x="169" y="238" text-anchor="middle" class="svg-small svg-accent-red">짧은쪽 점</text>
 
                   <line x1="125" y1="376" x2="255" y2="376" stroke="#64748b" stroke-width="2" />
                   <line x1="125" y1="368" x2="125" y2="384" stroke="#64748b" stroke-width="2" />
                   <line x1="255" y1="368" x2="255" y2="384" stroke="#64748b" stroke-width="2" />
 
-                  <text x="190" y="399" text-anchor="middle" class="svg-title-text">
+                  <text id="svgODText" x="190" y="399" text-anchor="middle" class="svg-title-text">
                     파이프 외경 = <tspan id="svg_OD">114.3</tspan> mm
                   </text>
 
@@ -1389,30 +1544,37 @@
                     stroke="#059669"
                     stroke-width="3"
                   />
-                  <text x="210" y="307" text-anchor="middle" class="svg-title-text" fill="#059669">
+                  <text id="svgAngleText" x="210" y="307" text-anchor="middle" class="svg-title-text svg-accent-green">
                     절단 각도 <tspan id="svg_A">16.7</tspan>°
                   </text>
                 </svg>
               </div>
             </section>
+
+            <div class="bottom-home-wrap">
+              <a id="bottomHomeLink" class="bottom-home-link" href="./index.html" aria-label="Back to main" title="Back to main">
+                <span class="bottom-home-link-icon" aria-hidden="true">🏠</span>
+                <span id="bottomHomeText">메인으로 돌아가기</span>
+              </a>
+            </div>
           </main>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="sticky" aria-label="모바일 핵심 결과">
+  <div id="stickyPanel" class="sticky" aria-label="모바일 핵심 결과">
     <div class="sticky-grid">
       <div class="sticky-item blue">
-        <p class="sticky-label blue">절단 길이</p>
+        <p id="stickyCutLabel" class="sticky-label blue">절단 길이</p>
         <p id="sticky_cut" class="sticky-value">0.0</p>
       </div>
       <div class="sticky-item green">
-        <p class="sticky-label green">각도</p>
+        <p id="stickyAngleLabel" class="sticky-label green">각도</p>
         <p id="sticky_angle" class="sticky-value">0.0°</p>
       </div>
       <div class="sticky-item red">
-        <p class="sticky-label red">컷백 B</p>
+        <p id="stickyBLabel" class="sticky-label red">컷백 B</p>
         <p id="sticky_B" class="sticky-value red">0.0</p>
       </div>
     </div>
@@ -1420,7 +1582,9 @@
 
   <script>
     const STORAGE_KEY = "pipe_miter_calculator_production_v3";
-
+    const THEME_KEY = "pipe_miter_calculator_theme";
+    const LANG_KEY = "jis-calc-lang";
+    const VALID_THEMES = ["auto", "light", "dark"];
     const PIPE_SIZES = {
       "15A": 21.7,
       "20A": 27.2,
@@ -1435,28 +1599,311 @@
       "150A": 165.2,
       "200A": 216.3
     };
-
     const DEFAULTS = {
       pipeSize: "100A",
       L: "400",
       T: "500",
-      D1: "0",
-      D2: "0",
-      Gap: "0",
       roundMode: "0.1"
     };
-
+    const I18N = {
+      ko: {
+        docTitle: "파이프 사선 커팅 계산기",
+        pageTools: "페이지 도구",
+        back: "메인으로 돌아가기",
+        langSelect: "언어 선택",
+        themeToggle: "테마 전환",
+        themeAuto: "자동모드",
+        themeLight: "주간모드",
+        themeDark: "야간모드",
+        title: "파이프 사선 커팅 계산기",
+        subtitle: "파이프 관경과 수평 거리, 대각선 거리를 입력하면 절단 각도와 컷백 거리(B)를 바로 확인할 수 있습니다.",
+        guideCallout: "먼저 확인하세요",
+        guideTitle: "배관 오프셋 거리 기준",
+        guideText: '입력 전에 수평 거리, 수직 거리, 대각선 거리의 관계를 먼저 확인하면 계산 기준을 헷갈리지 않습니다. 수직 거리(H)는 입력값이 아니라 자동 계산값입니다.',
+        guideItemL: '수평 거리: 시작 중심과 도착 중심의 가로 거리',
+        guideItemT: '대각선 거리: 실제 중심선 연결 길이',
+        guideItemH: '수직 거리(H): 수평/대각선 거리로부터 자동 계산',
+        topGuideSvgAria: "배관 오프셋 구조도",
+        svgHorizontal: "수평 거리",
+        svgVertical: "수직 거리",
+        svgDiagonal: "대각선 거리",
+        svgStartCenter: "시작 중심",
+        svgEndCenter: "도착 중심",
+        inputArea: "입력 영역",
+        inputTitle: "입력값 설정",
+        inputDesc: "현장에서 측정한 기준값을 입력하세요.",
+        saveAuto: "자동 저장",
+        saveSaved: "저장됨",
+        saveUnavailable: "저장 불가",
+        errorTitle: "입력값을 확인하세요",
+        pipeSizeLabel: "파이프 관경",
+        pipeSizeHelp: "15A부터 200A까지 JIS 배관 외경 기준을 적용합니다.",
+        appliedSizeLabel: "적용 관경 / 외경",
+        inputLLabel: "수평 거리",
+        inputLHelp: "시작 중심과 도착 중심 사이의 가로 거리입니다.",
+        inputTLabel: "대각선 거리",
+        inputTHelp: "실제 중심선 기준 길이입니다. 수평 거리보다 작을 수 없습니다.",
+        roundModeLabel: "표시 반올림",
+        round01: "0.1 mm 단위",
+        round1: "1 mm 단위",
+        round5: "5 mm 단위",
+        calculateButton: "계산하기",
+        resetButton: "초기화",
+        noticeTitle: "현장 팁",
+        noticeText: "긴쪽 기준선을 먼저 잡고 반대편에 컷백 거리(B)를 표시한 뒤 두 점을 연결하면 마킹이 쉽습니다.",
+        resultArea: "결과 영역",
+        resultTitle: "계산 결과",
+        resultDesc: "현장 마킹에 바로 사용할 핵심값만 정리했습니다.",
+        statusOk: "계산 정상",
+        statusError: "입력 오류",
+        resDiagonalLabel: "입력 대각 길이",
+        resDiagonalHelp: "입력한 중심선 기준 길이",
+        resCutLabel: "절단 적용 길이",
+        resCutHelp: "추가 보정 없이 바로 적용하는 길이",
+        resAngleLabel: "절단 각도",
+        resAngleHelp: "수평 기준 절단 각도",
+        resBKey: "마킹 핵심",
+        resBLabel: "컷백 거리 (B)",
+        resBHelp: "반대편에 표시할 높이 차이",
+        detailHLabel: "수직 거리",
+        detailODLabel: "적용 외경",
+        detailLongLabel: "긴쪽 참고값",
+        detailShortLabel: "짧은쪽 참고값",
+        workTitle: "현장 작업 순서",
+        workDesc: "처음 사용하는 작업자도 바로 따라 할 수 있게 순서를 정리했습니다.",
+        step1Title: "기준 직각선 표시",
+        step1Text: "긴쪽 기준으로 파이프 둘레에 직각선을 먼저 표시합니다.",
+        step2Title: "컷백 거리 표시",
+        step2TextPre: "반대편 위치에 ",
+        step2TextPost: " 만큼 올라간 위치를 표시합니다.",
+        step3Title: "절단선 연결",
+        step3Text: "기준선 끝점과 표시점을 연결하여 사선 절단선을 그립니다.",
+        tutorialTitle: "파이프 마킹 튜토리얼",
+        tutorialDesc: "컷백 거리(B)로 현장에서 바로 표시하는 방법",
+        tutorialSvgAria: "파이프 사선 마킹 튜토리얼",
+        tutorialStep1: "긴쪽 기준 직각선 표시",
+        tutorialStep2: "반대편 컷백 거리(B) 표시",
+        tutorialStep3: "두 점 연결 후 절단",
+        tutorialBaseLine: "① 기준 직각선",
+        tutorialCutLine: "③ 절단선",
+        tutorialBLabel: "② 컷백 거리",
+        tutorialLongRef: "긴쪽 기준",
+        tutorialShortPoint: "짧은쪽 점",
+        bottomHomeText: "메인으로 돌아가기",
+        svgPipeOD: "파이프 외경",
+        svgCutAngle: "절단 각도",
+        stickyAria: "모바일 핵심 결과",
+        stickyCutLabel: "절단 길이",
+        stickyAngleLabel: "각도",
+        stickyBLabel: "컷백 B",
+        needsReview: "확인 필요",
+        errorLPositive: "수평 거리는 0보다 커야 합니다.",
+        errorTPositive: "대각선 거리는 0보다 커야 합니다.",
+        errorTvsL: "대각선 거리는 수평 거리보다 작을 수 없습니다.",
+        pipeOption: "{size} · 외경 {od} mm"
+      },
+      vi: {
+        docTitle: "Máy tính cắt chéo ống",
+        pageTools: "Công cụ trang",
+        back: "Quay lại trang chính",
+        langSelect: "Chọn ngôn ngữ",
+        themeToggle: "Đổi giao diện",
+        themeAuto: "chế độ tự động",
+        themeLight: "chế độ sáng",
+        themeDark: "chế độ tối",
+        title: "Máy tính cắt chéo ống",
+        subtitle: "Chọn cỡ ống rồi nhập khoảng cách ngang và khoảng cách chéo để xem ngay góc cắt và khoảng lùi (B).",
+        guideCallout: "Kiểm tra trước",
+        guideTitle: "Mốc khoảng cách lệch ống",
+        guideText: 'Trước khi nhập, hãy xác nhận mối quan hệ giữa khoảng cách ngang, khoảng cách đứng và khoảng cách chéo để tránh nhầm chuẩn tính toán. Khoảng cách đứng (H) được tính tự động, không phải giá trị nhập.',
+        guideItemL: 'Khoảng cách ngang: khoảng cách theo phương ngang giữa tâm bắt đầu và tâm đích',
+        guideItemT: 'Khoảng cách chéo: chiều dài đường tâm nối thực tế',
+        guideItemH: 'Khoảng cách đứng (H): tự động tính từ khoảng cách ngang/chéo',
+        topGuideSvgAria: "Sơ đồ lệch ống",
+        svgHorizontal: "Khoảng cách ngang",
+        svgVertical: "Khoảng cách đứng",
+        svgDiagonal: "Khoảng cách chéo",
+        svgStartCenter: "Tâm bắt đầu",
+        svgEndCenter: "Tâm đích",
+        inputArea: "Khu vực nhập liệu",
+        inputTitle: "Thiết lập giá trị nhập",
+        inputDesc: "Nhập các giá trị đo được tại hiện trường.",
+        saveAuto: "Tự động lưu",
+        saveSaved: "Đã lưu",
+        saveUnavailable: "Không thể lưu",
+        errorTitle: "Hãy kiểm tra giá trị nhập",
+        pipeSizeLabel: "Kích thước ống",
+        pipeSizeHelp: "Áp dụng tiêu chuẩn đường kính ngoài JIS từ 15A đến 200A.",
+        appliedSizeLabel: "Cỡ ống áp dụng / OD",
+        inputLLabel: "Khoảng cách ngang",
+        inputLHelp: "Khoảng cách theo phương ngang giữa tâm đầu và tâm cuối.",
+        inputTLabel: "Khoảng cách chéo",
+        inputTHelp: "Chiều dài thực theo đường tâm. Không được nhỏ hơn khoảng cách ngang.",
+        roundModeLabel: "Làm tròn hiển thị",
+        round01: "Đơn vị 0.1 mm",
+        round1: "Đơn vị 1 mm",
+        round5: "Đơn vị 5 mm",
+        calculateButton: "Tính toán",
+        resetButton: "Đặt lại",
+        noticeTitle: "Mẹo hiện trường",
+        noticeText: "Hãy lấy chuẩn phía dài trước, đánh dấu khoảng lùi (B) ở phía đối diện rồi nối hai điểm để vạch dấu dễ hơn.",
+        resultArea: "Khu vực kết quả",
+        resultTitle: "Kết quả tính toán",
+        resultDesc: "Chỉ giữ lại các giá trị chính để dùng ngay khi đánh dấu tại hiện trường.",
+        statusOk: "Tính toán bình thường",
+        statusError: "Lỗi nhập liệu",
+        resDiagonalLabel: "Chiều dài chéo đã nhập",
+        resDiagonalHelp: "Chiều dài chuẩn theo đường tâm đã nhập",
+        resCutLabel: "Chiều dài áp dụng để cắt",
+        resCutHelp: "Chiều dài áp dụng trực tiếp không cần hiệu chỉnh thêm",
+        resAngleLabel: "Góc cắt",
+        resAngleHelp: "Góc cắt theo phương ngang",
+        resBKey: "Giá trị đánh dấu chính",
+        resBLabel: "Khoảng lùi (B)",
+        resBHelp: "Độ chênh cao cần đánh dấu ở phía đối diện",
+        detailHLabel: "Khoảng cách đứng",
+        detailODLabel: "Đường kính ngoài áp dụng",
+        detailLongLabel: "Giá trị tham khảo phía dài",
+        detailShortLabel: "Giá trị tham khảo phía ngắn",
+        workTitle: "Trình tự thi công",
+        workDesc: "Sắp xếp theo từng bước để cả người mới cũng có thể làm theo ngay.",
+        step1Title: "Đánh dấu đường vuông góc chuẩn",
+        step1Text: "Đầu tiên hãy đánh dấu đường vuông góc quanh chu vi ống theo phía dài.",
+        step2Title: "Đánh dấu khoảng lùi",
+        step2TextPre: "Đánh dấu vị trí nâng lên ",
+        step2TextPost: " ở phía đối diện.",
+        step3Title: "Nối đường cắt",
+        step3Text: "Nối đầu đường chuẩn với điểm đánh dấu để vẽ đường cắt chéo.",
+        tutorialTitle: "Hướng dẫn đánh dấu ống",
+        tutorialDesc: "Cách đánh dấu trực tiếp tại hiện trường bằng khoảng lùi (B)",
+        tutorialSvgAria: "Hướng dẫn đánh dấu cắt chéo trên ống",
+        tutorialStep1: "Đánh dấu đường vuông góc phía dài",
+        tutorialStep2: "Đánh dấu khoảng lùi (B) phía đối diện",
+        tutorialStep3: "Nối hai điểm rồi cắt",
+        tutorialBaseLine: "① Đường vuông góc chuẩn",
+        tutorialCutLine: "③ Đường cắt",
+        tutorialBLabel: "② Khoảng lùi",
+        tutorialLongRef: "Chuẩn phía dài",
+        tutorialShortPoint: "Điểm phía ngắn",
+        bottomHomeText: "Về trang chính",
+        svgPipeOD: "Đường kính ngoài ống",
+        svgCutAngle: "Góc cắt",
+        stickyAria: "Kết quả chính trên di động",
+        stickyCutLabel: "Chiều dài cắt",
+        stickyAngleLabel: "Góc",
+        stickyBLabel: "Khoảng lùi B",
+        needsReview: "Cần kiểm tra",
+        errorLPositive: "Khoảng cách ngang phải lớn hơn 0.",
+        errorTPositive: "Khoảng cách chéo phải lớn hơn 0.",
+        errorTvsL: "Khoảng cách chéo không được nhỏ hơn khoảng cách ngang.",
+        pipeOption: "{size} · OD {od} mm"
+      },
+      id: {
+        docTitle: "Kalkulator potong miring pipa",
+        pageTools: "Alat halaman",
+        back: "Kembali ke halaman utama",
+        langSelect: "Pilih bahasa",
+        themeToggle: "Ganti tema",
+        themeAuto: "mode otomatis",
+        themeLight: "mode terang",
+        themeDark: "mode gelap",
+        title: "Kalkulator potong miring pipa",
+        subtitle: "Pilih ukuran pipa lalu masukkan jarak horizontal dan jarak diagonal untuk langsung melihat sudut potong dan jarak cutback (B).",
+        guideCallout: "Periksa dulu",
+        guideTitle: "Acuan jarak offset pipa",
+        guideText: 'Sebelum input, pahami hubungan antara jarak horizontal, jarak vertikal, dan jarak diagonal agar tidak keliru pada dasar perhitungan. Jarak vertikal (H) dihitung otomatis, bukan nilai input.',
+        guideItemL: 'Jarak horizontal: jarak mendatar antara titik pusat awal dan titik pusat akhir',
+        guideItemT: 'Jarak diagonal: panjang garis tengah sambungan aktual',
+        guideItemH: 'Jarak vertikal (H): dihitung otomatis dari jarak horizontal/diagonal',
+        topGuideSvgAria: "Diagram offset pipa",
+        svgHorizontal: "Jarak horizontal",
+        svgVertical: "Jarak vertikal",
+        svgDiagonal: "Jarak diagonal",
+        svgStartCenter: "Titik pusat awal",
+        svgEndCenter: "Titik pusat akhir",
+        inputArea: "Area input",
+        inputTitle: "Pengaturan nilai input",
+        inputDesc: "Masukkan nilai hasil ukur dari lapangan.",
+        saveAuto: "Tersimpan otomatis",
+        saveSaved: "Tersimpan",
+        saveUnavailable: "Tidak dapat menyimpan",
+        errorTitle: "Periksa nilai input",
+        pipeSizeLabel: "Ukuran pipa",
+        pipeSizeHelp: "Menggunakan standar diameter luar JIS dari 15A sampai 200A.",
+        appliedSizeLabel: "Ukuran terpakai / OD",
+        inputLLabel: "Jarak horizontal",
+        inputLHelp: "Jarak mendatar antara titik pusat awal dan titik pusat akhir.",
+        inputTLabel: "Jarak diagonal",
+        inputTHelp: "Panjang aktual berdasarkan garis tengah. Tidak boleh lebih kecil dari jarak horizontal.",
+        roundModeLabel: "Pembulatan tampilan",
+        round01: "Satuan 0.1 mm",
+        round1: "Satuan 1 mm",
+        round5: "Satuan 5 mm",
+        calculateButton: "Hitung",
+        resetButton: "Reset",
+        noticeTitle: "Tip lapangan",
+        noticeText: "Buat dulu garis acuan di sisi panjang, tandai jarak cutback (B) di sisi seberang, lalu hubungkan kedua titik agar marking lebih mudah.",
+        resultArea: "Area hasil",
+        resultTitle: "Hasil perhitungan",
+        resultDesc: "Nilai inti diringkas agar langsung bisa dipakai saat marking di lapangan.",
+        statusOk: "Perhitungan normal",
+        statusError: "Kesalahan input",
+        resDiagonalLabel: "Panjang diagonal input",
+        resDiagonalHelp: "Panjang acuan garis tengah yang dimasukkan",
+        resCutLabel: "Panjang acuan potong",
+        resCutHelp: "Panjang yang langsung dipakai tanpa koreksi tambahan",
+        resAngleLabel: "Sudut potong",
+        resAngleHelp: "Sudut potong terhadap horizontal",
+        resBKey: "Kunci penandaan",
+        resBLabel: "Jarak cutback (B)",
+        resBHelp: "Perbedaan tinggi yang ditandai di sisi seberang",
+        detailHLabel: "Jarak vertikal",
+        detailODLabel: "Diameter luar terpakai",
+        detailLongLabel: "Nilai referensi sisi panjang",
+        detailShortLabel: "Nilai referensi sisi pendek",
+        workTitle: "Urutan kerja lapangan",
+        workDesc: "Disusun langkah demi langkah agar pekerja baru pun mudah mengikuti.",
+        step1Title: "Tandai garis siku-siku acuan",
+        step1Text: "Tandai dulu garis siku-siku mengelilingi pipa pada sisi panjang.",
+        step2Title: "Tandai jarak cutback",
+        step2TextPre: "Tandai posisi yang naik ",
+        step2TextPost: " di sisi seberang.",
+        step3Title: "Hubungkan garis potong",
+        step3Text: "Hubungkan ujung garis acuan dan titik tanda untuk menggambar garis potong miring.",
+        tutorialTitle: "Tutorial marking pipa",
+        tutorialDesc: "Cara marking langsung di lapangan dengan jarak cutback (B)",
+        tutorialSvgAria: "Tutorial marking potong miring pipa",
+        tutorialStep1: "Tandai garis siku-siku sisi panjang",
+        tutorialStep2: "Tandai jarak cutback (B) di sisi seberang",
+        tutorialStep3: "Hubungkan dua titik lalu potong",
+        tutorialBaseLine: "① Garis siku-siku acuan",
+        tutorialCutLine: "③ Garis potong",
+        tutorialBLabel: "② Jarak cutback",
+        tutorialLongRef: "Acuan sisi panjang",
+        tutorialShortPoint: "Titik sisi pendek",
+        bottomHomeText: "Kembali ke halaman utama",
+        svgPipeOD: "Diameter luar pipa",
+        svgCutAngle: "Sudut potong",
+        stickyAria: "Hasil inti seluler",
+        stickyCutLabel: "Panjang potong",
+        stickyAngleLabel: "Sudut",
+        stickyBLabel: "Cutback B",
+        needsReview: "Perlu dicek",
+        errorLPositive: "Jarak horizontal harus lebih besar dari 0.",
+        errorTPositive: "Jarak diagonal harus lebih besar dari 0.",
+        errorTvsL: "Jarak diagonal tidak boleh lebih kecil dari jarak horizontal.",
+        pipeOption: "{size} · OD {od} mm"
+      }
+    };
     const state = {
-      selectedSize: DEFAULTS.pipeSize
+      selectedSize: DEFAULTS.pipeSize,
+      language: "ko",
+      saveBadgeState: "auto",
+      ready: false
     };
 
     function $(id) {
       return document.getElementById(id);
-    }
-
-    function getNumber(id) {
-      const value = parseFloat($(id).value);
-      return Number.isFinite(value) ? value : 0;
     }
 
     function setText(id, value) {
@@ -1467,6 +1914,222 @@
     function setHtml(id, value) {
       const el = $(id);
       if (el) el.innerHTML = value;
+    }
+
+    function setAttr(id, attr, value) {
+      const el = $(id);
+      if (el) el.setAttribute(attr, value);
+    }
+
+    function currentText(id, fallback = "") {
+      const el = $(id);
+      return el ? el.textContent : fallback;
+    }
+
+    function t(key, params) {
+      const labels = I18N[state.language] || I18N.ko;
+      let value = labels[key] ?? I18N.ko[key] ?? key;
+      if (!params) return value;
+      return value.replace(/\{(\w+)\}/g, (_, name) =>
+        params[name] !== undefined ? String(params[name]) : `{${name}}`
+      );
+    }
+
+    function detectLanguage() {
+      try {
+        const saved = localStorage.getItem(LANG_KEY);
+        if (saved && I18N[saved]) return saved;
+      } catch (error) {
+        // Ignore localStorage read failures and fall back to browser language detection.
+      }
+      const browserLang = (navigator.language || "ko").toLowerCase();
+      if (browserLang.startsWith("vi")) return "vi";
+      if (browserLang.startsWith("id")) return "id";
+      return "ko";
+    }
+
+    function getThemeLabel(theme) {
+      if (theme === "light") return t("themeLight");
+      if (theme === "dark") return t("themeDark");
+      return t("themeAuto");
+    }
+
+    function applyTheme(theme) {
+      const safeTheme = VALID_THEMES.includes(theme) ? theme : "auto";
+      document.documentElement.dataset.theme = safeTheme;
+      const title = `${t("themeToggle")}: ${getThemeLabel(safeTheme)}`;
+      setAttr("themeToggle", "aria-label", title);
+      setAttr("themeToggle", "title", title);
+    }
+
+    function loadTheme() {
+      try {
+        applyTheme(localStorage.getItem(THEME_KEY) || "auto");
+      } catch (error) {
+        console.warn("Unable to load theme preference; defaulting to auto mode for this session.", error);
+        applyTheme("auto");
+      }
+    }
+
+    function toggleTheme() {
+      const current = VALID_THEMES.includes(document.documentElement.dataset.theme)
+        ? document.documentElement.dataset.theme
+        : "auto";
+      const currentIndex = VALID_THEMES.indexOf(current);
+      const next = VALID_THEMES[(currentIndex + 1) % VALID_THEMES.length];
+      applyTheme(next);
+      try {
+        localStorage.setItem(THEME_KEY, next);
+      } catch (error) {
+        console.warn("Unable to save theme preference; the selected theme will only apply for this session.", error);
+      }
+    }
+
+    function renderPipeSizeOptions() {
+      const select = $("pipeSize");
+      if (!select) return;
+      const selected = select.value || state.selectedSize || DEFAULTS.pipeSize;
+      select.innerHTML = Object.entries(PIPE_SIZES)
+        .map(([size, od]) => `<option value="${size}">${t("pipeOption", { size, od: od.toFixed(1) })}</option>`)
+        .join("");
+      select.value = PIPE_SIZES[selected] ? selected : DEFAULTS.pipeSize;
+    }
+
+    function renderRoundOptions() {
+      setText("roundOption01", t("round01"));
+      setText("roundOption1", t("round1"));
+      setText("roundOption5", t("round5"));
+    }
+
+    function updateSaveBadge() {
+      const key = state.saveBadgeState === "saved"
+        ? "saveSaved"
+        : state.saveBadgeState === "unavailable"
+          ? "saveUnavailable"
+          : "saveAuto";
+      setText("saveBadge", t(key));
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = state.language;
+      document.title = t("docTitle");
+
+      const textMap = {
+        pageTitle: "title",
+        pageSubtitle: "subtitle",
+        guideCallout: "guideCallout",
+        inputTitle: "inputTitle",
+        inputDesc: "inputDesc",
+        errorTitle: "errorTitle",
+        pipeSizeLabel: "pipeSizeLabel",
+        pipeSizeHelp: "pipeSizeHelp",
+        appliedSizeLabel: "appliedSizeLabel",
+        inputLLabel: "inputLLabel",
+        inputLHelp: "inputLHelp",
+        inputTLabel: "inputTLabel",
+        inputTHelp: "inputTHelp",
+        roundModeLabel: "roundModeLabel",
+        calculateButton: "calculateButton",
+        resetButton: "resetButton",
+        noticeTitle: "noticeTitle",
+        noticeText: "noticeText",
+        resultTitle: "resultTitle",
+        resultDesc: "resultDesc",
+        resDiagonalLabel: "resDiagonalLabel",
+        resDiagonalHelp: "resDiagonalHelp",
+        resCutLabel: "resCutLabel",
+        resCutHelp: "resCutHelp",
+        resAngleLabel: "resAngleLabel",
+        resAngleHelp: "resAngleHelp",
+        resBKeyBadge: "resBKey",
+        resBLabel: "resBLabel",
+        resBHelp: "resBHelp",
+        detailHLabel: "detailHLabel",
+        detailODLabel: "detailODLabel",
+        detailLongLabel: "detailLongLabel",
+        detailShortLabel: "detailShortLabel",
+        guideTitle: "workTitle",
+        workGuideDesc: "workDesc",
+        step1Title: "step1Title",
+        step1Text: "step1Text",
+        step2Title: "step2Title",
+        step3Title: "step3Title",
+        step3Text: "step3Text",
+        tutorialTitle: "tutorialTitle",
+        tutorialDesc: "tutorialDesc",
+        tutorialStep1: "tutorialStep1",
+        tutorialStep2: "tutorialStep2",
+        tutorialStep3: "tutorialStep3",
+        tutorialBaseLine: "tutorialBaseLine",
+        tutorialCutLabel: "tutorialCutLine",
+        bLabel1: "tutorialBLabel",
+        longReferenceLabel: "tutorialLongRef",
+        shortLabel: "tutorialShortPoint",
+        bottomHomeText: "bottomHomeText",
+        stickyCutLabel: "stickyCutLabel",
+        stickyAngleLabel: "stickyAngleLabel",
+        stickyBLabel: "stickyBLabel",
+        langSelectLabel: "langSelect"
+      };
+      Object.entries(textMap).forEach(([id, key]) => setText(id, t(key)));
+      setText("topGuideTitle", t("guideTitle"));
+
+      setText("guideText", t("guideText"));
+      setText("guideItemL", t("guideItemL"));
+      setText("guideItemT", t("guideItemT"));
+      setText("guideItemH", t("guideItemH"));
+
+      renderPipeSizeOptions();
+      renderRoundOptions();
+      updateSaveBadge();
+
+      setAttr("pageTools", "aria-label", t("pageTools"));
+      setAttr("backToMain", "aria-label", t("back"));
+      setAttr("backToMain", "title", t("back"));
+      setAttr("bottomHomeLink", "aria-label", t("back"));
+      setAttr("bottomHomeLink", "title", t("back"));
+      setAttr("langSelect", "aria-label", t("langSelect"));
+      setAttr("topGuideSvg", "aria-label", t("topGuideSvgAria"));
+      setAttr("tutorialSvg", "aria-label", t("tutorialSvgAria"));
+      setAttr("inputPanel", "aria-label", t("inputArea"));
+      setAttr("mainPanel", "aria-label", t("resultArea"));
+      setAttr("stickyPanel", "aria-label", t("stickyAria"));
+
+      setHtml("svgLabelL", `${t("svgHorizontal")} = <tspan id="svg_L">${currentText("svg_L", DEFAULTS.L)}</tspan> mm`);
+      setHtml("svgLabelH", `${t("svgVertical")} = <tspan id="svg_H">300</tspan> mm`);
+      setHtml("svgLabelT", `${t("svgDiagonal")} = <tspan id="svg_T">${currentText("svg_T", DEFAULTS.T)}</tspan> mm`);
+      setText("svgStartCenter", t("svgStartCenter"));
+      setText("svgEndCenter", t("svgEndCenter"));
+      setHtml("bLabel2", `B = <tspan id="svg_B">${currentText("svg_B", "0.0")}</tspan> mm`);
+      setHtml("svgODText", `${t("svgPipeOD")} = <tspan id="svg_OD">${currentText("svg_OD", PIPE_SIZES[DEFAULTS.pipeSize].toFixed(1))}</tspan> mm`);
+      setHtml("svgAngleText", `${t("svgCutAngle")} <tspan id="svg_A">${currentText("svg_A", "0.0")}</tspan>°`);
+
+      setText("step2TextPrefix", t("step2TextPre"));
+      setText("step2TextSuffix", t("step2TextPost"));
+
+      applyTheme(document.documentElement.dataset.theme || "auto");
+      $("langSelect").value = state.language;
+    }
+
+    function setLanguage(lang, options = {}) {
+      const { persist = true, refresh = true } = options;
+      state.language = I18N[lang] ? lang : "ko";
+      if (persist) {
+        try {
+          localStorage.setItem(LANG_KEY, state.language);
+        } catch (error) {
+          // Ignore localStorage write failures; the selected language still applies now, but will not persist across reloads.
+        }
+      }
+      applyLanguage();
+      if (refresh && state.ready) {
+        calculate();
+      }
+    }
+
+    function getNumber(id) {
+      const value = parseFloat($(id).value);
+      return Number.isFinite(value) ? value : 0;
     }
 
     function getRoundUnit() {
@@ -1482,12 +2145,8 @@
     function formatNumber(value) {
       const unit = getRoundUnit();
       const rounded = roundBy(value, unit);
-
-      if (unit >= 1) {
-        return rounded.toFixed(0);
-      }
-
-      return rounded.toFixed(1);
+      // Values rounded to 1mm or larger units are displayed as integers, while finer rounding keeps one decimal place.
+      return unit >= 1 ? rounded.toFixed(0) : rounded.toFixed(1);
     }
 
     function showError(message) {
@@ -1496,15 +2155,13 @@
 
       const badge = $("statusBadge");
       badge.className = "status-badge status-error";
-      badge.textContent = "입력 오류";
+      badge.textContent = t("statusError");
 
-      const errorHtml = '<span style="font-size:20px; color:#dc2626; font-weight:950;">확인 필요</span>';
-
+      const errorHtml = `<span style="font-size:20px; color:#dc2626; font-weight:950;">${t("needsReview")}</span>`;
       setHtml("res_diagonal", errorHtml);
       setHtml("res_cut", errorHtml);
       setHtml("res_angle", errorHtml);
       setHtml("res_B", errorHtml);
-
       setText("sticky_cut", "-");
       setText("sticky_angle", "-");
       setText("sticky_B", "-");
@@ -1512,35 +2169,33 @@
 
     function clearError() {
       $("errorBox").classList.remove("is-visible");
-
       const badge = $("statusBadge");
       badge.className = "status-badge status-ok";
-      badge.textContent = "계산 정상";
+      badge.textContent = t("statusOk");
     }
 
-    function validateInputs({ L, T, D1, D2, Gap }) {
-      if (L <= 0) return "수평 거리는 0보다 커야 합니다.";
-      if (T <= 0) return "대각선 거리는 0보다 커야 합니다.";
-      if (T < L) return "대각선 거리는 수평 거리보다 작을 수 없습니다.";
-      if (D1 < 0 || D2 < 0) return "감면 길이는 음수가 될 수 없습니다.";
-      if (Gap < 0) return "총 용접 갭은 음수가 될 수 없습니다.";
+    function validateInputs({ L, T }) {
+      if (L <= 0) return t("errorLPositive");
+      if (T <= 0) return t("errorTPositive");
+      if (T < L) return t("errorTvsL");
       return "";
     }
 
-    function onPipeSizeChange() {
+    function updateSelectedPipe() {
       state.selectedSize = $("pipeSize").value;
       const od = PIPE_SIZES[state.selectedSize];
-
       setText("selectedSize", state.selectedSize);
       setText("selectedOD", od.toFixed(1));
+    }
 
+    function onPipeSizeChange() {
+      updateSelectedPipe();
       calculate();
     }
 
     function updateSvg({ angleRad, angleDeg, bDistance, OD }) {
       const pipeWidthSvg = 130;
       const maxBSvg = 142;
-
       let ratio = bDistance / OD;
       if (!Number.isFinite(ratio)) ratio = 0;
 
@@ -1549,37 +2204,29 @@
 
       const bottomY = 322;
       const topY = bottomY - svgB;
-
       $("svg_slant").setAttribute("d", `M 125 ${topY} L 255 ${bottomY}`);
-
       $("bTopTick").setAttribute("y1", topY);
       $("bTopTick").setAttribute("y2", topY);
       $("bBottomTick").setAttribute("y1", bottomY);
       $("bBottomTick").setAttribute("y2", bottomY);
       $("bLine").setAttribute("y1", topY);
       $("bLine").setAttribute("y2", bottomY);
-
       $("shortPoint").setAttribute("cy", topY);
       $("shortLabel").setAttribute("y", topY - 8);
-      $("cutLabel").setAttribute("y", topY + 18);
+      $("tutorialCutLabel").setAttribute("y", topY + 18);
 
       const midY = (topY + bottomY) / 2;
       $("bLabel1").setAttribute("y", midY - 8);
       $("bLabel2").setAttribute("y", midY + 12);
 
       const arc = $("svg_arc");
-
       if (angleDeg > 0.5) {
         const radius = 30;
         const startX = 255 - radius;
         const startY = bottomY;
         const endX = 255 - radius * Math.cos(angleRad);
         const endY = bottomY - radius * Math.sin(angleRad);
-
-        arc.setAttribute(
-          "d",
-          `M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`
-        );
+        arc.setAttribute("d", `M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`);
         arc.style.display = "block";
       } else {
         arc.style.display = "none";
@@ -1589,10 +2236,7 @@
     function calculate() {
       const inputs = {
         L: getNumber("input_L"),
-        T: getNumber("input_T"),
-        D1: getNumber("input_D1"),
-        D2: getNumber("input_D2"),
-        Gap: getNumber("input_Gap")
+        T: getNumber("input_T")
       };
 
       const validationMessage = validateInputs(inputs);
@@ -1602,25 +2246,18 @@
         return;
       }
 
-      const OD = PIPE_SIZES[state.selectedSize];
-      const { L, T, D1, D2, Gap } = inputs;
-
+      const selectedSize = $("pipeSize").value;
+      const OD = PIPE_SIZES[selectedSize] || PIPE_SIZES[DEFAULTS.pipeSize];
+      state.selectedSize = PIPE_SIZES[selectedSize] ? selectedSize : DEFAULTS.pipeSize;
+      const { L, T } = inputs;
       const H = Math.sqrt((T * T) - (L * L));
       const angleRad = Math.acos(L / T);
       const angleDeg = angleRad * (180 / Math.PI);
       const bDistance = OD * Math.tan(angleRad);
-
-      const actualCutLength = T - D1 - D2 - Gap;
-
-      if (actualCutLength <= 0) {
-        showError("실제 절단 길이가 0 이하입니다. 감면 길이와 총 용접 갭을 다시 확인하세요.");
-        saveValues();
-        return;
-      }
+      const actualCutLength = T;
 
       const longSide = actualCutLength + (bDistance / 2);
       const shortSide = actualCutLength - (bDistance / 2);
-
       clearError();
 
       const diagonalText = formatNumber(T);
@@ -1632,18 +2269,14 @@
       setHtml("res_cut", `${cutText} <span class="unit">mm</span>`);
       setHtml("res_angle", `${angleText} <span class="unit">°</span>`);
       setHtml("res_B", `${bText} <span class="unit unit-red">mm</span>`);
-
       setText("detail_H", `${formatNumber(H)} mm`);
       setText("detail_OD", `${formatNumber(OD)} mm`);
       setText("detail_long", `${formatNumber(longSide)} mm`);
       setText("detail_short", `${formatNumber(shortSide)} mm`);
-
       setText("guide_B", `B = ${bText} mm`);
-
       setText("sticky_cut", cutText);
       setText("sticky_angle", `${angleText}°`);
       setText("sticky_B", bText);
-
       setText("svg_L", formatNumber(L));
       setText("svg_H", formatNumber(H));
       setText("svg_T", formatNumber(T));
@@ -1651,13 +2284,7 @@
       setText("svg_OD", formatNumber(OD));
       setText("svg_A", angleText);
 
-      updateSvg({
-        angleRad,
-        angleDeg,
-        bDistance,
-        OD
-      });
-
+      updateSvg({ angleRad, angleDeg, bDistance, OD });
       saveValues();
     }
 
@@ -1666,22 +2293,21 @@
         pipeSize: $("pipeSize").value,
         L: $("input_L").value,
         T: $("input_T").value,
-        D1: $("input_D1").value,
-        D2: $("input_D2").value,
-        Gap: $("input_Gap").value,
         roundMode: $("roundMode").value
       };
 
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(values));
-        const badge = $("saveBadge");
-        badge.textContent = "저장됨";
+        state.saveBadgeState = "saved";
+        updateSaveBadge();
         window.clearTimeout(saveValues._timer);
         saveValues._timer = window.setTimeout(() => {
-          badge.textContent = "자동 저장";
+          state.saveBadgeState = "auto";
+          updateSaveBadge();
         }, 850);
       } catch (error) {
-        $("saveBadge").textContent = "저장 불가";
+        state.saveBadgeState = "unavailable";
+        updateSaveBadge();
       }
     }
 
@@ -1689,19 +2315,13 @@
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return;
-
         const values = JSON.parse(raw);
-
         if (values.pipeSize && PIPE_SIZES[values.pipeSize]) {
           $("pipeSize").value = values.pipeSize;
           state.selectedSize = values.pipeSize;
         }
-
         if (values.L !== undefined) $("input_L").value = values.L;
         if (values.T !== undefined) $("input_T").value = values.T;
-        if (values.D1 !== undefined) $("input_D1").value = values.D1;
-        if (values.D2 !== undefined) $("input_D2").value = values.D2;
-        if (values.Gap !== undefined) $("input_Gap").value = values.Gap;
         if (values.roundMode !== undefined) $("roundMode").value = values.roundMode;
       } catch (error) {
         localStorage.removeItem(STORAGE_KEY);
@@ -1712,22 +2332,25 @@
       $("pipeSize").value = DEFAULTS.pipeSize;
       $("input_L").value = DEFAULTS.L;
       $("input_T").value = DEFAULTS.T;
-      $("input_D1").value = DEFAULTS.D1;
-      $("input_D2").value = DEFAULTS.D2;
-      $("input_Gap").value = DEFAULTS.Gap;
       $("roundMode").value = DEFAULTS.roundMode;
-
       state.selectedSize = DEFAULTS.pipeSize;
-
       try {
         localStorage.removeItem(STORAGE_KEY);
       } catch (error) {}
-
+      state.saveBadgeState = "auto";
+      updateSaveBadge();
       onPipeSizeChange();
     }
 
     window.addEventListener("load", () => {
+      setLanguage(detectLanguage(), { persist: false, refresh: false });
+      loadTheme();
+      $("themeToggle").addEventListener("click", toggleTheme);
+      $("langSelect").addEventListener("change", (event) => {
+        setLanguage(event.target.value);
+      });
       loadValues();
+      state.ready = true;
       onPipeSizeChange();
     });
   </script>
