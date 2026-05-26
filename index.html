@@ -694,14 +694,14 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle, #tempLink, #notifPermBtn, #pipeCalcBtn, #angleMarkBtn {
+  #boardToggle, #tempLink, #notifPermBtn, #pipeCalcBtn {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
     text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover, #pipeCalcBtn:hover, #angleMarkBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover, #pipeCalcBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
   #notifPermBtn[hidden] { display: none; }
 
   /* Board modal */
@@ -1235,6 +1235,7 @@
           <option value="id">🇮🇩 Bahasa Indonesia</option>
         </select>
       </div>
+      <button class="icon-btn" data-action="open-angle-mark" data-i18n-attr="title:tb.angle_mark,aria-label:tb.angle_mark" title="각도 마킹 계산기" aria-label="각도 마킹 계산기">📐</button>
       <button class="icon-btn" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
       <button class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">❓ 도움말</button>
     </div>
@@ -1851,11 +1852,6 @@
       data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc"
       title="파이프 사선 커팅 계산기" aria-label="파이프 사선 커팅 계산기">
       <span aria-hidden="true">🧮</span>
-    </button>
-    <button id="angleMarkBtn" type="button" data-action="open-angle-mark"
-      data-i18n-attr="title:tb.angle_mark,aria-label:tb.angle_mark"
-      title="각도 마킹 계산기" aria-label="각도 마킹 계산기">
-      <span aria-hidden="true">📐</span>
     </button>
     <button id="notifPermBtn" type="button" title="온도 알람 알림 허용" aria-label="알람 허용하기" hidden>
       <span aria-hidden="true">🔔</span>
