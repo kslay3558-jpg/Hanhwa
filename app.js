@@ -2745,7 +2745,7 @@
   }
 
   const TOUR_STEPS = [
-    { selector: '[data-action="open-tutorial"]', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
+    { selector: '#btnHelpTutorial', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
     { selector: '#searchOD', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
     { selector: '[data-action="add-bolt"]', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
     { selector: '#btnCalculateMain', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
