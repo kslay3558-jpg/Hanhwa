@@ -2787,6 +2787,7 @@
     ModalCtl.close($('#tutorialModal'));
   }
 
+  const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
   const TOUR_STEPS = [
     { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
     { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
@@ -2797,7 +2798,8 @@
     { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
     { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
   ];
-  const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
+  /** Delay (ms) for visual feedback on language chip selection before advancing the tutorial page. */
+  const LANG_SELECTION_FEEDBACK_DELAY = 450;
 
   const TourCtl = {
     index: 0,
@@ -2844,7 +2846,7 @@
             target.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
           } catch (e) {
             console.warn('Failed to scroll with options, using simple scroll instead:', e);
-            target.scrollIntoView(false);
+            target.scrollIntoView({ block: 'end', behavior: 'auto' });
           }
         } else {
           smoothScrollIntoView(target, { block: 'center', inline: 'nearest' });
@@ -2971,7 +2973,7 @@
         b.setAttribute('aria-pressed', sel ? 'true' : 'false');
       });
       // Auto-advance to guide page after brief visual feedback
-      setTimeout(() => showTutPage('tutPageGuide'), 450);
+      setTimeout(() => showTutPage('tutPageGuide'), LANG_SELECTION_FEEDBACK_DELAY);
     },
     'start-tutorial-tour':() => { closeTutorial(); TourCtl.start(); },
     'tour-next':         () => TourCtl.next(),
