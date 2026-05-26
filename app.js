@@ -2798,7 +2798,7 @@
     { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
     { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
   ];
-  /** Delay (ms) for visual feedback on language chip selection before advancing the tutorial page. */
+  /** Delay (ms) for visual feedback on language chip selection before automatically advancing from the language selection page to the guide page. */
   const LANG_SELECTION_FEEDBACK_DELAY = 450;
 
   const TourCtl = {
@@ -2846,7 +2846,7 @@
             target.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
           } catch (e) {
             console.warn('Failed to scroll with options, using simple scroll instead:', e);
-            target.scrollIntoView({ block: 'end', behavior: 'auto' });
+            target.scrollIntoView({ block: 'center', behavior: 'auto' });
           }
         } else {
           smoothScrollIntoView(target, { block: 'center', inline: 'nearest' });
