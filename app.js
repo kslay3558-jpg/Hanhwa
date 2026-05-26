@@ -2873,7 +2873,9 @@
   }
 
   const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const TOUR_ACCORDION_BODY_IDS = ['accBodyFind', 'accBodyFlange', 'accBodyGasket', 'accBodyUbolt', 'accBodyGasPipe', 'accBodyMemo'];
+  function getTutorialAccordionBodyIds() {
+    return $$('.acc-body').map(body => body.id).filter(Boolean);
+  }
   function setAccordionExpanded(bodyId, shouldOpen) {
     if (!bodyId) return;
     const body = document.getElementById(bodyId);
@@ -2889,7 +2891,7 @@
     }
   }
   function getAccordionStateSnapshot() {
-    return TOUR_ACCORDION_BODY_IDS.reduce((states, bodyId) => {
+    return getTutorialAccordionBodyIds().reduce((states, bodyId) => {
       const body = document.getElementById(bodyId);
       states[bodyId] = !!(body && body.getAttribute('aria-hidden') !== 'true');
       return states;
@@ -2897,19 +2899,19 @@
   }
   function restoreAccordionStateSnapshot(snapshot) {
     if (!snapshot) return;
-    TOUR_ACCORDION_BODY_IDS.forEach(bodyId => {
+    getTutorialAccordionBodyIds().forEach(bodyId => {
       if (Object.prototype.hasOwnProperty.call(snapshot, bodyId)) {
         setAccordionExpanded(bodyId, !!snapshot[bodyId]);
       }
     });
   }
   function syncTutorialAccordion(activeBodyId) {
-    TOUR_ACCORDION_BODY_IDS.forEach(bodyId => {
+    getTutorialAccordionBodyIds().forEach(bodyId => {
       setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
     });
   }
   const TOUR_STEPS = [
-    { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d', accordionBodyId: 'accBodyFind' },
+    { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
     { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d', accordionBodyId: 'accBodyFind' },
     { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d', accordionBodyId: 'accBodyFlange' },
     { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d', accordionBodyId: 'accBodyFlange' },
