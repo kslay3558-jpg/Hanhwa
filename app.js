@@ -345,6 +345,30 @@
       'tut.s5_d':             '상단 파이프 아이콘을 누르면 파이프 사선 커팅 계산기로 이동합니다.',
       'tut.confirm':          '확인했어요, 시작할게요!',
       'tut.hide':             '다시 보지 않기',
+      'tut.lang_pg_title':    '🌐 언어를 먼저 선택해주세요',
+      'tut.lang_pg_desc':     '원하는 언어를 고르면 앱 전체가 해당 언어로 표시됩니다.',
+      'tut.tour_prev':        '이전',
+      'tut.tour_next':        '다음',
+      'tut.tour_done':        '완료 ✓',
+      'tut.tour_close':       '종료',
+      'tut.tour_step':        '{cur} / {total}',
+      'tut.tour1_t':          '도움말 버튼',
+      'tut.tour1_d':          '상단 ❓ 도움말 버튼을 누르면 즉시 클릭형 튜토리얼이 시작됩니다.',
+      'tut.tour2_t':          '플랜지 외경(OD) 역산',
+      'tut.tour2_d':          '플랜지의 외경(mm)을 입력하면 해당하는 JIS 규격 후보를 바로 찾아줍니다.',
+      'tut.tour3_t':          '압력등급 · 호칭경 선택',
+      'tut.tour3_d':          '압력등급(5K/10K/16K/30K)과 호칭경(A)을 선택해주세요. 볼트 규격이 자동으로 결정됩니다.',
+      'tut.tour4_t':          '볼트 옵션 설정',
+      'tut.tour4_d':          '볼트 연장(+5mm), 더블너트 적용, 가스켓 포함 여부를 토글로 간단하게 설정할 수 있습니다.',
+      'tut.tour5_t':          '포인트 추가',
+      'tut.tour5_d':          '규격과 옵션을 설정한 뒤 [＋ 포인트 추가] 버튼(또는 Enter)으로 대기열에 담습니다.',
+      'tut.tour6_t':          '대기열 · 현장 관리',
+      'tut.tour6_d':          '담은 자재들이 여기 표시됩니다. 수량을 바로 수정하거나 항목을 삭제할 수 있습니다.',
+      'tut.tour7_t':          '최종 집계',
+      'tut.tour7_d':          '대기열 항목을 [최종 집계] 또는 Ctrl+Enter로 동일 규격을 자동 병합해 합산합니다.',
+      'tut.tour8_t':          '결과 복사 · 저장',
+      'tut.tour8_d':          '집계 결과를 📋 복사 또는 이미지 저장으로 바로 공유할 수 있습니다.',
+      'tut.tour_finished':    '✅ 튜토리얼 완료! 이제 자재를 담아보세요.',
       // Toasts
       't.added':              '✅ 추가됨 · 대기열 {n}건',
       't.added_g':            '✅ 가스켓 추가 · {n}건',
@@ -649,6 +673,30 @@
       'tut.s5_d':             'Nhấn biểu tượng ống ở thanh trên để chuyển sang máy tính cắt chéo ống.',
       'tut.confirm':          'Đã hiểu, bắt đầu!',
       'tut.hide':             'Không hiển thị lại',
+      'tut.lang_pg_title':    '🌐 Hãy chọn ngôn ngữ trước',
+      'tut.lang_pg_desc':     'Chọn ngôn ngữ để hiển thị toàn bộ ứng dụng theo ngôn ngữ đó.',
+      'tut.tour_prev':        'Trước',
+      'tut.tour_next':        'Tiếp',
+      'tut.tour_done':        'Hoàn tất ✓',
+      'tut.tour_close':       'Thoát',
+      'tut.tour_step':        '{cur} / {total}',
+      'tut.tour1_t':          'Nút trợ giúp',
+      'tut.tour1_d':          'Nhấn nút ❓ ở trên để bắt đầu ngay hướng dẫn từng bước.',
+      'tut.tour2_t':          'Tra cứu OD mặt bích',
+      'tut.tour2_d':          'Nhập OD (mm) đã đo, ứng dụng sẽ tự tìm quy cách JIS phù hợp.',
+      'tut.tour3_t':          'Chọn áp suất · kích cỡ',
+      'tut.tour3_d':          'Chọn cấp áp (5K/10K/16K/30K) và đường kính danh nghĩa (A). Bu lông sẽ được tính tự động.',
+      'tut.tour4_t':          'Tùy chọn bu lông',
+      'tut.tour4_d':          'Bật/tắt dài thêm (+5mm), đai ốc đôi, và kèm gioăng bằng công tắc.',
+      'tut.tour5_t':          'Thêm điểm',
+      'tut.tour5_d':          'Sau khi thiết lập, nhấn [＋ Thêm điểm] hoặc Enter để thêm vào hàng chờ.',
+      'tut.tour6_t':          'Hàng chờ · Dự án',
+      'tut.tour6_d':          'Vật tư đã thêm hiển thị ở đây. Có thể sửa số lượng hoặc xóa từng mục.',
+      'tut.tour7_t':          'Tổng hợp cuối',
+      'tut.tour7_d':          'Nhấn [Tổng hợp cuối] hoặc Ctrl+Enter để gộp và cộng dồn tất cả vật tư.',
+      'tut.tour8_t':          'Sao chép · Lưu kết quả',
+      'tut.tour8_d':          'Sao chép kết quả bằng 📋 hoặc lưu ảnh để chia sẻ ngay.',
+      'tut.tour_finished':    '✅ Hướng dẫn hoàn tất! Hãy bắt đầu thêm vật tư.',
       't.added':              '✅ Đã thêm · Hàng chờ {n}',
       't.added_g':            '✅ Đã thêm gioăng · {n}',
       't.added_u':            '✅ Đã thêm bu lông U · {n}',
@@ -949,6 +997,30 @@
       'tut.s5_d':             'Tekan ikon pipa di bagian atas untuk pindah ke kalkulator potong miring pipa.',
       'tut.confirm':          'Mengerti, mulai sekarang!',
       'tut.hide':             'Jangan tampilkan lagi',
+      'tut.lang_pg_title':    '🌐 Pilih bahasa terlebih dahulu',
+      'tut.lang_pg_desc':     'Pilih bahasa agar seluruh aplikasi tampil dalam bahasa tersebut.',
+      'tut.tour_prev':        'Sebelumnya',
+      'tut.tour_next':        'Berikutnya',
+      'tut.tour_done':        'Selesai ✓',
+      'tut.tour_close':       'Tutup',
+      'tut.tour_step':        '{cur} / {total}',
+      'tut.tour1_t':          'Tombol bantuan',
+      'tut.tour1_d':          'Tekan tombol ❓ di atas untuk langsung memulai tutorial klik.',
+      'tut.tour2_t':          'Cari OD flensa',
+      'tut.tour2_d':          'Masukkan OD (mm) yang diukur, aplikasi akan mencari spesifikasi JIS yang sesuai.',
+      'tut.tour3_t':          'Pilih rating · ukuran',
+      'tut.tour3_d':          'Pilih rating tekanan (5K/10K/16K/30K) dan ukuran nominal (A). Baut akan otomatis ditentukan.',
+      'tut.tour4_t':          'Opsi baut',
+      'tut.tour4_d':          'Aktifkan perpanjangan (+5mm), mur ganda, dan gasket menggunakan sakelar.',
+      'tut.tour5_t':          'Tambah poin',
+      'tut.tour5_d':          'Setelah pengaturan, tekan [＋ Tambah poin] atau Enter untuk masukkan ke antrean.',
+      'tut.tour6_t':          'Antrean · Proyek',
+      'tut.tour6_d':          'Material yang ditambahkan tampil di sini. Ubah jumlah atau hapus item dengan mudah.',
+      'tut.tour7_t':          'Rekap akhir',
+      'tut.tour7_d':          'Tekan [Rekap akhir] atau Ctrl+Enter untuk menggabungkan dan menjumlahkan semua material.',
+      'tut.tour8_t':          'Salin · Simpan hasil',
+      'tut.tour8_d':          'Salin hasil dengan 📋 atau simpan gambar untuk langsung berbagi.',
+      'tut.tour_finished':    '✅ Tutorial selesai! Mulai tambahkan material.',
       't.added':              '✅ Ditambahkan · Antrean {n}',
       't.added_g':            '✅ Gasket ditambahkan · {n}',
       't.added_u':            '✅ Baut U ditambahkan · {n}',
@@ -2679,19 +2751,140 @@
   }
 
   /** ----- Tutorial ----- */
+  function showTutPage(pageId) {
+    $$('#tutorialModal .tut-page').forEach(p => p.classList.toggle('active', p.id === pageId));
+    const titleEl = document.getElementById('tutorialTitle');
+    if (titleEl && pageId === 'tutPageLang') {
+      titleEl.textContent = t('tut.lang_pg_title');
+    }
+    // Sync lang chip selected state on page 1
+    if (pageId === 'tutPageLang') {
+      $$('#tutPageLang .tut-lang-chip-big').forEach(b => {
+        b.classList.toggle('selected', b.dataset.lang === Lang.current);
+        b.setAttribute('aria-pressed', b.dataset.lang === Lang.current ? 'true' : 'false');
+      });
+    }
+  }
+
   function maybeShowTutorial() {
     let seen = false;
     try { seen = localStorage.getItem(TUTORIAL_KEY) === 'true'; } catch (e) {}
     if (!seen) {
+      showTutPage('tutPageLang');
       ModalCtl.open($('#tutorialModal'));
     }
   }
   function closeTutorial() {
-    if ($('#chkHideTutorial').checked) {
+    const hideTutorialChk = $('#chkHideTutorial');
+    if (hideTutorialChk && hideTutorialChk.checked) {
       try { localStorage.setItem(TUTORIAL_KEY, 'true'); } catch (e) {}
     }
     ModalCtl.close($('#tutorialModal'));
   }
+
+  const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const TOUR_STEPS = [
+    { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
+    { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
+    { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
+    { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
+    { selector: '[data-action="add-bolt"]',    icon: '➕', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' },
+    { selector: '#queueCard',                  icon: '📋', titleKey: 'tut.tour6_t', descKey: 'tut.tour6_d' },
+    { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
+    { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
+  ];
+  /** Delay (ms) to briefly show selected language feedback before tour start; 450ms keeps it noticeable but still snappy. */
+  const LANG_SELECTION_FEEDBACK_DELAY = 450;
+
+  const TourCtl = {
+    index: 0,
+    activeTarget: null,
+    isOpen() {
+      const overlay = $('#quickTourOverlay');
+      return !!(overlay && !overlay.hidden);
+    },
+    clearTarget() {
+      if (!this.activeTarget) return;
+      this.activeTarget.classList.remove('tour-target-highlight');
+      this.activeTarget = null;
+    },
+    start() {
+      const overlay = $('#quickTourOverlay');
+      if (!overlay) return;
+      this.index = 0;
+      this.clearTarget();
+      overlay.hidden = false;
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden', 'false');
+      this.render();
+    },
+    close() {
+      const overlay = $('#quickTourOverlay');
+      if (!overlay) return;
+      this.clearTarget();
+      overlay.classList.remove('show');
+      overlay.hidden = true;
+      overlay.setAttribute('aria-hidden', 'true');
+      this.index = 0;
+    },
+    render() {
+      const step = TOUR_STEPS[this.index];
+      if (!step) return;
+      const target = $(step.selector);
+      this.clearTarget();
+      if (target) {
+        this.activeTarget = target;
+        target.classList.add('tour-target-highlight');
+        const reduceMotion = REDUCE_MOTION_QUERY.matches;
+        if (reduceMotion) {
+          try {
+            target.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
+          } catch (e) {
+            console.warn('Browser does not support scrollIntoView options, falling back to basic scroll:', e);
+            target.scrollIntoView();
+          }
+        } else {
+          smoothScrollIntoView(target, { block: 'center', inline: 'nearest' });
+        }
+      }
+      $('#tourStep').textContent = t('tut.tour_step', { cur: this.index + 1, total: TOUR_STEPS.length });
+      const iconEl = $('#tourIcon');
+      if (iconEl) iconEl.textContent = step.icon || '';
+      $('#tourTitle').textContent = t(step.titleKey);
+      $('#tourDesc').textContent = t(step.descKey);
+      const dotsEl = $('#tourDots');
+      if (dotsEl) {
+        dotsEl.innerHTML = '';
+        TOUR_STEPS.forEach((_, i) => {
+          const d = document.createElement('span');
+          d.className = 'tour-dot' + (i === this.index ? ' active' : '');
+          dotsEl.appendChild(d);
+        });
+      }
+      const prevBtn = $('[data-action="tour-prev"]');
+      const nextBtn = $('[data-action="tour-next"]');
+      if (prevBtn) {
+        const isDisabled = this.index === 0;
+        prevBtn.disabled = isDisabled;
+        prevBtn.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
+      }
+      if (nextBtn) nextBtn.textContent = this.index === TOUR_STEPS.length - 1 ? t('tut.tour_done') : t('tut.tour_next');
+    },
+    next() {
+      if (this.index >= TOUR_STEPS.length - 1) {
+        this.close();
+        toast(t('tut.tour_finished'));
+        return;
+      }
+      this.index += 1;
+      this.render();
+    },
+    prev() {
+      if (this.index <= 0) return;
+      this.index -= 1;
+      this.render();
+    }
+  };
 
   const DEFAULT_MEASURE_GUIDE = 'flange-od';
   const MEASURE_GUIDES = {
@@ -2763,33 +2956,26 @@
     'theme-toggle':      actionToggleTheme,
     'open-measure-guide':(el2) => actionOpenMeasureGuide(el2.dataset.guide),
     'close-measure-guide':() => ModalCtl.close($('#measureGuideModal')),
-    'open-tutorial':     () => ModalCtl.open($('#tutorialModal')),
+    'open-tutorial':     () => { TourCtl.start(); },
     'close-tutorial':    closeTutorial,
-    'open-pipe-calc':    () => {
-      PipeCalc.initSizeSelect();
-      PipeCalc.loadSaved();
-      ModalCtl.open($('#pipeCalcModal'));
+    'tut-lang-pick':     (el2) => {
+      actionLangChange(el2.dataset.lang);
+      // Sync selected state visually
+      $$('#tutPageLang .tut-lang-chip-big').forEach(b => {
+        const sel = b.dataset.lang === el2.dataset.lang;
+        b.classList.toggle('selected', sel);
+        b.setAttribute('aria-pressed', sel ? 'true' : 'false');
+      });
+      // Save tutorial as seen and start interactive tour after brief visual feedback
+      setTimeout(() => {
+        try { localStorage.setItem(TUTORIAL_KEY, 'true'); } catch (e) {}
+        ModalCtl.close($('#tutorialModal'));
+        TourCtl.start();
+      }, LANG_SELECTION_FEEDBACK_DELAY);
     },
-    'close-pipe-calc':   () => { PipeCalc.saveForm(); ModalCtl.close($('#pipeCalcModal')); },
-    'pc-size-change':    () => { PipeCalc.updateOdHint(); PipeCalc.saveForm(); },
-    'pc-calc':           () => PipeCalc.calculate(),
-    'pc-reset':          () => PipeCalc.reset(),
-    'pc-tut-toggle':     (el2) => {
-      const body = $('#pcTutBody');
-      if (!body) return;
-      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
-      el2.setAttribute('aria-expanded', String(willOpen));
-      body.hidden = !willOpen;
-      el2.setAttribute('data-i18n', willOpen ? 'pc.tut_toggle_close' : 'pc.tut_toggle');
-      el2.textContent = t(willOpen ? 'pc.tut_toggle_close' : 'pc.tut_toggle');
-    },
-    'pc-adv-toggle':     (el2) => {
-      const body = $('#pcAdvBody');
-      if (!body) return;
-      const willOpen = el2.getAttribute('aria-expanded') !== 'true';
-      el2.setAttribute('aria-expanded', String(willOpen));
-      body.hidden = !willOpen;
-    },
+    'tour-next':         () => TourCtl.next(),
+    'tour-prev':         () => TourCtl.prev(),
+    'tour-close':        () => TourCtl.close(),
     'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
     'close-cart':        () => { ModalCtl.close($('#cartModal')); },
     'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
@@ -2846,6 +3032,7 @@
       const total = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
       if (total) View.renderResult(agg, Store.memo);
     }
+    if (TourCtl.isOpen()) TourCtl.render();
     // Sync language selects (header + tutorial)
     document.querySelectorAll('select[data-action="lang-change"]').forEach(s => { s.value = lang; });
     document.querySelectorAll('[data-action="lang-pick"]').forEach(b => {
@@ -2881,7 +3068,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change', 'pc-size-change'].includes(name)) {
+      if (['project-change', 'rating-change', 'grating-change', 'usize-change', 'lang-change', 'gas-preset-change', 'gas-washer-change'].includes(name)) {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -2917,6 +3104,11 @@
         }
         ModalCtl.trap(e);
         return;
+      }
+      if (TourCtl.isOpen()) {
+        if (e.key === 'Escape') { e.preventDefault(); TourCtl.close(); return; }
+        if (e.key === 'ArrowRight') { e.preventDefault(); TourCtl.next(); return; }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); TourCtl.prev(); return; }
       }
 
       // Global keyboard shortcuts (skip when typing in textarea/select)
@@ -2986,13 +3178,12 @@
     });
 
     // Modal backdrop close
-    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal'), $('#pipeCalcModal')].forEach(m => {
+    [$('#editModal'), $('#measureGuideModal'), $('#tutorialModal'), $('#cartModal')].forEach(m => {
       if (!m) return;
       m.addEventListener('click', (e) => {
         if (e.target === m) {
           if (m.id === 'tutorialModal') closeTutorial();
           else if (m.id === 'measureGuideModal') ModalCtl.close($('#measureGuideModal'));
-          else if (m.id === 'pipeCalcModal') { PipeCalc.saveForm(); ModalCtl.close(m); }
           else ModalCtl.close(m);
         }
       });
@@ -3001,11 +3192,6 @@
     // Drag-reorder
     bindDrag();
 
-    // Pipe calc: persist form values on input change
-    PC_FIELDS.forEach(function(pair) {
-      const el2 = $(pair[0]);
-      if (el2) el2.addEventListener('change', function() { PipeCalc.saveForm(); });
-    });
   }
 
   /* =====================================================================
