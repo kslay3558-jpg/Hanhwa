@@ -999,7 +999,7 @@
   /* Click tutorial overlay */
   .tour-overlay {
     position: fixed; inset: 0; z-index: 3400;
-    background: rgba(15, 23, 42, .72);
+    background: var(--c-overlay);
     opacity: 0; pointer-events: none; transition: opacity var(--m-base);
   }
   .tour-overlay.show { opacity: 1; pointer-events: auto; }
@@ -1024,6 +1024,7 @@
     position: relative;
     z-index: 3501;
     outline: 3px solid var(--c-primary);
+    outline-style: dashed;
     outline-offset: 2px;
     box-shadow: 0 0 0 8px var(--c-primary-weak);
     border-radius: 10px;

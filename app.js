@@ -2751,7 +2751,7 @@
     { selector: '#btnCalculateMain', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
     { selector: '#resultCard', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' }
   ];
-  const REDUCE_MOTION_QUERY = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const TourCtl = {
     index: 0,
@@ -2792,12 +2792,12 @@
       if (target) {
         this.activeTarget = target;
         target.classList.add('tour-target-highlight');
-        const reduceMotion = !!(REDUCE_MOTION_QUERY && REDUCE_MOTION_QUERY.matches);
+        const reduceMotion = REDUCE_MOTION_QUERY.matches;
         if (reduceMotion) {
           try {
             target.scrollIntoView({ behavior: 'auto', block: 'center', inline: 'nearest' });
           } catch (e) {
-            console.warn('scrollIntoView fallback:', e);
+            console.warn('Failed to scroll with options, using simple scroll instead:', e);
             target.scrollIntoView(false);
           }
         } else {
