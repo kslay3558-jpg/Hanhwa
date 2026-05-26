@@ -89,26 +89,34 @@
     return Math.ceil(value / 5) * 5;
   }
 
-  function convertGasPipeBoltLength(sourceLength) {
-    return roundUpToFive(sourceLength + 10);
-  }
-
-  const GAS_PIPE_FLANGE_THICKNESS = {
-    15: 14, 20: 16, 25: 16, 32: 18, 40: 18,
-    50: 20, 65: 22, 80: 22, 100: 24, 125: 26, 150: 26
-  };
-  const GAS_PIPE_SIZES = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150];
-  const GAS_PIPE_TABLE = GAS_PIPE_SIZES.map((size) => {
-    const [boltSize, sourceBoltLength, boltCount] = DATA["10K"][size];
-    return {
-      size,
-      flangeThickness: GAS_PIPE_FLANGE_THICKNESS[size],
-      boltSize,
-      boltCount,
-      sourceBoltLength,
-      boltLength: convertGasPipeBoltLength(sourceBoltLength)
-    };
-  });
+  const GAS_PIPE_TABLE = [
+    { size: 250, flangeThickness: 22, boltSize: 'M20', formula: '(22x2) + 3 + 6 + 20 + 5', theoreticalLength: 78, recommendedLength: 80 },
+    { size: 300, flangeThickness: 22, boltSize: 'M20', formula: '(22x2) + 3 + 6 + 20 + 5', theoreticalLength: 78, recommendedLength: 80 },
+    { size: 350, flangeThickness: 16, boltSize: 'M22', formula: '(16x2) + 3 + 6 + 22 + 5', theoreticalLength: 68, recommendedLength: 70 },
+    { size: 400, flangeThickness: 16, boltSize: 'M22', formula: '(16x2) + 3 + 6 + 22 + 5', theoreticalLength: 68, recommendedLength: 70 },
+    { size: 450, flangeThickness: 16, boltSize: 'M22', formula: '(16x2) + 3 + 6 + 22 + 5', theoreticalLength: 68, recommendedLength: 70 },
+    { size: 500, flangeThickness: 16, boltSize: 'M22', formula: '(16x2) + 3 + 6 + 22 + 5', theoreticalLength: 68, recommendedLength: 70 },
+    { size: 550, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 600, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 650, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 700, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 750, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 800, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 850, flangeThickness: 16, boltSize: 'M20', formula: '(16x2) + 3 + 6 + 20 + 5', theoreticalLength: 66, recommendedLength: 70 },
+    { size: 900, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 950, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1000, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1050, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1100, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1150, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1200, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1250, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1300, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1350, flangeThickness: 18, boltSize: 'M22', formula: '(18x2) + 3 + 6 + 22 + 5', theoreticalLength: 72, recommendedLength: 75 },
+    { size: 1400, flangeThickness: 20, boltSize: 'M22', formula: '(20x2) + 3 + 6 + 22 + 5', theoreticalLength: 76, recommendedLength: 80 },
+    { size: 1450, flangeThickness: 20, boltSize: 'M24', formula: '(20x2) + 3 + 6 + 24 + 5', theoreticalLength: 78, recommendedLength: 80 },
+    { size: 1500, flangeThickness: 20, boltSize: 'M24', formula: '(20x2) + 3 + 6 + 24 + 5', theoreticalLength: 78, recommendedLength: 80 }
+  ];
   const STORAGE_KEY = 'jis-calc-state-v2';
   const TUTORIAL_KEY = 'jis-calc-hide-tutorial';
   const THEME_KEY = 'jis-calc-theme';
@@ -194,7 +202,7 @@
       'btn.add_gsk':          '＋ 가스켓 추가',
       // Card 4: U-bolt
       'card.ubolt':           '⚓ U-볼트 추가',
-      'card.gas_pipe':        '🛢 가스파이프 (임시)',
+      'card.gas_pipe':        '🛢 가스파이프 프리셋',
       'form.qty_set':         '수량 (Set)',
       'aria.qty_ub':          'U-볼트 수량 조절',
       'aria.qty_ub_in':       'U-볼트 수량',
@@ -212,14 +220,16 @@
       'guide.close':          '확인',
       // Card 5: memo
       'card.memo':            '📝 추가 메모',
-      'gas.desc':             '첨부 표 기준 임시 참고 데이터를 정리했습니다. 플랜지 두께, 볼트 사이즈/갯수와 함께 현재 적용 중인 볼트 길이 값을 표시합니다.',
-      'gas.rule':             '현재 적용 규칙: 원본 길이 + 10 → 5mm 단위 올림 (볼트 길이는 미확정이라 추후 변경될 수 있음)',
+      'form.gas_pipe_preset': '가스파이프 프리셋',
+      'gas.desc':             '제공한 가스파이프 표를 프리셋으로 정리했습니다. 기존 파이프 검색처럼 사이즈를 선택하면 해당 기준값을 바로 확인할 수 있습니다.',
+      'gas.rule':             '길이 계산식 기준: (플랜지 두께 x 2) + 가스켓 3 + 와셔 6 + 볼트 규격값 + 여유 5',
+      'gas.help':             '250A부터 1500A까지 제공된 가스파이프 프리셋을 선택할 수 있습니다.',
       'gas.col.size':         '사이즈',
       'gas.col.flange':       '플랜지 두께',
       'gas.col.bolt_size':    '볼트 사이즈',
-      'gas.col.bolt_count':   '볼트 갯수',
-      'gas.col.src_len':      '원본 볼트 길이',
-      'gas.col.final_len':    '현재 적용 볼트 길이',
+      'gas.col.formula':      '길이 계산식',
+      'gas.col.theoretical':  '이론상 길이',
+      'gas.col.recommended':  '추천 볼트 길이',
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
@@ -453,7 +463,7 @@
       'aria.qty_gsk_in':      'Số gioăng',
       'btn.add_gsk':          '＋ Thêm gioăng',
       'card.ubolt':           '⚓ Thêm Bu lông U',
-      'card.gas_pipe':        '🛢 Ống gas (tạm thời)',
+      'card.gas_pipe':        '🛢 Preset ống gas',
       'form.qty_set':         'Số lượng (bộ)',
       'aria.qty_ub':          'Điều chỉnh số bu lông U',
       'aria.qty_ub_in':       'Số bu lông U',
@@ -470,14 +480,16 @@
       'guide.ubolt_pitch_desc':'Khoảng cách tâm lỗ (C-C) là khoảng cách từ tâm lỗ bu lông bên trái đến tâm lỗ bên phải.',
       'guide.close':          'Đã hiểu',
       'card.memo':            '📝 Ghi chú thêm',
-      'gas.desc':             'Đã sắp xếp dữ liệu tham khảo tạm thời từ bảng đính kèm. Hiển thị độ dày mặt bích, cỡ/số lượng bu lông và chiều dài bu lông đang áp dụng.',
-      'gas.rule':             'Quy tắc hiện tại: chiều dài gốc + 10 → làm tròn lên theo 5mm (chiều dài bu lông chưa chốt, có thể thay đổi sau)',
+      'form.gas_pipe_preset': 'Preset ống gas',
+      'gas.desc':             'Đã sắp xếp bảng ống gas đã cung cấp thành preset. Giống phần chọn ống hiện có, chỉ cần chọn kích thước để xem ngay giá trị chuẩn tương ứng.',
+      'gas.rule':             'Công thức tính chiều dài: (độ dày mặt bích x 2) + gioăng 3 + long đền 6 + giá trị cỡ bu lông + dư 5',
+      'gas.help':             'Có thể chọn preset ống gas đã cung cấp từ 250A đến 1500A.',
       'gas.col.size':         'Kích thước',
       'gas.col.flange':       'Độ dày mặt bích',
       'gas.col.bolt_size':    'Cỡ bu lông',
-      'gas.col.bolt_count':   'Số lượng bu lông',
-      'gas.col.src_len':      'Chiều dài gốc',
-      'gas.col.final_len':    'Chiều dài hiện áp dụng',
+      'gas.col.formula':      'Công thức chiều dài',
+      'gas.col.theoretical':  'Chiều dài lý thuyết',
+      'gas.col.recommended':  'Chiều dài bu lông đề xuất',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
       'card.queue':           '📋 Hàng chờ đăng ký',
@@ -700,7 +712,7 @@
       'aria.qty_gsk_in':      'Jumlah gasket',
       'btn.add_gsk':          '＋ Tambah gasket',
       'card.ubolt':           '⚓ Tambah Baut U',
-      'card.gas_pipe':        '🛢 Pipa gas (sementara)',
+      'card.gas_pipe':        '🛢 Preset pipa gas',
       'form.qty_set':         'Jumlah (Set)',
       'aria.qty_ub':          'Atur jumlah baut U',
       'aria.qty_ub_in':       'Jumlah baut U',
@@ -717,14 +729,16 @@
       'guide.ubolt_pitch_desc':'Jarak pusat lubang (C-C) adalah jarak dari pusat lubang baut kiri ke pusat lubang baut kanan.',
       'guide.close':          'Mengerti',
       'card.memo':            '📝 Catatan tambahan',
-      'gas.desc':             'Data referensi sementara dari tabel lampiran sudah dirangkum. Tabel menampilkan tebal flange, ukuran/jumlah baut, dan panjang baut yang saat ini dipakai.',
-      'gas.rule':             'Aturan saat ini: panjang asli + 10 → bulatkan ke atas per 5mm (panjang baut belum final dan bisa berubah nanti)',
+      'form.gas_pipe_preset': 'Preset pipa gas',
+      'gas.desc':             'Tabel pipa gas yang Anda berikan sudah diringkas sebagai preset. Seperti pencarian pipa yang ada, pilih ukuran untuk langsung melihat nilai acuannya.',
+      'gas.rule':             'Rumus panjang: (tebal flange x 2) + gasket 3 + washer 6 + nilai ukuran baut + allowance 5',
+      'gas.help':             'Preset pipa gas dari 250A sampai 1500A tersedia untuk dipilih.',
       'gas.col.size':         'Ukuran',
       'gas.col.flange':       'Tebal flange',
       'gas.col.bolt_size':    'Ukuran baut',
-      'gas.col.bolt_count':   'Jumlah baut',
-      'gas.col.src_len':      'Panjang baut asli',
-      'gas.col.final_len':    'Panjang baut yang saat ini dipakai',
+      'gas.col.formula':      'Rumus panjang',
+      'gas.col.theoretical':  'Panjang teoritis',
+      'gas.col.recommended':  'Panjang baut rekomendasi',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
       'card.queue':           '📋 Antrean pendaftaran',
@@ -1310,6 +1324,21 @@
       for (const s of USIZES) selectEl.appendChild(el('option', { value: s }, s + 'A'));
     },
 
+    populateGasPipePresetSelect(selectEl) {
+      if (!selectEl) return;
+      const prev = parseInt(selectEl.value, 10);
+      selectEl.textContent = '';
+      for (const row of GAS_PIPE_TABLE) {
+        selectEl.appendChild(el(
+          'option',
+          { value: row.size },
+          `${row.size}A · ${row.boltSize} · ${row.recommendedLength} mm`
+        ));
+      }
+      const nextValue = GAS_PIPE_TABLE.some(row => row.size === prev) ? prev : GAS_PIPE_TABLE[0]?.size;
+      if (nextValue != null) selectEl.value = String(nextValue);
+    },
+
     populateProjectSelect(selectEl) {
       if (!selectEl) return;
       selectEl.textContent = '';
@@ -1336,32 +1365,35 @@
     renderGasPipeTable() {
       const wrap = $('#gasPipeTableWrap');
       if (!wrap) return;
+      const selectedSize = parseInt($('#gasPipePreset')?.value, 10);
+      const row = GAS_PIPE_TABLE.find((item) => item.size === selectedSize) || GAS_PIPE_TABLE[0];
+      if (!row) return;
 
       const thead = el('thead', null,
         el('tr', null,
           el('th', null, t('gas.col.size')),
           el('th', null, t('gas.col.flange')),
           el('th', null, t('gas.col.bolt_size')),
-          el('th', null, t('gas.col.bolt_count')),
-          el('th', null, t('gas.col.src_len')),
-          el('th', null, t('gas.col.final_len'))
+          el('th', null, t('gas.col.formula')),
+          el('th', null, t('gas.col.theoretical')),
+          el('th', null, t('gas.col.recommended'))
         )
       );
-      const tbody = el('tbody');
-      GAS_PIPE_TABLE.forEach(row => {
-        tbody.appendChild(el('tr', null,
+      const tbody = el('tbody', null,
+        el('tr', null,
           el('td', null, `${row.size}A`),
           el('td', null, `${row.flangeThickness} mm`),
           el('td', null, row.boltSize),
-          el('td', null, String(row.boltCount)),
-          el('td', null, `${row.sourceBoltLength} mm`),
-          el('td', null, `${row.boltLength} mm`)
-        ));
-      });
+          el('td', null, row.formula),
+          el('td', null, `${row.theoreticalLength} mm`),
+          el('td', null, `${row.recommendedLength} mm`)
+        )
+      );
 
       wrap.textContent = '';
       wrap.appendChild(el('div', { class: 'gas-note' }, t('gas.desc')));
       wrap.appendChild(el('div', { class: 'gas-rule' }, t('gas.rule')));
+      wrap.appendChild(el('div', { class: 'gas-note', style: 'margin-top:8px;' }, t('gas.help')));
       wrap.appendChild(el('div', { class: 'gas-table-scroll' },
         el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
       ));
@@ -2377,6 +2409,7 @@
     'rating-change':     () => View.populateSizeSelect($('#size'), $('#rating').value),
     'grating-change':    () => View.populateSizeSelect($('#gsize'), $('#grating').value),
     'usize-change':      () => View.updatePitchInfo(parseInt($('#usize').value, 10)),
+    'gas-preset-change': () => View.renderGasPipeTable(),
     'qty-inc':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = toPosInt(inp.value) + 1; },
     'qty-dec':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = Math.max(1, toPosInt(inp.value) - 1); },
     'add-bolt':          actionAddBolt,
@@ -2456,6 +2489,7 @@
     View.populateSizeSelect($('#size'),  $('#rating').value);
     View.populateSizeSelect($('#gsize'), $('#grating').value);
     View.populateUSizeSelect($('#usize'));
+    View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.renderGasPipeTable();
     View.populateProjectSelect($('#projectSelect'));
@@ -2501,7 +2535,7 @@
       const target = e.target.closest('[data-action]');
       if (!target) return;
       const name = target.dataset.action;
-      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change' || name === 'lang-change') {
+      if (name === 'project-change' || name === 'rating-change' || name === 'grating-change' || name === 'usize-change' || name === 'lang-change' || name === 'gas-preset-change') {
         actions[name](target, e);
       }
       if (name === 'q-qty-set') {
@@ -2893,6 +2927,7 @@
     View.populateSizeSelect($('#size'), $('#rating').value);
     View.populateSizeSelect($('#gsize'), $('#grating').value);
     View.populateUSizeSelect($('#usize'));
+    View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.renderGasPipeTable();
     View.populateProjectSelect($('#projectSelect'));

@@ -1290,14 +1290,21 @@
         </div>
       </div>
 
-      <!-- 5. 가스파이프 (임시) 테이블 (기본 닫힘) -->
+      <!-- 5. 가스파이프 프리셋 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
-          <h2 data-i18n="card.gas_pipe">🛢 가스파이프 (임시)</h2>
+          <h2 data-i18n="card.gas_pipe">🛢 가스파이프 프리셋</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
           <div class="acc-body-inner">
+            <div class="form-grid col-2">
+              <div class="field">
+                <label for="gasPipePreset" data-i18n="form.gas_pipe_preset">가스파이프 프리셋</label>
+                <select id="gasPipePreset" data-action="gas-preset-change"></select>
+                <p class="help" data-i18n="gas.help">250A부터 1500A까지 제공된 가스파이프 프리셋을 선택할 수 있습니다.</p>
+              </div>
+            </div>
             <div id="gasPipeTableWrap"></div>
           </div>
         </div>
