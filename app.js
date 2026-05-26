@@ -85,10 +85,6 @@
     { r:"30K", s:250,od:485 }, { r:"30K",s:300,od:560 }, { r:"30K",s:350,od:620 }
   ];
 
-  function roundUpToFive(value) {
-    return Math.ceil(value / 5) * 5;
-  }
-
   const GAS_PIPE_TABLE = [
     { size: 250, flangeThickness: 22, boltSize: 'M20', formula: '(22x2) + 3 + 6 + 20 + 5', theoreticalLength: 78, recommendedLength: 80 },
     { size: 300, flangeThickness: 22, boltSize: 'M20', formula: '(22x2) + 3 + 6 + 20 + 5', theoreticalLength: 78, recommendedLength: 80 },
@@ -1393,7 +1389,7 @@
       wrap.textContent = '';
       wrap.appendChild(el('div', { class: 'gas-note' }, t('gas.desc')));
       wrap.appendChild(el('div', { class: 'gas-rule' }, t('gas.rule')));
-      wrap.appendChild(el('div', { class: 'gas-note', style: 'margin-top:8px;' }, t('gas.help')));
+      wrap.appendChild(el('div', { class: 'gas-note gas-note-sub' }, t('gas.help')));
       wrap.appendChild(el('div', { class: 'gas-table-scroll' },
         el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
       ));
