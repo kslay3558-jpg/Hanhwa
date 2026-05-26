@@ -1816,7 +1816,7 @@
 
       const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
       const isMobile = window.matchMedia(`(max-width: ${MOBILE_RESULT_SUMMARY_BREAKPOINT_PX}px)`).matches;
-      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_MIN_ROWS) {
+      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_MIN_ROW_COUNT) {
         const summaryCard = el('div', { class: 'res-summary-card' },
           el('h3', null, t('r.summary_title')),
           el('div', { class: 'res-summary-row' },
@@ -1950,7 +1950,7 @@
   let lastExportCSV  = '';
   let editingIndex   = -1;
   const MOBILE_RESULT_SUMMARY_BREAKPOINT_PX = 640;
-  const MOBILE_RESULT_SUMMARY_MIN_ROWS = 8;
+  const MOBILE_RESULT_SUMMARY_MIN_ROW_COUNT = 8;
   const UX_METRICS_KEY = 'jis-ux-metrics-v1';
   const UX_METRICS_MAX_HISTORY = 30;
   const UX = {
