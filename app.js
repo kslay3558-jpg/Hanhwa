@@ -1617,41 +1617,7 @@
       }
     },
 
-    renderGasPipeTable() {
-      const wrap = $('#gasPipeTableWrap');
-      if (!wrap) return;
-      const selectedSize = parseInt($('#gasPipePreset')?.value, 10);
-      const washerExtra = !!$('#optGasWasher')?.checked;
-      const row = GAS_PIPE_TABLE.find((item) => item.size === selectedSize) || GAS_PIPE_TABLE[0];
-      if (!row) return;
-      const boltLength = row.boltLength + (washerExtra ? 5 : 0);
-
-      const thead = el('thead', null,
-        el('tr', null,
-          el('th', null, t('gas.col.size')),
-          el('th', null, t('gas.col.flange')),
-          el('th', null, t('gas.col.bolt_size')),
-          el('th', null, t('gas.col.bolt_length')),
-          el('th', null, t('gas.col.bolt_count')),
-          el('th', null, t('gas.col.nut_count'))
-        )
-      );
-      const tbody = el('tbody', null,
-        el('tr', null,
-          el('td', null, `${row.size}A`),
-          el('td', null, `${row.flangeThickness} mm`),
-          el('td', null, row.boltSize),
-          el('td', null, `${boltLength} mm`),
-          el('td', null, String(row.boltCount ?? '-')),
-          el('td', null, String(row.nutCount ?? '-'))
-        )
-      );
-
-      wrap.textContent = '';
-      wrap.appendChild(el('div', { class: 'gas-table-scroll gas-pipe-table-wrap' },
-        el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
-      ));
-    },
+    renderGasPipeTable() {},
 
     /**
      * Render queue list. Uses DOM API only (no innerHTML w/ user data).
