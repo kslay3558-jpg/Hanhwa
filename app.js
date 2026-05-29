@@ -1482,7 +1482,7 @@
       gasPipe: true,
       bS: row.boltSize,
       bL: len,
-      bC: row.boltCount || 0,
+      bC: row.boltCount ?? 0,
       nC: row.nutCount ?? row.boltCount ?? 0
     };
   }
@@ -1497,7 +1497,8 @@
         const bolts = q.bC * q.qty;
         // nC is used by gas-pipe preset items (table-driven nut count per set).
         // Fallback keeps compatibility with existing/non-gas bolt items in saved queue data.
-        const nuts  = Number.isFinite(q.nC) ? (q.nC * q.qty) : (bolts * (q.doubleNut ? 2 : 1));
+        const hasTableNutCount = (typeof q.nC === 'number') && Number.isFinite(q.nC);
+        const nuts  = hasTableNutCount ? (q.nC * q.qty) : (bolts * (q.doubleNut ? 2 : 1));
         bM[bK] = (bM[bK] || 0) + bolts;
         nM[nK] = (nM[nK] || 0) + nuts;
       } else if (q.type === 'gasket') {
