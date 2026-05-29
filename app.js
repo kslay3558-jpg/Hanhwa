@@ -156,7 +156,7 @@
       'tb.theme':             '테마 전환',
       'tb.pipe_calc':         '파이프 사선 커팅 계산기 열기',
       'tb.help':              '사용 가이드 열기',
-      'tb.help_btn':          '❓ 도움말',
+      'tb.help_btn':          '도움말',
       'tb.lang':              '언어 변경',
       'tb.lang_select':       '언어 선택',
       'proj.default':         '기본 현장',
@@ -166,12 +166,12 @@
       'sec.result':           '집계 결과',
       'sec.result_aria':      '최종 집계 결과',
       // Card 1: find flange
-      'card.find':            '🔍 플랜지 사이즈 역산',
+      'card.find':            '플랜지 사이즈 역산',
       'form.od':              '플랜지 외경 (OD, mm)',
       'form.od_ph':           '예: 155',
       'btn.find':             '찾기',
       // Card 2: flange point
-      'card.flange':          '🔩 플랜지 포인트',
+      'card.flange':          '플랜지 포인트',
       'form.rating':          '압력등급',
       'form.size':            '호칭경 (A)',
       'form.qty_pt':          '포인트 개소',
@@ -191,15 +191,15 @@
       'btn.add_pt':           '＋ 포인트 추가',
       'kbd.enter':            '(Enter)',
       // Card 3: extra gasket
-      'card.gasket':          '⭕ 가스켓 추가',
+      'card.gasket':          '가스켓 추가',
       'form.gtype':           '재질/타입',
       'form.qty_sht':         '수량 (장)',
       'aria.qty_gsk':         '가스켓 수량 조절',
       'aria.qty_gsk_in':      '가스켓 수량',
       'btn.add_gsk':          '＋ 가스켓 추가',
       // Card 4: U-bolt
-      'card.ubolt':           '⚓ U-볼트 추가',
-      'card.gas_pipe':        '🛢 가스파이프',
+      'card.ubolt':           'U-볼트 추가',
+      'card.gas_pipe':        '가스파이프',
       'form.qty_set':         '수량 (Set)',
       'form.qty_ea':          '수량 (EA)',
       'aria.qty_ub':          'U-볼트 수량 조절',
@@ -217,7 +217,7 @@
       'guide.ubolt_pitch_desc':'홀 센터 간격(C-C)은 왼쪽 볼트 구멍 중심에서 오른쪽 볼트 구멍 중심까지의 거리입니다.',
       'guide.close':          '확인',
       // Card 5: memo
-      'card.memo':            '📝 추가 메모',
+      'card.memo':            '추가 메모',
       'form.gas_pipe_preset': '가스파이프 프리셋',
       'aria.qty_gas':         '가스파이프 볼트 수량 조절',
       'aria.qty_gas_in':      '가스파이프 볼트 수량',
@@ -233,8 +233,8 @@
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
-      'card.queue':           '📋 등록 대기열',
-      'btn.calc':             '🧮 최종 집계',
+      'card.queue':           '등록 대기열',
+      'btn.calc':             '최종 집계',
       'kbd.ctrl_enter':       '(Ctrl+Enter)',
       'btn.clear':            '초기화',
       'q.empty_t':            '대기열이 비어 있어요',
@@ -293,16 +293,19 @@
       'r.col_qty_sheet':      '수량(장)',
       'r.col_qty_set':        '수량(Set)',
       'r.no_rows':            '내역 없음',
+      'r.summary_title':      '요약',
+      'r.summary_items':      '항목 {n}개',
+      'r.detail_toggle':      '상세 내역 보기',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
       'r.memo_title':         '📝 추가 메모',
       'r.notice_pre':         '※ 자동 합산됨',
       'r.notice_total':       ' · 총 {n} 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2',
       // Floating bar
-      'fb.queue':             '🛒 대기열',
-      'fb.show_result':       '🧮 결과보기',
+      'fb.queue':             '대기열',
+      'fb.show_result':       '결과보기',
       // Cart drawer
-      'cart.title':           '🛒 현재 대기열',
+      'cart.title':           '현재 대기열',
       'cart.close':           '닫기',
       'cart.to_queue':        '대기열로 이동',
       'cart.empty':           '대기열이 비어 있어요',
@@ -497,7 +500,7 @@
       'tb.theme':             'Đổi giao diện',
       'tb.pipe_calc':         'Mở máy tính cắt chéo ống',
       'tb.help':              'Mở hướng dẫn sử dụng',
-      'tb.help_btn':          '❓ Hướng dẫn',
+      'tb.help_btn':          'Hướng dẫn',
       'tb.lang':              'Đổi ngôn ngữ',
       'tb.lang_select':       'Chọn ngôn ngữ',
       'proj.default':         'Dự án mặc định',
@@ -505,11 +508,11 @@
       'sec.queue':            'Hàng chờ đăng ký',
       'sec.result':           'Kết quả tổng hợp',
       'sec.result_aria':      'Kết quả tổng hợp cuối cùng',
-      'card.find':            '🔍 Tìm Mặt bích',
+      'card.find':            'Tìm Mặt bích',
       'form.od':              'Đường kính ngoài mặt bích (OD, mm)',
       'form.od_ph':           'VD: 155',
       'btn.find':             'Tìm',
-      'card.flange':          '🔩 Điểm Mặt bích',
+      'card.flange':          'Điểm Mặt bích',
       'form.rating':          'Cấp áp suất',
       'form.size':            'Đường kính danh nghĩa (A)',
       'form.qty_pt':          'Số điểm',
@@ -528,14 +531,14 @@
       'gsk.full':             'Full Face',
       'btn.add_pt':           '＋ Thêm điểm',
       'kbd.enter':            '(Enter)',
-      'card.gasket':          '⭕ Thêm Gioăng',
+      'card.gasket':          'Thêm Gioăng',
       'form.gtype':           'Vật liệu / Loại',
       'form.qty_sht':         'Số lượng (tấm)',
       'aria.qty_gsk':         'Điều chỉnh số gioăng',
       'aria.qty_gsk_in':      'Số gioăng',
       'btn.add_gsk':          '＋ Thêm gioăng',
-      'card.ubolt':           '⚓ Thêm Bu lông U',
-      'card.gas_pipe':        '🛢 Ống gas',
+      'card.ubolt':           'Thêm Bu lông U',
+      'card.gas_pipe':        'Ống gas',
       'form.qty_set':         'Số lượng (bộ)',
       'form.qty_ea':          'Số lượng (cái)',
       'aria.qty_ub':          'Điều chỉnh số bu lông U',
@@ -552,7 +555,7 @@
       'guide.flange_od_desc': 'OD là đường kính tổng thể, đo từ mép ngoài này sang mép ngoài đối diện của mặt bích.',
       'guide.ubolt_pitch_desc':'Khoảng cách tâm lỗ (C-C) là khoảng cách từ tâm lỗ bu lông bên trái đến tâm lỗ bên phải.',
       'guide.close':          'Đã hiểu',
-      'card.memo':            '📝 Ghi chú thêm',
+      'card.memo':            'Ghi chú thêm',
       'form.gas_pipe_preset': 'Preset ống gas',
       'aria.qty_gas':         'Điều chỉnh số bu lông ống gas',
       'aria.qty_gas_in':      'Số bu lông ống gas',
@@ -567,8 +570,8 @@
       'gas.col.bolt_length':  'Chiều dài bu lông',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
-      'card.queue':           '📋 Hàng chờ đăng ký',
-      'btn.calc':             '🧮 Tổng hợp cuối',
+      'card.queue':           'Hàng chờ đăng ký',
+      'btn.calc':             'Tổng hợp cuối',
       'kbd.ctrl_enter':       '(Ctrl+Enter)',
       'btn.clear':            'Xóa hết',
       'q.empty_t':            'Hàng chờ đang trống',
@@ -626,15 +629,18 @@
       'r.col_qty_sheet':      'SL (tấm)',
       'r.col_qty_set':        'SL (bộ)',
       'r.no_rows':            'Không có dữ liệu',
+      'r.summary_title':      'Tóm tắt',
+      'r.summary_items':      '{n} mục',
+      'r.detail_toggle':      'Xem chi tiết',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(không có pitch)',
       'r.memo_title':         '📝 Ghi chú thêm',
       'r.notice_pre':         '※ Đã tự động cộng dồn',
       'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
-      'fb.queue':             '🛒 Hàng chờ',
-      'fb.show_result':       '🧮 Xem kết quả',
+      'fb.queue':             'Hàng chờ',
+      'fb.show_result':       'Xem kết quả',
       // Cart drawer
-      'cart.title':           '🛒 Hàng chờ hiện tại',
+      'cart.title':           'Hàng chờ hiện tại',
       'cart.close':           'Đóng',
       'cart.to_queue':        'Đến hàng chờ',
       'cart.empty':           'Hàng chờ trống',
@@ -821,7 +827,7 @@
       'tb.theme':             'Ganti tema',
       'tb.pipe_calc':         'Buka kalkulator potong miring pipa',
       'tb.help':              'Buka panduan penggunaan',
-      'tb.help_btn':          '❓ Panduan',
+      'tb.help_btn':          'Panduan',
       'tb.lang':              'Ganti bahasa',
       'tb.lang_select':       'Pilih bahasa',
       'proj.default':         'Proyek default',
@@ -829,11 +835,11 @@
       'sec.queue':            'Antrean pendaftaran',
       'sec.result':           'Hasil rekap',
       'sec.result_aria':      'Hasil rekap akhir',
-      'card.find':            '🔍 Cari Flensa',
+      'card.find':            'Cari Flensa',
       'form.od':              'Diameter luar flensa (OD, mm)',
       'form.od_ph':           'cth: 155',
       'btn.find':             'Cari',
-      'card.flange':          '🔩 Titik Flensa',
+      'card.flange':          'Titik Flensa',
       'form.rating':          'Kelas tekanan',
       'form.size':            'Diameter nominal (A)',
       'form.qty_pt':          'Jumlah titik',
@@ -852,14 +858,14 @@
       'gsk.full':             'Full Face',
       'btn.add_pt':           '＋ Tambah titik',
       'kbd.enter':            '(Enter)',
-      'card.gasket':          '⭕ Tambah Gasket',
+      'card.gasket':          'Tambah Gasket',
       'form.gtype':           'Material / Tipe',
       'form.qty_sht':         'Jumlah (lembar)',
       'aria.qty_gsk':         'Atur jumlah gasket',
       'aria.qty_gsk_in':      'Jumlah gasket',
       'btn.add_gsk':          '＋ Tambah gasket',
-      'card.ubolt':           '⚓ Tambah Baut U',
-      'card.gas_pipe':        '🛢 Pipa gas',
+      'card.ubolt':           'Tambah Baut U',
+      'card.gas_pipe':        'Pipa gas',
       'form.qty_set':         'Jumlah (Set)',
       'form.qty_ea':          'Jumlah (pcs)',
       'aria.qty_ub':          'Atur jumlah baut U',
@@ -876,7 +882,7 @@
       'guide.flange_od_desc': 'OD adalah diameter total, diukur dari sisi luar flensa ke sisi luar yang berlawanan.',
       'guide.ubolt_pitch_desc':'Jarak pusat lubang (C-C) adalah jarak dari pusat lubang baut kiri ke pusat lubang baut kanan.',
       'guide.close':          'Mengerti',
-      'card.memo':            '📝 Catatan tambahan',
+      'card.memo':            'Catatan tambahan',
       'form.gas_pipe_preset': 'Preset pipa gas',
       'aria.qty_gas':         'Atur jumlah baut pipa gas',
       'aria.qty_gas_in':      'Jumlah baut pipa gas',
@@ -891,8 +897,8 @@
       'gas.col.bolt_length':  'Panjang baut',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
-      'card.queue':           '📋 Antrean pendaftaran',
-      'btn.calc':             '🧮 Rekap akhir',
+      'card.queue':           'Antrean pendaftaran',
+      'btn.calc':             'Rekap akhir',
       'kbd.ctrl_enter':       '(Ctrl+Enter)',
       'btn.clear':            'Reset',
       'q.empty_t':            'Antrean kosong',
@@ -950,15 +956,18 @@
       'r.col_qty_sheet':      'Jml (lbr)',
       'r.col_qty_set':        'Jml (set)',
       'r.no_rows':            'Tidak ada data',
+      'r.summary_title':      'Ringkasan',
+      'r.summary_items':      '{n} item',
+      'r.detail_toggle':      'Lihat detail',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(pitch tdk diketahui)',
       'r.memo_title':         '📝 Catatan tambahan',
       'r.notice_pre':         '※ Otomatis dijumlah',
       'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
-      'fb.queue':             '🛒 Antrean',
-      'fb.show_result':       '🧮 Lihat hasil',
+      'fb.queue':             'Antrean',
+      'fb.show_result':       'Lihat hasil',
       // Cart drawer
-      'cart.title':           '🛒 Antrean saat ini',
+      'cart.title':           'Antrean saat ini',
       'cart.close':           'Tutup',
       'cart.to_queue':        'Ke antrean',
       'cart.empty':           'Antrean kosong',
@@ -1650,12 +1659,14 @@
       if (queue.length > 0) {
         fb.classList.add('show');
         fb.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('is-floating-visible');
         fbBadge.textContent = String(queue.length);
         fbBadge.classList.add('pop');
         setTimeout(() => fbBadge.classList.remove('pop'), 220);
       } else {
         fb.classList.remove('show');
         fb.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('is-floating-visible');
       }
 
       tb.textContent = '';
@@ -1803,7 +1814,30 @@
       );
       card.appendChild(head);
 
-      card.appendChild(this._flatList(agg));
+      const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
+      const isMobile = window.matchMedia(`(max-width: ${MOBILE_RESULT_SUMMARY_BREAKPOINT_PX}px)`).matches;
+      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_MIN_ROW_COUNT) {
+        const summaryCard = el('div', { class: 'res-summary-card' },
+          el('h3', null, t('r.summary_title')),
+          el('div', { class: 'res-summary-row' },
+            el('div', { class: 'res-summary-total' }, t('r.summary_items', { n: rowCount })),
+            el('div', { class: 'res-summary-tags' },
+              agg.sB.length ? el('span', { class: 'res-cat-tag res-cat-tag-bolt' }, `${t('r.tag_bolt')} ${agg.sB.length}`) : null,
+              agg.sN.length ? el('span', { class: 'res-cat-tag res-cat-tag-nut' }, `${t('r.tag_nut')} ${agg.sN.length}`) : null,
+              agg.sG.length ? el('span', { class: 'res-cat-tag res-cat-tag-gsk' }, `${t('r.tag_gsk')} ${agg.sG.length}`) : null,
+              agg.sU.length ? el('span', { class: 'res-cat-tag res-cat-tag-ub' }, `${t('r.tag_ub')} ${agg.sU.length}`) : null
+            )
+          )
+        );
+        const detail = el('details', { class: 'res-detail' },
+          el('summary', null, t('r.detail_toggle')),
+          this._flatList(agg)
+        );
+        card.appendChild(summaryCard);
+        card.appendChild(detail);
+      } else {
+        card.appendChild(this._flatList(agg));
+      }
 
       if (memo && memo.trim()) {
         const memoBox = el('div', { style: 'margin-top:12px;' },
@@ -1915,6 +1949,62 @@
   let lastExportText = '';
   let lastExportCSV  = '';
   let editingIndex   = -1;
+  const MOBILE_RESULT_SUMMARY_BREAKPOINT_PX = 640;
+  const MOBILE_RESULT_SUMMARY_MIN_ROW_COUNT = 8;
+  const UX_METRICS_KEY = 'jis-ux-metrics-v1';
+  const UX_METRICS_MAX_HISTORY = 30;
+  const UX = {
+    sessionStart: Date.now(),
+    firstInputMs: null,
+    inputCount: 0,
+    invalidInputCount: 0,
+    maxScrollY: 0,
+    bound: false,
+    flushed: false,
+    markInput() {
+      this.inputCount += 1;
+      if (this.firstInputMs === null) this.firstInputMs = Date.now() - this.sessionStart;
+    },
+    markInvalidInput() {
+      this.invalidInputCount += 1;
+    },
+    updateScrollDepth() {
+      const y = Math.max(0, window.scrollY || window.pageYOffset);
+      if (y > this.maxScrollY) this.maxScrollY = y;
+    },
+    flush() {
+      if (this.flushed) return;
+      this.flushed = true;
+      const payload = {
+        ts: new Date().toISOString(),
+        firstInputMs: this.firstInputMs,
+        inputCount: this.inputCount,
+        invalidInputCount: this.invalidInputCount,
+        invalidRate: this.inputCount > 0 ? Math.round((this.invalidInputCount / this.inputCount) * 10000) / 10000 : 0,
+        maxScrollY: this.maxScrollY
+      };
+      try {
+        const list = JSON.parse(localStorage.getItem(UX_METRICS_KEY) || '[]');
+        list.push(payload);
+        localStorage.setItem(UX_METRICS_KEY, JSON.stringify(list.slice(-UX_METRICS_MAX_HISTORY)));
+      } catch (e) {
+        // storage unavailable or blocked; skip metrics persistence safely
+      }
+    },
+    bind() {
+      if (this.bound) return;
+      this.bound = true;
+      document.addEventListener('input', (e) => {
+        const targetElement = e.target;
+        if (!targetElement || !(targetElement instanceof Element)) return;
+        if (targetElement.matches('input, select, textarea')) this.markInput();
+      }, true);
+      window.addEventListener('scroll', () => this.updateScrollDepth(), { passive: true });
+      window.addEventListener('pagehide', () => this.flush());
+      window.addEventListener('beforeunload', () => this.flush());
+      this.updateScrollDepth();
+    }
+  };
 
   /** ----- Modal / focus trap ----- */
   const ModalCtl = {
@@ -2783,12 +2873,60 @@
   }
 
   const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function getTutorialAccordionBodyIds() {
+    return $$('.acc-body').map(body => body.id).filter(Boolean);
+  }
+  function setAccordionExpanded(bodyId, shouldOpen) {
+    if (!bodyId) return;
+    const body = document.getElementById(bodyId);
+    const head = getAccordionHead(bodyId);
+    if (!body || !head) return;
+    head.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    if (shouldOpen) {
+      body.removeAttribute('aria-hidden');
+      body.removeAttribute('inert');
+    } else {
+      body.setAttribute('aria-hidden', 'true');
+      body.setAttribute('inert', '');
+    }
+  }
+  function getAccordionStateSnapshot(bodyIds) {
+    return bodyIds.reduce((states, bodyId) => {
+      const body = document.getElementById(bodyId);
+      states[bodyId] = !!(body && body.getAttribute('aria-hidden') !== 'true');
+      return states;
+    }, {});
+  }
+  function restoreAccordionStateSnapshot(bodyIds, snapshot) {
+    if (!snapshot) return;
+    bodyIds.forEach(bodyId => {
+      if (Object.hasOwn(snapshot, bodyId)) {
+        setAccordionExpanded(bodyId, !!snapshot[bodyId]);
+      }
+    });
+  }
+  function syncTutorialAccordion(bodyIds, activeBodyId) {
+    if (!activeBodyId) return;
+    bodyIds.forEach(bodyId => {
+      setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
+    });
+  }
+  function getAccordionHead(bodyId) {
+    if (!bodyId) return null;
+    return document.querySelector(`.acc-head[aria-controls="${bodyId}"]`);
+  }
+  function resolveStepAccordionBodyId(step, target) {
+    if (step && step.accordionBodyId) return step.accordionBodyId;
+    if (!target || !(target instanceof Element)) return null;
+    const parentAccordion = target.closest('.acc-body');
+    return parentAccordion && parentAccordion.id ? parentAccordion.id : null;
+  }
   const TOUR_STEPS = [
     { selector: '#btnHelpTutorial',            icon: '❓', titleKey: 'tut.tour1_t', descKey: 'tut.tour1_d' },
-    { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d' },
-    { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d' },
-    { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d' },
-    { selector: '[data-action="add-bolt"]',    icon: '➕', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d' },
+    { selector: '#searchOD',                   icon: '🔍', titleKey: 'tut.tour2_t', descKey: 'tut.tour2_d', accordionBodyId: 'accBodyFind' },
+    { selector: '#rating',                     icon: '⚙️', titleKey: 'tut.tour3_t', descKey: 'tut.tour3_d', accordionBodyId: 'accBodyFlange' },
+    { selector: '#flangeOptionBox',            icon: '🔧', titleKey: 'tut.tour4_t', descKey: 'tut.tour4_d', accordionBodyId: 'accBodyFlange' },
+    { selector: '[data-action="add-bolt"]',    icon: '➕', titleKey: 'tut.tour5_t', descKey: 'tut.tour5_d', accordionBodyId: 'accBodyFlange' },
     { selector: '#queueCard',                  icon: '📋', titleKey: 'tut.tour6_t', descKey: 'tut.tour6_d' },
     { selector: '#btnCalculateMain',           icon: '🧮', titleKey: 'tut.tour7_t', descKey: 'tut.tour7_d' },
     { selector: '#resultCard',                 icon: '📊', titleKey: 'tut.tour8_t', descKey: 'tut.tour8_d' }
@@ -2799,20 +2937,63 @@
   const TourCtl = {
     index: 0,
     activeTarget: null,
+    activeAccordionHead: null,
+    accordionBodyIds: [],
+    savedAccordionState: null,
+    panelPositionTimer: null,
     isOpen() {
       const overlay = $('#quickTourOverlay');
       return !!(overlay && !overlay.hidden);
+    },
+    clearPanelPositionTimer() {
+      if (!this.panelPositionTimer) return;
+      clearTimeout(this.panelPositionTimer);
+      this.panelPositionTimer = null;
     },
     clearTarget() {
       if (!this.activeTarget) return;
       this.activeTarget.classList.remove('tour-target-highlight');
       this.activeTarget = null;
     },
+    clearAccordionHeadHighlight() {
+      if (!this.activeAccordionHead) return;
+      this.activeAccordionHead.classList.remove('tour-parent-highlight');
+      this.activeAccordionHead = null;
+    },
+    positionPanel() {
+      const panel = $('#quickTourOverlay .tour-panel');
+      if (!panel) return;
+      panel.style.left = '';
+      panel.style.right = '';
+      panel.style.top = '';
+      panel.style.bottom = '';
+      panel.style.transform = '';
+      panel.style.left = '50%';
+      panel.style.bottom = `calc(20px + env(safe-area-inset-bottom))`;
+      panel.style.transform = 'translateX(-50%)';
+    },
+    queuePanelPositionUpdate(target, delay = 0) {
+      this.clearPanelPositionTimer();
+      const reposition = () => {
+        this.panelPositionTimer = null;
+        if (!this.isOpen()) return;
+        this.positionPanel();
+      };
+      if (delay > 0) {
+        this.positionPanel();
+        this.panelPositionTimer = setTimeout(reposition, delay);
+        return;
+      }
+      requestAnimationFrame(reposition);
+    },
     start() {
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.index = 0;
+      this.accordionBodyIds = getTutorialAccordionBodyIds();
+      this.savedAccordionState = getAccordionStateSnapshot(this.accordionBodyIds);
       this.clearTarget();
+      this.clearAccordionHeadHighlight();
       overlay.hidden = false;
       overlay.classList.add('show');
       overlay.setAttribute('aria-hidden', 'false');
@@ -2822,6 +3003,19 @@
       const overlay = $('#quickTourOverlay');
       if (!overlay) return;
       this.clearTarget();
+      this.clearAccordionHeadHighlight();
+      restoreAccordionStateSnapshot(this.accordionBodyIds, this.savedAccordionState);
+      this.accordionBodyIds = [];
+      this.savedAccordionState = null;
+      this.clearPanelPositionTimer();
+      const panel = $('#quickTourOverlay .tour-panel');
+      if (panel) {
+        panel.style.left = '';
+        panel.style.right = '';
+        panel.style.top = '';
+        panel.style.bottom = '';
+        panel.style.transform = '';
+      }
       overlay.classList.remove('show');
       overlay.hidden = true;
       overlay.setAttribute('aria-hidden', 'true');
@@ -2831,7 +3025,17 @@
       const step = TOUR_STEPS[this.index];
       if (!step) return;
       const target = $(step.selector);
+      const activeAccordionBodyId = resolveStepAccordionBodyId(step, target);
+      syncTutorialAccordion(this.accordionBodyIds, activeAccordionBodyId);
       this.clearTarget();
+      this.clearAccordionHeadHighlight();
+      if (activeAccordionBodyId) {
+        const activeHead = getAccordionHead(activeAccordionBodyId);
+        if (activeHead) {
+          this.activeAccordionHead = activeHead;
+          activeHead.classList.add('tour-parent-highlight');
+        }
+      }
       if (target) {
         this.activeTarget = target;
         target.classList.add('tour-target-highlight');
@@ -2869,6 +3073,7 @@
         prevBtn.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
       }
       if (nextBtn) nextBtn.textContent = this.index === TOUR_STEPS.length - 1 ? t('tut.tour_done') : t('tut.tour_next');
+      this.queuePanelPositionUpdate(target || this.activeAccordionHead, target && !REDUCE_MOTION_QUERY.matches ? 260 : 0);
     },
     next() {
       if (this.index >= TOUR_STEPS.length - 1) {
@@ -3051,6 +3256,18 @@
   }
 
   function bindGlobalEvents() {
+    document.addEventListener('click', (e) => {
+      if (!TourCtl.isOpen()) return;
+      const panel = e.target.closest('#quickTourOverlay .tour-panel');
+      const actionButton = e.target.closest('[data-action="tour-prev"], [data-action="tour-next"], [data-action="tour-close"]');
+      if (actionButton) return;
+      if (panel || !e.target.closest('[data-action="open-tutorial"]')) {
+        e.preventDefault();
+        e.stopPropagation();
+        TourCtl.next();
+      }
+    }, true);
+
     // Click delegation
     document.addEventListener('click', (e) => {
       const target = e.target.closest('[data-action]');
@@ -3079,6 +3296,11 @@
     // Search debounced
     $('#searchOD').addEventListener('input', debouncedFindFlange);
 
+    window.addEventListener('resize', () => {
+      if (!TourCtl.isOpen()) return;
+      TourCtl.queuePanelPositionUpdate();
+    });
+
     // Memo autosave
     $('#memoInput').addEventListener('input', debounce(() => {
       Store.memo = $('#memoInput').value;
@@ -3089,7 +3311,10 @@
     document.addEventListener('input', (e) => {
       if (e.target.matches('input[type=number][min="1"]')) {
         const v = parseInt(e.target.value, 10);
-        if (e.target.value !== '' && (!Number.isFinite(v) || v < 1)) e.target.value = 1;
+        if (e.target.value !== '' && (!Number.isFinite(v) || v < 1)) {
+          UX.markInvalidInput();
+          e.target.value = 1;
+        }
       }
     });
 
@@ -3490,6 +3715,7 @@
 
     // Events
     bindGlobalEvents();
+    UX.bind();
 
     // Tutorial
     setTimeout(maybeShowTutorial, 200);

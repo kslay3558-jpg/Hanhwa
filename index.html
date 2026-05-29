@@ -45,11 +45,17 @@
     --r-md: 10px;
     --r-lg: 14px;
     --r-xl: 20px;
+    --space-1: 8px;
+    --space-2: 12px;
+    --space-3: 16px;
+    --space-4: 20px;
+    --control-h: 40px;
+    --control-h-compact: 36px;
     --gas-qty-min-width: 132px;
 
-    --e-1: 0 1px 2px rgba(15,23,42,.05), 0 1px 1px rgba(15,23,42,.04);
-    --e-2: 0 2px 6px rgba(15,23,42,.06), 0 1px 2px rgba(15,23,42,.04);
-    --e-3: 0 6px 16px rgba(15,23,42,.08), 0 2px 4px rgba(15,23,42,.04);
+    --e-1: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+    --e-2: 0 2px 4px rgba(15,23,42,.05), 0 1px 2px rgba(15,23,42,.03);
+    --e-3: 0 4px 12px rgba(15,23,42,.07), 0 2px 4px rgba(15,23,42,.03);
     --e-4: 0 12px 30px rgba(15,23,42,.14);
 
     --m-fast: .12s cubic-bezier(.4,0,.2,1);
@@ -123,10 +129,10 @@
     transition: background var(--m-base), color var(--m-base);
   }
   /* Typography scale */
-  h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
-  h2 { font-size: 1.125rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
-  h3 { font-size: .95rem; font-weight: 700; margin: 0; }
-  h4 { font-size: .9rem; font-weight: 700; margin: 0; }
+  h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+  h2 { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.015em; margin: 0; }
+  h3 { font-size: .92rem; font-weight: 700; margin: 0; }
+  h4 { font-size: .86rem; font-weight: 700; margin: 0; }
   p { margin: 0; }
   small { font-size: .78rem; }
 
@@ -139,11 +145,11 @@
     background: var(--c-surface);
     border-radius: var(--r-lg);
     box-shadow: var(--e-1);
-    padding: 12px 16px;
-    margin-bottom: 14px;
-    display: flex; align-items: center; gap: 12px;
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-2);
+    display: flex; align-items: center; gap: var(--space-2);
     border: 1px solid var(--c-border);
-    flex-wrap: wrap; row-gap: 8px;
+    flex-wrap: wrap; row-gap: var(--space-1);
     overflow: hidden;
   }
   /* Subtle accent strip on the top edge of the header */
@@ -196,8 +202,8 @@
   }
   a.icon-btn { text-decoration: none; }
   .icon-btn[data-action="open-tutorial"] { width: auto; padding: 0 10px; font-size: 0.8rem; font-weight: 600; }
-  .help-btn { background: var(--c-primary) !important; color: #fff !important; border-color: var(--c-primary) !important; box-shadow: var(--e-1); }
-  .help-btn:hover { background: var(--c-primary-strong, #1d4ed8) !important; filter: brightness(1.08); }
+  .help-btn { background: var(--c-surface-2) !important; color: var(--c-text-sub) !important; border-color: var(--c-border) !important; box-shadow: none; }
+  .help-btn:hover { background: var(--c-primary-weak) !important; color: var(--c-primary) !important; border-color: var(--c-primary) !important; }
   .icon-btn:hover { background: var(--c-primary-weak); color: var(--c-primary); }
   .icon-btn[data-action="q-del"]:hover { background: var(--c-danger-weak); color: var(--c-danger); }
   .icon-btn:active { transform: scale(.94); }
@@ -259,7 +265,7 @@
   /* Main grid: 1/2/3 columns responsive */
   .main-grid {
     display: grid;
-    gap: 14px;
+    gap: var(--space-2);
     align-items: start;
     grid-template-columns: 1fr;
   }
@@ -273,26 +279,26 @@
     /* 데스크탑 3열에서는 결과 섹션이 3번째 열에 자연스럽게 위치 */
     .main-grid > section:nth-child(3) { grid-column: auto; }
   }
-  .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .col { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 
   /* Cards */
   .card {
     background: var(--c-surface);
     border-radius: var(--r-lg);
-    padding: 18px 18px 16px;
-    box-shadow: var(--e-2);
+    padding: var(--space-3);
+    box-shadow: var(--e-1);
     border: 1px solid var(--c-border);
     transition: box-shadow var(--m-base), border-color var(--m-base), transform var(--m-base);
   }
-  @media (max-width: 480px) { .card { padding: 16px 14px 14px; } }
+  @media (max-width: 480px) { .card { padding: 14px 12px; } }
   .card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
   /* color-mix() 폴백 패턴: Safari 15 이하 미지원 대비.
      같은 속성을 두 번 선언해 지원 브라우저는 두 번째(color-mix) 값을 사용하고,
      미지원 브라우저는 첫 번째(solid) 값을 유지합니다. */
   .card-head {
     display: flex; align-items: center; gap: 10px;
-    margin-bottom: 14px;
-    padding-bottom: 10px;
+    margin-bottom: var(--space-2);
+    padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--c-border);
     border-bottom: 1px solid color-mix(in srgb, var(--c-border) 65%, transparent);
   }
@@ -376,17 +382,17 @@
   .acc-body[aria-hidden="true"] { grid-template-rows: 0fr; }
   .acc-body-inner {
     overflow: hidden;
-    padding: 0 18px 16px;
+    padding: 0 var(--space-3) var(--space-3);
   }
   @media (max-width: 480px) {
     .acc-head { padding: 12px 14px; }
-    .acc-body-inner { padding: 0 14px 14px; }
+    .acc-body-inner { padding: 0 12px 12px; }
   }
   /* Inside acc-body the first form-grid loses top margin gap */
   .acc-body-inner > .form-grid:first-child { margin-top: 14px; }
 
   /* Forms */
-  .form-grid { display: grid; gap: 10px; margin-bottom: 12px; }
+  .form-grid { display: grid; gap: var(--space-1); margin-bottom: var(--space-2); }
   .col-3 { grid-template-columns: repeat(3, 1fr); }
   .col-2 { grid-template-columns: 1fr 1fr; }
   .col-auto { grid-template-columns: 1fr 88px; }
@@ -396,7 +402,7 @@
   }
   .field label, label.field-label {
     display: block; font-size: .78rem; font-weight: 700;
-    color: var(--c-text-sub); margin-bottom: 5px; letter-spacing: 0;
+    color: var(--c-text-sub); margin-bottom: 6px; letter-spacing: 0;
   }
   .label-with-help {
     display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
@@ -428,7 +434,7 @@
       font-size: max(16px, .9rem);
     }
   }
-  select, input[type=number], input[type=text] { height: 40px; padding: 0 12px; }
+  select, input[type=number], input[type=text] { height: var(--control-h); padding: 0 12px; }
   textarea { padding: 10px 12px; line-height: 1.5; resize: vertical; }
   select {
     background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
@@ -454,11 +460,11 @@
 
   /* Stepper */
   .stepper {
-    display: flex; height: 40px; background: var(--c-surface-2);
+    display: flex; height: var(--control-h); background: var(--c-surface-2);
     border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden;
   }
   .stepper button {
-    flex: 0 0 38px; background: transparent; border: none;
+    flex: 0 0 var(--control-h); background: transparent; border: none;
     color: var(--c-text-sub); font-size: 1.1rem; cursor: pointer;
     transition: background var(--m-fast); padding: 0;
   }
@@ -474,7 +480,7 @@
   .btn {
     position: relative; overflow: hidden;
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    width: 100%; min-height: 40px; padding: 0 14px;
+    width: 100%; min-height: var(--control-h); padding: 0 14px;
     border: 1px solid transparent; border-radius: var(--r-md);
     background: var(--c-surface-2); color: var(--c-text);
     font-family: inherit; font-size: .9rem; font-weight: 700;
@@ -487,8 +493,10 @@
   .btn-primary:hover:not(:disabled) { background: var(--c-primary-strong); }
   .btn-secondary { background: var(--c-surface-2); border-color: var(--c-border); color: var(--c-text); }
   .btn-secondary:hover:not(:disabled) { background: var(--c-primary-weak); border-color: var(--c-primary); color: var(--c-primary); }
-  .btn-success { background: var(--c-success); color: #fff; box-shadow: var(--e-2); min-height: 48px; font-size: 1rem; }
-  .btn-warn   { background: var(--c-accent); color: #fff; }
+  .btn-success { background: var(--c-primary); color: #fff; box-shadow: var(--e-1); font-size: .95rem; }
+  .btn-success:hover:not(:disabled) { background: var(--c-primary-strong); }
+  .btn-warn   { background: var(--c-surface-2); border-color: var(--c-border); color: var(--c-text-sub); }
+  .btn-warn:hover:not(:disabled) { background: var(--c-primary-weak); border-color: var(--c-primary); color: var(--c-primary); }
   .btn-ghost  { background: transparent; border-color: var(--c-border); color: var(--c-text-sub); }
   .btn-ghost:hover { background: var(--c-surface-2); color: var(--c-text); }
   .btn-danger { background: var(--c-danger-weak); color: var(--c-danger); border-color: transparent; }
@@ -663,6 +671,56 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
+  .res-summary-card {
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-surface-2);
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+  .res-summary-card h3 {
+    font-size: .82rem; color: var(--c-text-sub);
+    margin-bottom: 8px;
+  }
+  .res-summary-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .res-summary-total {
+    font-size: 1rem; font-weight: 800; color: var(--c-text);
+    white-space: nowrap;
+  }
+  .res-summary-tags {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .res-detail {
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    background: var(--c-surface);
+    margin-bottom: 4px;
+    overflow: hidden;
+  }
+  .res-detail summary {
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--c-text-sub);
+    padding: 10px 12px;
+    background: var(--c-surface-2);
+    border-bottom: 1px solid transparent;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .res-detail summary::-webkit-details-marker { display: none; }
+  .res-detail summary::before {
+    content: '▸';
+    font-size: .76rem;
+    transition: transform var(--m-fast);
+  }
+  .res-detail[open] summary::before { transform: rotate(90deg); }
+  .res-detail[open] summary { border-bottom-color: var(--c-border); }
+  .res-detail .res-flat-wrapper { border: none; border-radius: 0; margin-bottom: 0; }
   .gas-pipe-form.col-2 { grid-template-columns: minmax(0, 1.5fr) minmax(var(--gas-qty-min-width), .75fr); }
   .gas-pipe-form .field { min-width: 0; }
   .gas-pipe-option-box { margin-top: 0; margin-bottom: 10px; }
@@ -853,7 +911,9 @@
   .floating-bar.show { transform: none; }
   .float-info { flex: 1; font-size: .9rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
   .float-badge {
-    background: var(--c-primary); color: #fff; padding: 2px 10px;
+    background: var(--c-primary-weak); color: var(--c-primary);
+    border: 1px solid var(--c-primary);
+    padding: 2px 10px;
     border-radius: 999px; font-size: .8rem; transition: transform var(--m-base);
   }
   .float-badge.pop { transform: scale(1.3); }
@@ -872,6 +932,13 @@
   /* Lift FAB above floating bar when bar is visible */
   body:has(.floating-bar.show) .cart-fab {
     bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+  body.is-floating-visible .cart-fab {
+    bottom: calc(74px + env(safe-area-inset-bottom));
+  }
+  body:has(.floating-bar.show) .install-banner.show,
+  body.is-floating-visible .install-banner.show {
+    display: none;
   }
   .cart-fab:hover { background: #d97706; transform: scale(1.07); box-shadow: 0 6px 22px rgba(217,119,6,.5), 0 2px 8px rgba(0,0,0,.2); }
   .cart-fab:active { transform: scale(.95); }
@@ -1040,10 +1107,23 @@
     border-radius: 10px;
     transition: outline-color var(--m-fast), box-shadow var(--m-fast);
   }
+  .acc-head.tour-parent-highlight {
+    position: relative;
+    z-index: 3501;
+    background: var(--c-surface);
+    border-color: color-mix(in srgb, var(--c-primary) 48%, var(--c-border));
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--c-primary) 76%, white);
+  }
+  .acc-head.tour-parent-highlight h2,
+  .acc-head.tour-parent-highlight .acc-chevron {
+    color: var(--c-primary);
+  }
+  .acc-head.tour-parent-highlight::before { opacity: 1; }
   @media (max-width: 520px) {
     .tour-panel { width: calc(100vw - 20px); }
   }
   @media (prefers-reduced-motion: reduce) {
+    .acc-head.tour-parent-highlight { transition: none; }
     .tour-target-highlight { transition: none; }
     .tour-dot { transition: none; }
   }
@@ -1080,9 +1160,10 @@
     position: fixed; left: 12px; right: 12px; bottom: 80px; z-index: 950;
     background: var(--c-surface); color: var(--c-text);
     border: 1px solid var(--c-border); border-radius: var(--r-lg);
-    padding: 12px 14px; box-shadow: var(--e-3);
+    padding: 12px 14px;
     display: none; align-items: center; gap: 10px;
     max-width: 480px; margin: 0 auto;
+    box-shadow: var(--e-2);
   }
   .install-banner.show { display: flex; animation: springIn .4s var(--m-spring); }
   .install-banner .ib-icon { font-size: 1.6rem; }
@@ -1203,7 +1284,7 @@
           </svg>
         </span>
       </a>
-      <button id="btnHelpTutorial" class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">❓ 도움말</button>
+      <button id="btnHelpTutorial" class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">도움말</button>
     </div>
   </header>
 
@@ -1215,7 +1296,7 @@
       <!-- 1. 플랜지 사이즈 역산 (기본 열림) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFind">
-          <h2><span data-i18n="card.find">🔍 플랜지 사이즈 역산</span></h2>
+          <h2><span data-i18n="card.find">플랜지 사이즈 역산</span></h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyFind" class="acc-body">
@@ -1238,13 +1319,13 @@
         </div>
       </div>
 
-      <!-- 2. 플랜지 포인트 (기본 열림) -->
+      <!-- 2. 플랜지 포인트 (기본 닫힘) -->
       <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFlange">
-          <h2 data-i18n="card.flange">🔩 플랜지 포인트</h2>
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFlange">
+          <h2 data-i18n="card.flange">플랜지 포인트</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
-        <div id="accBodyFlange" class="acc-body">
+        <div id="accBodyFlange" class="acc-body" aria-hidden="true" inert>
           <div class="acc-body-inner">
             <div class="form-grid col-3">
               <div class="field">
@@ -1304,7 +1385,7 @@
       <!-- 3. 가스켓 추가 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasket">
-          <h2 data-i18n="card.gasket">⭕ 가스켓 추가</h2>
+          <h2 data-i18n="card.gasket">가스켓 추가</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyGasket" class="acc-body" aria-hidden="true" inert>
@@ -1350,7 +1431,7 @@
       <!-- 4. U-볼트 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyUbolt">
-          <h2 data-i18n="card.ubolt">⚓ U-볼트 추가</h2>
+          <h2 data-i18n="card.ubolt">U-볼트 추가</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyUbolt" class="acc-body" aria-hidden="true" inert>
@@ -1381,7 +1462,7 @@
       <!-- 5. 가스파이프 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
-          <h2 data-i18n="card.gas_pipe">🛢 가스파이프</h2>
+          <h2 data-i18n="card.gas_pipe">가스파이프</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
@@ -1418,7 +1499,7 @@
       <!-- 6. 메모 (기본 닫힘) -->
       <div class="card acc-card">
         <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
-          <h2 data-i18n="card.memo">📝 추가 메모</h2>
+          <h2 data-i18n="card.memo">추가 메모</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
         <div id="accBodyMemo" class="acc-body" aria-hidden="true" inert>
@@ -1434,11 +1515,11 @@
     <section class="col" data-i18n-attr="aria-label:sec.queue" aria-label="등록 대기열">
       <div class="card" id="queueCard">
         <div class="card-head">
-          <h2><span data-i18n="card.queue">📋 등록 대기열</span> <span class="badge" id="qCount">0건</span></h2>
+          <h2><span data-i18n="card.queue">등록 대기열</span> <span class="badge" id="qCount">0건</span></h2>
         </div>
         <div id="qBody" class="queue-list" aria-live="polite" aria-relevant="additions removals"></div>
         <div class="action-row">
-          <button id="btnCalculateMain" class="btn btn-success" data-action="calculate"><span data-i18n="btn.calc">🧮 최종 집계</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.ctrl_enter">(Ctrl+Enter)</small></button>
+          <button id="btnCalculateMain" class="btn btn-success" data-action="calculate"><span data-i18n="btn.calc">최종 집계</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.ctrl_enter">(Ctrl+Enter)</small></button>
           <button class="btn btn-ghost" data-action="clear-all" data-i18n="btn.clear">초기화</button>
         </div>
       </div>
@@ -1477,21 +1558,21 @@
   <div id="cartModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-hidden="true">
     <div class="modal-content">
       <div class="cart-drawer-header">
-        <h2 id="cartDrawerTitle" data-i18n="cart.title">🛒 현재 대기열</h2>
+        <h2 id="cartDrawerTitle" data-i18n="cart.title">현재 대기열</h2>
         <button class="icon-btn" type="button" data-action="close-cart" data-i18n-attr="aria-label:cart.close" aria-label="닫기">✕</button>
       </div>
       <div id="cartDrawerBody"></div>
       <div class="cart-drawer-actions">
         <button class="btn btn-ghost" type="button" data-action="close-cart" data-i18n="cart.to_queue">대기열로 이동</button>
-        <button class="btn btn-success" type="button" data-action="cart-calculate" data-i18n="fb.show_result">🧮 결과보기</button>
+        <button class="btn btn-success" type="button" data-action="cart-calculate" data-i18n="fb.show_result">결과보기</button>
       </div>
     </div>
   </div>
 
   <!-- 모바일 플로팅 바 -->
   <div id="floatingBar" class="floating-bar" aria-hidden="true">
-    <div class="float-info"><span data-i18n="fb.queue">🛒 대기열</span> <span id="floatCount" class="float-badge">0</span></div>
-    <button class="btn btn-success" data-action="calculate" style="min-height:38px;padding:0 14px;" data-i18n="fb.show_result">🧮 결과보기</button>
+    <div class="float-info"><span data-i18n="fb.queue">대기열</span> <span id="floatCount" class="float-badge">0</span></div>
+    <button class="btn btn-success" data-action="calculate" style="min-height:38px;padding:0 14px;" data-i18n="fb.show_result">결과보기</button>
   </div>
 
   <!-- 설치 배너 -->
