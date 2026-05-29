@@ -1483,6 +1483,9 @@
   function buildGasPipeBoltItem(s, qty, opts) {
     const row = GAS_PIPE_TABLE.find(item => item.size === s);
     if (!row) return null;
+    const boltCount = Number.isFinite(row.boltCount) ? row.boltCount : null;
+    const nutCount = Number.isFinite(row.nutCount) ? row.nutCount : null;
+    if (boltCount == null || nutCount == null) return null;
     let len = row.boltLength;
     if (opts.washerExtra) len += 5;
     return {
@@ -1494,8 +1497,8 @@
       gasPipe: true,
       bS: row.boltSize,
       bL: len,
-      bC: row.boltCount ?? 0,
-      nC: row.nutCount ?? 0
+      bC: boltCount,
+      nC: nutCount
     };
   }
 
@@ -1509,7 +1512,7 @@
         const bolts = q.bC * q.qty;
         // nC is used by gas-pipe preset items (table-driven nut count per set).
         // Fallback keeps compatibility with existing/non-gas bolt items in saved queue data.
-        const hasExplicitNutCount = (typeof q.nC === 'number') && Number.isFinite(q.nC);
+        const hasExplicitNutCount = Number.isFinite(q.nC);
         const nuts  = hasExplicitNutCount ? (q.nC * q.qty) : (bolts * (q.doubleNut ? 2 : 1));
         bM[bK] = (bM[bK] || 0) + bolts;
         nM[nK] = (nM[nK] || 0) + nuts;
@@ -1629,7 +1632,10 @@
       }
     },
 
-    renderGasPipeTable() {},
+    renderGasPipeTable() {
+      // Gas-pipe detail table was intentionally removed from the section UI.
+      // Keep this no-op for existing action wiring and backward compatibility.
+    },
 
     renderSizeReferenceTables() {
       const jisBody = $('#jisSizeRefBody');
