@@ -232,6 +232,10 @@
       'gas.col.bolt_length':  '볼트 길이',
       'gas.col.bolt_count':   '볼트 개수',
       'gas.col.nut_count':    '너트 개수',
+      'size_ref.jump_aria':   '사이즈 표 보기',
+      'size_ref.title':       '사이즈 표',
+      'size_ref.jis_title':   'JIS 테이블',
+      'size_ref.gas_title':   '가스파이프 테이블',
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
@@ -572,6 +576,10 @@
       'gas.col.bolt_length':  'Chiều dài bu lông',
       'gas.col.bolt_count':   'Số bu lông',
       'gas.col.nut_count':    'Số đai ốc',
+      'size_ref.jump_aria':   'Xem bảng kích thước',
+      'size_ref.title':       'Bảng kích thước',
+      'size_ref.jis_title':   'Bảng JIS',
+      'size_ref.gas_title':   'Bảng ống gas',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
       'card.queue':           'Hàng chờ đăng ký',
@@ -901,6 +909,10 @@
       'gas.col.bolt_length':  'Panjang baut',
       'gas.col.bolt_count':   'Jumlah baut',
       'gas.col.nut_count':    'Jumlah mur',
+      'size_ref.jump_aria':   'Lihat tabel ukuran',
+      'size_ref.title':       'Tabel ukuran',
+      'size_ref.jis_title':   'Tabel JIS',
+      'size_ref.gas_title':   'Tabel pipa gas',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
       'card.queue':           'Antrean pendaftaran',
@@ -1618,6 +1630,41 @@
     },
 
     renderGasPipeTable() {},
+
+    renderSizeReferenceTables() {
+      const jisBody = $('#jisSizeRefBody');
+      const gasBody = $('#gasSizeRefBody');
+      if (!jisBody || !gasBody) return;
+
+      jisBody.textContent = '';
+      const ratings = Object.keys(DATA).sort((a, b) => (RATING_ORDER[a] || 0) - (RATING_ORDER[b] || 0));
+      for (const rating of ratings) {
+        for (const size of SIZES) {
+          const row = DATA[rating]?.[size];
+          if (!row) continue;
+          const [boltSize, boltLength, boltCount] = row;
+          jisBody.appendChild(el('tr', null,
+            el('td', null, rating),
+            el('td', null, `${size}A`),
+            el('td', null, boltSize),
+            el('td', null, `${boltLength} mm`),
+            el('td', { class: 'num' }, String(boltCount))
+          ));
+        }
+      }
+
+      gasBody.textContent = '';
+      for (const row of GAS_PIPE_TABLE) {
+        gasBody.appendChild(el('tr', null,
+          el('td', null, `${row.size}A`),
+          el('td', null, `${row.flangeThickness} mm`),
+          el('td', null, row.boltSize),
+          el('td', null, `${row.boltLength} mm`),
+          el('td', { class: 'num' }, String(row.boltCount ?? '-')),
+          el('td', { class: 'num' }, String(row.nutCount ?? '-'))
+        ));
+      }
+    },
 
     /**
      * Render queue list. Uses DOM API only (no innerHTML w/ user data).
@@ -3117,6 +3164,16 @@
     'usize-change':      () => View.updatePitchInfo(parseInt($('#usize').value, 10)),
     'gas-preset-change': () => View.renderGasPipeTable(),
     'gas-washer-change': () => View.renderGasPipeTable(),
+    'open-size-ref':     () => {
+      const section = $('#sizeTableSection');
+      const card = $('#sizeRefCard');
+      if (!section) return;
+      smoothScrollIntoView(section, { block: 'start' });
+      if (card) {
+        card.classList.remove('size-ref-highlight');
+        requestAnimationFrame(() => card.classList.add('size-ref-highlight'));
+      }
+    },
     'qty-inc':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = toPosInt(inp.value) + 1; },
     'qty-dec':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = Math.max(1, toPosInt(inp.value) - 1); },
     'add-bolt':          actionAddBolt,
@@ -3218,6 +3275,7 @@
     View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.renderGasPipeTable();
+    View.renderSizeReferenceTables();
     View.populateProjectSelect($('#projectSelect'));
     View.renderQueue();
     // Re-render result if currently shown
@@ -3686,6 +3744,7 @@
     View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.renderGasPipeTable();
+    View.renderSizeReferenceTables();
     View.populateProjectSelect($('#projectSelect'));
 
     // Sync language UI to current selection

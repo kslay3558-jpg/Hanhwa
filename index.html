@@ -730,14 +730,28 @@
   .gas-pipe-table { min-width: 0; table-layout: fixed; }
   .gas-pipe-table th, .gas-pipe-table td { padding: 8px 10px; }
   .gas-pipe-add-btn { width: 100%; margin-top: 12px; }
+  .size-ref-section { margin: 18px 0 6px; }
+  .size-ref-card { padding-bottom: 14px; }
+  .size-ref-card .card-head { margin-bottom: 10px; }
+  .size-ref-table-wrap { margin-top: 8px; }
+  .size-ref-table { min-width: 620px; table-layout: auto; }
+  .size-ref-table th, .size-ref-table td { text-align: left; white-space: nowrap; }
+  .size-ref-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .size-ref-highlight { animation: sizeRefFlash .7s ease-out; }
+  @keyframes sizeRefFlash {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-primary) 55%, transparent); }
+    100% { box-shadow: 0 0 0 10px transparent; }
+  }
   @media (max-width: 640px) {
     .gas-pipe-form.col-2 { grid-template-columns: 1fr; gap: 12px; }
     .gas-pipe-form .field label { margin-bottom: 6px; }
     .gas-pipe-option-box { margin-bottom: 12px; }
     .gas-pipe-table th, .gas-pipe-table td { font-size: .8rem; }
+    .size-ref-table { min-width: 560px; }
   }
   @media (max-width: 380px) {
     .gas-pipe-table th, .gas-pipe-table td { padding: 7px 8px; font-size: .76rem; }
+    .size-ref-table { min-width: 520px; }
   }
   /* Category pill tags */
   .res-cat-tag {
@@ -791,14 +805,14 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle, #tempLink, #notifPermBtn {
+  #boardToggle, #tempLink, #notifPermBtn, #sizeTableJump {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
     text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover, #sizeTableJump:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
   #notifPermBtn[hidden] { display: none; }
 
   /* Board modal */
@@ -1706,6 +1720,49 @@
     </button>
   </aside>
 
+  <section id="sizeTableSection" class="size-ref-section" data-i18n-attr="aria-label:size_ref.title" aria-label="사이즈 표">
+    <div id="sizeRefCard" class="card size-ref-card">
+      <div class="card-head">
+        <h2 data-i18n="size_ref.title">사이즈 표</h2>
+      </div>
+      <details class="res-detail" open>
+        <summary data-i18n="size_ref.jis_title">JIS 테이블</summary>
+        <div class="res-flat-wrapper gas-table-scroll size-ref-table-wrap">
+          <table class="res-flat-table size-ref-table">
+            <thead>
+              <tr>
+                <th data-i18n="form.rating">압력등급</th>
+                <th data-i18n="gas.col.size">사이즈</th>
+                <th data-i18n="gas.col.bolt_size">볼트 사이즈</th>
+                <th data-i18n="gas.col.bolt_length">볼트 길이</th>
+                <th data-i18n="gas.col.bolt_count">볼트 개수</th>
+              </tr>
+            </thead>
+            <tbody id="jisSizeRefBody"></tbody>
+          </table>
+        </div>
+      </details>
+      <details class="res-detail" style="margin-top:10px;" open>
+        <summary data-i18n="size_ref.gas_title">가스파이프 테이블</summary>
+        <div class="res-flat-wrapper gas-table-scroll size-ref-table-wrap">
+          <table class="res-flat-table size-ref-table">
+            <thead>
+              <tr>
+                <th data-i18n="gas.col.size">사이즈</th>
+                <th data-i18n="gas.col.flange">플랜지 두께</th>
+                <th data-i18n="gas.col.bolt_size">볼트 사이즈</th>
+                <th data-i18n="gas.col.bolt_length">볼트 길이</th>
+                <th data-i18n="gas.col.bolt_count">볼트 개수</th>
+                <th data-i18n="gas.col.nut_count">너트 개수</th>
+              </tr>
+            </thead>
+            <tbody id="gasSizeRefBody"></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </section>
+
   <!-- 당일 방문자 수 (클릭 시 표시) -->
   <div id="visitorFooter">
     <button id="visitorToggle" type="button" aria-expanded="false">
@@ -1717,6 +1774,9 @@
     </span>
     <button id="boardToggle" type="button" aria-label="댓글 게시판 열기" title="댓글 게시판">
       <span aria-hidden="true">💬</span>
+    </button>
+    <button id="sizeTableJump" type="button" data-action="open-size-ref" data-i18n-attr="aria-label:size_ref.jump_aria,title:size_ref.jump_aria" aria-label="사이즈 표 보기" title="사이즈 표 보기">
+      <span aria-hidden="true">📊</span>
     </button>
     <a id="tempLink"
        href="http://www.kma.go.kr/cgi-bin/aws/nph-aws_txt_min?0&amp;0&amp;mindb_01m&amp;294&amp;a"
