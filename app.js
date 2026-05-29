@@ -225,7 +225,7 @@
       'btn.add_gas_bolt':     '＋ 가스파이프 볼트 추가',
       'gas.desc':             '가스파이프 프리셋에서 사이즈를 선택하면 볼트 규격과 길이를 바로 확인하고 장바구니처럼 추가할 수 있습니다.',
       'gas.rule':             '기본 볼트 길이는 기존 값에서 5mm를 제외한 값입니다. 와셔 추가를 체크하면 5mm가 다시 더해집니다.',
-      'gas.help':             '가스켓 없이 볼트/너트를 추가합니다. 입력 수량은 Set 기준이며 표의 볼트·너트 개수가 자동 반영됩니다.',
+      'gas.help':             '가스켓 없이 볼트/너트를 추가합니다. 입력 수량은 Set 기준이며 표의 볼트/너트 개수가 자동 반영됩니다.',
       'gas.col.size':         '사이즈',
       'gas.col.flange':       '플랜지 두께',
       'gas.col.bolt_size':    '볼트 사이즈',
@@ -1483,7 +1483,7 @@
       bS: row.boltSize,
       bL: len,
       bC: row.boltCount || 0,
-      nC: row.nutCount || row.boltCount || 0
+      nC: row.nutCount ?? row.boltCount ?? 0
     };
   }
 
@@ -1495,6 +1495,8 @@
         const bK = `${q.bS} × ${q.bL}L`;
         const nK = q.bS;
         const bolts = q.bC * q.qty;
+        // nC is used by gas-pipe preset items (table-driven nut count per set).
+        // Fallback keeps compatibility with existing/non-gas bolt items in saved queue data.
         const nuts  = Number.isFinite(q.nC) ? (q.nC * q.qty) : (bolts * (q.doubleNut ? 2 : 1));
         bM[bK] = (bM[bK] || 0) + bolts;
         nM[nK] = (nM[nK] || 0) + nuts;
