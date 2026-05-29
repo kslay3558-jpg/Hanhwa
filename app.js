@@ -230,8 +230,8 @@
       'gas.col.flange':       '플랜지 두께',
       'gas.col.bolt_size':    '볼트 사이즈',
       'gas.col.bolt_length':  '볼트 길이',
-      'gas.col.bolt_count':   '볼트 갯수',
-      'gas.col.nut_count':    '너트 갯수',
+      'gas.col.bolt_count':   '볼트 개수',
+      'gas.col.nut_count':    '너트 개수',
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
