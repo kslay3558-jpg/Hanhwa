@@ -371,7 +371,7 @@ function parseCheckerOutput() {
   const nickname  = nickMatch ? nickMatch[1].trim() : '알 수 없음';
   const sessionId = sessionMatch ? parseInt(sessionMatch[1], 10) : null;
   const boss      = bossMatch[1].trim();
-  // Normalise everdark to uppercase for consistent comparison
+  // Normalize everdark to uppercase for consistent comparison
   const everdark  = everdarkMatch ? everdarkMatch[1].trim().toUpperCase() : null;
 
   showResult({ nickname, sessionId, boss, everdark });
@@ -453,8 +453,7 @@ function showResult(info) {
     const mapCoords = POIS_BY_MAP[mapType] || [];
 
     // POI table
-    const tableHtml = buildPOITable(pois, mapCoords, mapType);
-    mapContent.innerHTML = tableHtml;
+    mapContent.insertAdjacentHTML('beforeend', buildPOITable(pois, mapCoords, mapType));
 
     // Draw canvas map
     const canvasWrap = document.createElement('div');
@@ -480,14 +479,31 @@ function showResult(info) {
     // No seed data — show possible maps for this nightlord
     const possibleMaps = getPossibleMaps(boss);
     if (possibleMaps.length > 0) {
-      let html = `<div class="alert alert-info">세션 ID가 없어 시드를 특정할 수 없습니다. 보스 "${boss}"는 다음 맵 타입에 등장할 수 있습니다:</div>`;
-      html += '<div class="btn-group" style="margin-bottom:16px;">' +
-        possibleMaps.map(m => `<button class="map-btn" onclick="showMapPreview('${m}', '${boss}')">${MAP_KO[m] || m}</button>`).join('') +
-        '</div>';
-      html += '<div id="map-preview-area"></div>';
-      mapContent.innerHTML = html;
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'alert alert-info';
+      infoDiv.textContent = `세션 ID가 없어 시드를 특정할 수 없습니다. 보스 "${boss}"는 다음 맵 타입에 등장할 수 있습니다:`;
+      mapContent.appendChild(infoDiv);
+
+      const btnGroup = document.createElement('div');
+      btnGroup.className = 'btn-group';
+      btnGroup.style.marginBottom = '16px';
+      possibleMaps.forEach(m => {
+        const btn = document.createElement('button');
+        btn.className = 'map-btn';
+        btn.textContent = MAP_KO[m] || m;
+        btn.onclick = () => showMapPreview(m, boss);
+        btnGroup.appendChild(btn);
+      });
+      mapContent.appendChild(btnGroup);
+
+      const previewArea = document.createElement('div');
+      previewArea.id = 'map-preview-area';
+      mapContent.appendChild(previewArea);
     } else {
-      mapContent.innerHTML = `<div class="alert alert-error">보스 "${boss}"에 대한 맵 데이터를 찾을 수 없습니다. (Harmonia/Straghess는 아직 데이터셋에 없을 수 있습니다)</div>`;
+      const errDiv = document.createElement('div');
+      errDiv.className = 'alert alert-error';
+      errDiv.textContent = `보스 "${boss}"에 대한 맵 데이터를 찾을 수 없습니다. (Harmonia/Straghess는 아직 데이터셋에 없을 수 있습니다)`;
+      mapContent.appendChild(errDiv);
     }
   }
 
@@ -566,6 +582,10 @@ function buildPOITable(pois, mapCoords, mapType) {
   </table></div>`;
 }
 
+// Cache background color once to avoid repeated DOM queries in drawMap
+const MAP_BG_COLOR = getComputedStyle(document.documentElement)
+  .getPropertyValue('--c-surface-2').trim() || '#1a2846';
+
 function drawMap(canvas, mapType, pois, mapCoords) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
@@ -574,10 +594,8 @@ function drawMap(canvas, mapType, pois, mapCoords) {
   const ORIG = 900;
   const scale = W / ORIG;
 
-  // Background — use a dark static fallback so getComputedStyle is not called per draw
-  const bgColor = getComputedStyle(document.documentElement)
-    .getPropertyValue('--c-surface-2').trim() || '#1a2846';
-  ctx.fillStyle = bgColor;
+  // Background
+  ctx.fillStyle = MAP_BG_COLOR;
   ctx.fillRect(0, 0, W, H);
 
   // Grid lines (subtle)
