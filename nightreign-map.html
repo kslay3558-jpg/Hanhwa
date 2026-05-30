@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nightreign 맵 탐지기 — NR-Nightlord-Checker + NightreignMapFilter 연동</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --c-bg: #0b1220;
+    --c-surface: #131f35;
+    --c-surface-2: #1a2846;
+    --c-border: #2d4270;
+    --c-text: #e2e8f0;
+    --c-text-sub: #94a3b8;
+    --c-primary: #4f8ef7;
+    --c-primary-weak: #1e3a6a;
+    --c-success: #34d399;
+    --c-success-weak: #064e3b;
+    --c-warn: #fbbf24;
+    --c-warn-weak: #451a03;
+    --c-danger: #f87171;
+    --c-danger-weak: #450a0a;
+    --c-church: #f59e0b;
+    --c-mage: #818cf8;
+    --c-village: #34d399;
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --c-bg: #f1f5f9;
+      --c-surface: #ffffff;
+      --c-surface-2: #f8fafc;
+      --c-border: #cbd5e1;
+      --c-text: #0f172a;
+      --c-text-sub: #475569;
+      --c-primary: #2563eb;
+      --c-primary-weak: #eff6ff;
+      --c-success: #059669;
+      --c-success-weak: #ecfdf5;
+      --c-warn: #d97706;
+      --c-warn-weak: #fef3c7;
+      --c-danger: #dc2626;
+      --c-danger-weak: #fee2e2;
+      --c-church: #d97706;
+      --c-mage: #4f46e5;
+      --c-village: #059669;
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    min-height: 100vh;
+    padding: 16px;
+  }
+  h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+  h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; color: var(--c-primary); }
+  .subtitle { color: var(--c-text-sub); font-size: 0.85rem; margin-bottom: 20px; }
+  .card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--c-text-sub);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--c-border);
+  }
+  textarea {
+    width: 100%;
+    background: var(--c-surface-2);
+    color: var(--c-text);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.85rem;
+    resize: vertical;
+    min-height: 120px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  textarea:focus { border-color: var(--c-primary); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: var(--r-md);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--c-primary); color: #fff; }
+  .btn-primary:hover { opacity: .88; }
+  .btn-secondary {
+    background: var(--c-surface-2);
+    color: var(--c-text);
+    border: 1px solid var(--c-border);
+  }
+  .btn-secondary:hover { border-color: var(--c-primary); }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .info-item {
+    background: var(--c-surface-2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: 12px 14px;
+  }
+  .info-label { font-size: 0.75rem; color: var(--c-text-sub); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+  .info-value { font-size: 1rem; font-weight: 700; color: var(--c-text); }
+  .info-value.highlight { color: var(--c-primary); }
+  .info-value.success { color: var(--c-success); }
+  .info-value.warn { color: var(--c-warn); }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .badge-church { background: var(--c-warn-weak); color: var(--c-church); border: 1px solid var(--c-church); }
+  .badge-mage   { background: var(--c-primary-weak); color: var(--c-primary); border: 1px solid var(--c-primary); }
+  .badge-village { background: var(--c-success-weak); color: var(--c-success); border: 1px solid var(--c-success); }
+  .map-canvas-wrap {
+    position: relative;
+    display: inline-block;
+    background: var(--c-surface-2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  canvas { display: block; max-width: 100%; }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 0.82rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .legend-dot.church { background: #f59e0b; }
+  .legend-dot.mage { background: #818cf8; }
+  .legend-dot.village { background: #34d399; }
+  .manual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  @media (max-width: 520px) { .manual-grid { grid-template-columns: 1fr; } }
+  .nl-btn, .map-btn {
+    padding: 8px 12px;
+    border-radius: var(--r-sm);
+    border: 1px solid var(--c-border);
+    background: var(--c-surface-2);
+    color: var(--c-text);
+    cursor: pointer;
+    font-size: 0.82rem;
+    text-align: left;
+    transition: border-color .15s, background .15s;
+  }
+  .nl-btn:hover, .map-btn:hover { border-color: var(--c-primary); background: var(--c-primary-weak); }
+  .nl-btn.active, .map-btn.active { border-color: var(--c-primary); background: var(--c-primary-weak); color: var(--c-primary); font-weight: 600; }
+  .btn-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  select {
+    padding: 8px 12px;
+    border-radius: var(--r-md);
+    border: 1px solid var(--c-border);
+    background: var(--c-surface-2);
+    color: var(--c-text);
+    font-size: 0.88rem;
+    cursor: pointer;
+    outline: none;
+  }
+  select:focus { border-color: var(--c-primary); }
+  #result-section { display: none; }
+  .poi-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .poi-table th, .poi-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--c-border); }
+  .poi-table th { color: var(--c-text-sub); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+  .everdark-yes { color: var(--c-warn); font-weight: 700; }
+  .everdark-no { color: var(--c-text-sub); }
+  .alert {
+    padding: 12px 16px;
+    border-radius: var(--r-md);
+    font-size: 0.88rem;
+    margin-bottom: 12px;
+  }
+  .alert-error { background: var(--c-danger-weak); color: var(--c-danger); border: 1px solid var(--c-danger); }
+  .alert-info { background: var(--c-primary-weak); color: var(--c-primary); border: 1px solid var(--c-primary); }
+  .separator { height: 1px; background: var(--c-border); margin: 16px 0; }
+  .source-link { color: var(--c-primary); text-decoration: none; font-size: 0.82rem; }
+  .source-link:hover { text-decoration: underline; }
+  label { display: block; font-size: 0.85rem; color: var(--c-text-sub); margin-bottom: 6px; }
+  .section-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div style="max-width:860px;margin:0 auto;">
+  <h1>🗺️ Nightreign 맵 탐지기</h1>
+  <p class="subtitle">
+    NR-Nightlord-Checker 출력에서 보스/세션을 읽어 NightreignMapFilter 데이터로 맵 정보를 자동 표시합니다.<br>
+    <a class="source-link" href="https://github.com/arcahn8/NR-Nightlord-Checker" target="_blank">NR-Nightlord-Checker</a>
+    &nbsp;+&nbsp;
+    <a class="source-link" href="https://github.com/xxiixi/NightreignMapFilter" target="_blank">NightreignMapFilter</a>
+    연동 도구
+  </p>
+
+  <!-- Input section -->
+  <div class="card">
+    <div class="card-title">📋 NR-Nightlord-Checker 출력 붙여넣기</div>
+    <label for="checkerOutput">NR-Nightlord-Checker를 실행한 후 출력 내용을 아래에 붙여넣으세요:</label>
+    <textarea id="checkerOutput" placeholder="예시:
+Nickname: Tarnished
+Last Session ID: 1234
+Boss: Gladius
+Everdark Sovereign? No"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="parseCheckerOutput()">🔍 분석하기</button>
+      <button class="btn btn-secondary" onclick="clearAll()">✕ 초기화</button>
+    </div>
+    <div id="parse-error" class="alert alert-error" style="display:none;margin-top:12px;"></div>
+  </div>
+
+  <!-- Manual selection -->
+  <div class="card">
+    <div class="card-title">✋ 수동 선택 (출력 없이 직접 입력)</div>
+    <div class="section-row">
+      <div>
+        <label>나이트로드 (보스)</label>
+        <div class="btn-group" id="nl-buttons">
+          <!-- generated by JS -->
+        </div>
+      </div>
+    </div>
+    <div class="section-row">
+      <div>
+        <label>세션 ID (선택 사항 — 시드 번호 계산용)</label>
+        <input type="number" id="manualSessionId" placeholder="예: 1234" min="0"
+          style="padding:8px 12px;border-radius:var(--r-md);border:1px solid var(--c-border);background:var(--c-surface-2);color:var(--c-text);font-size:0.88rem;outline:none;width:180px;" />
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="applyManual()">🔍 수동 분석</button>
+    </div>
+  </div>
+
+  <!-- Result section -->
+  <div id="result-section">
+    <div class="card">
+      <div class="card-title">📊 탐지 결과</div>
+      <div class="info-grid" id="result-info-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗺️ 맵 정보 &amp; POI 배치</div>
+      <div id="map-info-content"></div>
+    </div>
+  </div>
+
+  <p style="font-size:0.75rem;color:var(--c-text-sub);margin-top:16px;text-align:center;">
+    데이터 출처: <a class="source-link" href="https://github.com/xxiixi/NightreignMapFilter" target="_blank">NightreignMapFilter</a> (320 시드) ·
+    체커: <a class="source-link" href="https://github.com/arcahn8/NR-Nightlord-Checker" target="_blank">NR-Nightlord-Checker</a>
+  </p>
+</div>
+
+<script>
+// ---- Embedded dataset (from NightreignMapFilter dataset/dataset.json) ----
+const SEEDS = {"0":{"nl":"Gladius","map":"Default","pois":{"1":"church","2":"mage","5":"church","10":"church","11":"mage"}},"1":{"nl":"Gladius","map":"Default","pois":{"2":"church","5":"mage","7":"mage","9":"church","11":"church"}},"2":{"nl":"Gladius","map":"Default","pois":{"2":"mage","6":"church","9":"church","11":"church"}},"3":{"nl":"Gladius","map":"Default","pois":{"1":"mage","2":"church","4":"church","5":"mage","7":"village","10":"church"}},"4":{"nl":"Gladius","map":"Default","pois":{"1":"mage","2":"mage","3":"church","4":"church","9":"village","11":"church"}},"5":{"nl":"Gladius","map":"Default","pois":{"1":"mage","2":"mage","3":"church","6":"church","8":"church","9":"mage"}},"6":{"nl":"Gladius","map":"Default","pois":{"1":"church","7":"church","9":"mage","10":"church"}},"7":{"nl":"Gladius","map":"Default","pois":{"1":"church","2":"village","3":"mage","5":"mage","7":"church","10":"church"}},"8":{"nl":"Gladius","map":"Default","pois":{"1":"church","3":"church","4":"village","5":"mage","6":"church","8":"mage","9":"church"}},"9":{"nl":"Gladius","map":"Default","pois":{"1":"church","2":"church","4":"church","7":"church","11":"mage"}},"10":{"nl":"Gladius","map":"Default","pois":{"1":"church","3":"village","5":"church","6":"church","8":"mage","10":"church"}},"11":{"nl":"Gladius","map":"Default","pois":{"2":"church","4":"mage","6":"mage","7":"church","9":"mage","10":"church"}},"12":{"nl":"Gladius","map":"Default","pois":{"1":"church","4":"church","6":"mage","7":"mage","10":"church","11":"mage"}},"13":{"nl":"Gladius","map":"Default","pois":{"4":"church","5":"village","6":"church","7":"mage","10":"church"}},"14":{"nl":"Gladius","map":"Default","pois":{"2":"church","5":"church","7":"church","11":"mage"}},"15":{"nl":"Gladius","map":"Default","pois":{"2":"mage","3":"mage","5":"church","6":"mage","7":"church","8":"church"}},"16":{"nl":"Gladius","map":"Default","pois":{"2":"mage","4":"church","5":"mage","6":"church","10":"church"}},"17":{"nl":"Gladius","map":"Default","pois":{"2":"mage","3":"church","6":"church","7":"church","11":"mage"}},"18":{"nl":"Gladius","map":"Default","pois":{"5":"mage","7":"church","8":"church","11":"church"}},"19":{"nl":"Gladius","map":"Default","pois":{"4":"church","6":"church","7":"mage","8":"mage","9":"church"}},"20":{"nl":"Gladius","map":"Mountaintop","pois":{"3":"church","6":"church","8":"church","9":"church"}},"21":{"nl":"Gladius","map":"Mountaintop","pois":{"1":"church","3":"mage","7":"mage","9":"church","11":"church"}},"22":{"nl":"Gladius","map":"Mountaintop","pois":{"1":"church","6":"church","8":"mage","9":"church","11":"mage"}},"23":{"nl":"Gladius","map":"Mountaintop","pois":{"1":"church","6":"church","10":"church","11":"village"}},"24":{"nl":"Gladius","map":"Mountaintop","pois":{"2":"village","6":"church","7":"church","10":"church","11":"mage"}},"25":{"nl":"Gladius","map":"Crater","pois":{"2":"church","3":"village","7":"church","9":"mage","10":"church"}},"26":{"nl":"Gladius","map":"Crater","pois":{"2":"mage","3":"church","7":"church","8":"church"}},"27":{"nl":"Gladius","map":"Crater","pois":{"1":"church","2":"mage","5":"church","6":"church","8":"village","9":"mage"}},"28":{"nl":"Gladius","map":"Crater","pois":{"2":"village","3":"mage","6":"church","7":"church","8":"church"}},"29":{"nl":"Gladius","map":"Crater","pois":{"1":"church","6":"mage","7":"church","10":"church"}},"30":{"nl":"Gladius","map":"Rotted Woods","pois":{"2":"church","3":"mage","4":"church","5":"mage","11":"church"}},"31":{"nl":"Gladius","map":"Rotted Woods","pois":{"1":"church","2":"church","4":"church","5":"church","9":"village","11":"mage"}},"32":{"nl":"Gladius","map":"Rotted Woods","pois":{"1":"church","3":"mage","4":"church","11":"church"}},"33":{"nl":"Gladius","map":"Rotted Woods","pois":{"1":"church","2":"church","5":"mage","10":"mage","11":"church"}},"34":{"nl":"Gladius","map":"Rotted Woods","pois":{"1":"mage","4":"mage","5":"church","9":"church","10":"village","11":"church"}},"35":{"nl":"Gladius","map":"Noklateo","pois":{"5":"church","6":"church","9":"village","10":"church","11":"mage"}},"36":{"nl":"Gladius","map":"Noklateo","pois":{"4":"mage","5":"church","7":"church","8":"church","9":"village"}},"37":{"nl":"Gladius","map":"Noklateo","pois":{"5":"church","6":"church","8":"mage","10":"church"}},"38":{"nl":"Gladius","map":"Noklateo","pois":{"4":"mage","5":"church","6":"mage","7":"church","9":"village","10":"church"}},"39":{"nl":"Gladius","map":"Noklateo","pois":{"4":"church","6":"church","8":"church","9":"mage","10":"village"}},"40":{"nl":"Adel","map":"Default","pois":{"1":"church","2":"mage","3":"mage","7":"mage","9":"church","11":"church"}},"41":{"nl":"Adel","map":"Default","pois":{"2":"church","4":"church","6":"mage","7":"mage","10":"church","11":"mage"}},"42":{"nl":"Adel","map":"Default","pois":{"1":"church","2":"church","5":"mage","7":"mage","8":"mage","9":"church"}},"43":{"nl":"Adel","map":"Default","pois":{"5":"church","6":"church","7":"church","11":"mage"}},"44":{"nl":"Adel","map":"Default","pois":{"1":"church","4":"church","8":"church","10":"mage"}},"45":{"nl":"Adel","map":"Default","pois":{"2":"mage","3":"church","7":"church","9":"mage","10":"church"}},"46":{"nl":"Adel","map":"Default","pois":{"2":"church","3":"church","4":"mage","7":"church","8":"village"}},"47":{"nl":"Adel","map":"Default","pois":{"2":"church","3":"church","4":"mage","7":"village","9":"church"}},"48":{"nl":"Adel","map":"Default","pois":{"2":"mage","3":"mage","5":"church","8":"church","11":"church"}},"49":{"nl":"Adel","map":"Default","pois":{"1":"church","4":"mage","5":"church","7":"church","8":"mage","9":"village","10":"mage","11":"church"}},"50":{"nl":"Adel","map":"Default","pois":{"1":"church","3":"mage","5":"mage","6":"church","7":"village","9":"church"}},"51":{"nl":"Adel","map":"Default","pois":{"1":"church","3":"mage","6":"church","8":"mage","9":"village","10":"church"}},"52":{"nl":"Adel","map":"Default","pois":{"5":"mage","6":"church","7":"church","9":"mage","10":"church"}},"53":{"nl":"Adel","map":"Default","pois":{"1":"church","3":"church","5":"church","7":"church","8":"mage"}},"54":{"nl":"Adel","map":"Default","pois":{"2":"church","3":"church","5":"mage","6":"village","8":"church","11":"church"}},"55":{"nl":"Adel","map":"Default","pois":{"1":"village","2":"church","3":"church","4":"church","5":"mage","8":"mage","10":"mage"}},"56":{"nl":"Adel","map":"Default","pois":{"4":"mage","5":"church","6":"mage","9":"church","10":"village","11":"church"}},"57":{"nl":"Adel","map":"Default","pois":{"1":"church","4":"church","6":"mage","7":"church","8":"mage","10":"church","11":"mage"}},"58":{"nl":"Adel","map":"Default","pois":{"4":"church","5":"village","6":"church","7":"mage","9":"church"}},"59":{"nl":"Adel","map":"Default","pois":{"3":"mage","4":"church","6":"church","11":"church"}},"60":{"nl":"Adel","map":"Mountaintop","pois":{"3":"church","7":"church","10":"mage","11":"church"}},"61":{"nl":"Adel","map":"Mountaintop","pois":{"3":"church","6":"church","7":"village","9":"church"}},"62":{"nl":"Adel","map":"Mountaintop","pois":{"2":"church","3":"church","6":"village","8":"church","11":"mage"}},"63":{"nl":"Adel","map":"Mountaintop","pois":{"1":"church","2":"church","8":"mage","9":"church","11":"mage"}},"64":{"nl":"Adel","map":"Mountaintop","pois":{"1":"church","6":"church","8":"church","10":"church","11":"mage"}},"65":{"nl":"Adel","map":"Crater","pois":{"2":"church","3":"village","5":"church","9":"church","10":"mage"}},"66":{"nl":"Adel","map":"Crater","pois":{"2":"mage","5":"church","7":"church","10":"church"}},"67":{"nl":"Adel","map":"Crater","pois":{"2":"church","5":"church","8":"church","9":"mage"}},"68":{"nl":"Adel","map":"Crater","pois":{"2":"church","3":"church","6":"village","8":"mage","10":"church"}},"69":{"nl":"Adel","map":"Crater","pois":{"5":"mage","6":"church","7":"church","8":"mage","10":"church"}},"70":{"nl":"Adel","map":"Rotted Woods","pois":{"3":"mage","5":"church","9":"church","11":"church"}},"71":{"nl":"Adel","map":"Rotted Woods","pois":{"1":"church","3":"mage","4":"church","10":"church"}},"72":{"nl":"Adel","map":"Rotted Woods","pois":{"2":"village","4":"church","5":"mage","9":"church","11":"church"}},"73":{"nl":"Adel","map":"Rotted Woods","pois":{"2":"church","3":"mage","4":"church","11":"church"}},"74":{"nl":"Adel","map":"Rotted Woods","pois":{"1":"mage","4":"church","9":"mage","10":"church","11":"church"}},"75":{"nl":"Adel","map":"Noklateo","pois":{"4":"church","6":"church","7":"mage","8":"village","9":"church","10":"mage","11":"church"}},"76":{"nl":"Adel","map":"Noklateo","pois":{"5":"church","6":"mage","7":"church","10":"church"}},"77":{"nl":"Adel","map":"Noklateo","pois":{"4":"church","6":"mage","8":"village","10":"church","11":"church"}},"78":{"nl":"Adel","map":"Noklateo","pois":{"5":"church","9":"church","10":"mage","11":"church"}},"79":{"nl":"Adel","map":"Noklateo","pois":{"5":"church","7":"mage","10":"church","11":"church"}},"80":{"nl":"Gnoster","map":"Default","pois":{"2":"mage","3":"mage","4":"mage","5":"church","6":"church","8":"church"}},"81":{"nl":"Gnoster","map":"Default","pois":{"4":"church","5":"church","6":"church","10":"church","11":"mage"}},"82":{"nl":"Gnoster","map":"Default","pois":{"3":"church","4":"village","6":"church","8":"mage","10":"church","11":"church"}},"83":{"nl":"Gnoster","map":"Default","pois":{"1":"church","2":"mage","5":"mage","6":"mage","8":"village","9":"church","11":"church"}},"84":{"nl":"Gnoster","map":"Default","pois":{"2":"church","3":"mage","4":"church","6":"village","10":"church"}},"85":{"nl":"Gnoster","map":"Default","pois":{"2":"church","3":"mage","4":"church","7":"mage","10":"church"}},"86":{"nl":"Gnoster","map":"Default","pois":{"2":"church","3":"church","4":"church","9":"mage","11":"village"}},"87":{"nl":"Gnoster","map":"Default","pois":{"2":"church","3":"church","4":"mage","5":"mage","9":"church","10":"mage","11":"village"}},"88":{"nl":"Gnoster","map":"Default","pois":{"1":"church","4":"village","5":"mage","8":"mage","9":"church","11":"church"}},"89":{"nl":"Gnoster","map":"Default","pois":{"1":"church","2":"mage","4":"church","5":"mage","9":"church","10":"village"}},"90":{"nl":"Gnoster","map":"Default","pois":{"2":"church","5":"mage","9":"mage","10":"church","11":"church"}},"91":{"nl":"Gnoster","map":"Default","pois":{"2":"church","3":"mage","4":"church","7":"church","8":"village","9":"mage"}},"92":{"nl":"Gnoster","map":"Default","pois":{"1":"mage","2":"church","5":"church","7":"mage","10":"church"}},"93":{"nl":"Gnoster","map":"Default","pois":{"1":"church","3":"mage","4":"mage","6":"village","7":"church","8":"mage","10":"church"}},"94":{"nl":"Gnoster","map":"Default","pois":{"1":"church","2":"mage","5":"church","7":"church"}},"95":{"nl":"Gnoster","map":"Default","pois":{"1":"church","4":"church","5":"mage","8":"mage","10":"church"}},"96":{"nl":"Gnoster","map":"Default","pois":{"1":"church","2":"village","4":"church","5":"mage","6":"church","8":"church","10":"mage"}},"97":{"nl":"Gnoster","map":"Default","pois":{"1":"church","3":"mage","4":"church","6":"mage","7":"church","8":"mage","9":"church"}},"98":{"nl":"Gnoster","map":"Default","pois":{"2":"mage","6":"church","7":"church","8":"church"}},"99":{"nl":"Gnoster","map":"Default","pois":{"1":"church","5":"church","6":"church","10":"mage","11":"mage"}},"100":{"nl":"Gnoster","map":"Mountaintop","pois":{"1":"village","2":"church","7":"church","10":"mage","11":"church"}},"101":{"nl":"Gnoster","map":"Mountaintop","pois":{"1":"church","3":"village","6":"church","7":"mage","9":"mage","11":"church"}},"102":{"nl":"Gnoster","map":"Mountaintop","pois":{"1":"church","6":"mage","8":"church","11":"church"}},"103":{"nl":"Gnoster","map":"Mountaintop","pois":{"1":"church","6":"church","7":"mage","11":"church"}},"104":{"nl":"Gnoster","map":"Mountaintop","pois":{"1":"mage","2":"church","3":"church","7":"church","9":"mage","10":"church"}},"105":{"nl":"Gnoster","map":"Crater","pois":{"3":"mage","5":"church","7":"church","8":"church"}},"106":{"nl":"Gnoster","map":"Crater","pois":{"1":"mage","2":"church","5":"village","7":"church","10":"church"}},"107":{"nl":"Gnoster","map":"Crater","pois":{"1":"church","6":"mage","7":"church","8":"church","9":"mage"}},"108":{"nl":"Gnoster","map":"Crater","pois":{"1":"church","2":"church","3":"village","6":"mage","9":"mage","10":"church"}},"109":{"nl":"Gnoster","map":"Crater","pois":{"1":"mage","2":"church","5":"church","7":"church","9":"village"}},"110":{"nl":"Gnoster","map":"Rotted Woods","pois":{"3":"church","4":"mage","9":"church","10":"mage","11":"church"}},"111":{"nl":"Gnoster","map":"Rotted Woods","pois":{"2":"church","4":"mage","5":"mage","9":"village","10":"church","11":"church"}},"112":{"nl":"Gnoster","map":"Rotted Woods","pois":{"1":"church","2":"church","4":"mage","9":"mage","10":"church"}},"113":{"nl":"Gnoster","map":"Rotted Woods","pois":{"1":"mage","2":"church","4":"village","5":"church","9":"mage","10":"church"}},"114":{"nl":"Gnoster","map":"Rotted Woods","pois":{"1":"church","2":"church","3":"mage","4":"church","10":"village"}},"115":{"nl":"Gnoster","map":"Noklateo","pois":{"5":"church","8":"mage","9":"church","10":"church","11":"church"}},"116":{"nl":"Gnoster","map":"Noklateo","pois":{"4":"church","5":"village","6":"mage","7":"church","8":"church"}},"117":{"nl":"Gnoster","map":"Noklateo","pois":{"4":"church","5":"mage","6":"church","8":"church","9":"village","11":"mage"}},"118":{"nl":"Gnoster","map":"Noklateo","pois":{"4":"mage","6":"church","9":"mage","10":"church","11":"church"}},"119":{"nl":"Gnoster","map":"Noklateo","pois":{"5":"church","7":"church","8":"mage","10":"mage","11":"church"}},"120":{"nl":"Maris","map":"Default","pois":{"2":"church","3":"church","5":"mage","7":"mage","9":"church"}},"121":{"nl":"Maris","map":"Default","pois":{"2":"church","3":"church","7":"mage","9":"church","10":"mage","11":"church"}},"122":{"nl":"Maris","map":"Default","pois":{"1":"church","2":"church","6":"church","9":"mage","10":"church","11":"mage"}},"123":{"nl":"Maris","map":"Default","pois":{"1":"church","2":"church","3":"village","5":"church","7":"mage","9":"mage","11":"church"}},"124":{"nl":"Maris","map":"Default","pois":{"1":"mage","3":"mage","4":"church","5":"village","6":"church","7":"church","10":"mage"}},"125":{"nl":"Maris","map":"Default","pois":{"2":"mage","4":"mage","5":"church","6":"church","8":"church"}},"126":{"nl":"Maris","map":"Default","pois":{"5":"church","7":"church","8":"mage","10":"church","11":"mage"}},"127":{"nl":"Maris","map":"Default","pois":{"1":"mage","2":"village","3":"mage","5":"church","7":"church","8":"church"}},"128":{"nl":"Maris","map":"Default","pois":{"2":"church","4":"mage","5":"church","7":"church","8":"mage"}},"129":{"nl":"Maris","map":"Default","pois":{"1":"mage","2":"church","3":"church","6":"mage","9":"church","11":"mage"}},"130":{"nl":"Maris","map":"Default","pois":{"1":"mage","2":"church","3":"village","8":"church","11":"church"}},"131":{"nl":"Maris","map":"Default","pois":{"2":"church","3":"mage","4":"mage","6":"mage","7":"church","8":"village","9":"church","11":"church"}},"132":{"nl":"Maris","map":"Default","pois":{"3":"mage","4":"mage","6":"church","7":"church","8":"mage","11":"church"}},"133":{"nl":"Maris","map":"Default","pois":{"2":"church","3":"church","4":"mage","6":"mage","9":"church"}},"134":{"nl":"Maris","map":"Default","pois":{"2":"mage","3":"church","4":"church","7":"village","11":"church"}},"135":{"nl":"Maris","map":"Default","pois":{"2":"mage","3":"church","7":"church","8":"mage","11":"church"}},"136":{"nl":"Maris","map":"Default","pois":{"1":"church","2":"church","7":"church","9":"mage"}},"137":{"nl":"Maris","map":"Default","pois":{"2":"church","3":"mage","5":"church","7":"mage","8":"church"}},"138":{"nl":"Maris","map":"Default","pois":{"2":"mage","3":"church","7":"church","11":"church"}},"139":{"nl":"Maris","map":"Default","pois":{"4":"church","5":"mage","7":"mage","10":"church","11":"church"}},"140":{"nl":"Maris","map":"Mountaintop","pois":{"2":"church","3":"church","8":"mage","10":"church","11":"mage"}},"141":{"nl":"Maris","map":"Mountaintop","pois":{"1":"church","2":"mage","7":"church","8":"church","9":"mage"}},"142":{"nl":"Maris","map":"Mountaintop","pois":{"2":"church","3":"village","7":"church","9":"mage","10":"mage","11":"church"}},"143":{"nl":"Maris","map":"Mountaintop","pois":{"1":"mage","3":"church","7":"church","11":"church"}},"144":{"nl":"Maris","map":"Mountaintop","pois":{"2":"church","3":"church","7":"church","11":"mage"}},"145":{"nl":"Maris","map":"Crater","pois":{"3":"church","6":"church","9":"mage","10":"church"}},"146":{"nl":"Maris","map":"Crater","pois":{"1":"church","2":"church","3":"mage","5":"church","9":"mage"}},"147":{"nl":"Maris","map":"Crater","pois":{"2":"church","5":"church","8":"church","10":"mage"}},"148":{"nl":"Maris","map":"Crater","pois":{"2":"mage","5":"church","6":"church","8":"church"}},"149":{"nl":"Maris","map":"Crater","pois":{"2":"village","3":"church","6":"church","8":"mage","9":"mage","10":"church"}},"150":{"nl":"Maris","map":"Rotted Woods","pois":{"1":"church","2":"church","5":"church","10":"mage","11":"church"}},"151":{"nl":"Maris","map":"Rotted Woods","pois":{"1":"church","2":"church","9":"mage","11":"church"}},"152":{"nl":"Maris","map":"Rotted Woods","pois":{"2":"village","3":"mage","4":"church","5":"mage","10":"church","11":"church"}},"153":{"nl":"Maris","map":"Rotted Woods","pois":{"1":"church","2":"church","3":"village","5":"church","9":"church","10":"mage","11":"mage"}},"154":{"nl":"Maris","map":"Rotted Woods","pois":{"1":"church","2":"village","5":"church","9":"church","11":"mage"}},"155":{"nl":"Maris","map":"Noklateo","pois":{"4":"church","6":"church","7":"mage","9":"church","10":"mage"}},"156":{"nl":"Maris","map":"Noklateo","pois":{"5":"church","6":"mage","8":"mage","9":"church","11":"church"}},"157":{"nl":"Maris","map":"Noklateo","pois":{"4":"church","7":"village","9":"church","10":"mage","11":"church"}},"158":{"nl":"Maris","map":"Noklateo","pois":{"4":"church","6":"church","8":"mage","9":"church","10":"mage","11":"church"}},"159":{"nl":"Maris","map":"Noklateo","pois":{"4":"church","6":"mage","7":"village","8":"church","11":"church"}},"160":{"nl":"Libra","map":"Default","pois":{"1":"church","5":"church","6":"mage","10":"mage","11":"church"}},"161":{"nl":"Libra","map":"Default","pois":{"1":"mage","2":"mage","7":"church","8":"church","10":"mage","11":"church"}},"162":{"nl":"Libra","map":"Default","pois":{"2":"church","5":"church","7":"church","11":"mage"}},"163":{"nl":"Libra","map":"Default","pois":{"2":"church","3":"church","4":"church","7":"mage","10":"mage"}},"164":{"nl":"Libra","map":"Default","pois":{"1":"church","2":"church","4":"church","6":"mage","7":"mage"}},"165":{"nl":"Libra","map":"Default","pois":{"3":"mage","5":"church","6":"mage","8":"church","11":"church"}},"166":{"nl":"Libra","map":"Default","pois":{"1":"church","2":"church","4":"church","5":"church","7":"village","10":"mage"}},"167":{"nl":"Libra","map":"Default","pois":{"1":"church","2":"mage","4":"church","6":"mage","7":"church","9":"mage","11":"village"}},"168":{"nl":"Libra","map":"Default","pois":{"2":"mage","3":"church","7":"mage","8":"mage","9":"church","11":"church"}},"169":{"nl":"Libra","map":"Default","pois":{"2":"church","3":"church","5":"mage","7":"mage","9":"church"}},"170":{"nl":"Libra","map":"Default","pois":{"3":"church","4":"church","5":"mage","9":"church","10":"mage"}},"171":{"nl":"Libra","map":"Default","pois":{"1":"church","2":"mage","3":"mage","4":"village","7":"church","10":"church","11":"mage"}},"172":{"nl":"Libra","map":"Default","pois":{"2":"mage","4":"church","7":"church","8":"mage","9":"mage","10":"church"}},"173":{"nl":"Libra","map":"Default","pois":{"1":"church","3":"mage","5":"church","7":"church","9":"mage","10":"church"}},"174":{"nl":"Libra","map":"Default","pois":{"1":"village","2":"church","4":"church","7":"mage","9":"church"}},"175":{"nl":"Libra","map":"Default","pois":{"4":"church","5":"mage","6":"church","9":"church"}},"176":{"nl":"Libra","map":"Default","pois":{"2":"mage","3":"church","4":"village","7":"church","10":"mage","11":"church"}},"177":{"nl":"Libra","map":"Default","pois":{"1":"mage","2":"church","3":"mage","5":"church","7":"church","9":"mage","10":"village"}},"178":{"nl":"Libra","map":"Default","pois":{"1":"mage","2":"mage","3":"church","7":"church","8":"village","9":"church","10":"mage"}},"179":{"nl":"Libra","map":"Default","pois":{"5":"church","6":"mage","7":"church","8":"church","10":"mage","11":"mage"}},"180":{"nl":"Libra","map":"Mountaintop","pois":{"1":"mage","2":"church","3":"mage","8":"church","11":"church"}},"181":{"nl":"Libra","map":"Mountaintop","pois":{"2":"church","3":"mage","7":"mage","8":"church","10":"village","11":"church"}},"182":{"nl":"Libra","map":"Mountaintop","pois":{"2":"mage","3":"church","7":"church","10":"church"}},"183":{"nl":"Libra","map":"Mountaintop","pois":{"1":"church","2":"mage","7":"church","10":"mage","11":"church"}},"184":{"nl":"Libra","map":"Mountaintop","pois":{"6":"church","7":"church","10":"mage","11":"church"}},"185":{"nl":"Libra","map":"Crater","pois":{"1":"church","2":"church","5":"church","6":"mage","7":"village"}},"186":{"nl":"Libra","map":"Crater","pois":{"1":"mage","2":"church","5":"church","6":"church","7":"church","9":"mage"}},"187":{"nl":"Libra","map":"Crater","pois":{"1":"church","2":"church","7":"village","8":"mage","10":"church"}},"188":{"nl":"Libra","map":"Crater","pois":{"1":"mage","2":"village","3":"church","6":"church","8":"church","10":"mage"}},"189":{"nl":"Libra","map":"Crater","pois":{"1":"church","2":"church","8":"mage","9":"mage","10":"church"}},"190":{"nl":"Libra","map":"Rotted Woods","pois":{"2":"church","3":"church","4":"mage","5":"village","9":"church"}},"191":{"nl":"Libra","map":"Rotted Woods","pois":{"2":"village","3":"mage","4":"church","9":"church","11":"church"}},"192":{"nl":"Libra","map":"Rotted Woods","pois":{"1":"church","2":"church","5":"mage","9":"church"}},"193":{"nl":"Libra","map":"Rotted Woods","pois":{"2":"church","3":"church","4":"mage","9":"village","10":"church"}},"194":{"nl":"Libra","map":"Rotted Woods","pois":{"2":"church","3":"mage","4":"mage","5":"church","11":"church"}},"195":{"nl":"Libra","map":"Noklateo","pois":{"5":"church","6":"church","8":"village","10":"church","11":"mage"}},"196":{"nl":"Libra","map":"Noklateo","pois":{"5":"church","6":"church","9":"mage","10":"church"}},"197":{"nl":"Libra","map":"Noklateo","pois":{"4":"church","5":"church","6":"church","7":"mage","9":"church","11":"mage"}},"198":{"nl":"Libra","map":"Noklateo","pois":{"4":"mage","5":"church","8":"church","10":"village","11":"church"}},"199":{"nl":"Libra","map":"Noklateo","pois":{"4":"church","7":"church","8":"mage","9":"village","10":"church","11":"church"}},"200":{"nl":"Fulghor","map":"Default","pois":{"1":"church","2":"church","3":"mage","7":"village","10":"church"}},"201":{"nl":"Fulghor","map":"Default","pois":{"2":"mage","5":"mage","7":"church","9":"mage","10":"church","11":"church"}},"202":{"nl":"Fulghor","map":"Default","pois":{"2":"church","3":"mage","5":"church","7":"church","9":"mage","11":"mage"}},"203":{"nl":"Fulghor","map":"Default","pois":{"2":"mage","3":"church","4":"church","6":"village","8":"mage","9":"mage","11":"church"}},"204":{"nl":"Fulghor","map":"Default","pois":{"4":"church","5":"village","9":"mage","10":"church","11":"church"}},"205":{"nl":"Fulghor","map":"Default","pois":{"2":"church","3":"church","4":"church","7":"mage","10":"mage","11":"village"}},"206":{"nl":"Fulghor","map":"Default","pois":{"2":"village","4":"church","7":"mage","10":"church","11":"church"}},"207":{"nl":"Fulghor","map":"Default","pois":{"1":"mage","2":"church","4":"church","6":"mage","8":"mage","11":"church"}},"208":{"nl":"Fulghor","map":"Default","pois":{"1":"church","2":"mage","5":"church","6":"church","7":"mage"}},"209":{"nl":"Fulghor","map":"Default","pois":{"1":"church","7":"church","8":"mage","11":"church"}},"210":{"nl":"Fulghor","map":"Default","pois":{"2":"church","3":"mage","7":"village","9":"church","11":"church"}},"211":{"nl":"Fulghor","map":"Default","pois":{"2":"church","3":"mage","4":"mage","5":"church","10":"church"}},"212":{"nl":"Fulghor","map":"Default","pois":{"2":"mage","4":"church","5":"mage","6":"church","8":"church","9":"village"}},"213":{"nl":"Fulghor","map":"Default","pois":{"2":"church","3":"church","4":"mage","10":"church"}},"214":{"nl":"Fulghor","map":"Default","pois":{"1":"mage","2":"village","3":"church","4":"mage","5":"church","8":"mage","9":"church","11":"church"}},"215":{"nl":"Fulghor","map":"Default","pois":{"1":"church","3":"mage","4":"church","8":"church","9":"church"}},"216":{"nl":"Fulghor","map":"Default","pois":{"2":"church","9":"mage","10":"church","11":"church"}},"217":{"nl":"Fulghor","map":"Default","pois":{"1":"church","3":"mage","5":"church","6":"mage","7":"church","10":"mage"}},"218":{"nl":"Fulghor","map":"Default","pois":{"1":"church","2":"church","3":"church","4":"church","6":"mage","7":"mage","8":"mage"}},"219":{"nl":"Fulghor","map":"Default","pois":{"3":"mage","6":"church","7":"church","8":"mage","10":"church","11":"church"}},"220":{"nl":"Fulghor","map":"Mountaintop","pois":{"1":"church","2":"church","6":"mage","7":"church","8":"mage"}},"221":{"nl":"Fulghor","map":"Mountaintop","pois":{"2":"church","6":"mage","7":"church","9":"village","10":"church"}},"222":{"nl":"Fulghor","map":"Mountaintop","pois":{"1":"church","2":"mage","6":"church","9":"church"}},"223":{"nl":"Fulghor","map":"Mountaintop","pois":{"1":"church","2":"church","6":"mage","9":"church","11":"mage"}},"224":{"nl":"Fulghor","map":"Mountaintop","pois":{"1":"mage","2":"church","3":"church","8":"church","10":"mage","11":"church"}},"225":{"nl":"Fulghor","map":"Crater","pois":{"3":"mage","6":"church","7":"church","10":"church"}},"226":{"nl":"Fulghor","map":"Crater","pois":{"1":"church","3":"village","6":"church","8":"mage","9":"church"}},"227":{"nl":"Fulghor","map":"Crater","pois":{"1":"church","2":"church","3":"church","6":"village","8":"mage","9":"church"}},"228":{"nl":"Fulghor","map":"Crater","pois":{"2":"church","3":"church","9":"church","10":"mage"}},"229":{"nl":"Fulghor","map":"Crater","pois":{"1":"church","2":"mage","3":"mage","6":"church","8":"church"}},"230":{"nl":"Fulghor","map":"Rotted Woods","pois":{"1":"mage","2":"church","4":"church","5":"village","10":"mage","11":"church"}},"231":{"nl":"Fulghor","map":"Rotted Woods","pois":{"1":"church","2":"mage","3":"mage","5":"church","10":"church"}},"232":{"nl":"Fulghor","map":"Rotted Woods","pois":{"2":"mage","3":"church","4":"church","10":"church","11":"village"}},"233":{"nl":"Fulghor","map":"Rotted Woods","pois":{"1":"church","3":"mage","4":"church","5":"mage","10":"church"}},"234":{"nl":"Fulghor","map":"Rotted Woods","pois":{"1":"church","4":"church","9":"village","10":"mage","11":"church"}},"235":{"nl":"Fulghor","map":"Noklateo","pois":{"4":"village","5":"church","6":"church","9":"mage","11":"church"}},"236":{"nl":"Fulghor","map":"Noklateo","pois":{"6":"village","7":"church","8":"mage","9":"mage","10":"church","11":"church"}},"237":{"nl":"Fulghor","map":"Noklateo","pois":{"6":"church","7":"mage","10":"church","11":"church"}},"238":{"nl":"Fulghor","map":"Noklateo","pois":{"4":"church","6":"mage","8":"church","11":"church"}},"239":{"nl":"Fulghor","map":"Noklateo","pois":{"5":"church","6":"church","9":"village","10":"mage","11":"church"}},"240":{"nl":"Caligo","map":"Default","pois":{"2":"mage","3":"church","5":"village","6":"church","7":"church"}},"241":{"nl":"Caligo","map":"Default","pois":{"2":"village","3":"mage","6":"church","7":"church","10":"mage","11":"church"}},"242":{"nl":"Caligo","map":"Default","pois":{"1":"mage","5":"mage","7":"church","8":"village","10":"church","11":"church"}},"243":{"nl":"Caligo","map":"Default","pois":{"2":"church","3":"mage","4":"church","9":"church","10":"mage"}},"244":{"nl":"Caligo","map":"Default","pois":{"2":"mage","4":"church","6":"church","8":"church"}},"245":{"nl":"Caligo","map":"Default","pois":{"1":"church","4":"mage","5":"church","7":"church","8":"church","10":"mage","11":"mage"}},"246":{"nl":"Caligo","map":"Default","pois":{"2":"church","4":"mage","6":"village","8":"church","11":"church"}},"247":{"nl":"Caligo","map":"Default","pois":{"1":"church","3":"mage","4":"mage","5":"church","8":"church"}},"248":{"nl":"Caligo","map":"Default","pois":{"1":"church","2":"mage","4":"village","5":"church","6":"church","7":"church","10":"mage"}},"249":{"nl":"Caligo","map":"Default","pois":{"1":"church","2":"church","4":"mage","8":"mage","11":"church"}},"250":{"nl":"Caligo","map":"Default","pois":{"1":"church","2":"village","4":"mage","5":"church","9":"mage","10":"church"}},"251":{"nl":"Caligo","map":"Default","pois":{"2":"mage","3":"church","6":"church","11":"church"}},"252":{"nl":"Caligo","map":"Default","pois":{"1":"mage","2":"mage","3":"church","4":"village","6":"church","9":"church"}},"253":{"nl":"Caligo","map":"Default","pois":{"2":"church","5":"church","6":"mage","8":"village","9":"church","10":"mage"}},"254":{"nl":"Caligo","map":"Default","pois":{"3":"church","6":"mage","7":"church","8":"mage","10":"church","11":"mage"}},"255":{"nl":"Caligo","map":"Default","pois":{"2":"mage","4":"church","5":"mage","7":"church","8":"church"}},"256":{"nl":"Caligo","map":"Default","pois":{"1":"church","3":"village","7":"church","10":"mage","11":"church"}},"257":{"nl":"Caligo","map":"Default","pois":{"2":"church","5":"church","8":"mage","10":"church"}},"258":{"nl":"Caligo","map":"Default","pois":{"1":"church","5":"church","7":"mage","10":"mage","11":"church"}},"259":{"nl":"Caligo","map":"Default","pois":{"2":"village","3":"mage","5":"church","6":"church","10":"church"}},"260":{"nl":"Caligo","map":"Mountaintop","pois":{"3":"church","6":"church","7":"church","9":"mage"}},"261":{"nl":"Caligo","map":"Mountaintop","pois":{"2":"church","3":"church","6":"mage","8":"church","9":"mage","11":"village"}},"262":{"nl":"Caligo","map":"Mountaintop","pois":{"1":"church","2":"church","9":"church","10":"mage"}},"263":{"nl":"Caligo","map":"Mountaintop","pois":{"1":"mage","3":"church","6":"church","7":"village","10":"church"}},"264":{"nl":"Caligo","map":"Mountaintop","pois":{"3":"mage","6":"church","7":"church","10":"church"}},"265":{"nl":"Caligo","map":"Crater","pois":{"1":"mage","2":"mage","3":"church","7":"church","10":"church"}},"266":{"nl":"Caligo","map":"Crater","pois":{"1":"church","7":"church","8":"church","9":"mage","10":"village"}},"267":{"nl":"Caligo","map":"Crater","pois":{"2":"church","3":"mage","5":"church","6":"mage","7":"church","8":"church"}},"268":{"nl":"Caligo","map":"Crater","pois":{"3":"church","5":"village","6":"mage","7":"church","8":"church","9":"church"}},"269":{"nl":"Caligo","map":"Crater","pois":{"1":"mage","2":"church","3":"church","7":"mage","8":"church"}},"270":{"nl":"Caligo","map":"Rotted Woods","pois":{"2":"church","3":"church","9":"church","10":"village","11":"mage"}},"271":{"nl":"Caligo","map":"Rotted Woods","pois":{"1":"church","4":"mage","5":"church","9":"mage","10":"church"}},"272":{"nl":"Caligo","map":"Rotted Woods","pois":{"1":"mage","2":"mage","3":"church","4":"church","9":"church"}},"273":{"nl":"Caligo","map":"Rotted Woods","pois":{"2":"mage","5":"church","9":"mage","10":"church","11":"church"}},"274":{"nl":"Caligo","map":"Rotted Woods","pois":{"1":"church","4":"church","10":"mage","11":"church"}},"275":{"nl":"Caligo","map":"Noklateo","pois":{"4":"church","5":"mage","6":"church","7":"church","8":"church"}},"276":{"nl":"Caligo","map":"Noklateo","pois":{"4":"church","8":"church","9":"mage","11":"church"}},"277":{"nl":"Caligo","map":"Noklateo","pois":{"4":"village","5":"church","6":"church","7":"church","8":"church","11":"mage"}},"278":{"nl":"Caligo","map":"Noklateo","pois":{"5":"church","6":"church","7":"mage","9":"mage","10":"church"}},"279":{"nl":"Caligo","map":"Noklateo","pois":{"4":"church","5":"mage","6":"church","7":"village","9":"church"}},"280":{"nl":"Heolstor","map":"Default","pois":{"1":"village","2":"church","4":"mage","9":"mage","10":"church","11":"church"}},"281":{"nl":"Heolstor","map":"Default","pois":{"1":"church","3":"mage","7":"church","8":"mage","10":"church","11":"mage"}},"282":{"nl":"Heolstor","map":"Default","pois":{"1":"church","4":"mage","5":"church","6":"mage","7":"church"}},"283":{"nl":"Heolstor","map":"Default","pois":{"1":"church","5":"church","6":"village","8":"church","9":"mage"}},"284":{"nl":"Heolstor","map":"Default","pois":{"2":"mage","5":"mage","6":"church","9":"church","10":"mage","11":"church"}},"285":{"nl":"Heolstor","map":"Default","pois":{"1":"church","2":"mage","4":"mage","5":"church","9":"church","10":"mage"}},"286":{"nl":"Heolstor","map":"Default","pois":{"1":"mage","6":"church","9":"village","10":"church","11":"church"}},"287":{"nl":"Heolstor","map":"Default","pois":{"1":"church","6":"mage","7":"church","9":"church","11":"church"}},"288":{"nl":"Heolstor","map":"Default","pois":{"1":"church","2":"mage","5":"church","6":"mage","7":"church","10":"mage","11":"church"}},"289":{"nl":"Heolstor","map":"Default","pois":{"2":"mage","3":"church","4":"church","8":"village","9":"mage","10":"church"}},"290":{"nl":"Heolstor","map":"Default","pois":{"4":"village","7":"church","8":"church","9":"mage","11":"church"}},"291":{"nl":"Heolstor","map":"Default","pois":{"2":"church","3":"church","5":"mage","7":"church","9":"village"}},"292":{"nl":"Heolstor","map":"Default","pois":{"2":"church","4":"church","5":"mage","8":"mage","10":"church"}},"293":{"nl":"Heolstor","map":"Default","pois":{"2":"mage","7":"church","8":"mage","10":"church","11":"church"}},"294":{"nl":"Heolstor","map":"Default","pois":{"3":"mage","5":"church","6":"church","8":"church","9":"church","11":"village"}},"295":{"nl":"Heolstor","map":"Default","pois":{"2":"church","5":"church","7":"church","8":"mage"}},"296":{"nl":"Heolstor","map":"Default","pois":{"2":"church","4":"church","5":"village","8":"church","10":"mage"}},"297":{"nl":"Heolstor","map":"Default","pois":{"5":"church","6":"mage","7":"mage","9":"mage","10":"church","11":"church"}},"298":{"nl":"Heolstor","map":"Default","pois":{"2":"village","3":"church","6":"church","7":"church","8":"mage"}},"299":{"nl":"Heolstor","map":"Default","pois":{"2":"church","5":"church","8":"mage","9":"church"}},"300":{"nl":"Heolstor","map":"Mountaintop","pois":{"1":"church","2":"church","3":"mage","7":"mage","10":"church"}},"301":{"nl":"Heolstor","map":"Mountaintop","pois":{"3":"church","7":"mage","8":"mage","10":"church","11":"church"}},"302":{"nl":"Heolstor","map":"Mountaintop","pois":{"2":"church","3":"church","7":"mage","9":"church","10":"mage"}},"303":{"nl":"Heolstor","map":"Mountaintop","pois":{"2":"church","3":"church","7":"mage","9":"church"}},"304":{"nl":"Heolstor","map":"Mountaintop","pois":{"1":"mage","3":"church","6":"church","7":"church"}},"305":{"nl":"Heolstor","map":"Crater","pois":{"2":"church","3":"church","7":"village","8":"mage","9":"mage","10":"church"}},"306":{"nl":"Heolstor","map":"Crater","pois":{"1":"church","2":"church","3":"mage","8":"mage","10":"church"}},"307":{"nl":"Heolstor","map":"Crater","pois":{"2":"church","5":"church","7":"mage","9":"church"}},"308":{"nl":"Heolstor","map":"Crater","pois":{"3":"mage","5":"church","6":"church","10":"church"}},"309":{"nl":"Heolstor","map":"Crater","pois":{"2":"mage","3":"church","5":"church","7":"church","9":"village","10":"church"}},"310":{"nl":"Heolstor","map":"Rotted Woods","pois":{"3":"mage","4":"mage","5":"church","10":"church","11":"church"}},"311":{"nl":"Heolstor","map":"Rotted Woods","pois":{"1":"church","3":"mage","4":"church","5":"church","9":"mage","10":"church"}},"312":{"nl":"Heolstor","map":"Rotted Woods","pois":{"2":"church","3":"mage","9":"mage","10":"church","11":"church"}},"313":{"nl":"Heolstor","map":"Rotted Woods","pois":{"1":"mage","3":"church","4":"church","9":"mage","10":"church"}},"314":{"nl":"Heolstor","map":"Rotted Woods","pois":{"1":"church","2":"mage","4":"church","5":"village","9":"church"}},"315":{"nl":"Heolstor","map":"Noklateo","pois":{"5":"church","7":"mage","9":"church","10":"mage","11":"church"}},"316":{"nl":"Heolstor","map":"Noklateo","pois":{"5":"mage","6":"church","7":"church","9":"mage","10":"church"}},"317":{"nl":"Heolstor","map":"Noklateo","pois":{"5":"church","7":"village","8":"mage","10":"church","11":"church"}},"318":{"nl":"Heolstor","map":"Noklateo","pois":{"4":"church","6":"church","7":"village","8":"church","9":"mage","10":"mage"}},"319":{"nl":"Heolstor","map":"Noklateo","pois":{"4":"church","7":"village","8":"mage","10":"church","11":"church"}}};
+
+// ---- POI coordinates per map (from NightreignMapFilter data.js) ----
+const POIS_BY_MAP = {"Default":[{"id":1,"x":155,"y":551},{"id":2,"x":350,"y":545},{"id":3,"x":155,"y":436},{"id":4,"x":280,"y":308},{"id":5,"x":165,"y":284},{"id":6,"x":436,"y":620},{"id":7,"x":420,"y":495},{"id":8,"x":620,"y":455},{"id":9,"x":530,"y":285},{"id":10,"x":595,"y":278},{"id":11,"x":410,"y":180}],"Crater":[{"id":1,"x":155,"y":551},{"id":2,"x":348,"y":545},{"id":3,"x":155,"y":440},{"id":5,"x":165,"y":284},{"id":6,"x":436,"y":630},{"id":7,"x":420,"y":495},{"id":8,"x":620,"y":455},{"id":9,"x":530,"y":295},{"id":10,"x":595,"y":278}],"Rotted Woods":[{"id":1,"x":153,"y":557},{"id":2,"x":350,"y":545},{"id":3,"x":155,"y":442},{"id":4,"x":275,"y":315},{"id":5,"x":165,"y":284},{"id":9,"x":530,"y":285},{"id":10,"x":597,"y":285},{"id":11,"x":410,"y":180}],"Mountaintop":[{"id":1,"x":155,"y":551},{"id":2,"x":345,"y":547},{"id":3,"x":155,"y":440},{"id":6,"x":436,"y":620},{"id":7,"x":420,"y":495},{"id":8,"x":620,"y":460},{"id":9,"x":530,"y":285},{"id":10,"x":595,"y":278},{"id":11,"x":410,"y":180}],"Noklateo":[{"id":4,"x":278,"y":308},{"id":5,"x":165,"y":284},{"id":6,"x":436,"y":620},{"id":7,"x":420,"y":495},{"id":8,"x":620,"y":455},{"id":9,"x":530,"y":287},{"id":10,"x":595,"y":278},{"id":11,"x":410,"y":182}]};
+
+const TOTAL_SEEDS = 320;
+
+// Map display names (Korean)
+const MAP_KO = {
+  "Default":      "기본 (Default)",
+  "Mountaintop":  "산정 (Mountaintop)",
+  "Crater":       "분화구 (Crater)",
+  "Rotted Woods": "썩은 숲 (Rotted Woods)",
+  "Noklateo":     "녹라테오 (Noklateo)"
+};
+
+// Nightlord display names
+const NL_NAMES = ["Gladius", "Adel", "Gnoster", "Maris", "Libra", "Fulghor", "Caligo", "Heolstor", "Harmonia", "Straghess"];
+
+// POI type colors and labels
+const POI_STYLE = {
+  church:  { color: "#f59e0b", label: "교회 (Church)",  emoji: "⛪" },
+  mage:    { color: "#818cf8", label: "마법탑 (Mage)",   emoji: "🔮" },
+  village: { color: "#34d399", label: "마을 (Village)", emoji: "🏘️" }
+};
+
+let selectedNL = null;
+
+// Build manual NL buttons
+const nlContainer = document.getElementById('nl-buttons');
+NL_NAMES.forEach(name => {
+  const btn = document.createElement('button');
+  btn.className = 'nl-btn';
+  btn.textContent = name;
+  btn.dataset.nl = name;
+  btn.onclick = () => {
+    document.querySelectorAll('.nl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedNL = name;
+  };
+  nlContainer.appendChild(btn);
+});
+
+function clearAll() {
+  document.getElementById('checkerOutput').value = '';
+  document.getElementById('parse-error').style.display = 'none';
+  document.getElementById('result-section').style.display = 'none';
+  document.querySelectorAll('.nl-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('manualSessionId').value = '';
+  selectedNL = null;
+}
+
+function showError(msg) {
+  const el = document.getElementById('parse-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function parseCheckerOutput() {
+  const raw = document.getElementById('checkerOutput').value;
+  document.getElementById('parse-error').style.display = 'none';
+
+  if (!raw.trim()) {
+    showError('❌ 출력 내용을 붙여넣어 주세요.');
+    return;
+  }
+
+  const nickMatch    = raw.match(/Nickname:\s*(.+)/i);
+  const sessionMatch = raw.match(/Last Session ID:\s*(\d+)/i);
+  const bossMatch    = raw.match(/Boss:\s*(\w+)/i);
+  const everdarkMatch = raw.match(/Everdark Sovereign\?\s*(\S+)/i);
+
+  if (!bossMatch) {
+    showError('❌ "Boss: ..." 항목을 찾을 수 없습니다. NR-Nightlord-Checker 출력이 맞는지 확인하세요.');
+    return;
+  }
+
+  const nickname  = nickMatch ? nickMatch[1].trim() : '알 수 없음';
+  const sessionId = sessionMatch ? parseInt(sessionMatch[1], 10) : null;
+  const boss      = bossMatch[1].trim();
+  // Normalise everdark to uppercase for consistent comparison
+  const everdark  = everdarkMatch ? everdarkMatch[1].trim().toUpperCase() : null;
+
+  showResult({ nickname, sessionId, boss, everdark });
+}
+
+function applyManual() {
+  if (!selectedNL) {
+    showError('나이트로드를 선택해 주세요.');
+    document.getElementById('parse-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('parse-error').style.display = 'none';
+  const sessionIdRaw = document.getElementById('manualSessionId').value.trim();
+  const sessionId = sessionIdRaw ? parseInt(sessionIdRaw, 10) : null;
+  if (sessionIdRaw && (isNaN(sessionId) || sessionId < 0)) {
+    showError('세션 ID는 0 이상의 정수여야 합니다.');
+    document.getElementById('parse-error').style.display = 'block';
+    return;
+  }
+  showResult({ nickname: null, sessionId, boss: selectedNL, everdark: null });
+}
+
+function showResult(info) {
+  const { nickname, sessionId, boss, everdark } = info;
+
+  // Compute seed number if session ID is available
+  let seedNumber = null;
+  let seedData   = null;
+  if (sessionId !== null && !isNaN(sessionId)) {
+    seedNumber = sessionId % TOTAL_SEEDS;
+    seedData   = SEEDS[seedNumber.toString()];
+  }
+
+  // Determine map type; detect nightlord mismatch
+  let mapType = null;
+  let mismatchWarning = null;
+  if (seedData) {
+    mapType = seedData.map;
+    if (seedData.nl.toLowerCase() !== boss.toLowerCase()) {
+      mismatchWarning = `⚠️ 시드 #${seedNumber}의 나이트로드(${seedData.nl})가 탐지된 보스(${boss})와 다릅니다. 세션 ID를 확인해 주세요.`;
+    }
+  }
+
+  // Build info grid
+  const grid = document.getElementById('result-info-grid');
+  grid.innerHTML = '';
+
+  const items = [
+    ...(nickname ? [{ label: '닉네임', value: nickname, cls: '' }] : []),
+    ...(sessionId !== null ? [{ label: '세션 ID', value: sessionId.toLocaleString(), cls: 'highlight' }] : []),
+    { label: '탐지 보스', value: boss, cls: 'highlight' },
+    ...(seedNumber !== null ? [{ label: '시드 번호', value: seedNumber, cls: 'success' }] : []),
+    ...(mapType ? [{ label: '맵 타입', value: MAP_KO[mapType] || mapType, cls: 'success' }] : []),
+    ...(everdark ? [{ label: 'Everdark Sovereign', value: everdark === 'YES' ? '✅ YES' : '❌ No', cls: everdark === 'YES' ? 'warn' : '' }] : [])
+  ];
+
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'info-item';
+    div.innerHTML = `<div class="info-label">${item.label}</div><div class="info-value ${item.cls}">${item.value}</div>`;
+    grid.appendChild(div);
+  });
+
+  // Build map info content
+  const mapContent = document.getElementById('map-info-content');
+  mapContent.innerHTML = '';
+
+  // Show mismatch warning if detected
+  if (mismatchWarning) {
+    const warnDiv = document.createElement('div');
+    warnDiv.className = 'alert alert-error';
+    warnDiv.textContent = mismatchWarning;
+    mapContent.appendChild(warnDiv);
+  }
+
+  if (seedData && mapType) {
+    // Show seed-specific POI info
+    const pois = seedData.pois || {};
+    const mapCoords = POIS_BY_MAP[mapType] || [];
+
+    // POI table
+    const tableHtml = buildPOITable(pois, mapCoords, mapType);
+    mapContent.innerHTML = tableHtml;
+
+    // Draw canvas map
+    const canvasWrap = document.createElement('div');
+    canvasWrap.className = 'map-canvas-wrap';
+    canvasWrap.style.marginTop = '16px';
+    const canvas = document.createElement('canvas');
+    canvas.width = 750;
+    canvas.height = 750;
+    canvasWrap.appendChild(canvas);
+    mapContent.appendChild(canvasWrap);
+
+    // Legend
+    const legendDiv = document.createElement('div');
+    legendDiv.className = 'legend';
+    legendDiv.innerHTML = Object.entries(POI_STYLE).map(([t, s]) =>
+      `<div class="legend-item"><div class="legend-dot ${t}"></div>${s.label}</div>`
+    ).join('');
+    mapContent.appendChild(legendDiv);
+
+    drawMap(canvas, mapType, pois, mapCoords);
+
+  } else if (boss) {
+    // No seed data — show possible maps for this nightlord
+    const possibleMaps = getPossibleMaps(boss);
+    if (possibleMaps.length > 0) {
+      let html = `<div class="alert alert-info">세션 ID가 없어 시드를 특정할 수 없습니다. 보스 "${boss}"는 다음 맵 타입에 등장할 수 있습니다:</div>`;
+      html += '<div class="btn-group" style="margin-bottom:16px;">' +
+        possibleMaps.map(m => `<button class="map-btn" onclick="showMapPreview('${m}', '${boss}')">${MAP_KO[m] || m}</button>`).join('') +
+        '</div>';
+      html += '<div id="map-preview-area"></div>';
+      mapContent.innerHTML = html;
+    } else {
+      mapContent.innerHTML = `<div class="alert alert-error">보스 "${boss}"에 대한 맵 데이터를 찾을 수 없습니다. (Harmonia/Straghess는 아직 데이터셋에 없을 수 있습니다)</div>`;
+    }
+  }
+
+  document.getElementById('result-section').style.display = 'block';
+  document.getElementById('result-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function getPossibleMaps(boss) {
+  const maps = new Set();
+  Object.values(SEEDS).forEach(s => {
+    if (s.nl.toLowerCase() === boss.toLowerCase()) maps.add(s.map);
+  });
+  return [...maps];
+}
+
+function showMapPreview(mapType, boss) {
+  document.querySelectorAll('.map-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === (MAP_KO[mapType] || mapType));
+  });
+
+  const area = document.getElementById('map-preview-area');
+  if (!area) return;
+
+  // Find seeds for this boss+map combo
+  const matchingSeeds = Object.entries(SEEDS)
+    .filter(([, s]) => s.nl.toLowerCase() === boss.toLowerCase() && s.map === mapType)
+    .map(([num, s]) => ({ num: parseInt(num), ...s }));
+
+  if (matchingSeeds.length === 0) {
+    area.innerHTML = '<div class="alert alert-error">일치하는 시드가 없습니다.</div>';
+    return;
+  }
+
+  const mapCoords = POIS_BY_MAP[mapType] || [];
+
+  let html = `<p style="font-size:.85rem;color:var(--c-text-sub);margin-bottom:10px;">
+    보스 <strong>${boss}</strong> + <strong>${MAP_KO[mapType] || mapType}</strong> 조합: ${matchingSeeds.length}개 시드
+  </p>`;
+  html += buildSeedListTable(matchingSeeds);
+  area.innerHTML = html;
+}
+
+function buildSeedListTable(seeds) {
+  let rows = seeds.map(s => {
+    const poisStr = Object.entries(s.pois).map(([id, type]) => {
+      const st = POI_STYLE[type] || {};
+      return `<span class="badge badge-${type}">${st.emoji || ''} POI#${id}</span>`;
+    }).join(' ');
+    return `<tr><td>${s.num}</td><td>${poisStr}</td></tr>`;
+  }).join('');
+
+  return `<div style="overflow-x:auto;"><table class="poi-table">
+    <thead><tr><th>시드 #</th><th>POI 배치</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function buildPOITable(pois, mapCoords, mapType) {
+  const coordMap = {};
+  mapCoords.forEach(c => { coordMap[c.id] = c; });
+
+  const rows = Object.entries(pois).map(([id, type]) => {
+    const coord = coordMap[id];
+    const st = POI_STYLE[type] || { color: '#888', label: type, emoji: '?' };
+    const coordStr = coord ? `(${coord.x}, ${coord.y})` : '—';
+    return `<tr>
+      <td>POI #${id}</td>
+      <td><span class="badge badge-${type}">${st.emoji} ${st.label}</span></td>
+      <td style="color:var(--c-text-sub);font-size:.82rem;">${coordStr}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div style="overflow-x:auto;"><table class="poi-table">
+    <thead><tr><th>POI 슬롯</th><th>타입</th><th>좌표 (900×900 기준)</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function drawMap(canvas, mapType, pois, mapCoords) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  // ORIG is the coordinate system scale used by NightreignMapFilter (900×900).
+  // The canvas itself is rendered at 750×750 for display.
+  const ORIG = 900;
+  const scale = W / ORIG;
+
+  // Background — use a dark static fallback so getComputedStyle is not called per draw
+  const bgColor = getComputedStyle(document.documentElement)
+    .getPropertyValue('--c-surface-2').trim() || '#1a2846';
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines (subtle)
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 9; i++) {
+    ctx.beginPath(); ctx.moveTo(i * W / 9, 0); ctx.lineTo(i * W / 9, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, i * H / 9); ctx.lineTo(W, i * H / 9); ctx.stroke();
+  }
+
+  // Map name watermark
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.font = `bold ${Math.floor(W * 0.08)}px -apple-system, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(mapType.toUpperCase(), W / 2, H / 2);
+
+  // Draw inactive POI slots (all map slots, grey)
+  const coordMap = {};
+  mapCoords.forEach(c => { coordMap[c.id] = c; });
+
+  mapCoords.forEach(c => {
+    const x = c.x * scale, y = c.y * scale;
+    ctx.beginPath();
+    ctx.arc(x, y, 12 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Slot number
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = `${Math.floor(9 * scale)}px -apple-system, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(c.id), x, y);
+  });
+
+  // Draw active POIs (seed-specific)
+  Object.entries(pois).forEach(([idStr, type]) => {
+    const id = parseInt(idStr, 10);
+    const coord = coordMap[id];
+    if (!coord) return;
+
+    const x = coord.x * scale, y = coord.y * scale;
+    const color = POI_STYLE[type] ? POI_STYLE[type].color : '#888888';
+
+    // Outer glow
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, 20 * scale);
+    gradient.addColorStop(0, color + '60');
+    gradient.addColorStop(1, 'transparent');
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(x, y, 20 * scale, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main circle
+    ctx.beginPath();
+    ctx.arc(x, y, 14 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2 * scale;
+    ctx.stroke();
+
+    // ID label
+    ctx.fillStyle = '#000';
+    ctx.font = `bold ${Math.floor(10 * scale)}px -apple-system, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(id), x, y);
+  });
+}
+</script>
+</body>
+</html>
