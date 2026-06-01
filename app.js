@@ -86,32 +86,32 @@
   ];
 
   const GAS_PIPE_TABLE = [
-    { size: 250, flangeThickness: 22, boltSize: 'M20', boltLength: 75 },
-    { size: 300, flangeThickness: 22, boltSize: 'M20', boltLength: 75 },
-    { size: 350, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
-    { size: 400, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
-    { size: 450, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
-    { size: 500, flangeThickness: 16, boltSize: 'M22', boltLength: 65 },
-    { size: 550, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 600, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 650, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 700, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 750, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 800, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 850, flangeThickness: 16, boltSize: 'M20', boltLength: 65 },
-    { size: 900, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 950, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1000, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1050, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1100, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1150, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1200, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1250, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1300, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1350, flangeThickness: 18, boltSize: 'M22', boltLength: 70 },
-    { size: 1400, flangeThickness: 20, boltSize: 'M22', boltLength: 75 },
-    { size: 1450, flangeThickness: 20, boltSize: 'M24', boltLength: 75 },
-    { size: 1500, flangeThickness: 20, boltSize: 'M24', boltLength: 75 }
+    { size: 250,  flangeThickness: 22, boltSize: 'M20', boltLength: 75, boltCount: 12, nutCount: 12 },
+    { size: 300,  flangeThickness: 22, boltSize: 'M20', boltLength: 75, boltCount: 12, nutCount: 12 },
+    { size: 350,  flangeThickness: 16, boltSize: 'M22', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 400,  flangeThickness: 16, boltSize: 'M22', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 450,  flangeThickness: 16, boltSize: 'M22', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 500,  flangeThickness: 16, boltSize: 'M22', boltLength: 65, boltCount: 20, nutCount: 20 },
+    { size: 550,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 600,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 650,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 700,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 16, nutCount: 16 },
+    { size: 750,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 20, nutCount: 20 },
+    { size: 800,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 20, nutCount: 20 },
+    { size: 850,  flangeThickness: 16, boltSize: 'M20', boltLength: 65, boltCount: 20, nutCount: 20 },
+    { size: 900,  flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 20, nutCount: 20 },
+    { size: 950,  flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 20, nutCount: 20 },
+    { size: 1000, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 20, nutCount: 20 },
+    { size: 1050, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 24, nutCount: 24 },
+    { size: 1100, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 24, nutCount: 24 },
+    { size: 1150, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 24, nutCount: 24 },
+    { size: 1200, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 24, nutCount: 24 },
+    { size: 1250, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 28, nutCount: 28 },
+    { size: 1300, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 28, nutCount: 28 },
+    { size: 1350, flangeThickness: 18, boltSize: 'M22', boltLength: 70, boltCount: 28, nutCount: 28 },
+    { size: 1400, flangeThickness: 20, boltSize: 'M22', boltLength: 75, boltCount: 28, nutCount: 28 },
+    { size: 1450, flangeThickness: 20, boltSize: 'M24', boltLength: 75, boltCount: 28, nutCount: 28 },
+    { size: 1500, flangeThickness: 20, boltSize: 'M24', boltLength: 75, boltCount: 28, nutCount: 28 }
   ];
   const STORAGE_KEY = 'jis-calc-state-v2';
   const TUTORIAL_KEY = 'jis-calc-hide-tutorial';
@@ -225,11 +225,17 @@
       'btn.add_gas_bolt':     '＋ 가스파이프 볼트 추가',
       'gas.desc':             '가스파이프 프리셋에서 사이즈를 선택하면 볼트 규격과 길이를 바로 확인하고 장바구니처럼 추가할 수 있습니다.',
       'gas.rule':             '기본 볼트 길이는 기존 값에서 5mm를 제외한 값입니다. 와셔 추가를 체크하면 5mm가 다시 더해집니다.',
-      'gas.help':             '가스켓 없이 볼트만 추가합니다. 입력 수량은 볼트 EA 기준으로 합산됩니다.',
+      'gas.help':             '가스켓 없이 볼트/너트를 추가합니다. 입력 수량은 Set 기준이며 표의 볼트/너트 개수가 자동 반영됩니다.',
       'gas.col.size':         '사이즈',
       'gas.col.flange':       '플랜지 두께',
       'gas.col.bolt_size':    '볼트 사이즈',
       'gas.col.bolt_length':  '볼트 길이',
+      'gas.col.bolt_count':   '볼트 개수',
+      'gas.col.nut_count':    '너트 개수',
+      'size_ref.jump_aria':   '사이즈 표 보기',
+      'size_ref.title':       '사이즈 표',
+      'size_ref.jis_title':   'JIS 테이블',
+      'size_ref.gas_title':   '가스파이프 테이블',
       'form.memo_label':      '자유 메모',
       'form.memo_ph':         '기타 자재 또는 비고를 자유롭게 기입하세요.',
       // Queue
@@ -563,11 +569,17 @@
       'btn.add_gas_bolt':     '＋ Thêm bu lông ống gas',
       'gas.desc':             'Khi chọn kích thước trong preset ống gas, bạn có thể xem ngay quy cách và chiều dài bu lông rồi thêm vào hàng chờ như giỏ hàng.',
       'gas.rule':             'Chiều dài bu lông cơ bản đã bỏ phần cộng thêm 5mm. Nếu chọn thêm vòng đệm kim loại, chiều dài sẽ cộng lại 5mm.',
-      'gas.help':             'Chỉ thêm bu lông, không thêm gioăng. Số lượng nhập sẽ được cộng theo đơn vị EA.',
+      'gas.help':             'Thêm bu lông/đai ốc, không thêm gioăng. Số lượng nhập theo Set và số lượng trong bảng được áp dụng tự động.',
       'gas.col.size':         'Kích thước',
       'gas.col.flange':       'Độ dày mặt bích',
       'gas.col.bolt_size':    'Cỡ bu lông',
       'gas.col.bolt_length':  'Chiều dài bu lông',
+      'gas.col.bolt_count':   'Số bu lông',
+      'gas.col.nut_count':    'Số đai ốc',
+      'size_ref.jump_aria':   'Xem bảng kích thước',
+      'size_ref.title':       'Bảng kích thước',
+      'size_ref.jis_title':   'Bảng JIS',
+      'size_ref.gas_title':   'Bảng ống gas',
       'form.memo_label':      'Ghi chú tự do',
       'form.memo_ph':         'Ghi chú tự do về vật tư khác hoặc chú thích.',
       'card.queue':           'Hàng chờ đăng ký',
@@ -890,11 +902,17 @@
       'btn.add_gas_bolt':     '＋ Tambah baut pipa gas',
       'gas.desc':             'Saat ukuran preset pipa gas dipilih, spesifikasi dan panjang baut langsung tampil dan bisa ditambahkan ke antrean seperti keranjang.',
       'gas.rule':             'Panjang baut dasar sudah dikurangi 5mm dari nilai sebelumnya. Jika opsi washer dipilih, 5mm akan ditambahkan kembali.',
-      'gas.help':             'Hanya baut yang ditambahkan, tanpa gasket. Jumlah input dihitung sebagai EA.',
+      'gas.help':             'Tambahkan baut/mur tanpa gasket. Jumlah input dihitung per Set dan kuantitas tabel diterapkan otomatis.',
       'gas.col.size':         'Ukuran',
       'gas.col.flange':       'Tebal flange',
       'gas.col.bolt_size':    'Ukuran baut',
       'gas.col.bolt_length':  'Panjang baut',
+      'gas.col.bolt_count':   'Jumlah baut',
+      'gas.col.nut_count':    'Jumlah mur',
+      'size_ref.jump_aria':   'Lihat tabel ukuran',
+      'size_ref.title':       'Tabel ukuran',
+      'size_ref.jis_title':   'Tabel JIS',
+      'size_ref.gas_title':   'Tabel pipa gas',
       'form.memo_label':      'Catatan bebas',
       'form.memo_ph':         'Catatan bebas untuk material lain atau keterangan.',
       'card.queue':           'Antrean pendaftaran',
@@ -1340,7 +1358,7 @@
    * @property {number}  qty
    * @property {boolean=} ext, doubleNut, auto, gasPipe — gasPipe=true when the bolt item comes from the gas pipe preset flow
    * @property {string=} bS, gtype
-   * @property {number=} bL, bC
+   * @property {number=} bL, bC, nC
    * @property {number=} pitch
    */
   const Store = {
@@ -1467,8 +1485,18 @@
     if (!row) return null;
     let len = row.boltLength;
     if (opts.washerExtra) len += 5;
-    // Gas pipe preset quantity already represents the final individual bolt count, unlike flange points that multiply by hole count, so bC is set to 1.
-    return { type: 'bolt', s, qty, ext: !!opts.washerExtra, doubleNut: false, gasPipe: true, bS: row.boltSize, bL: len, bC: 1 };
+    return {
+      type: 'bolt',
+      s,
+      qty,
+      ext: !!opts.washerExtra,
+      doubleNut: false,
+      gasPipe: true,
+      bS: row.boltSize,
+      bL: len,
+      bC: row.boltCount ?? 0,
+      nC: row.nutCount ?? 0
+    };
   }
 
   /** Aggregate the queue into bolt/nut/gasket/ubolt maps. */
@@ -1479,7 +1507,10 @@
         const bK = `${q.bS} × ${q.bL}L`;
         const nK = q.bS;
         const bolts = q.bC * q.qty;
-        const nuts  = bolts * (q.doubleNut ? 2 : 1);
+        // nC is used by gas-pipe preset items (table-driven nut count per set).
+        // Fallback keeps compatibility with existing/non-gas bolt items in saved queue data.
+        const hasExplicitNutCount = (typeof q.nC === 'number') && Number.isFinite(q.nC);
+        const nuts  = hasExplicitNutCount ? (q.nC * q.qty) : (bolts * (q.doubleNut ? 2 : 1));
         bM[bK] = (bM[bK] || 0) + bolts;
         nM[nK] = (nM[nK] || 0) + nuts;
       } else if (q.type === 'gasket') {
@@ -1598,36 +1629,41 @@
       }
     },
 
-    renderGasPipeTable() {
-      const wrap = $('#gasPipeTableWrap');
-      if (!wrap) return;
-      const selectedSize = parseInt($('#gasPipePreset')?.value, 10);
-      const washerExtra = !!$('#optGasWasher')?.checked;
-      const row = GAS_PIPE_TABLE.find((item) => item.size === selectedSize) || GAS_PIPE_TABLE[0];
-      if (!row) return;
-      const boltLength = row.boltLength + (washerExtra ? 5 : 0);
+    renderGasPipeTable() {},
 
-      const thead = el('thead', null,
-        el('tr', null,
-          el('th', null, t('gas.col.size')),
-          el('th', null, t('gas.col.flange')),
-          el('th', null, t('gas.col.bolt_size')),
-          el('th', null, t('gas.col.bolt_length'))
-        )
-      );
-      const tbody = el('tbody', null,
-        el('tr', null,
+    renderSizeReferenceTables() {
+      const jisBody = $('#jisSizeRefBody');
+      const gasBody = $('#gasSizeRefBody');
+      if (!jisBody || !gasBody) return;
+
+      jisBody.textContent = '';
+      const ratings = Object.keys(DATA).sort((a, b) => (RATING_ORDER[a] || 0) - (RATING_ORDER[b] || 0));
+      for (const rating of ratings) {
+        for (const size of SIZES) {
+          const row = DATA[rating]?.[size];
+          if (!row) continue;
+          const [boltSize, boltLength, boltCount] = row;
+          jisBody.appendChild(el('tr', null,
+            el('td', null, rating),
+            el('td', null, `${size}A`),
+            el('td', null, boltSize),
+            el('td', null, `${boltLength} mm`),
+            el('td', { class: 'num' }, String(boltCount))
+          ));
+        }
+      }
+
+      gasBody.textContent = '';
+      for (const row of GAS_PIPE_TABLE) {
+        gasBody.appendChild(el('tr', null,
           el('td', null, `${row.size}A`),
           el('td', null, `${row.flangeThickness} mm`),
           el('td', null, row.boltSize),
-          el('td', null, `${boltLength} mm`)
-        )
-      );
-
-      wrap.textContent = '';
-      wrap.appendChild(el('div', { class: 'gas-table-scroll gas-pipe-table-wrap' },
-        el('table', { class: 'res-flat-table gas-pipe-table' }, thead, tbody)
-      ));
+          el('td', null, `${row.boltLength} mm`),
+          el('td', { class: 'num' }, String(row.boltCount ?? '-')),
+          el('td', { class: 'num' }, String(row.nutCount ?? '-'))
+        ));
+      }
     },
 
     /**
@@ -3128,6 +3164,16 @@
     'usize-change':      () => View.updatePitchInfo(parseInt($('#usize').value, 10)),
     'gas-preset-change': () => View.renderGasPipeTable(),
     'gas-washer-change': () => View.renderGasPipeTable(),
+    'open-size-ref':     () => {
+      const section = $('#sizeTableSection');
+      const card = $('#sizeRefCard');
+      if (!section) return;
+      smoothScrollIntoView(section, { block: 'start' });
+      if (card) {
+        card.classList.remove('size-ref-highlight');
+        requestAnimationFrame(() => card.classList.add('size-ref-highlight'));
+      }
+    },
     'qty-inc':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = toPosInt(inp.value) + 1; },
     'qty-dec':           (el2) => { const inp = $('#' + el2.dataset.target); inp.value = Math.max(1, toPosInt(inp.value) - 1); },
     'add-bolt':          actionAddBolt,
@@ -3229,6 +3275,7 @@
     View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.renderGasPipeTable();
+    View.renderSizeReferenceTables();
     View.populateProjectSelect($('#projectSelect'));
     View.renderQueue();
     // Re-render result if currently shown
@@ -3697,6 +3744,7 @@
     View.populateGasPipePresetSelect($('#gasPipePreset'));
     View.updatePitchInfo(parseInt($('#usize').value, 10));
     View.renderGasPipeTable();
+    View.renderSizeReferenceTables();
     View.populateProjectSelect($('#projectSelect'));
 
     // Sync language UI to current selection

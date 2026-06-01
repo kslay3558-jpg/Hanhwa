@@ -730,14 +730,28 @@
   .gas-pipe-table { min-width: 0; table-layout: fixed; }
   .gas-pipe-table th, .gas-pipe-table td { padding: 8px 10px; }
   .gas-pipe-add-btn { width: 100%; margin-top: 12px; }
+  .size-ref-section { margin: 18px 0 6px; }
+  .size-ref-card { padding-bottom: 14px; }
+  .size-ref-card .card-head { margin-bottom: 10px; }
+  .size-ref-table-wrap { margin-top: 8px; }
+  .size-ref-table { min-width: 620px; table-layout: auto; }
+  .size-ref-table th, .size-ref-table td { text-align: left; white-space: nowrap; }
+  .size-ref-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .size-ref-highlight { animation: sizeRefFlash .7s ease-out; }
+  @keyframes sizeRefFlash {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--c-primary) 55%, transparent); }
+    100% { box-shadow: 0 0 0 10px transparent; }
+  }
   @media (max-width: 640px) {
     .gas-pipe-form.col-2 { grid-template-columns: 1fr; gap: 12px; }
     .gas-pipe-form .field label { margin-bottom: 6px; }
     .gas-pipe-option-box { margin-bottom: 12px; }
     .gas-pipe-table th, .gas-pipe-table td { font-size: .8rem; }
+    .size-ref-table { min-width: 560px; }
   }
   @media (max-width: 380px) {
     .gas-pipe-table th, .gas-pipe-table td { padding: 7px 8px; font-size: .76rem; }
+    .size-ref-table { min-width: 520px; }
   }
   /* Category pill tags */
   .res-cat-tag {
@@ -791,14 +805,14 @@
   #visitorCountWrap { display: inline-flex; align-items: center; gap: 3px; animation: fadeIn .2s var(--m-base); }
   #visitorCountWrap[hidden] { display: none; }
   #visitorCountWrap strong { color: var(--c-text-sub); font-weight: 800; }
-  #boardToggle, #tempLink, #notifPermBtn {
+  #boardToggle, #tempLink, #notifPermBtn, #sizeTableJump {
     background: none; border: 1px solid var(--c-border); border-radius: 99px;
     padding: 3px 8px; cursor: pointer; font-size: .85rem; color: var(--c-text-mute);
     transition: background var(--m-fast), border-color var(--m-fast);
     line-height: 1.4;
     text-decoration: none; display: inline-flex; align-items: center;
   }
-  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
+  #boardToggle:hover, #tempLink:hover, #notifPermBtn:hover, #sizeTableJump:hover { background: var(--c-surface-2); border-color: var(--c-border-strong); }
   #notifPermBtn[hidden] { display: none; }
 
   /* Board modal */
@@ -1490,7 +1504,6 @@
                 </label>
               </div>
             </div>
-            <div id="gasPipeTableWrap"></div>
             <button class="btn btn-primary gas-pipe-add-btn" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
           </div>
         </div>
