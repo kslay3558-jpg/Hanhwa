@@ -42,10 +42,11 @@
     "5K":  {10:["M10",30,4],15:["M10",30,4],20:["M10",35,4],25:["M10",35,4],32:["M12",40,4],40:["M12",40,4],50:["M12",45,4],65:["M12",45,4],80:["M16",45,4],100:["M16",50,8],125:["M16",50,8],150:["M16",55,8],200:["M20",65,8],250:["M20",70,12],300:["M20",70,12],350:["M22",75,12],400:["M22",75,16],450:["M22",75,16],500:["M22",75,20],550:["M24",80,20],600:["M24",80,20],650:["M24",80,24],700:["M24",80,24],750:["M30",90,24],800:["M30",90,24],850:["M30",90,24],900:["M30",95,24],1000:["M30",100,28],1100:["M30",100,28],1200:["M30",105,32],1350:["M30",105,32],1500:["M30",110,36]},
     "10K": {10:["M12",40,4],15:["M12",40,4],20:["M12",45,4],25:["M16",45,4],32:["M16",50,4],40:["M16",50,4],50:["M16",50,4],65:["M16",55,4],80:["M16",55,8],100:["M16",55,8],125:["M20",65,8],150:["M20",70,8],200:["M20",70,12],250:["M22",75,12],300:["M22",75,16],350:["M22",80,16],400:["M24",85,16],450:["M24",90,20],500:["M24",90,20],550:["M30",100,20],600:["M30",100,24],650:["M30",105,24],700:["M30",105,24],750:["M30",110,24],800:["M30",110,28],850:["M30",110,28],900:["M30",115,28],1000:["M36",125,28],1100:["M36",130,28],1200:["M36",135,32],1350:["M42",145,36],1500:["M42",150,40]},
     "16K": {10:["M12",40,4],15:["M12",40,4],20:["M12",45,4],25:["M16",45,4],32:["M16",50,4],40:["M16",50,4],50:["M16",50,8],65:["M16",55,8],80:["M20",65,8],100:["M20",65,8],125:["M22",70,8],150:["M22",75,12],200:["M22",80,12],250:["M24",85,12],300:["M24",90,16],350:["M30",105,16],400:["M30",110,16],450:["M30",115,20],500:["M30",120,20],550:["M36",130,20],600:["M36",135,24],650:["M36",140,24],700:["M39",145,24],750:["M39",150,24],800:["M45",160,24],850:["M45",165,28],900:["M45",170,28],1000:["M52",185,28]},
+    "20K": {15:["M12",45,4],20:["M12",45,4],25:["M16",55,4],32:["M16",55,4],40:["M16",55,4],50:["M16",55,8],65:["M16",60,8],80:["M20",65,8],100:["M20",70,8],125:["M22",75,8],150:["M22",80,12],200:["M22",85,12],250:["M24",95,12],300:["M24",100,16],350:["M30",110,16],400:["M30",125,16],450:["M30",135,20],500:["M30",135,20],550:["M36",150,20],600:["M36",155,24]},
     // 제공된 표 기준으로 30K는 400A까지만 데이터가 확인됨.
     "30K": {10:["M16",50,4],15:["M16",55,4],20:["M16",55,4],25:["M16",60,4],32:["M16",65,4],40:["M20",70,4],50:["M16",65,8],65:["M20",75,8],80:["M20",80,8],100:["M22",90,8],125:["M22",100,8],150:["M24",105,12],200:["M24",115,12],250:["M30",130,12],300:["M30",140,16],350:["M30",145,16],400:["M30",165,16]}
   };
-  const RATING_ORDER = { "5K": 1, "10K": 2, "16K": 3, "30K": 4 };
+  const RATING_ORDER = { "5K": 1, "10K": 2, "16K": 3, "20K": 4, "30K": 5 };
 
   /**
    * JIS B 2220 RF 플랜지 외경 (OD, mm).
@@ -366,7 +367,7 @@
       'tut.tour2_t':          '플랜지 외경(OD) 역산',
       'tut.tour2_d':          '플랜지의 외경(mm)을 입력하면 해당하는 JIS 규격 후보를 바로 찾아줍니다.',
       'tut.tour3_t':          '압력등급 · 호칭경 선택',
-      'tut.tour3_d':          '압력등급(5K/10K/16K/30K)과 호칭경(A)을 선택해주세요. 볼트 규격이 자동으로 결정됩니다.',
+      'tut.tour3_d':          '압력등급(5K/10K/16K/20K/30K)과 호칭경(A)을 선택해주세요. 볼트 규격이 자동으로 결정됩니다.',
       'tut.tour4_t':          '볼트 옵션 설정',
       'tut.tour4_d':          '볼트 연장(+5mm), 더블너트 적용, 가스켓 포함 여부를 토글로 간단하게 설정할 수 있습니다.',
       'tut.tour5_t':          '포인트 추가',
@@ -703,7 +704,7 @@
       'tut.tour2_t':          'Tra cứu OD mặt bích',
       'tut.tour2_d':          'Nhập OD (mm) đã đo, ứng dụng sẽ tự tìm quy cách JIS phù hợp.',
       'tut.tour3_t':          'Chọn áp suất · kích cỡ',
-      'tut.tour3_d':          'Chọn cấp áp (5K/10K/16K/30K) và đường kính danh nghĩa (A). Bu lông sẽ được tính tự động.',
+      'tut.tour3_d':          'Chọn cấp áp (5K/10K/16K/20K/30K) và đường kính danh nghĩa (A). Bu lông sẽ được tính tự động.',
       'tut.tour4_t':          'Tùy chọn bu lông',
       'tut.tour4_d':          'Bật/tắt dài thêm (+5mm), đai ốc đôi, và kèm gioăng bằng công tắc.',
       'tut.tour5_t':          'Thêm điểm',
@@ -1036,7 +1037,7 @@
       'tut.tour2_t':          'Cari OD flensa',
       'tut.tour2_d':          'Masukkan OD (mm) yang diukur, aplikasi akan mencari spesifikasi JIS yang sesuai.',
       'tut.tour3_t':          'Pilih rating · ukuran',
-      'tut.tour3_d':          'Pilih rating tekanan (5K/10K/16K/30K) dan ukuran nominal (A). Baut akan otomatis ditentukan.',
+      'tut.tour3_d':          'Pilih rating tekanan (5K/10K/16K/20K/30K) dan ukuran nominal (A). Baut akan otomatis ditentukan.',
       'tut.tour4_t':          'Opsi baut',
       'tut.tour4_d':          'Aktifkan perpanjangan (+5mm), mur ganda, dan gasket menggunakan sakelar.',
       'tut.tour5_t':          'Tambah poin',
@@ -1353,7 +1354,7 @@
   /**
    * @typedef {Object} Item
    * @property {'bolt'|'gasket'|'ubolt'} type
-   * @property {string=} r       — rating (5K/10K/16K/30K)
+   * @property {string=} r       — rating (5K/10K/16K/20K/30K)
    * @property {number=} s       — size A
    * @property {number}  qty
    * @property {boolean=} ext, doubleNut, auto, gasPipe — gasPipe=true when the bolt item comes from the gas pipe preset flow
@@ -2678,7 +2679,7 @@
           el('label', { for: 'editRating' }, t('form.rating')),
           (() => {
             const sel = el('select', { id: 'editRating' });
-            ['5K', '10K', '16K', '30K'].forEach(r => sel.appendChild(el('option', { value: r, selected: r === item.r ? true : null }, r)));
+            ['5K', '10K', '16K', '20K', '30K'].forEach(r => sel.appendChild(el('option', { value: r, selected: r === item.r ? true : null }, r)));
             return sel;
           })()
         ),
@@ -2727,7 +2728,7 @@
           el('label', { for: 'editGRating' }, t('form.rating')),
           (() => {
             const sel = el('select', { id: 'editGRating' });
-            ['5K','10K','16K','30K'].forEach(r => sel.appendChild(el('option', { value: r, selected: r === item.r ? true : null }, r)));
+            ['5K','10K','16K','20K','30K'].forEach(r => sel.appendChild(el('option', { value: r, selected: r === item.r ? true : null }, r)));
             return sel;
           })()
         ),
