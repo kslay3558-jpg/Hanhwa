@@ -7,45 +7,47 @@
     <meta name="color-scheme" content="light dark">
     <title>각도 마킹 도우미</title>
     <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-
         :root {
             color-scheme: light dark;
-            --bg: #f3f6fb;
-            --surface: rgba(255, 255, 255, 0.9);
+            --bg: #f1f5f9;
+            --surface: #ffffff;
             --surface-strong: #ffffff;
-            --surface-soft: #f8fbff;
-            --line: #d8e1ee;
-            --line-strong: #b8c7dc;
+            --surface-soft: #f8fafc;
+            --line: #e2e8f0;
+            --line-strong: #cbd5e1;
             --text: #0f172a;
             --text-sub: #475569;
             --text-soft: #64748b;
             --primary: #2563eb;
             --primary-soft: rgba(37, 99, 235, 0.12);
             --primary-strong: #1d4ed8;
+            --on-primary: #ffffff;
+            --field-user: #eff6ff;
+            --field-calc: #ecfdf5;
             --success: #059669;
             --success-soft: rgba(5, 150, 105, 0.12);
             --warning: #d97706;
             --warning-soft: rgba(217, 119, 6, 0.16);
             --danger: #dc2626;
             --danger-soft: rgba(220, 38, 38, 0.14);
-            --shadow-lg: 0 22px 56px rgba(15, 23, 42, 0.14);
-            --shadow-md: 0 12px 28px rgba(15, 23, 42, 0.08);
-            --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.08);
-            --radius-xl: 28px;
-            --radius-lg: 20px;
-            --radius-md: 14px;
-            --radius-sm: 10px;
+            --shadow-lg: 0 4px 16px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 2px 6px rgba(15, 23, 42, 0.04);
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+            --radius-xl: 16px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 12px;
             --motion: 180ms cubic-bezier(.4, 0, .2, 1);
             --stage-height: clamp(430px, 64vw, 620px);
             --diagonal-rotation: 0deg;
             --angle-card-width: 100%;
+            --diagram-scale: 1;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #07111f;
-                --surface: rgba(15, 23, 42, 0.82);
+                --bg: #0b1220;
+                --surface: #0f172a;
                 --surface-strong: #0f172a;
                 --surface-soft: #111d32;
                 --line: #23324a;
@@ -56,34 +58,18 @@
                 --primary: #60a5fa;
                 --primary-soft: rgba(96, 165, 250, 0.16);
                 --primary-strong: #93c5fd;
+                --on-primary: #0f172a;
+                --field-user: #1e3356;
+                --field-calc: #122e26;
                 --success: #34d399;
                 --success-soft: rgba(52, 211, 153, 0.14);
                 --warning: #f59e0b;
                 --warning-soft: rgba(245, 158, 11, 0.18);
                 --danger: #f87171;
                 --danger-soft: rgba(248, 113, 113, 0.18);
-                --shadow-lg: 0 24px 60px rgba(2, 6, 23, 0.42);
-                --shadow-md: 0 16px 34px rgba(2, 6, 23, 0.34);
-                --shadow-sm: 0 6px 14px rgba(2, 6, 23, 0.24);
-            }
-
-            .field-body {
-                background: rgba(22, 36, 56, 0.92);
-                border-color: rgba(71, 107, 158, 0.3);
-            }
-
-            .field-card.is-user .field-body {
-                background: rgba(30, 51, 86, 0.96);
-                border-color: rgba(96, 165, 250, 0.38);
-            }
-
-            .field-card.is-calc .field-body {
-                background: rgba(18, 46, 38, 0.96);
-                border-color: rgba(52, 211, 153, 0.38);
-            }
-
-            .floating-input::placeholder {
-                color: #4e6a8c;
+                --shadow-lg: 0 4px 16px rgba(2, 6, 23, 0.2);
+                --shadow-md: 0 2px 6px rgba(2, 6, 23, 0.16);
+                --shadow-sm: 0 1px 2px rgba(2, 6, 23, 0.18);
             }
         }
 
@@ -95,12 +81,10 @@
         }
 
         body {
-            font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Nanum Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background:
-                radial-gradient(circle at top, rgba(37, 99, 235, 0.16), transparent 34%),
-                linear-gradient(180deg, rgba(255, 255, 255, 0.45), transparent 24%),
-                var(--bg);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+            background: var(--bg);
             color: var(--text);
+            line-height: 1.5;
             padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
         }
 
@@ -108,29 +92,53 @@
             width: min(100%, 1080px);
             margin: 0 auto;
             background: var(--surface);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.28);
+            border: 1px solid var(--line);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-lg);
             overflow: hidden;
         }
 
-        .hero {
-            position: relative;
-            padding: 28px 28px 20px;
-            background:
-                radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 28%),
-                linear-gradient(135deg, rgba(255,255,255,0.08), transparent),
-                var(--surface-strong);
-            border-bottom: 1px solid var(--line);
+        :focus-visible {
+            outline: 3px solid var(--primary);
+            outline-offset: 3px;
         }
 
-        .hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, rgba(37, 99, 235, 0.08), transparent 42%);
-            pointer-events: none;
+        .tool-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--line);
+            background: var(--surface-strong);
+        }
+
+        .tool-nav a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: var(--text-sub);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .tool-nav a:hover {
+            background: var(--surface-soft);
+        }
+
+        .tool-nav a[aria-current="page"] {
+            background: var(--primary-soft);
+            color: var(--primary-strong);
+        }
+
+        .hero {
+            position: relative;
+            padding: 28px;
+            background: var(--surface-strong);
+            border-bottom: 1px solid var(--line);
         }
 
         .hero-content {
@@ -155,7 +163,9 @@
 
         .hero h1 {
             margin: 0;
-            font-size: clamp(1.8rem, 3.8vw, 2.8rem);
+            font-size: clamp(24px, 4vw, 34px);
+            font-weight: 800;
+            line-height: 1.3;
             letter-spacing: -0.04em;
         }
 
@@ -264,12 +274,9 @@
             min-height: var(--stage-height);
             padding: 24px;
             margin: 18px;
-            border-radius: 24px;
+            border-radius: 16px;
             border: 1px solid var(--line);
-            background:
-                radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 34%),
-                linear-gradient(180deg, rgba(255,255,255,0.5), transparent 28%),
-                var(--surface-soft);
+            background: var(--surface-soft);
             overflow: hidden;
             isolation: isolate;
         }
@@ -300,9 +307,9 @@
 
         .field-card {
             width: 100%;
-            height: 100%;
+            height: auto;
             display: grid;
-            gap: 5px;
+            gap: calc(4px / var(--diagram-scale));
         }
 
         .field-card.diagonal {
@@ -324,66 +331,68 @@
         }
 
         .field-name {
-            font-size: 0.76rem;
-            font-weight: 800;
+            font-size: calc(12px / var(--diagram-scale));
+            font-weight: 700;
             color: var(--text-sub);
             letter-spacing: -0.02em;
         }
 
         .unit-chip {
-            padding: 3px 8px;
+            padding: 1px 4px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.78);
-            border: 1px solid rgba(148, 163, 184, 0.22);
-            font-size: 0.64rem;
-            font-weight: 800;
-            color: var(--text-soft);
-            backdrop-filter: blur(10px);
+            background: var(--surface-strong);
+            border: 1px solid var(--line);
+            font-size: calc(10px / var(--diagram-scale));
+            font-weight: 600;
+            color: var(--text-sub);
         }
 
         .field-body {
             position: relative;
             display: flex;
             align-items: center;
-            min-height: 50px;
-            background: rgba(255, 255, 255, 0.88);
-            border: 1px solid rgba(148, 163, 184, 0.26);
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-            transition: transform var(--motion), border-color var(--motion), box-shadow var(--motion), background var(--motion);
+            min-height: calc(44px / var(--diagram-scale));
+            background: var(--surface-strong);
+            border: 1px solid var(--line-strong);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: border-color var(--motion), box-shadow var(--motion), background var(--motion);
             overflow: hidden;
-            backdrop-filter: blur(14px);
         }
 
         .field-card.is-active .field-body {
-            transform: translateY(-1px) scale(1.02);
-            border-color: rgba(37, 99, 235, 0.44);
-            box-shadow: 0 14px 24px rgba(37, 99, 235, 0.18);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-soft);
+        }
+
+        .field-body:focus-within {
+            outline: calc(2px / var(--diagram-scale)) solid var(--primary);
+            outline-offset: calc(2px / var(--diagram-scale));
         }
 
         .field-card.is-user .field-body {
-            background: rgba(239, 246, 255, 0.96);
-            border-color: rgba(37, 99, 235, 0.34);
+            background: var(--field-user);
+            border-color: var(--primary);
         }
 
         .field-card.is-calc .field-body {
-            background: rgba(236, 253, 245, 0.96);
-            border-color: rgba(5, 150, 105, 0.34);
+            background: var(--field-calc);
+            border-color: var(--success);
         }
 
         .field-accent {
-            width: 7px;
+            width: 4px;
             align-self: stretch;
-            background: linear-gradient(180deg, var(--line-strong), transparent);
+            background: var(--line-strong);
             transition: background var(--motion);
         }
 
         .field-card.is-user .field-accent {
-            background: linear-gradient(180deg, var(--primary), #7dd3fc);
+            background: var(--primary);
         }
 
         .field-card.is-calc .field-accent {
-            background: linear-gradient(180deg, var(--success), #6ee7b7);
+            background: var(--success);
         }
 
         .floating-input {
@@ -392,17 +401,20 @@
             border: 0;
             background: transparent;
             color: var(--text);
-            font-size: 1rem;
-            font-weight: 800;
+            min-height: calc(44px / var(--diagram-scale));
+            font: inherit;
+            font-size: calc(16px / var(--diagram-scale));
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
             text-align: center;
-            padding: 12px 10px;
+            padding: 6px 4px;
             outline: none;
             -moz-appearance: textfield;
         }
 
         .floating-input::placeholder {
-            color: #94a3b8;
-            font-weight: 700;
+            color: var(--text-soft);
+            font-weight: 400;
         }
 
         .floating-input::-webkit-outer-spin-button,
@@ -466,9 +478,10 @@
             appearance: none;
             border: 0;
             border-radius: 13px;
+            min-height: 44px;
             padding: 14px 18px;
             font: inherit;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
             transition: transform var(--motion), box-shadow var(--motion), background var(--motion), color var(--motion);
         }
@@ -478,9 +491,13 @@
         }
 
         .button-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-strong));
-            color: #ffffff;
-            box-shadow: 0 14px 26px rgba(37, 99, 235, 0.22);
+            background: var(--primary);
+            color: var(--on-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .button-primary:hover {
+            background: var(--primary-strong);
         }
 
         .button-secondary {
@@ -498,7 +515,7 @@
 
         .note-card {
             padding: 16px 18px;
-            border-radius: 18px;
+            border-radius: 12px;
             background: var(--surface-soft);
             border: 1px solid var(--line);
         }
@@ -571,7 +588,6 @@
             stroke: rgba(37, 99, 235, 0.92);
             stroke-width: 7;
             stroke-linejoin: round;
-            filter: drop-shadow(0 18px 24px rgba(37, 99, 235, 0.12));
         }
 
         .svg-guide {
@@ -649,20 +665,15 @@
                 grid-template-columns: 1fr;
             }
 
-            .field-name {
-                font-size: 0.72rem;
-            }
-
-            .floating-input {
-                font-size: 0.94rem;
-                padding: 11px 9px;
-            }
         }
 
         @media (max-width: 720px) {
             body {
                 padding: 8px;
             }
+
+            .tool-nav { padding: 8px; gap: 2px; }
+            .tool-nav a { flex: 1; padding-inline: 8px; }
 
             .hero {
                 padding-left: 14px;
@@ -685,28 +696,14 @@
                 margin: 6px;
                 padding: 10px;
                 min-height: unset;
-                aspect-ratio: 600 / 440;
-                border-radius: 18px;
+                aspect-ratio: 600 / 480;
+                border-radius: 12px;
             }
 
             .triangle-svg {
                 inset: 6px;
                 width: calc(100% - 12px);
                 height: calc(100% - 12px);
-            }
-
-            .field-name {
-                font-size: 0.68rem;
-            }
-
-            .unit-chip {
-                font-size: 0.58rem;
-                padding: 3px 6px;
-            }
-
-            .floating-input {
-                font-size: 0.84rem;
-                padding: 10px 7px;
             }
 
             .controls-row .button {
@@ -725,13 +722,23 @@
                 padding-right: 14px;
             }
         }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition: none !important;
+            }
+        }
     </style>
 </head>
 <body>
     <main class="app-shell">
+        <nav class="tool-nav" aria-label="계산 도구">
+            <a href="./index.html">자재 계산</a>
+            <a href="./Cal.html">사선 커팅</a>
+            <a href="./각도마킹.html" aria-current="page">각도 마킹</a>
+        </nav>
         <section class="hero">
             <div class="hero-content">
-                <span class="eyebrow">📐 각도 마킹 도우미</span>
                 <div>
                     <h1>각도 마킹 도우미</h1>
                     <p>높이, 밑변, 대각선, 각도 중 <strong>2개만 입력</strong>하면 나머지 치수를 즉시 계산합니다.</p>
@@ -744,7 +751,7 @@
                 <div class="panel-head">
                     <div>
                         <h2 id="calc-panel-title">직각삼각형 치수 계산</h2>
-                        <p>도형 위 입력창에 직접 입력하면 해당 구간이 강조됩니다. 중복되는 SVG 텍스트는 정리해 도면을 더 깔끔하게 다듬었습니다.</p>
+                        <p>길이는 mm, 각도는 ° 단위로 입력하세요. 입력 중인 변이 도형에 강조됩니다.</p>
                     </div>
                     <div class="status-pill" id="status-pill" aria-live="polite">
                         <span class="status-dot" aria-hidden="true"></span>
@@ -753,7 +760,7 @@
                 </div>
 
                 <div class="calc-stage" id="tri-container">
-                    <svg class="triangle-svg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" aria-label="직각삼각형 계산기 입력 도형 — 높이·밑변·대각선·각도 입력칸이 포함된 인터랙티브 SVG" role="img">
+                    <svg class="triangle-svg" viewBox="0 0 600 440" preserveAspectRatio="xMidYMid meet" aria-label="직각삼각형 계산기 입력 도형 — 높이·밑변·대각선·각도 입력칸이 포함된 인터랙티브 SVG" role="group">
                         <defs>
                             <linearGradient id="triFill" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" stop-color="rgba(59, 130, 246, 0.18)"></stop>
@@ -794,7 +801,7 @@
                                 </div>
                                 <label class="field-body" for="inp-h">
                                     <span class="field-accent" aria-hidden="true"></span>
-                                    <input type="number" id="inp-h" class="floating-input" placeholder="높이" inputmode="decimal" step="any" aria-label="높이 입력" />
+                                    <input type="number" id="inp-h" class="floating-input" placeholder="높이" inputmode="decimal" step="any" aria-label="높이 입력 (mm)" />
                                 </label>
                             </div>
                         </foreignObject>
@@ -807,7 +814,7 @@
                                 </div>
                                 <label class="field-body" for="inp-b">
                                     <span class="field-accent" aria-hidden="true"></span>
-                                    <input type="number" id="inp-b" class="floating-input" placeholder="밑변" inputmode="decimal" step="any" aria-label="밑변 입력" />
+                                    <input type="number" id="inp-b" class="floating-input" placeholder="밑변" inputmode="decimal" step="any" aria-label="밑변 입력 (mm)" />
                                 </label>
                             </div>
                         </foreignObject>
@@ -820,7 +827,7 @@
                                 </div>
                                 <label class="field-body" for="inp-hyp">
                                     <span class="field-accent" aria-hidden="true"></span>
-                                    <input type="number" id="inp-hyp" class="floating-input" placeholder="대각선" inputmode="decimal" step="any" aria-label="대각선 입력" />
+                                    <input type="number" id="inp-hyp" class="floating-input" placeholder="대각선" inputmode="decimal" step="any" aria-label="대각선 입력 (mm)" />
                                 </label>
                             </div>
                         </foreignObject>
@@ -833,7 +840,7 @@
                                 </div>
                                 <label class="field-body" for="inp-a">
                                     <span class="field-accent" aria-hidden="true"></span>
-                                    <input type="number" id="inp-a" class="floating-input" placeholder="각도" inputmode="decimal" step="any" aria-label="각도 입력" />
+                                    <input type="number" id="inp-a" class="floating-input" placeholder="각도" inputmode="decimal" step="any" aria-label="각도 입력 (°)" />
                                 </label>
                             </div>
                         </foreignObject>
@@ -841,7 +848,7 @@
                 </div>
 
                 <div class="stage-footer">
-                    <div class="legend" aria-hidden="true">
+                    <div class="legend">
                         <span class="legend-item"><span class="legend-swatch user"></span>직접 입력한 값</span>
                         <span class="legend-item"><span class="legend-swatch calc"></span>자동 계산된 값</span>
                     </div>
@@ -849,18 +856,18 @@
                 </div>
 
                 <div class="controls-row">
-                    <button class="button button-primary" id="reset-button" type="button">전체 지우기</button>
-                    <span class="helper-copy">도형 위 입력창을 바로 수정할 수 있어 현장 입력 속도를 높였습니다.</span>
+                    <button class="button button-secondary" id="reset-button" type="button">전체 지우기</button>
+                    <span class="helper-copy">다른 입력 조합으로 계산하려면 전체 지우기를 누르세요.</span>
                 </div>
 
                 <div class="note-grid">
                     <article class="note-card">
                         <strong>추천 입력 조합</strong>
-                        <p>도형 위에서 보이는 위치 그대로 2개 값만 넣으면 나머지 치수가 즉시 계산되어 도면 해석 흐름이 자연스럽습니다.</p>
+                        <p>높이 + 밑변, 밑변 + 각도처럼 알고 있는 값 2개를 입력하세요. 자동 계산된 값도 직접 수정할 수 있습니다.</p>
                     </article>
                     <article class="note-card">
                         <strong>입력 오류 방지</strong>
-                        <p>빗변은 반드시 다른 변보다 길어야 하며, 계산 불가능한 조합은 즉시 토스트로 안내하고 자동 계산값을 정리합니다.</p>
+                        <p>대각선은 다른 변보다 길어야 합니다. 각도는 0°보다 크고 90°보다 작아야 합니다.</p>
                     </article>
                 </div>
             </section>
@@ -871,6 +878,16 @@
     <span class="sr-only" id="live-region" aria-live="polite"></span>
 
     <script>
+        const diagram = document.querySelector('.triangle-svg');
+        // SVG coordinates stay fixed; keep the embedded form controls readable at every viewport size.
+        function updateDiagramScale() {
+            const bounds = diagram.getBoundingClientRect();
+            const scale = Math.min(bounds.width / 600, bounds.height / 440);
+            if (scale > 0) diagram.style.setProperty('--diagram-scale', scale);
+        }
+        new ResizeObserver(updateDiagramScale).observe(diagram);
+        updateDiagramScale();
+
         const fields = {
             b: {
                 input: document.getElementById('inp-b'),

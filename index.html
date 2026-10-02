@@ -20,7 +20,7 @@
      ========================================================================== */
   :root {
     color-scheme: light dark;
-    --c-bg: #f1f5f9;
+    --c-bg: #f4f6f8;
     --c-surface: #ffffff;
     --c-surface-2: #f8fafc;
     --c-border: #cbd5e1;
@@ -49,8 +49,8 @@
     --space-2: 12px;
     --space-3: 16px;
     --space-4: 20px;
-    --control-h: 40px;
-    --control-h-compact: 36px;
+    --control-h: 48px;
+    --control-h-compact: 44px;
     --gas-qty-min-width: 132px;
 
     --e-1: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
@@ -122,14 +122,14 @@
     letter-spacing: -0.01em;
     word-break: keep-all;
     overflow-wrap: anywhere;
-    padding: 12px 12px calc(96px + env(safe-area-inset-bottom));
+    padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     min-height: 100dvh;
     /* iOS Safari: 고정 요소가 있을 때 스크롤 성능 향상 */
     -webkit-overflow-scrolling: touch;
     transition: background var(--m-base), color var(--m-base);
   }
   /* Typography scale */
-  h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; margin: 0; }
+  h1 { font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 800; letter-spacing: -0.03em; margin: 0; }
   h2 { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.015em; margin: 0; }
   h3 { font-size: .92rem; font-weight: 700; margin: 0; }
   h4 { font-size: .86rem; font-weight: 700; margin: 0; }
@@ -137,26 +137,29 @@
   small { font-size: .78rem; }
 
   /* Layout */
-  .wrap { max-width: 1320px; margin: 0 auto; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  .skip-link { position: fixed; top: 8px; left: 8px; z-index: 4000; padding: 12px 20px; background: var(--c-surface); color: var(--c-primary); transform: translateY(-150%); }
+  .skip-link:focus { transform: none; }
+  .tool-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; padding: 6px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-lg); }
+  .tool-nav a { flex: 1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 12px; border-radius: var(--r-md); text-decoration: none; color: var(--c-text-sub); font-size: .88rem; font-weight: 700; text-align: center; }
+  .tool-nav a:hover { background: var(--c-surface-2); color: var(--c-primary); }
+  .tool-nav a[aria-current="page"] { background: var(--c-primary-weak); color: var(--c-primary-strong); }
+  .section-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 4px; }
+  .step-number { display: grid; place-items: center; flex: 0 0 32px; height: 32px; border: 1px solid var(--c-border); border-radius: 10px; color: var(--c-primary); background: var(--c-surface); font-size: .78rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .section-heading p { margin-top: 3px; font-size: .8rem; color: var(--c-text-sub); }
+  .queue-tools { display: flex; gap: 8px; margin-bottom: 12px; }
+  .queue-tools .btn { width: auto; font-size: .82rem; }
+  .session-note { color: var(--c-text-mute); font-size: .78rem; margin-top: 12px; }
+  .input-column, #queueCard, #resultCard { scroll-margin-top: 20px; }
 
   /* App header */
   .app-header {
     position: relative;
-    background: var(--c-surface);
-    border-radius: var(--r-lg);
-    box-shadow: var(--e-1);
-    padding: var(--space-2) var(--space-3);
-    margin-bottom: var(--space-2);
+    background: transparent;
+    padding: 8px 0 20px;
+    margin-bottom: 0;
     display: flex; align-items: center; gap: var(--space-2);
-    border: 1px solid var(--c-border);
     flex-wrap: wrap; row-gap: var(--space-1);
-    overflow: hidden;
-  }
-  /* Subtle accent strip on the top edge of the header */
-  .app-header::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg, var(--c-primary) 0%, var(--c-success) 60%, var(--c-accent) 100%);
-    opacity: .85;
   }
   /* brand: 최소 200px flex-basis로 controls에 밀려 0px가 되는 현상 방지 */
   .app-header .brand { flex: 1 1 200px; min-width: 0; padding-right: 52px; }
@@ -164,8 +167,8 @@
   .app-header .brand p { color: var(--c-text-mute); font-size: .78rem; margin-top: 3px; font-weight: 500; }
   .app-header .header-theme-toggle {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 8px;
+    right: 0;
     z-index: 1;
   }
   /* controls: min-width 0으로 flex-shrink가 제대로 동작하게 함 */
@@ -179,7 +182,7 @@
     border-radius: var(--r-md); color: var(--c-text); max-width: 180px;
   }
   .icon-btn {
-    width: 34px; height: 34px; border-radius: var(--r-md);
+    width: 44px; height: 44px; border-radius: var(--r-md);
     border: 1px solid var(--c-border); background: var(--c-surface-2);
     color: var(--c-text-sub); display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer; font-size: 1rem; transition: background var(--m-fast), color var(--m-fast), transform var(--m-fast);
@@ -207,6 +210,7 @@
   .icon-btn:hover { background: var(--c-primary-weak); color: var(--c-primary); }
   .icon-btn[data-action="q-del"]:hover { background: var(--c-danger-weak); color: var(--c-danger); }
   .icon-btn:active { transform: scale(.94); }
+  .icon-btn:disabled { opacity: .45; cursor: not-allowed; }
   .icon-btn[aria-pressed="true"] { background: var(--c-primary); color: #fff; border-color: var(--c-primary); }
 
   /* Language picker (header) */
@@ -218,18 +222,18 @@
     border: 1px solid var(--c-border);
     border-radius: 999px;
     padding: 0 4px 0 8px;
-    height: 36px;
+    height: 44px;
     transition: border-color var(--m-fast);
   }
   .lang-picker:hover, .lang-picker:focus-within { border-color: var(--c-focus); }
   .lang-picker select {
     appearance: none; -webkit-appearance: none;
     background: transparent; border: none; outline: none;
-    color: var(--c-text); font-weight: 700; font-size: .82rem;
-    padding: 0 22px 0 8px; height: 34px; cursor: pointer;
+    color: var(--c-text); font-weight: 700; font-size: 1rem;
+    padding: 0 22px 0 8px; height: 42px; cursor: pointer;
     background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
                       linear-gradient(135deg, currentColor 50%, transparent 50%);
-    background-position: calc(100% - 12px) 14px, calc(100% - 7px) 14px;
+    background-position: calc(100% - 12px) 18px, calc(100% - 7px) 18px;
     background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
   }
@@ -262,22 +266,19 @@
   .tut-lang-chip:focus-visible { outline: 2px solid var(--c-focus); outline-offset: 2px; }
   .tut-lang-chip .flag { font-size: 1.1rem; }
 
-  /* Main grid: 1/2/3 columns responsive */
+  /* Input on the left; review and results share the right column. */
   .main-grid {
     display: grid;
-    gap: var(--space-2);
+    gap: 24px;
     align-items: start;
     grid-template-columns: 1fr;
   }
-  @media (min-width: 760px) {
-    .main-grid { grid-template-columns: 1fr 1fr; }
-    /* 결과 섹션이 두 번째 행에 홀로 뜨지 않도록 전체 너비로 표시 */
-    .main-grid > section:nth-child(3) { grid-column: 1 / -1; }
-  }
-  @media (min-width: 1200px) {
-    .main-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr); }
-    /* 데스크탑 3열에서는 결과 섹션이 3번째 열에 자연스럽게 위치 */
-    .main-grid > section:nth-child(3) { grid-column: auto; }
+  @media (min-width: 900px) {
+    .main-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); }
+    .input-column { grid-row: span 2; }
+    .main-grid > section:not(.input-column) { grid-column: 2; }
+    .app-header .controls { padding-right: 56px; }
+    .app-header .brand { padding-right: 0; }
   }
   .col { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 
@@ -380,6 +381,7 @@
     transition: grid-template-rows .28s cubic-bezier(.4,0,.2,1);
   }
   .acc-body[aria-hidden="true"] { grid-template-rows: 0fr; }
+  .acc-body[aria-hidden="true"] .acc-body-inner { padding-bottom: 0; }
   .acc-body-inner {
     overflow: hidden;
     padding: 0 var(--space-3) var(--space-3);
@@ -409,7 +411,7 @@
   }
   .field .label-with-help label { margin-bottom: 0; }
   .measure-help-btn {
-    flex: 0 0 auto; width: 20px; height: 20px; border-radius: 999px;
+    flex: 0 0 auto; width: 44px; height: 44px; border-radius: var(--r-md);
     border: 1px solid var(--c-border); background: var(--c-primary-weak);
     color: var(--c-primary-strong); font-size: .72rem; font-weight: 900;
     line-height: 1; display: inline-flex; align-items: center; justify-content: center;
@@ -451,7 +453,7 @@
   }
 
   /* Focus ring (a11y) */
-  :where(select, input, textarea, button, [tabindex]):focus-visible {
+  :where(select, input, textarea, button, a, summary, [tabindex]):focus-visible {
     outline: none;
     border-color: var(--c-focus);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35); /* --c-primary(#2563eb) 35% 폴백 */
@@ -489,18 +491,18 @@
   }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn:active:not(:disabled) { transform: scale(.97); }
-  .btn-primary { background: var(--c-primary); color: #fff; box-shadow: var(--e-1); }
-  .btn-primary:hover:not(:disabled) { background: var(--c-primary-strong); }
+  .btn-primary { background: #2563eb; color: #fff; box-shadow: var(--e-1); }
+  .btn-primary:hover:not(:disabled) { background: #1d4ed8; }
   .btn-secondary { background: var(--c-surface-2); border-color: var(--c-border); color: var(--c-text); }
   .btn-secondary:hover:not(:disabled) { background: var(--c-primary-weak); border-color: var(--c-primary); color: var(--c-primary); }
-  .btn-success { background: var(--c-primary); color: #fff; box-shadow: var(--e-1); font-size: .95rem; }
-  .btn-success:hover:not(:disabled) { background: var(--c-primary-strong); }
+  .btn-success { background: #2563eb; color: #fff; box-shadow: var(--e-1); font-size: .95rem; }
+  .btn-success:hover:not(:disabled) { background: #1d4ed8; }
   .btn-warn   { background: var(--c-surface-2); border-color: var(--c-border); color: var(--c-text-sub); }
   .btn-warn:hover:not(:disabled) { background: var(--c-primary-weak); border-color: var(--c-primary); color: var(--c-primary); }
   .btn-ghost  { background: transparent; border-color: var(--c-border); color: var(--c-text-sub); }
   .btn-ghost:hover { background: var(--c-surface-2); color: var(--c-text); }
   .btn-danger { background: var(--c-danger-weak); color: var(--c-danger); border-color: transparent; }
-  .btn-sm { min-height: 32px; padding: 0 10px; font-size: .82rem; }
+  .btn-sm { min-height: 44px; padding: 0 10px; font-size: .82rem; }
   .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* Ripple effect */
@@ -526,10 +528,10 @@
   .toggle-extra { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 
   /* Switch */
-  .switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+  .switch { position: relative; display: inline-block; width: 44px; height: 44px; flex-shrink: 0; }
   .switch input { opacity: 0; width: 0; height: 0; }
   .slider {
-    position: absolute; cursor: pointer; inset: 0;
+    position: absolute; cursor: pointer; inset: 10px 0;
     background: var(--c-border-strong); border-radius: 24px;
     transition: background var(--m-base);
   }
@@ -545,7 +547,7 @@
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-focus) 35%, transparent);
   }
 
-  .gasket-select { width: 110px !important; height: 32px !important; font-size: .78rem !important; padding: 0 24px 0 8px !important; }
+  .gasket-select { width: 126px; height: 44px; font-size: 1rem; padding: 0 28px 0 8px; }
 
   /* Search results */
   .search-res {
@@ -558,7 +560,7 @@
   .search-res .badge-pill {
     display: inline-flex; align-items: center; gap: 4px;
     background: var(--c-surface); border: 1px solid var(--c-border);
-    padding: 4px 10px; border-radius: 999px; font-weight: 700;
+    padding: 10px 12px; min-height: 44px; border-radius: var(--r-md); font-weight: 700;
     margin: 4px 4px 0 0; font-size: .8rem; color: var(--c-text);
     cursor: pointer; transition: background var(--m-fast), border-color var(--m-fast);
   }
@@ -583,7 +585,7 @@
     overscroll-behavior: contain;
   }
   .q-item {
-    display: flex; flex-direction: row; align-items: center; gap: 8px;
+    display: flex; flex-direction: column; align-items: stretch; gap: 12px;
     padding: 10px 12px; background: var(--c-surface-2);
     border: 1px solid var(--c-border); border-radius: var(--r-md);
     animation: springIn .38s var(--m-spring);
@@ -605,9 +607,9 @@
   .q-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .q-title {
     font-size: .9rem; font-weight: 800; color: var(--c-text);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    white-space: normal; overflow-wrap: anywhere;
   }
-  .q-title-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .q-title-text { white-space: normal; min-width: 0; }
   .q-desc { font-size: .78rem; color: var(--c-text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .q-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 1px; }
   .q-tag {
@@ -618,17 +620,17 @@
   .q-tag.blue { background: var(--c-primary-weak); color: var(--c-primary-strong); border-color: transparent; }
   .q-tag.warn { background: var(--c-warn-weak); color: var(--c-warn); border-color: transparent; }
   /* 액션: 우측 고정 (스테퍼 + 삭제만) */
-  .q-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
-  .q-mini-stepper { display: flex; align-items: center; height: 32px; border: 1px solid var(--c-border); border-radius: var(--r-sm); overflow: hidden; background: var(--c-surface); }
-  .q-mini-stepper button { width: 28px; height: 32px; border: none; background: transparent; color: var(--c-text-sub); cursor: pointer; font-size: .95rem; }
+  .q-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+  .q-mini-stepper { display: flex; align-items: center; height: 46px; border: 1px solid var(--c-border); border-radius: var(--r-sm); overflow: hidden; background: var(--c-surface); margin-right: auto; }
+  .q-mini-stepper button { width: 44px; height: 44px; border: none; background: transparent; color: var(--c-text-sub); cursor: pointer; font-size: 1rem; }
   .q-mini-stepper button:hover { background: var(--c-primary-weak); color: var(--c-primary); }
-  .q-mini-stepper input { width: 36px; height: 32px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: .88rem; padding: 0; color: var(--c-text); }
+  .q-mini-stepper input { width: 56px; height: 44px; border: none; background: transparent; text-align: center; font-weight: 800; font-size: 1rem; padding: 0; color: var(--c-text); }
 
   /* Empty state */
   .empty-state {
     padding: 32px 16px; text-align: center; color: var(--c-text-mute);
     font-size: .88rem; background: var(--c-surface-2);
-    border-radius: var(--r-md); border: 2px dashed var(--c-border);
+    border-radius: var(--r-md); border: 1px dashed var(--c-border);
     display: flex; flex-direction: column; align-items: center; gap: 8px;
   }
   .empty-state svg { width: 56px; height: 56px; opacity: .55; }
@@ -642,22 +644,21 @@
   /* Result box */
   .result-box {
     padding: 18px; background: var(--c-surface);
-    border: 2px solid var(--c-success); border-radius: var(--r-lg);
-    box-shadow: var(--e-3); display: none;
+    border: 1px solid var(--c-border); border-top: 3px solid var(--c-primary); border-radius: var(--r-lg);
+    box-shadow: var(--e-1); display: none;
   }
   .result-box.show { display: block; animation: springIn .4s var(--m-spring); }
   .result-box .res-head {
     display: flex; align-items: center; gap: 8px;
-    border-bottom: 2px dashed rgba(5, 150, 105, 0.4);
-    border-bottom: 2px dashed color-mix(in srgb, var(--c-success) 40%, transparent);
+    border-bottom: 1px solid var(--c-border);
     padding-bottom: 12px; margin-bottom: 14px;
   }
-  .result-box .res-head h2 { color: var(--c-success); flex: 1; min-width: 0; }
+  .result-box .res-head h2 { color: var(--c-text); flex: 1; min-width: 0; }
   .result-box .res-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
   /* Flat result list */
   .res-flat-wrapper { border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 4px; }
-  .res-flat-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  .res-flat-table { width: 100%; border-collapse: collapse; font-size: .94rem; font-variant-numeric: tabular-nums; }
   .res-flat-table th, .res-flat-table td { padding: 9px 10px; border-bottom: 1px solid var(--c-border); color: var(--c-text); vertical-align: middle; }
   .res-flat-table th { background: var(--c-surface-2); color: var(--c-text-sub); font-weight: 700; font-size: .75rem; letter-spacing: .02em; position: sticky; top: 0; }
   .res-flat-table th:first-child { width: 72px; text-align: center; }
@@ -923,7 +924,7 @@
     bottom: var(--kb-offset, 0px);
   }
   .floating-bar.show { transform: none; }
-  .float-info { flex: 1; font-size: .9rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+  .float-info { flex: 1; font-size: .9rem; font-weight: 800; display: flex; align-items: center; justify-content: flex-start; gap: 6px; }
   .float-badge {
     background: var(--c-primary-weak); color: var(--c-primary);
     border: 1px solid var(--c-primary);
@@ -931,42 +932,12 @@
     border-radius: 999px; font-size: .8rem; transition: transform var(--m-base);
   }
   .float-badge.pop { transform: scale(1.3); }
-  .floating-bar button { width: auto; min-height: 38px; padding: 0 14px; }
-
-  /* Cart FAB */
-  .cart-fab {
-    position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom));
-    z-index: 960; width: 56px; height: 56px;
-    background: #f59e0b; color: #fff;
-    border: 2.5px solid #fff; border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; box-shadow: 0 4px 18px rgba(245,158,11,.45), 0 2px 8px rgba(0,0,0,.18);
-    transition: bottom var(--m-spring), transform var(--m-base), background var(--m-base), box-shadow var(--m-base);
-  }
-  /* Lift FAB above floating bar when bar is visible */
-  body:has(.floating-bar.show) .cart-fab {
-    bottom: calc(74px + env(safe-area-inset-bottom));
-  }
-  body.is-floating-visible .cart-fab {
-    bottom: calc(74px + env(safe-area-inset-bottom));
-  }
+  .floating-bar button { width: auto; min-height: 48px; padding: 0 14px; }
+  @media (min-width: 900px) { .floating-bar { display: none; } }
   body:has(.floating-bar.show) .install-banner.show,
   body.is-floating-visible .install-banner.show {
     display: none;
   }
-  .cart-fab:hover { background: #d97706; transform: scale(1.07); box-shadow: 0 6px 22px rgba(217,119,6,.5), 0 2px 8px rgba(0,0,0,.2); }
-  .cart-fab:active { transform: scale(.95); }
-  .cart-fab-badge {
-    position: absolute; top: 4px; right: 4px;
-    background: var(--c-danger, #e53e3e); color: #fff;
-    font-size: .62rem; font-weight: 800; min-width: 17px; height: 17px;
-    padding: 0 4px; border-radius: 999px;
-    display: flex; align-items: center; justify-content: center;
-    transition: transform var(--m-base);
-    pointer-events: none;
-  }
-  .cart-fab-badge[hidden] { display: none; }
-  .cart-fab-badge.pop { transform: scale(1.4); }
 
   /* Cart drawer (bottom-sheet modal variant) */
   .cart-drawer { align-items: flex-end; padding: 0; }
@@ -997,7 +968,7 @@
   .cart-item-ro-desc { font-size: .78rem; color: var(--c-text-sub); margin-top: 2px; }
   .cart-item-ro-qty { font-size: .85rem; font-weight: 800; color: var(--c-primary); white-space: nowrap; }
   .cart-item-ro-del {
-    flex-shrink: 0; width: 28px; height: 28px; border-radius: var(--r-sm);
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: var(--r-sm);
     border: none; background: transparent; color: var(--c-text-mute);
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     font-size: .85rem; transition: background var(--m-fast), color var(--m-fast);
@@ -1006,15 +977,7 @@
   .cart-drawer-actions { display: flex; gap: 8px; margin-top: 16px; }
   .cart-drawer-actions .btn { flex: 1; }
 
-  /* Compact queue items */
-  .q-item { padding: 7px 10px; gap: 6px; }
-  .q-item-main { gap: 6px; }
-  .q-info { gap: 1px; }
-  .q-title { font-size: .83rem; }
   .q-compact-label { font-size: .75rem; color: var(--c-text-mute); margin-left: 4px; }
-  .q-mini-stepper { height: 30px; }
-  .q-mini-stepper button { width: 26px; height: 30px; }
-  .q-mini-stepper input { width: 32px; height: 30px; }
 
   /* Modal */
   .modal {
@@ -1258,10 +1221,12 @@
   /* Print */
   @media print {
     body { background: #fff; color: #000; padding: 0; }
-    .app-header .controls, .floating-bar, .cart-fab, .install-banner, .install-cta, #toast, .modal,
+    .app-header, .tool-nav, .section-heading, .queue-tools, .session-note, .skip-link, #visitorFooter, .floating-bar, .install-banner, .install-cta, #toast, .modal,
     .card:not(#queueCard):not(#resultCard), .action-row, .q-actions, .q-handle,
-    .res-actions, .card-head .badge { display: none !important; }
+    .res-actions, .res-action-strip, .card-head .badge { display: none !important; }
     .main-grid { grid-template-columns: 1fr !important; }
+    .main-grid > section:not(.input-column) { grid-column: 1; }
+    .input-column { display: none; }
     .card { box-shadow: none !important; border: 1px solid #ccc !important; page-break-inside: avoid; }
     .result-box { display: block !important; border-color: #000 !important; }
     .queue-list { max-height: none !important; overflow: visible !important; }
@@ -1272,6 +1237,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#materialInput" data-i18n="nav.skip">자재 입력으로 바로가기</a>
 <div class="wrap" id="appRoot">
 
   <header class="app-header" role="banner">
@@ -1289,31 +1255,32 @@
           <option value="id">🇮🇩 Bahasa Indonesia</option>
         </select>
       </div>
-      <a class="icon-btn" href="./Cal.html" data-i18n-attr="title:tb.pipe_calc,aria-label:tb.pipe_calc" title="파이프 사선 커팅 계산기 열기" aria-label="파이프 사선 커팅 계산기 열기">
-        <span class="pipe-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <circle cx="5.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
-            <circle cx="18.5" cy="12" r="3" fill="currentColor" opacity="0.9"></circle>
-            <rect x="5.5" y="9" width="13" height="6" rx="2" fill="currentColor"></rect>
-          </svg>
-        </span>
-      </a>
       <button id="btnHelpTutorial" class="icon-btn help-btn" data-action="open-tutorial" data-i18n="tb.help_btn" data-i18n-attr="title:tb.help,aria-label:tb.help" title="사용 가이드" aria-label="사용 가이드 열기">도움말</button>
     </div>
   </header>
 
-  <div class="main-grid">
+  <nav class="tool-nav" data-i18n-attr="aria-label:nav.tools" aria-label="계산 도구">
+    <a href="./index.html" aria-current="page" data-i18n="nav.material">자재 계산</a>
+    <a href="./Cal.html" data-i18n="nav.cutting">사선 커팅</a>
+    <a href="./각도마킹.html" data-i18n="nav.angle">각도 마킹</a>
+  </nav>
+
+  <main class="main-grid">
 
     <!-- ============================== COLUMN 1: 입력 ============================== -->
-    <section class="col" data-i18n-attr="aria-label:sec.input" aria-label="자재 입력">
+    <section class="col input-column" id="materialInput" tabindex="-1" data-i18n-attr="aria-label:sec.input" aria-label="자재 입력">
+      <div class="section-heading">
+        <span class="step-number" aria-hidden="true">01</span>
+        <div><h2 data-i18n="sec.input">자재 입력</h2><p data-i18n="work.input_hint">필요한 자재의 규격과 수량을 선택하세요.</p></div>
+      </div>
 
-      <!-- 1. 플랜지 사이즈 역산 (기본 열림) -->
+      <!-- 1. 플랜지 사이즈 역산 -->
       <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFind">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFind">
           <h2><span data-i18n="card.find">플랜지 사이즈 역산</span></h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
-        <div id="accBodyFind" class="acc-body">
+        <div id="accBodyFind" class="acc-body" aria-hidden="true" inert>
           <div class="acc-body-inner">
             <div class="form-grid col-auto" style="margin-bottom:8px;">
               <div class="field">
@@ -1333,13 +1300,13 @@
         </div>
       </div>
 
-      <!-- 2. 플랜지 포인트 (기본 닫힘) -->
+      <!-- 2. 플랜지 포인트 (기본 열림) -->
       <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFlange">
+        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFlange">
           <h2 data-i18n="card.flange">플랜지 포인트</h2>
           <span class="acc-chevron" aria-hidden="true">▾</span>
         </button>
-        <div id="accBodyFlange" class="acc-body" aria-hidden="true" inert>
+        <div id="accBodyFlange" class="acc-body">
           <div class="acc-body-inner">
             <div class="form-grid col-3">
               <div class="field">
@@ -1369,15 +1336,15 @@
 
             <div id="flangeOptionBox" class="option-box">
               <div class="toggle-row">
-                <span class="toggle-title" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)</span>
+                <label class="toggle-title" for="optExtended" id="lblExt" data-i18n="opt.ext">볼트 5mm 더 길게 (폴리파이프 / 두꺼운 밸브)</label>
                 <label class="switch"><input type="checkbox" id="optExtended" aria-labelledby="lblExt"><span class="slider"></span></label>
               </div>
               <div class="toggle-row">
-                <span class="toggle-title" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (너트 두께 자동 합산)</span>
+                <label class="toggle-title" for="optDoubleNut" id="lblDN" data-i18n="opt.dn">더블 너트 적용 (너트 두께 자동 합산)</label>
                 <label class="switch"><input type="checkbox" id="optDoubleNut" aria-labelledby="lblDN"><span class="slider"></span></label>
               </div>
               <div class="toggle-row">
-                <span class="toggle-title" id="lblGsk" data-i18n="opt.gsk">가스켓 포함</span>
+                <label class="toggle-title" for="optGasket" id="lblGsk" data-i18n="opt.gsk">가스켓 포함</label>
                 <div class="toggle-extra">
                   <label class="sr-only" for="gTypeInFlange" data-i18n="aria.gsk_type">가스켓 종류</label>
                   <select id="gTypeInFlange" class="gasket-select" data-i18n-attr="aria-label:aria.gsk_type_in" aria-label="포함될 가스켓 종류">
@@ -1528,20 +1495,33 @@
 
     <!-- ============================== COLUMN 2: 대기열 ============================== -->
     <section class="col" data-i18n-attr="aria-label:sec.queue" aria-label="등록 대기열">
+      <div class="section-heading">
+        <span class="step-number" aria-hidden="true">02</span>
+        <div><h2 data-i18n="sec.queue">등록 대기열</h2><p data-i18n="work.queue_hint">추가한 항목을 확인하고 한 번에 집계하세요.</p></div>
+      </div>
       <div class="card" id="queueCard">
         <div class="card-head">
           <h2><span data-i18n="card.queue">등록 대기열</span> <span class="badge" id="qCount">0건</span></h2>
+        </div>
+        <div class="queue-tools">
+          <button id="btnUndo" class="btn btn-ghost" type="button" data-action="undo" data-i18n-attr="title:tb.undo_title" disabled><span aria-hidden="true">↶</span><span data-i18n="tb.undo">되돌리기</span></button>
+          <button id="btnRedo" class="btn btn-ghost" type="button" data-action="redo" data-i18n-attr="title:tb.redo_title" disabled><span aria-hidden="true">↷</span><span data-i18n="tb.redo">다시 실행</span></button>
         </div>
         <div id="qBody" class="queue-list" aria-live="polite" aria-relevant="additions removals"></div>
         <div class="action-row">
           <button id="btnCalculateMain" class="btn btn-success" data-action="calculate"><span data-i18n="btn.calc">최종 집계</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.ctrl_enter">(Ctrl+Enter)</small></button>
           <button class="btn btn-ghost" data-action="clear-all" data-i18n="btn.clear">초기화</button>
         </div>
+        <p class="session-note" data-i18n="work.session_note">작업 내용은 새로고침하거나 다른 도구로 이동하면 초기화됩니다. 결과를 먼저 복사하거나 이미지로 저장하세요.</p>
       </div>
     </section>
 
     <!-- ============================== COLUMN 3: 결과 ============================== -->
     <section class="col" data-i18n-attr="aria-label:sec.result" aria-label="집계 결과">
+      <div class="section-heading">
+        <span class="step-number" aria-hidden="true">03</span>
+        <div><h2 data-i18n="sec.result">집계 결과</h2><p data-i18n="work.result_hint">규격별 합계를 확인하고 현장에 공유하세요.</p></div>
+      </div>
       <div id="resultCard" class="result-box" role="region" data-i18n-attr="aria-label:sec.result_aria" aria-label="최종 집계 결과">
         <!-- 동적으로 채워짐 -->
       </div>
@@ -1559,15 +1539,9 @@
       </div>
     </section>
 
-  </div>
+  </main>
 
   <div id="toast" role="status" aria-live="polite"></div>
-
-  <!-- 장바구니 FAB (항상 표시) -->
-  <button id="cartFab" class="cart-fab" type="button" data-action="open-cart" aria-label="장바구니 대기열 보기">
-    🛒
-    <span id="cartFabBadge" class="cart-fab-badge" hidden>0</span>
-  </button>
 
   <!-- 장바구니 드로어 -->
   <div id="cartModal" class="modal cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-hidden="true">
@@ -1578,16 +1552,16 @@
       </div>
       <div id="cartDrawerBody"></div>
       <div class="cart-drawer-actions">
-        <button class="btn btn-ghost" type="button" data-action="close-cart" data-i18n="cart.to_queue">대기열로 이동</button>
+        <button class="btn btn-ghost" type="button" data-action="go-queue" data-i18n="cart.to_queue">대기열로 이동</button>
         <button class="btn btn-success" type="button" data-action="cart-calculate" data-i18n="fb.show_result">결과보기</button>
       </div>
     </div>
   </div>
 
   <!-- 모바일 플로팅 바 -->
-  <div id="floatingBar" class="floating-bar" aria-hidden="true">
-    <div class="float-info"><span data-i18n="fb.queue">대기열</span> <span id="floatCount" class="float-badge">0</span></div>
-    <button class="btn btn-success" data-action="calculate" style="min-height:38px;padding:0 14px;" data-i18n="fb.show_result">결과보기</button>
+  <div id="floatingBar" class="floating-bar" aria-hidden="true" inert>
+    <button class="btn btn-ghost float-info" type="button" data-action="open-cart"><span data-i18n="fb.queue">대기열</span> <span id="floatCount" class="float-badge">0</span></button>
+    <button class="btn btn-success" data-action="calculate" data-i18n="fb.show_result">결과보기</button>
   </div>
 
   <!-- 설치 배너 -->
@@ -1671,6 +1645,7 @@
         <div class="tut-lang-pg">
           <h2 id="tutorialTitle" data-i18n="tut.lang_pg_title">🌐 언어를 먼저 선택해주세요</h2>
           <p data-i18n="tut.lang_pg_desc">원하는 언어를 고르면 앱 전체가 해당 언어로 표시됩니다.</p>
+          <button class="btn btn-ghost" type="button" data-action="skip-tutorial" data-i18n="work.start">설명 없이 바로 시작</button>
         </div>
         <div class="tut-lang-chips-big">
           <button type="button" class="tut-lang-chip-big" data-action="tut-lang-pick" data-lang="ko" aria-pressed="false">

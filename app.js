@@ -139,6 +139,16 @@
 
   const I18N = {
     ko: {
+      'nav.skip':             '자재 입력으로 바로가기',
+      'nav.tools':            '계산 도구',
+      'nav.material':         '자재 계산',
+      'nav.cutting':          '사선 커팅',
+      'nav.angle':            '각도 마킹',
+      'work.input_hint':      '필요한 자재의 규격과 수량을 선택하세요.',
+      'work.queue_hint':      '추가한 항목을 확인하고 한 번에 집계하세요.',
+      'work.result_hint':     '규격별 합계를 확인하고 현장에 공유하세요.',
+      'work.session_note':    '작업 내용은 새로고침하거나 다른 도구로 이동하면 초기화됩니다. 결과를 먼저 복사하거나 이미지로 저장하세요.',
+      'work.start':           '설명 없이 바로 시작',
       // App
       'app.title':            '설비/배관 자재 계산기',
       'app.subtitle':         'JIS 규격 기반 · 오프라인 PWA',
@@ -245,7 +255,7 @@
       'kbd.ctrl_enter':       '(Ctrl+Enter)',
       'btn.clear':            '초기화',
       'q.empty_t':            '대기열이 비어 있어요',
-      'q.empty_d':            '좌측 양식에서 자재를 추가하면 여기에 쌓입니다.',
+      'q.empty_d':            '자재 입력에서 항목을 추가하면 여기에 표시됩니다.',
       'q.flange':             '플랜지',
       'q.gasket':             '가스켓',
       'q.ubolt':              'U-볼트',
@@ -491,6 +501,16 @@
     },
 
     vi: {
+      'nav.skip':             'Chuyển đến nhập vật tư',
+      'nav.tools':            'Công cụ tính toán',
+      'nav.material':         'Vật tư',
+      'nav.cutting':          'Cắt xiên',
+      'nav.angle':            'Đánh dấu góc',
+      'work.input_hint':      'Chọn quy cách và số lượng vật tư cần dùng.',
+      'work.queue_hint':      'Kiểm tra các mục đã thêm rồi tổng hợp.',
+      'work.result_hint':     'Kiểm tra tổng theo quy cách và chia sẻ.',
+      'work.session_note':    'Tải lại trang hoặc chuyển công cụ sẽ xóa công việc hiện tại. Hãy sao chép hoặc lưu ảnh kết quả trước.',
+      'work.start':           'Bắt đầu không cần hướng dẫn',
       'app.title':            'Máy tính Vật tư Đường ống',
       'app.subtitle':         'Tiêu chuẩn JIS · PWA Ngoại tuyến',
       'app.toolbar':          'Công cụ ứng dụng',
@@ -588,7 +608,7 @@
       'kbd.ctrl_enter':       '(Ctrl+Enter)',
       'btn.clear':            'Xóa hết',
       'q.empty_t':            'Hàng chờ đang trống',
-      'q.empty_d':            'Thêm vật tư từ form bên trái — chúng sẽ xuất hiện ở đây.',
+      'q.empty_d':            'Thêm vật tư từ phần nhập — chúng sẽ xuất hiện ở đây.',
       'q.flange':             'Mặt bích',
       'q.gasket':             'Gioăng',
       'q.ubolt':              'Bu lông U',
@@ -824,6 +844,16 @@
     },
 
     id: {
+      'nav.skip':             'Langsung ke input material',
+      'nav.tools':            'Alat perhitungan',
+      'nav.material':         'Material',
+      'nav.cutting':          'Potong miring',
+      'nav.angle':            'Penandaan sudut',
+      'work.input_hint':      'Pilih spesifikasi dan jumlah material.',
+      'work.queue_hint':      'Periksa item yang ditambahkan lalu rekap.',
+      'work.result_hint':     'Periksa total per spesifikasi dan bagikan.',
+      'work.session_note':    'Memuat ulang atau berpindah alat akan menghapus pekerjaan saat ini. Salin atau simpan gambar hasil terlebih dahulu.',
+      'work.start':           'Mulai tanpa panduan',
       'app.title':            'Kalkulator Material Pipa',
       'app.subtitle':         'Standar JIS · PWA Offline',
       'app.toolbar':          'Alat aplikasi',
@@ -921,7 +951,7 @@
       'kbd.ctrl_enter':       '(Ctrl+Enter)',
       'btn.clear':            'Reset',
       'q.empty_t':            'Antrean kosong',
-      'q.empty_d':            'Tambahkan material dari form di kiri — akan muncul di sini.',
+      'q.empty_d':            'Tambahkan material dari bagian input — akan muncul di sini.',
       'q.flange':             'Flensa',
       'q.gasket':             'Gasket',
       'q.ubolt':              'Baut U',
@@ -1670,8 +1700,11 @@
     /**
      * Render queue list. Uses DOM API only (no innerHTML w/ user data).
      */
-    renderQueue() {
+    renderQueue(invalidateResult = true) {
+      if (invalidateResult) this.resetResult();
       const tb = $('#qBody');
+      const previousCount = tb.querySelectorAll('.q-item').length;
+      const previousScroll = tb.scrollTop;
       const qCount = $('#qCount');
       const fb = $('#floatingBar');
       const fbBadge = $('#floatCount');
@@ -1679,23 +1712,11 @@
 
       qCount.textContent = t('unit.count', { n: queue.length });
 
-      // Cart FAB badge
-      const cartBadge = $('#cartFabBadge');
-      if (cartBadge) {
-        if (queue.length > 0) {
-          cartBadge.textContent = String(queue.length);
-          cartBadge.hidden = false;
-          cartBadge.classList.add('pop');
-          setTimeout(() => cartBadge.classList.remove('pop'), 220);
-        } else {
-          cartBadge.hidden = true;
-        }
-      }
-
       // Floating bar (mobile)
       if (queue.length > 0) {
         fb.classList.add('show');
         fb.setAttribute('aria-hidden', 'false');
+        fb.removeAttribute('inert');
         document.body.classList.add('is-floating-visible');
         fbBadge.textContent = String(queue.length);
         fbBadge.classList.add('pop');
@@ -1703,6 +1724,7 @@
       } else {
         fb.classList.remove('show');
         fb.setAttribute('aria-hidden', 'true');
+        fb.setAttribute('inert', '');
         document.body.classList.remove('is-floating-visible');
       }
 
@@ -1736,7 +1758,7 @@
       }
 
       queue.forEach((q, i) => tb.appendChild(this.renderQueueItem(q, i)));
-      tb.scrollTop = tb.scrollHeight;
+      tb.scrollTop = queue.length > previousCount ? tb.scrollHeight : previousScroll;
       this.updateUndoRedoButtons();
     },
 
@@ -1818,6 +1840,7 @@
 
       const actions = el('div', { class: 'q-actions' },
         stepper,
+        el('button', { class: 'icon-btn', type: 'button', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, '✎'),
         el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
       );
 
@@ -1968,6 +1991,7 @@
 
     /** Reset result view to placeholder. */
     resetResult() {
+      lastExportText = lastExportCSV = '';
       $('#resultCard').classList.remove('show');
       $('#resultCard').textContent = '';
       $('#resultPlaceholder').style.display = '';
@@ -2660,10 +2684,14 @@
     if (!item) return;
     const newQty = absolute != null ? toPosInt(absolute) : Math.max(1, item.qty + delta);
     if (newQty === item.qty) return;
+    const focusedAction = document.activeElement?.closest('.q-actions') ? document.activeElement.dataset.action : null;
     Store.snapshot();
     item.qty = newQty;
     Store.save();
     View.renderQueue();
+    if (focusedAction) {
+      $(`.q-item[data-index="${i}"] [data-action="${focusedAction}"]`)?.focus({ preventScroll: true });
+    }
   }
 
   /** ----- Edit modal ----- */
@@ -2673,7 +2701,23 @@
     editingIndex = i;
     const body = $('#editModalBody');
     body.textContent = '';
-    if (item.type === 'bolt') {
+    if (item.gasPipe || item.type === 'ubolt') {
+      const select = el('select', { id: 'editPresetSize' });
+      const sizes = item.gasPipe ? GAS_PIPE_TABLE.map(row => row.size) : USIZES;
+      sizes.forEach(s => select.appendChild(el('option', { value: s, selected: s === item.s ? true : null }, s + 'A')));
+      body.appendChild(el('div', { class: 'field' },
+        el('label', { for: 'editPresetSize' }, t('form.size')), select
+      ));
+      if (item.gasPipe) {
+        body.appendChild(el('div', { class: 'toggle-row' },
+          el('label', { for: 'editWasher', class: 'toggle-title' }, t('opt.gas_washer')),
+          el('label', { class: 'switch' },
+            el('input', { type: 'checkbox', id: 'editWasher', checked: item.ext ? true : null, 'aria-label': t('opt.gas_washer') }),
+            el('span', { class: 'slider' })
+          )
+        ));
+      }
+    } else if (item.type === 'bolt') {
       body.appendChild(el('div', { class: 'form-grid col-2' },
         el('div', { class: 'field' },
           el('label', { for: 'editRating' }, t('form.rating')),
@@ -2700,14 +2744,14 @@
         el('div', { class: 'toggle-row' },
           el('span', { class: 'toggle-title' }, t('opt.ext')),
           el('label', { class: 'switch' },
-            el('input', { type: 'checkbox', id: 'editExt', checked: item.ext ? true : null }),
+            el('input', { type: 'checkbox', id: 'editExt', checked: item.ext ? true : null, 'aria-label': t('opt.ext') }),
             el('span', { class: 'slider' })
           )
         ),
         el('div', { class: 'toggle-row' },
           el('span', { class: 'toggle-title' }, t('edit.dn')),
           el('label', { class: 'switch' },
-            el('input', { type: 'checkbox', id: 'editDN', checked: item.doubleNut ? true : null }),
+            el('input', { type: 'checkbox', id: 'editDN', checked: item.doubleNut ? true : null, 'aria-label': t('edit.dn') }),
             el('span', { class: 'slider' })
           )
         )
@@ -2754,6 +2798,9 @@
           })()
         )
       ));
+      body.querySelector('#editGRating').addEventListener('change', (e) => {
+        View.populateSizeSelect(body.querySelector('#editGSize'), e.target.value);
+      });
     }
     ModalCtl.open($('#editModal'));
   }
@@ -2763,7 +2810,13 @@
     const item = Store.queue[i];
     if (!item) { ModalCtl.close($('#editModal')); return; }
     Store.snapshot();
-    if (item.type === 'bolt') {
+    if (item.gasPipe) {
+      const s = parseInt($('#editPresetSize').value, 10);
+      const newItem = buildGasPipeBoltItem(s, item.qty, { washerExtra: $('#editWasher').checked });
+      if (newItem) Store.queue[i] = newItem;
+    } else if (item.type === 'ubolt') {
+      Store.queue[i] = buildUboltItem(parseInt($('#editPresetSize').value, 10), item.qty);
+    } else if (item.type === 'bolt') {
       const r = $('#editRating').value;
       const s = parseInt($('#editSize').value, 10);
       const ext = $('#editExt').checked;
@@ -2780,6 +2833,7 @@
     Store.save();
     View.renderQueue();
     ModalCtl.close($('#editModal'));
+    $(`.q-item[data-index="${i}"] [data-action="q-edit"]`)?.focus({ preventScroll: true });
     toast(t('t.saved'));
   }
 
@@ -3230,6 +3284,16 @@
     'tour-close':        () => TourCtl.close(),
     'open-cart':         () => { View.renderCartModal(); ModalCtl.open($('#cartModal')); },
     'close-cart':        () => { ModalCtl.close($('#cartModal')); },
+    'go-queue':          () => {
+      ModalCtl.close($('#cartModal'));
+      smoothScrollIntoView($('#queueCard'), { block: 'start' });
+      $('#btnCalculateMain').focus({ preventScroll: true });
+    },
+    'skip-tutorial':     () => {
+      try { localStorage.setItem(TUTORIAL_KEY, 'true'); } catch (e) {}
+      ModalCtl.close($('#tutorialModal'));
+      $('#rating').focus({ preventScroll: true });
+    },
     'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
     'project-change':    () => { const s = $('#projectSelect'); if (s) actionProjectChange(s.value); },
     'project-new':       actionProjectNew,
@@ -3278,12 +3342,13 @@
     View.renderGasPipeTable();
     View.renderSizeReferenceTables();
     View.populateProjectSelect($('#projectSelect'));
-    View.renderQueue();
+    View.renderQueue(false);
     // Re-render result if currently shown
     if ($('#resultCard').children.length) {
       const agg = aggregate(Store.queue);
-      const total = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
-      if (total) View.renderResult(agg, Store.memo);
+      lastExportText = buildExportText(agg, Store.memo);
+      lastExportCSV = buildExportCSV(agg, Store.memo);
+      View.renderResult(agg, Store.memo);
     }
     if (TourCtl.isOpen()) TourCtl.render();
     // Sync language selects (header + tutorial)
@@ -3350,10 +3415,11 @@
     });
 
     // Memo autosave
-    $('#memoInput').addEventListener('input', debounce(() => {
+    $('#memoInput').addEventListener('input', () => {
       Store.memo = $('#memoInput').value;
+      View.resetResult();
       Store.save();
-    }, 400));
+    });
 
     // Validate qty inputs (>=1)
     document.addEventListener('input', (e) => {
