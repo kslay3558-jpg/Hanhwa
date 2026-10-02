@@ -210,15 +210,18 @@
 
     .tool-nav {
       display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--slate-200);
-      background: var(--surface-solid);
+      gap: 4px;
+      margin: 16px 24px 0;
+      padding: 4px;
+      border: 1px solid var(--slate-200);
+      border-radius: 16px;
+      background: var(--surface-muted);
     }
 
     .tool-nav a {
       display: inline-flex;
+      flex: 1;
+      min-width: 0;
       align-items: center;
       justify-content: center;
       min-height: 44px;
@@ -228,6 +231,8 @@
       font-size: 14px;
       font-weight: 700;
       text-decoration: none;
+      text-align: center;
+      overflow-wrap: anywhere;
     }
 
     .tool-nav a:hover {
@@ -237,6 +242,7 @@
     .tool-nav a[aria-current="page"] {
       background: var(--blue-50);
       color: var(--blue-700);
+      box-shadow: inset 0 -2px var(--blue-600);
     }
 
     input[type="number"]::-webkit-inner-spin-button,
@@ -250,7 +256,7 @@
     }
 
     .page {
-      width: min(100%, 1440px);
+      width: min(100%, 1248px);
       margin: 0 auto;
       padding: 12px;
     }
@@ -266,7 +272,7 @@
     .header {
       position: relative;
       overflow: hidden;
-      padding: 26px 22px;
+      padding: 24px;
       color: var(--header-ink);
       background: var(--surface-solid);
       border-bottom: 1px solid var(--slate-200);
@@ -275,13 +281,14 @@
     .header-inner {
       position: relative;
       display: grid;
-      gap: 12px;
+      gap: 8px;
     }
 
     .header-top {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: space-between;
       gap: 12px;
     }
 
@@ -289,7 +296,9 @@
       display: flex;
       gap: 8px;
       align-items: center;
-      flex: 0 0 auto;
+      flex: 0 1 auto;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .sr-only {
@@ -305,7 +314,8 @@
     }
 
     .header-lang {
-      min-width: 148px;
+      width: 180px;
+      min-width: 0;
       min-height: 44px;
       padding: 8px 36px 8px 12px;
       border: 1px solid var(--slate-300);
@@ -338,6 +348,7 @@
 
     .header-link {
       display: inline-flex;
+      flex-shrink: 0;
       align-items: center;
       justify-content: center;
       width: 44px;
@@ -363,7 +374,7 @@
     .title {
       margin: 0;
       color: var(--header-ink);
-      font-size: clamp(24px, 4vw, 34px);
+      font-size: clamp(1.375rem, 3vw, 1.75rem);
       font-weight: 800;
       line-height: 1.3;
       letter-spacing: -0.04em;
@@ -373,7 +384,7 @@
       max-width: 860px;
       margin: 0;
       color: var(--slate-600);
-      font-size: 15px;
+      font-size: 0.875rem;
       line-height: 1.65;
       font-weight: 400;
     }
@@ -402,7 +413,7 @@
     .section-title {
       margin: 0;
       color: var(--slate-950);
-      font-size: 20px;
+      font-size: 1.125rem;
       font-weight: 750;
       line-height: 1.25;
       letter-spacing: -0.03em;
@@ -411,8 +422,8 @@
     .section-desc {
       margin: 4px 0 0;
       color: var(--slate-500);
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 0.875rem;
+      font-weight: 400;
       line-height: 1.45;
     }
 
@@ -435,7 +446,30 @@
     }
 
     .hero-guide {
-      padding: 18px;
+      padding: 0;
+    }
+
+    .hero-guide > summary {
+      min-height: 52px;
+      padding: 14px 18px;
+      border-radius: var(--radius-2xl);
+      color: var(--slate-700);
+      cursor: pointer;
+    }
+
+    .hero-guide > summary:hover {
+      background: var(--slate-50);
+    }
+
+    .hero-guide > summary .guide-title {
+      display: inline;
+      font-size: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-guide[open] > summary {
+      border-bottom: 1px solid var(--slate-200);
+      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
     }
 
     .guide-grid {
@@ -443,6 +477,7 @@
       grid-template-columns: 1fr;
       gap: 14px;
       align-items: stretch;
+      padding: 18px;
     }
 
     .guide-note {
@@ -1080,11 +1115,12 @@
 
     @media (max-width: 719px) {
       .page { padding: 8px; }
-      .tool-nav { padding: 8px; gap: 2px; }
+      .tool-nav { margin: 12px 12px 0; gap: 2px; }
       .tool-nav a { flex: 1; padding-inline: 8px; }
-      .header { padding: 20px 16px; }
+      .header { padding: 16px; }
       .content { padding: 12px; }
-      .hero-guide, .panel { padding: 14px; }
+      .guide-grid, .panel { padding: 14px; }
+      .hero-guide > summary { padding: 14px; }
       .section-head { align-items: flex-start; flex-wrap: wrap; }
     }
 
@@ -1094,7 +1130,7 @@
       }
 
       .header {
-        padding: 32px;
+        padding: 24px;
       }
 
       .content {
@@ -1159,14 +1195,10 @@
 
   <div class="page">
     <div class="app-shell">
-      <nav class="tool-nav" aria-label="계산 도구">
-        <a href="./index.html">자재 계산</a>
-        <a href="./Cal.html" aria-current="page">사선 커팅</a>
-        <a href="./각도마킹.html">각도 마킹</a>
-      </nav>
       <header class="header">
         <div class="header-inner">
           <div class="header-top">
+            <h1 id="pageTitle" class="title">파이프 사선 커팅 계산기</h1>
             <div id="pageTools" class="header-actions" aria-label="Page tools">
               <label id="langSelectLabel" class="sr-only" for="langSelect">언어 선택</label>
               <select id="langSelect" class="header-lang" aria-label="언어 선택">
@@ -1178,21 +1210,25 @@
               <a id="backToMain" class="header-link" href="./index.html" aria-label="Back to main" title="Back to main">🏠</a>
             </div>
           </div>
-          <h1 id="pageTitle" class="title">파이프 사선 커팅 계산기</h1>
           <p id="pageSubtitle" class="subtitle">
             파이프 관경을 선택하고 수평 거리와 대각선 거리를 입력하면
             절단 각도, 컷백 거리(B), 실제 절단 길이를 현장 작업 순서와 함께 계산합니다.
           </p>
         </div>
       </header>
+      <nav id="toolNav" class="tool-nav" aria-label="계산 도구">
+        <a id="navMaterials" href="./index.html">자재 계산</a>
+        <a id="navCutting" href="./Cal.html" aria-current="page">사선 커팅</a>
+        <a id="navAngle" href="./각도마킹.html">각도 마킹</a>
+      </nav>
 
       <div class="content">
         <!-- 최상단 구조도 -->
-        <section class="section card hero-guide" aria-labelledby="topGuideTitle">
+        <details class="section card hero-guide">
+          <summary><h2 id="topGuideTitle" class="guide-title">배관 오프셋 거리 기준</h2></summary>
           <div class="guide-grid">
             <div class="guide-note">
               <span id="guideCallout" class="guide-callout">먼저 확인하세요</span>
-              <h2 id="topGuideTitle" class="guide-title">배관 오프셋 거리 기준</h2>
               <p id="guideText" class="guide-text">
                 입력 전에 수평 거리, 수직 거리, 대각선 거리의 관계를 먼저 확인하면 계산 기준을 헷갈리지 않습니다.
                 수직 거리(H)는 입력값이 아니라 자동 계산값입니다.
@@ -1299,7 +1335,7 @@
               </svg>
             </div>
           </div>
-        </section>
+        </details>
 
         <!-- 입력 / 결과 -->
         <div class="layout">
@@ -1640,6 +1676,10 @@
       ko: {
         docTitle: "파이프 사선 커팅 계산기",
         pageTools: "페이지 도구",
+        toolNav: "계산 도구",
+        navMaterials: "자재 계산",
+        navCutting: "사선 커팅",
+        navAngle: "각도 마킹",
         back: "메인으로 돌아가기",
         langSelect: "언어 선택",
         themeToggle: "테마 전환",
@@ -1736,6 +1776,10 @@
       vi: {
         docTitle: "Máy tính cắt chéo ống",
         pageTools: "Công cụ trang",
+        toolNav: "Công cụ tính toán",
+        navMaterials: "Vật liệu",
+        navCutting: "Cắt chéo",
+        navAngle: "Đánh dấu góc",
         back: "Quay lại trang chính",
         langSelect: "Chọn ngôn ngữ",
         themeToggle: "Đổi giao diện",
@@ -1832,6 +1876,10 @@
       id: {
         docTitle: "Kalkulator potong miring pipa",
         pageTools: "Alat halaman",
+        toolNav: "Alat perhitungan",
+        navMaterials: "Material",
+        navCutting: "Potong miring",
+        navAngle: "Penandaan sudut",
         back: "Kembali ke halaman utama",
         langSelect: "Pilih bahasa",
         themeToggle: "Ganti tema",
@@ -2048,6 +2096,9 @@
       const textMap = {
         pageTitle: "title",
         pageSubtitle: "subtitle",
+        navMaterials: "navMaterials",
+        navCutting: "navCutting",
+        navAngle: "navAngle",
         guideCallout: "guideCallout",
         inputTitle: "inputTitle",
         inputDesc: "inputDesc",
@@ -2115,6 +2166,7 @@
       updateSaveBadge();
 
       setAttr("pageTools", "aria-label", t("pageTools"));
+      setAttr("toolNav", "aria-label", t("toolNav"));
       setAttr("backToMain", "aria-label", t("back"));
       setAttr("backToMain", "title", t("back"));
       setAttr("bottomHomeLink", "aria-label", t("back"));

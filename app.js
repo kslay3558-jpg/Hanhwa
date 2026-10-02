@@ -310,8 +310,9 @@
       'r.col_qty_sheet':      '수량(장)',
       'r.col_qty_set':        '수량(Set)',
       'r.no_rows':            '내역 없음',
-      'r.summary_title':      '요약',
-      'r.summary_items':      '항목 {n}개',
+      'r.summary_title':      '자재별 필요 수량',
+      'r.summary_items':      '규격 {n}종',
+      'r.quantity_note':      '너트는 규격(M)별로 집계하며, 더블 너트는 수량에 반영됩니다.',
       'r.detail_toggle':      '상세 내역 보기',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
@@ -662,8 +663,9 @@
       'r.col_qty_sheet':      'SL (tấm)',
       'r.col_qty_set':        'SL (bộ)',
       'r.no_rows':            'Không có dữ liệu',
-      'r.summary_title':      'Tóm tắt',
-      'r.summary_items':      '{n} mục',
+      'r.summary_title':      'Số lượng theo vật tư',
+      'r.summary_items':      '{n} quy cách',
+      'r.quantity_note':      'Đai ốc được tổng hợp theo cỡ (M); số lượng đã tính cả tùy chọn đai ốc đôi.',
       'r.detail_toggle':      'Xem chi tiết',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(không có pitch)',
@@ -1005,8 +1007,9 @@
       'r.col_qty_sheet':      'Jml (lbr)',
       'r.col_qty_set':        'Jml (set)',
       'r.no_rows':            'Tidak ada data',
-      'r.summary_title':      'Ringkasan',
-      'r.summary_items':      '{n} item',
+      'r.summary_title':      'Jumlah per material',
+      'r.summary_items':      '{n} spesifikasi',
+      'r.quantity_note':      'Mur direkap per ukuran (M); jumlah sudah memperhitungkan opsi mur ganda.',
       'r.detail_toggle':      'Lihat detail',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(pitch tdk diketahui)',
@@ -1869,35 +1872,36 @@
       card.textContent = '';
       card.classList.add('show');
 
-      const head = el('div', { class: 'res-head' },
-        el('h2', null, t('r.title'))
-      );
-      card.appendChild(head);
-
       const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
-      const isMobile = window.matchMedia(`(max-width: ${MOBILE_RESULT_SUMMARY_BREAKPOINT_PX}px)`).matches;
-      if (isMobile && rowCount >= MOBILE_RESULT_SUMMARY_MIN_ROW_COUNT) {
-        const summaryCard = el('div', { class: 'res-summary-card' },
-          el('h3', null, t('r.summary_title')),
-          el('div', { class: 'res-summary-row' },
-            el('div', { class: 'res-summary-total' }, t('r.summary_items', { n: rowCount })),
-            el('div', { class: 'res-summary-tags' },
-              agg.sB.length ? el('span', { class: 'res-cat-tag res-cat-tag-bolt' }, `${t('r.tag_bolt')} ${agg.sB.length}`) : null,
-              agg.sN.length ? el('span', { class: 'res-cat-tag res-cat-tag-nut' }, `${t('r.tag_nut')} ${agg.sN.length}`) : null,
-              agg.sG.length ? el('span', { class: 'res-cat-tag res-cat-tag-gsk' }, `${t('r.tag_gsk')} ${agg.sG.length}`) : null,
-              agg.sU.length ? el('span', { class: 'res-cat-tag res-cat-tag-ub' }, `${t('r.tag_ub')} ${agg.sU.length}`) : null
-            )
-          )
-        );
-        const detail = el('details', { class: 'res-detail' },
-          el('summary', null, t('r.detail_toggle')),
-          this._flatList(agg)
-        );
-        card.appendChild(summaryCard);
-        card.appendChild(detail);
-      } else {
-        card.appendChild(this._flatList(agg));
+      card.appendChild(el('div', { class: 'res-head' },
+        el('h3', null, t('r.summary_title')),
+        el('span', { class: 'result-spec-count' }, t('r.summary_items', { n: rowCount }))
+      ));
+
+      if (rowCount) {
+        const totals = el('dl', { class: 'result-totals' });
+        for (const [rows, label, unit] of [
+          [agg.sB, 'r.tag_bolt', 'x.unit_ea'],
+          [agg.sN, 'r.tag_nut', 'x.unit_ea'],
+          [agg.sG, 'r.tag_gsk', 'x.unit_sheet'],
+          [agg.sU, 'r.tag_ub', 'x.unit_set']
+        ]) {
+          if (!rows.length) continue;
+          const quantity = rows.reduce((sum, [, value]) => sum + value, 0);
+          totals.appendChild(el('div', { class: 'result-total' },
+            el('dt', null, t(label)),
+            el('dd', null, quantity.toLocaleString(Lang.current), ' ', el('span', null, t(unit)))
+          ));
+        }
+        card.appendChild(totals);
       }
+
+      const strip = el('div', { class: 'res-action-strip' },
+        el('button', { class: 'btn btn-sm btn-primary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
+        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'save-image' }, t('r.save_image'))
+      );
+      card.appendChild(strip);
+      card.appendChild(this._flatList(agg));
 
       if (memo && memo.trim()) {
         const memoBox = el('div', { style: 'margin-top:12px;' },
@@ -1907,26 +1911,7 @@
         card.appendChild(memoBox);
       }
 
-      const totalCount = agg.sB.reduce((s, [, v]) => s + v, 0)
-                       + agg.sN.reduce((s, [, v]) => s + v, 0)
-                       + agg.sG.reduce((s, [, v]) => s + v, 0)
-                       + agg.sU.reduce((s, [, v]) => s + v, 0);
-      const totalNode = el('span', null, '0');
-      const noticeParts = t('r.notice_total', { n: '\u0001' }).split('\u0001');
-      const notice = el('div', { class: 'notice' },
-        el('b', null, t('r.notice_pre')),
-        document.createTextNode(noticeParts[0] || ''), totalNode,
-        document.createTextNode(noticeParts[1] || '')
-      );
-      card.appendChild(notice);
-      countUp(totalNode, totalCount, 600);
-
-      // Action strip (copy / save-image)
-      const strip = el('div', { class: 'res-action-strip' },
-        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
-        el('button', { class: 'btn btn-sm btn-ghost', 'data-action': 'save-image' }, t('r.save_image'))
-      );
-      card.appendChild(strip);
+      card.appendChild(el('div', { class: 'notice' }, t('r.quantity_note')));
 
       // Scroll into view (mobile)
       if (window.matchMedia('(max-width: 1199px)').matches) {
@@ -1938,9 +1923,9 @@
     _flatList(agg) {
       const thead = el('thead', null,
         el('tr', null,
-          el('th', null, t('r.col_cat')),
-          el('th', { style: 'text-align:left;' }, t('r.col_spec')),
-          el('th', null, t('r.col_qty'))
+          el('th', { scope: 'col' }, t('r.col_cat')),
+          el('th', { scope: 'col', style: 'text-align:left;' }, t('r.col_spec')),
+          el('th', { scope: 'col' }, t('r.col_qty'))
         )
       );
       const tbody = el('tbody');
@@ -1985,7 +1970,7 @@
       }
 
       return el('div', { class: 'res-flat-wrapper' },
-        el('table', { class: 'res-flat-table' }, thead, tbody)
+        el('table', { class: 'res-flat-table', 'aria-label': t('sec.result_aria') }, thead, tbody)
       );
     },
 
@@ -2010,8 +1995,6 @@
   let lastExportText = '';
   let lastExportCSV  = '';
   let editingIndex   = -1;
-  const MOBILE_RESULT_SUMMARY_BREAKPOINT_PX = 640;
-  const MOBILE_RESULT_SUMMARY_MIN_ROW_COUNT = 8;
   const UX_METRICS_KEY = 'jis-ux-metrics-v1';
   const UX_METRICS_MAX_HISTORY = 30;
   const UX = {
