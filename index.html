@@ -41,10 +41,10 @@
     --c-focus: #2563eb;
     --c-overlay: rgba(15, 23, 42, .55);
 
-    --r-sm: 6px;
-    --r-md: 10px;
-    --r-lg: 14px;
-    --r-xl: 20px;
+    --r-sm: 4px;
+    --r-md: 6px;
+    --r-lg: 8px;
+    --r-xl: 10px;
     --space-1: 8px;
     --space-2: 12px;
     --space-3: 16px;
@@ -53,7 +53,7 @@
     --control-h-compact: 44px;
     --gas-qty-min-width: 132px;
 
-    --e-1: 0 1px 2px rgba(15,23,42,.04), 0 1px 1px rgba(15,23,42,.03);
+    --e-1: none;
     --e-2: 0 2px 4px rgba(15,23,42,.05), 0 1px 2px rgba(15,23,42,.03);
     --e-3: 0 4px 12px rgba(15,23,42,.07), 0 2px 4px rgba(15,23,42,.03);
     --e-4: 0 12px 30px rgba(15,23,42,.14);
@@ -88,7 +88,7 @@
     --c-accent: #fb923c;
     --c-focus: #60a5fa;
     --c-overlay: rgba(0,0,0,.7);
-    --e-1: 0 1px 2px rgba(0,0,0,.4);
+    --e-1: none;
     --e-2: 0 2px 8px rgba(0,0,0,.45);
     --e-3: 0 8px 20px rgba(0,0,0,.5);
     --e-4: 0 14px 36px rgba(0,0,0,.6);
@@ -104,7 +104,7 @@
       --c-warn: #fbbf24; --c-warn-weak: #78350f44;
       --c-danger: #f87171; --c-danger-weak: #7f1d1d55;
       --c-accent: #fb923c; --c-focus: #60a5fa; --c-overlay: rgba(0,0,0,.7);
-      --e-1: 0 1px 2px rgba(0,0,0,.4);
+      --e-1: none;
       --e-2: 0 2px 8px rgba(0,0,0,.45);
       --e-3: 0 8px 20px rgba(0,0,0,.5);
       --e-4: 0 14px 36px rgba(0,0,0,.6);
@@ -285,6 +285,30 @@
   }
   .col { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
   .review-column { display: flex; flex-direction: column; gap: 24px; min-width: 0; container-type: inline-size; }
+  .icon { width: 20px; height: 20px; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-library { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .card.workbench { padding: 0; }
+  .material-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 8px; border-bottom: 1px solid var(--c-border); background: var(--c-surface-2); }
+  .material-tab { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 48px; padding: 8px; font: inherit; font-size: .875rem; font-weight: 700; color: var(--c-text-sub); border: 1px solid transparent; border-radius: var(--r-sm); background: transparent; cursor: pointer; }
+  .material-tab[aria-selected="true"] { background: var(--c-surface); border-color: var(--c-border); color: var(--c-primary-strong); box-shadow: inset 0 -2px var(--c-primary); }
+  .material-tab:hover { background: var(--c-primary-weak); }
+  .material-tab span { min-width: 0; overflow-wrap: anywhere; }
+  .material-panel { padding: 20px; }
+  .material-panel[hidden] { display: none; }
+  .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .panel-heading .btn { width: auto; }
+  .od-tool { margin-bottom: 16px; border-bottom: 1px solid var(--c-border); }
+  .od-tool .acc-body-inner { padding: 0 0 16px; }
+  .work-memo { margin: 16px 0; padding-top: 12px; border-top: 1px solid var(--c-border); }
+  .work-memo summary { cursor: pointer; min-height: 44px; display: list-item; align-content: center; font-size: .875rem; font-weight: 700; color: var(--c-text-sub); }
+  .work-memo textarea { margin-top: 8px; }
+  .result-state { margin: 0 0 12px; padding: 10px 12px; font-size: .875rem; color: var(--c-text-sub); background: var(--c-surface-2); border-left: 3px solid var(--c-border-strong); }
+  .result-state.is-stale { border-left-color: var(--c-warn); background: var(--c-warn-weak); color: var(--c-text); }
+  .q-input-label { font-size: .8125rem; color: var(--c-text-sub); }
+  @media (max-width: 600px) {
+    .material-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .material-panel { padding: 16px 12px; }
+  }
 
   /* Cards */
   .card {
@@ -296,7 +320,7 @@
     transition: box-shadow var(--m-base), border-color var(--m-base), transform var(--m-base);
   }
   @media (max-width: 480px) { .card { padding: 14px 12px; } }
-  .card:focus-within { border-color: var(--c-focus); box-shadow: var(--e-3); }
+  .card:focus-within { border-color: var(--c-focus); }
   /* color-mix() 폴백 패턴: Safari 15 이하 미지원 대비.
      같은 속성을 두 번 선언해 지원 브라우저는 두 번째(color-mix) 값을 사용하고,
      미지원 브라우저는 첫 번째(solid) 값을 유지합니다. */
@@ -522,8 +546,8 @@
 
   /* Option box */
   .option-box {
-    background: var(--c-surface-2); padding: 0 14px;
-    border-radius: var(--r-md); border: 1px solid var(--c-border);
+    background: transparent; padding: 0;
+    border-top: 1px solid var(--c-border);
     margin-bottom: 12px;
   }
   .toggle-row {
@@ -627,7 +651,8 @@
   .q-tag.blue { background: var(--c-primary-weak); color: var(--c-primary-strong); border-color: transparent; }
   .q-tag.warn { background: var(--c-warn-weak); color: var(--c-warn); border-color: transparent; }
   /* 액션: 우측 고정 (스테퍼 + 삭제만) */
-  .q-actions { display: flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+  .q-actions { display: flex; gap: 8px; align-items: flex-end; justify-content: flex-end; flex-wrap: wrap; }
+  .q-quantity { display: grid; gap: 4px; margin-right: auto; }
   .q-mini-stepper { display: flex; align-items: center; height: 46px; border: 1px solid var(--c-border); border-radius: var(--r-sm); overflow: hidden; background: var(--c-surface); margin-right: auto; }
   .q-mini-stepper button { width: 44px; height: 44px; border: none; background: transparent; color: var(--c-text-sub); cursor: pointer; font-size: 1rem; }
   .q-mini-stepper button:hover { background: var(--c-primary-weak); color: var(--c-primary); }
@@ -655,7 +680,7 @@
   /* Result box */
   .result-box {
     padding: 18px; background: var(--c-surface);
-    border: 1px solid var(--c-border); border-top: 3px solid var(--c-primary); border-radius: var(--r-lg);
+    border: 1px solid var(--c-border); border-radius: var(--r-lg);
     box-shadow: var(--e-1); display: none;
   }
   .result-box.show { display: block; animation: springIn .4s var(--m-spring); }
@@ -684,10 +709,10 @@
   .res-flat-table td.spec-cell { text-align: left; line-height: 1.4; }
   .res-flat-table td.spec-cell .spec-sub { display: block; font-size: .72rem; color: var(--c-text-mute); margin-top: 2px; }
   .res-flat-table td.muted { text-align: center; color: var(--c-text-mute); font-size: .82rem; }
-  .result-totals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0 0 16px; }
-  .result-total { padding: 12px; background: var(--c-primary-weak); border: 1px solid var(--c-border); border-radius: var(--r-md); }
+  .result-totals { display: flex; flex-wrap: wrap; gap: 12px 24px; padding-bottom: 12px; border-bottom: 1px solid var(--c-border); margin: 0 0 16px; }
+  .result-total { min-width: 80px; }
   .result-total dt { font-size: .875rem; color: var(--c-text-sub); }
-  .result-total dd { margin: 4px 0 0; font-size: 1.5rem; font-weight: 800; line-height: 1.3; color: var(--c-primary-strong); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .result-total dd { margin: 4px 0 0; font-size: 1.125rem; font-weight: 800; line-height: 1.3; color: var(--c-text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
   .result-total dd span { font-size: .875rem; font-weight: 600; }
   .gas-pipe-form.col-2 { grid-template-columns: minmax(0, 1.5fr) minmax(var(--gas-qty-min-width), .75fr); }
   .gas-pipe-form .field { min-width: 0; }
@@ -1187,7 +1212,7 @@
   /* Print */
   @media print {
     body { background: #fff; color: #000; padding: 0; }
-    .app-header, .tool-nav, .section-heading, .queue-tools, .session-note, .keyboard-help, .skip-link, #visitorFooter, .floating-bar, .install-banner, .install-cta, #toast, .modal,
+    .app-header, .tool-nav, .section-heading, .queue-tools, .work-memo, .result-state, .session-note, .keyboard-help, .skip-link, #visitorFooter, .floating-bar, .install-banner, .install-cta, #toast, .modal,
     .card:not(#queueCard):not(#resultCard), .action-row, .q-actions, .q-handle,
     .res-actions, .res-action-strip, .card-head .badge { display: none !important; }
     .main-grid { grid-template-columns: 1fr !important; }
@@ -1205,6 +1230,24 @@
 </style>
 </head>
 <body>
+<svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="i-flange" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 5v1m0 12v1M5 12h1m12 0h1"/></symbol>
+    <symbol id="i-gasket" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="6"/></symbol>
+    <symbol id="i-ubolt" viewBox="0 0 24 24"><path d="M6 21V8a6 6 0 0 1 12 0v13M3 16h6m6 0h6M3 19h6m6 0h6"/></symbol>
+    <symbol id="i-pipe" viewBox="0 0 24 24"><ellipse cx="6" cy="12" rx="3" ry="7"/><path d="M6 5h12c4 0 4 14 0 14H6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="m15 15 5 5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="m8 4-5 5 5 5M3 9h11a6 6 0 0 1 0 12"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="m16 4 5 5-5 5m5-5H10a6 6 0 0 0 0 12"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="m15 4 5 5M4 20l5-1L21 7l-5-5L4 14v6Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15 8V3H3v13h5"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8" cy="8" r="1"/><path d="m3 17 5-5 4 4 4-6 5 7"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 8V3h12v5M6 17H3V8h18v9h-3M6 14h12v7H6Z"/></symbol>
+    <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18m0-15 5 2m-5 1 7 2m-7 1 7 2m-7 1 5 2"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><path d="M8 5h1m6 0h1M8 12h1m6 0h1M8 19h1m6 0h1"/></symbol>
+  </defs>
+</svg>
 <a class="skip-link" href="#materialInput" data-i18n="nav.skip">자재 입력으로 바로가기</a>
 <div class="wrap" id="appRoot">
 
@@ -1213,7 +1256,7 @@
       <h1 data-i18n="app.title">설비/배관 자재 계산기</h1>
       <p data-i18n="app.subtitle">JIS 규격 기반 · 오프라인 PWA</p>
     </div>
-    <button class="icon-btn header-theme-toggle" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환">🌗</button>
+    <button class="icon-btn header-theme-toggle" data-action="theme-toggle" id="btnTheme" data-i18n-attr="title:tb.theme,aria-label:tb.theme" title="테마 전환" aria-label="테마 전환"><svg class="icon" aria-hidden="true"><use href="#i-theme"/></svg></button>
     <div class="controls" role="toolbar" data-i18n-attr="aria-label:app.toolbar" aria-label="앱 도구">
       <div class="lang-picker" data-i18n-attr="aria-label:tb.lang">
         <label class="sr-only" for="langSelect" data-i18n="tb.lang_select">언어 선택</label>
@@ -1242,40 +1285,36 @@
         <div><h2 data-i18n="sec.input">자재 입력</h2><p data-i18n="work.input_hint">필요한 자재의 규격과 수량을 선택하세요.</p></div>
       </div>
 
-      <!-- 1. 플랜지 사이즈 역산 -->
-      <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFind">
-          <h2><span data-i18n="card.find">플랜지 사이즈 역산</span></h2>
-          <span class="acc-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div id="accBodyFind" class="acc-body" aria-hidden="true" inert>
-          <div class="acc-body-inner">
-            <div class="form-grid col-auto" style="margin-bottom:8px;">
-              <div class="field">
-                <div class="label-with-help">
-                  <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
-                  <button class="measure-help-btn" type="button" data-action="open-measure-guide" data-guide="flange-od" data-i18n-attr="title:guide.flange_od_aria,aria-label:guide.flange_od_aria">?</button>
-                </div>
-                <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
-              </div>
-              <div class="field">
-                <label aria-hidden="true">&nbsp;</label>
-                <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
-              </div>
-            </div>
-            <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
-          </div>
+      <div class="card workbench">
+        <div class="material-tabs" role="tablist" data-i18n-attr="aria-label:work.materials" aria-label="자재 선택">
+          <button type="button" class="material-tab" id="tabFlange" role="tab" aria-selected="true" aria-controls="accBodyFlange" data-action="material-select"><svg class="icon" aria-hidden="true"><use href="#i-flange"/></svg><span data-i18n="q.flange">플랜지</span></button>
+          <button type="button" class="material-tab" id="tabGasket" role="tab" aria-selected="false" aria-controls="accBodyGasket" tabindex="-1" data-action="material-select"><svg class="icon" aria-hidden="true"><use href="#i-gasket"/></svg><span data-i18n="q.gasket">가스켓</span></button>
+          <button type="button" class="material-tab" id="tabUbolt" role="tab" aria-selected="false" aria-controls="accBodyUbolt" tabindex="-1" data-action="material-select"><svg class="icon" aria-hidden="true"><use href="#i-ubolt"/></svg><span data-i18n="q.ubolt">U볼트</span></button>
+          <button type="button" class="material-tab" id="tabGasPipe" role="tab" aria-selected="false" aria-controls="accBodyGasPipe" tabindex="-1" data-action="material-select"><svg class="icon" aria-hidden="true"><use href="#i-pipe"/></svg><span data-i18n="q.gas_pipe">가스파이프</span></button>
         </div>
-      </div>
-
-      <!-- 2. 플랜지 포인트 (기본 열림) -->
-      <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="true" aria-controls="accBodyFlange">
-          <h2 data-i18n="card.flange">플랜지 포인트</h2>
-          <span class="acc-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div id="accBodyFlange" class="acc-body">
-          <div class="acc-body-inner">
+        <div id="accBodyFlange" class="material-panel" role="tabpanel" aria-labelledby="tabFlange">
+          <div class="panel-heading">
+            <h3 data-i18n="card.flange">플랜지 포인트</h3>
+            <button class="btn btn-sm btn-ghost" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyFind"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span data-i18n="work.find">외경으로 찾기</span></button>
+          </div>
+          <div id="accBodyFind" class="acc-body od-tool" aria-hidden="true" inert>
+            <div class="acc-body-inner">
+              <div class="form-grid col-auto">
+                <div class="field">
+                  <div class="label-with-help">
+                    <label for="searchOD" data-i18n="form.od">플랜지 외경 (OD, mm)</label>
+                    <button class="measure-help-btn" type="button" data-action="open-measure-guide" data-guide="flange-od" data-i18n-attr="title:guide.flange_od_aria,aria-label:guide.flange_od_aria">?</button>
+                  </div>
+                  <input type="number" id="searchOD" inputmode="decimal" data-i18n-attr="placeholder:form.od_ph" placeholder="예: 155" min="0" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label aria-hidden="true">&nbsp;</label>
+                  <button class="btn btn-warn" data-action="find-flange" data-i18n="btn.find">찾기</button>
+                </div>
+              </div>
+              <div id="searchResult" class="search-res" role="status" aria-live="polite"></div>
+            </div>
+          </div>
             <div class="form-grid col-3">
               <div class="field">
                 <label for="rating" data-i18n="form.rating">압력등급</label>
@@ -1328,18 +1367,10 @@
             </div>
 
             <button class="btn btn-primary" data-action="add-bolt"><span data-i18n="btn.add_pt">＋ 포인트 추가</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.enter">(Enter)</small></button>
-          </div>
         </div>
-      </div>
 
-      <!-- 3. 가스켓 추가 (기본 닫힘) -->
-      <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasket">
-          <h2 data-i18n="card.gasket">가스켓 추가</h2>
-          <span class="acc-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div id="accBodyGasket" class="acc-body" aria-hidden="true" inert>
-          <div class="acc-body-inner">
+        <div id="accBodyGasket" class="material-panel" role="tabpanel" aria-labelledby="tabGasket" hidden inert>
+          <div class="panel-heading"><h3 data-i18n="card.gasket">가스켓 추가</h3></div>
             <div class="form-grid col-2">
               <div class="field">
                 <label for="grating" data-i18n="form.rating">압력등급</label>
@@ -1374,19 +1405,11 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-secondary" data-action="add-gasket" data-i18n="btn.add_gsk">＋ 가스켓 추가</button>
-          </div>
+            <button class="btn btn-primary" data-action="add-gasket" data-i18n="btn.add_gsk">＋ 가스켓 추가</button>
         </div>
-      </div>
 
-      <!-- 4. U-볼트 (기본 닫힘) -->
-      <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyUbolt">
-          <h2 data-i18n="card.ubolt">U-볼트 추가</h2>
-          <span class="acc-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div id="accBodyUbolt" class="acc-body" aria-hidden="true" inert>
-          <div class="acc-body-inner">
+        <div id="accBodyUbolt" class="material-panel" role="tabpanel" aria-labelledby="tabUbolt" hidden inert>
+          <div class="panel-heading"><h3 data-i18n="card.ubolt">U-볼트 추가</h3></div>
             <div class="form-grid col-2">
               <div class="field">
                 <label for="usize" data-i18n="form.size">호칭경 (A)</label>
@@ -1405,26 +1428,18 @@
                 </div>
               </div>
             </div>
-            <button class="btn btn-secondary" data-action="add-ubolt" data-i18n="btn.add_ub">＋ U-볼트 추가</button>
-          </div>
+            <button class="btn btn-primary" data-action="add-ubolt" data-i18n="btn.add_ub">＋ U-볼트 추가</button>
         </div>
-      </div>
 
-      <!-- 5. 가스파이프 (기본 닫힘) -->
-      <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyGasPipe">
-          <h2 data-i18n="card.gas_pipe">가스파이프</h2>
-          <span class="acc-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div id="accBodyGasPipe" class="acc-body" aria-hidden="true" inert>
-          <div class="acc-body-inner">
+        <div id="accBodyGasPipe" class="material-panel" role="tabpanel" aria-labelledby="tabGasPipe" hidden inert>
+          <div class="panel-heading"><h3 data-i18n="card.gas_pipe">가스파이프</h3></div>
             <div class="form-grid col-2 gas-pipe-form">
               <div class="field">
                 <label for="gasPipePreset" data-i18n="form.gas_pipe_preset">가스파이프 프리셋</label>
                 <select id="gasPipePreset" data-action="gas-preset-change"></select>
               </div>
               <div class="field">
-                <label for="gasQty" data-i18n="form.qty_ea">수량 (EA)</label>
+                <label for="gasQty" data-i18n="form.qty_pt">포인트 개소</label>
                 <div class="stepper" role="group" data-i18n-attr="aria-label:aria.qty_gas" aria-label="가스파이프 볼트 수량 조절">
                   <button type="button" data-action="qty-dec" data-target="gasQty" data-i18n-attr="aria-label:form.qty_dec" aria-label="감소">−</button>
                   <input type="number" id="gasQty" value="1" min="1" inputmode="numeric" data-i18n-attr="aria-label:aria.qty_gas_in" aria-label="가스파이프 볼트 수량">
@@ -1434,7 +1449,7 @@
             </div>
             <div class="option-box gas-pipe-option-box">
               <div class="toggle-row">
-                <span class="toggle-title" data-i18n="opt.gas_washer">와셔 추가 +5mm</span>
+                <label class="toggle-title" for="optGasWasher" data-i18n="opt.gas_washer">와셔 추가 +5mm</label>
                 <label class="switch">
                   <input type="checkbox" id="optGasWasher" data-action="gas-washer-change">
                   <span class="slider"></span>
@@ -1442,21 +1457,6 @@
               </div>
             </div>
             <button class="btn btn-primary gas-pipe-add-btn" data-action="add-gas-bolt" data-i18n="btn.add_gas_bolt">＋ 가스파이프 볼트 추가</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 6. 메모 (기본 닫힘) -->
-      <div class="card acc-card">
-        <button class="acc-head" type="button" data-action="acc-toggle" aria-expanded="false" aria-controls="accBodyMemo">
-          <h2 data-i18n="card.memo">추가 메모</h2>
-          <span class="acc-chevron" aria-hidden="true">▾</span>
-        </button>
-        <div id="accBodyMemo" class="acc-body" aria-hidden="true" inert>
-          <div class="acc-body-inner">
-            <label class="sr-only" for="memoInput" data-i18n="form.memo_label">자유 메모</label>
-            <textarea id="memoInput" rows="3" data-i18n-attr="placeholder:form.memo_ph" placeholder="기타 자재 또는 비고를 자유롭게 기입하세요." style="margin-top:14px;"></textarea>
-          </div>
         </div>
       </div>
     </section>
@@ -1471,10 +1471,15 @@
       </div>
       <div class="card" id="queueCard">
         <div class="queue-tools">
-          <button id="btnUndo" class="btn btn-ghost" type="button" data-action="undo" data-i18n-attr="title:tb.undo_title" disabled><span aria-hidden="true">↶</span><span data-i18n="tb.undo">되돌리기</span></button>
-          <button id="btnRedo" class="btn btn-ghost" type="button" data-action="redo" data-i18n-attr="title:tb.redo_title" disabled><span aria-hidden="true">↷</span><span data-i18n="tb.redo">다시 실행</span></button>
+          <button id="btnUndo" class="btn btn-ghost" type="button" data-action="undo" data-i18n-attr="title:tb.undo_title" disabled><svg class="icon" aria-hidden="true"><use href="#i-undo"/></svg><span data-i18n="tb.undo">되돌리기</span></button>
+          <button id="btnRedo" class="btn btn-ghost" type="button" data-action="redo" data-i18n-attr="title:tb.redo_title" disabled><svg class="icon" aria-hidden="true"><use href="#i-redo"/></svg><span data-i18n="tb.redo">다시 실행</span></button>
         </div>
         <div id="qBody" class="queue-list" aria-live="polite" aria-relevant="additions removals"></div>
+        <details class="work-memo">
+          <summary data-i18n="card.memo">작업 메모</summary>
+          <label class="sr-only" for="memoInput" data-i18n="form.memo_label">자유 메모</label>
+          <textarea id="memoInput" rows="3" data-i18n-attr="placeholder:form.memo_ph" placeholder="기타 자재 또는 비고를 자유롭게 기입하세요."></textarea>
+        </details>
         <div class="action-row">
           <button id="btnCalculateMain" class="btn btn-success" data-action="calculate"><span data-i18n="btn.calc">최종 집계</span> <small style="opacity:.7;font-weight:600" data-i18n="kbd.ctrl_enter">(Ctrl+Enter)</small></button>
           <button class="btn btn-ghost" data-action="clear-all" data-i18n="btn.clear">초기화</button>
@@ -1489,6 +1494,7 @@
         <span class="step-number" aria-hidden="true">03</span>
         <div><h2 data-i18n="sec.result">집계 결과</h2><p data-i18n="work.result_hint">규격별 합계를 확인하고 현장에 공유하세요.</p></div>
       </div>
+      <p id="resultState" class="result-state" role="status" aria-live="polite" data-i18n="work.result_empty">자재를 등록하고 명세서를 집계하세요.</p>
       <div id="resultCard" class="result-box" role="region" data-i18n-attr="aria-label:sec.result_aria" aria-label="최종 집계 결과">
         <!-- 동적으로 채워짐 -->
       </div>

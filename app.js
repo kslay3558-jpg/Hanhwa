@@ -149,6 +149,14 @@
       'work.result_hint':     '규격별 합계를 확인하고 현장에 공유하세요.',
       'work.session_note':    '작업 내용은 새로고침하거나 다른 도구로 이동하면 초기화됩니다. 결과를 먼저 복사하거나 이미지로 저장하세요.',
       'work.start':           '설명 없이 바로 시작',
+      'work.materials':       '자재 선택',
+      'work.find':            '외경으로 찾기',
+      'work.input_qty':       '입력 수량',
+      'work.points':          '개소',
+      'work.result_empty':    '자재를 등록하고 명세서를 집계하세요.',
+      'work.result_ready':    '현재 작업 목록을 반영한 명세서입니다.',
+      'work.result_stale':    '작업 목록이나 메모가 변경되었습니다. 다시 집계하세요.',
+      'work.print':           '인쇄',
       // App
       'app.title':            '설비/배관 자재 계산기',
       'app.subtitle':         'JIS 규격 기반 · 오프라인 PWA',
@@ -173,8 +181,8 @@
       'proj.default':         '기본 현장',
       // Section labels
       'sec.input':            '자재 입력',
-      'sec.queue':            '등록 대기열',
-      'sec.result':           '집계 결과',
+      'sec.queue':            '작업 목록',
+      'sec.result':           '자재 명세서',
       'sec.result_aria':      '최종 집계 결과',
       // Card 1: find flange
       'card.find':            '플랜지 사이즈 역산',
@@ -228,10 +236,10 @@
       'guide.ubolt_pitch_desc':'홀 센터 간격(C-C)은 왼쪽 볼트 구멍 중심에서 오른쪽 볼트 구멍 중심까지의 거리입니다.',
       'guide.close':          '확인',
       // Card 5: memo
-      'card.memo':            '추가 메모',
+      'card.memo':            '작업 메모',
       'form.gas_pipe_preset': '가스파이프 프리셋',
-      'aria.qty_gas':         '가스파이프 볼트 수량 조절',
-      'aria.qty_gas_in':      '가스파이프 볼트 수량',
+      'aria.qty_gas':         '가스파이프 포인트 개소 조절',
+      'aria.qty_gas_in':      '가스파이프 포인트 개소',
       'opt.gas_washer':       '와셔 추가 +5mm',
       'btn.add_gas_bolt':     '＋ 가스파이프 볼트 추가',
       'gas.desc':             '가스파이프 프리셋에서 사이즈를 선택하면 볼트 규격과 길이를 바로 확인하고 장바구니처럼 추가할 수 있습니다.',
@@ -287,9 +295,9 @@
       'r.sc_del':             '삭제',
       'r.sc_agg':             '집계',
       'r.sc_copy':            '복사',
-      'r.title':              '✅ 최종 집계',
-      'r.copy':               '📋 복사',
-      'r.save_image':         '🖼 이미지 저장',
+      'r.title':              '자재 명세서',
+      'r.copy':               '복사',
+      'r.save_image':         '이미지 저장',
       'r.share':              '🔗 공유',
       'r.bolt':               '🔩 볼트 (Bolt)',
       'r.nut':                '🔩 너트 (Nut)',
@@ -301,7 +309,7 @@
       'r.tag_ub':             'U볼트',
       'r.col_cat':            '분류',
       'r.col_spec':           '규격',
-      'r.col_qty':            '수량',
+      'r.col_qty':            '필요 수량',
       'r.col_bolt_spec':      '규격 (S × L)',
       'r.col_nut_spec':       '규격 (M)',
       'r.col_gsk_spec':       '규격 및 재질',
@@ -512,6 +520,14 @@
       'work.result_hint':     'Kiểm tra tổng theo quy cách và chia sẻ.',
       'work.session_note':    'Tải lại trang hoặc chuyển công cụ sẽ xóa công việc hiện tại. Hãy sao chép hoặc lưu ảnh kết quả trước.',
       'work.start':           'Bắt đầu không cần hướng dẫn',
+      'work.materials':       'Chọn vật tư',
+      'work.find':            'Tra theo OD',
+      'work.input_qty':       'Số lượng nhập',
+      'work.points':          'điểm',
+      'work.result_empty':    'Thêm vật tư rồi tổng hợp bảng kê.',
+      'work.result_ready':    'Bảng kê phản ánh danh sách hiện tại.',
+      'work.result_stale':    'Danh sách hoặc ghi chú đã thay đổi. Hãy tổng hợp lại.',
+      'work.print':           'In',
       'app.title':            'Máy tính Vật tư Đường ống',
       'app.subtitle':         'Tiêu chuẩn JIS · PWA Ngoại tuyến',
       'app.toolbar':          'Công cụ ứng dụng',
@@ -585,8 +601,8 @@
       'guide.close':          'Đã hiểu',
       'card.memo':            'Ghi chú thêm',
       'form.gas_pipe_preset': 'Preset ống gas',
-      'aria.qty_gas':         'Điều chỉnh số bu lông ống gas',
-      'aria.qty_gas_in':      'Số bu lông ống gas',
+      'aria.qty_gas':         'Điều chỉnh số điểm ống gas',
+      'aria.qty_gas_in':      'Số điểm ống gas',
       'opt.gas_washer':       'Thêm vòng đệm kim loại +5mm',
       'btn.add_gas_bolt':     '＋ Thêm bu lông ống gas',
       'gas.desc':             'Khi chọn kích thước trong preset ống gas, bạn có thể xem ngay quy cách và chiều dài bu lông rồi thêm vào hàng chờ như giỏ hàng.',
@@ -640,9 +656,9 @@
       'r.sc_del':             'Xóa',
       'r.sc_agg':             'Tổng hợp',
       'r.sc_copy':            'Sao chép',
-      'r.title':              '✅ Tổng hợp cuối',
-      'r.copy':               '📋 Sao chép',
-      'r.save_image':         '🖼 Lưu ảnh',
+      'r.title':              'Bảng kê vật tư',
+      'r.copy':               'Sao chép',
+      'r.save_image':         'Lưu ảnh',
       'r.share':              '🔗 Chia sẻ',
       'r.bolt':               '🔩 Bu lông (Bolt)',
       'r.nut':                '🔩 Đai ốc (Nut)',
@@ -654,7 +670,7 @@
       'r.tag_ub':             'Bu lông U',
       'r.col_cat':            'Loại',
       'r.col_spec':           'Quy cách',
-      'r.col_qty':            'SL',
+      'r.col_qty':            'SL cần dùng',
       'r.col_bolt_spec':      'Quy cách (S × L)',
       'r.col_nut_spec':       'Quy cách (M)',
       'r.col_gsk_spec':       'Quy cách & Vật liệu',
@@ -856,6 +872,14 @@
       'work.result_hint':     'Periksa total per spesifikasi dan bagikan.',
       'work.session_note':    'Memuat ulang atau berpindah alat akan menghapus pekerjaan saat ini. Salin atau simpan gambar hasil terlebih dahulu.',
       'work.start':           'Mulai tanpa panduan',
+      'work.materials':       'Pilih material',
+      'work.find':            'Cari dari OD',
+      'work.input_qty':       'Jumlah input',
+      'work.points':          'titik',
+      'work.result_empty':    'Tambahkan material lalu rekap daftar kebutuhan.',
+      'work.result_ready':    'Daftar kebutuhan sesuai item saat ini.',
+      'work.result_stale':    'Daftar atau catatan berubah. Rekap ulang untuk memperbarui.',
+      'work.print':           'Cetak',
       'app.title':            'Kalkulator Material Pipa',
       'app.subtitle':         'Standar JIS · PWA Offline',
       'app.toolbar':          'Alat aplikasi',
@@ -929,8 +953,8 @@
       'guide.close':          'Mengerti',
       'card.memo':            'Catatan tambahan',
       'form.gas_pipe_preset': 'Preset pipa gas',
-      'aria.qty_gas':         'Atur jumlah baut pipa gas',
-      'aria.qty_gas_in':      'Jumlah baut pipa gas',
+      'aria.qty_gas':         'Atur jumlah titik pipa gas',
+      'aria.qty_gas_in':      'Jumlah titik pipa gas',
       'opt.gas_washer':       'Tambah washer +5mm',
       'btn.add_gas_bolt':     '＋ Tambah baut pipa gas',
       'gas.desc':             'Saat ukuran preset pipa gas dipilih, spesifikasi dan panjang baut langsung tampil dan bisa ditambahkan ke antrean seperti keranjang.',
@@ -984,9 +1008,9 @@
       'r.sc_del':             'Hapus',
       'r.sc_agg':             'Rekap',
       'r.sc_copy':            'Salin',
-      'r.title':              '✅ Rekap akhir',
-      'r.copy':               '📋 Salin',
-      'r.save_image':         '🖼 Simpan Gambar',
+      'r.title':              'Daftar kebutuhan material',
+      'r.copy':               'Salin',
+      'r.save_image':         'Simpan gambar',
       'r.share':              '🔗 Bagikan',
       'r.bolt':               '🔩 Baut (Bolt)',
       'r.nut':                '🔩 Mur (Nut)',
@@ -998,7 +1022,7 @@
       'r.tag_ub':             'Baut U',
       'r.col_cat':            'Jenis',
       'r.col_spec':           'Spesifikasi',
-      'r.col_qty':            'Jml',
+      'r.col_qty':            'Kebutuhan',
       'r.col_bolt_spec':      'Spesifikasi (S × L)',
       'r.col_nut_spec':       'Spesifikasi (M)',
       'r.col_gsk_spec':       'Spesifikasi & Material',
@@ -1312,6 +1336,17 @@
     return node;
   }
 
+  function icon(name) {
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'icon');
+    svg.setAttribute('aria-hidden', 'true');
+    const use = document.createElementNS(ns, 'use');
+    use.setAttribute('href', '#i-' + name);
+    svg.appendChild(use);
+    return svg;
+  }
+
   /** Debounce trailing-call. Preserves `this` via closure. */
   function debounce(fn, ms) {
     let t;
@@ -1575,7 +1610,7 @@
 
   /** Build plaintext export. */
   function buildExportText(agg, memo) {
-    let out = t('x.title') + '\n\n';
+    let out = t('r.title') + '\n\n';
     for (const [k, v] of agg.sB) out += `${t('x.bolt')} ${k} : ${v}${t('x.unit_ea')}\n`;
     if (agg.sN.length) out += '\n';
     for (const [k, v] of agg.sN) out += `${t('x.nut')} ${k} : ${v}${t('x.unit_ea')}\n`;
@@ -1625,8 +1660,10 @@
     },
 
     populateUSizeSelect(selectEl) {
+      const prev = selectEl.value;
       selectEl.textContent = '';
       for (const s of USIZES) selectEl.appendChild(el('option', { value: s }, s + 'A'));
+      if ([...selectEl.options].some(option => option.value === prev)) selectEl.value = prev;
     },
 
     populateGasPipePresetSelect(selectEl) {
@@ -1816,7 +1853,7 @@
       const tags = [];
 
       if (q.type === 'bolt') {
-        title = q.gasPipe ? `${t('q.gas_pipe')} ${q.s}A` : `${q.r} ${q.s}A`;
+        title = q.gasPipe ? `${t('q.gas_pipe')} ${q.s}A` : `${q.r} ${q.s}A ${t('q.flange')}`;
         if (q.ext) tags.push({ label: '+5mm', kind: 'blue' });
         if (q.doubleNut) tags.push({ label: t('q.tag_dn'), kind: 'blue' });
       } else if (q.type === 'gasket') {
@@ -1841,10 +1878,12 @@
         el('button', { type: 'button', 'data-action': 'q-qty-inc', 'data-index': i, 'aria-label': t('q.qty_inc') }, '+')
       );
 
+      const inputUnit = q.type === 'gasket' ? 'x.unit_sheet' : q.type === 'ubolt' ? 'x.unit_set' : 'work.points';
       const actions = el('div', { class: 'q-actions' },
-        stepper,
-        el('button', { class: 'icon-btn', type: 'button', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, '✎'),
-        el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, '✕')
+        el('div', { class: 'q-quantity' },
+          el('span', { class: 'q-input-label' }, `${t('work.input_qty')} (${t(inputUnit)})`), stepper),
+        el('button', { class: 'icon-btn', type: 'button', 'data-action': 'q-edit', 'data-index': i, title: t('q.edit'), 'aria-label': t('q.edit') }, icon('edit')),
+        el('button', { class: 'icon-btn', 'data-action': 'q-del', 'data-index': i, title: t('q.del_title'), 'aria-label': t('q.del') }, icon('close'))
       );
 
       return el('div',
@@ -1852,7 +1891,7 @@
           'aria-label': t('q.aria_label', { title, n: q.qty }),
           'aria-keyshortcuts': 'Delete' },
         el('div', { class: 'q-item-main' },
-          el('div', { class: 'q-handle', 'aria-hidden': 'true' }, '⋮⋮'),
+          el('div', { class: 'q-handle', 'aria-hidden': 'true' }, icon('grip')),
           el('div', { class: 'q-info' }, titleNode, tagsRow)
         ),
         actions
@@ -1871,10 +1910,11 @@
       placeholder.style.display = 'none';
       card.textContent = '';
       card.classList.add('show');
+      this.setResultState('ready');
 
       const rowCount = agg.sB.length + agg.sN.length + agg.sG.length + agg.sU.length;
       card.appendChild(el('div', { class: 'res-head' },
-        el('h3', null, t('r.summary_title')),
+        el('h3', null, t('r.title')),
         el('span', { class: 'result-spec-count' }, t('r.summary_items', { n: rowCount }))
       ));
 
@@ -1897,8 +1937,9 @@
       }
 
       const strip = el('div', { class: 'res-action-strip' },
-        el('button', { class: 'btn btn-sm btn-primary', 'data-action': 'copy-result', title: 'Ctrl+C' }, t('r.copy')),
-        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'save-image' }, t('r.save_image'))
+        el('button', { class: 'btn btn-sm btn-primary', 'data-action': 'copy-result', title: 'Ctrl+C' }, icon('copy'), t('r.copy')),
+        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'save-image' }, icon('image'), t('r.save_image')),
+        el('button', { class: 'btn btn-sm btn-secondary', 'data-action': 'print-result' }, icon('print'), t('work.print'))
       );
       card.appendChild(strip);
       card.appendChild(this._flatList(agg));
@@ -1976,10 +2017,19 @@
 
     /** Reset result view to placeholder. */
     resetResult() {
+      const hadResult = $('#resultCard').classList.contains('show') || $('#resultState').classList.contains('is-stale');
+      this.setResultState(hadResult && (Store.queue.length || Store.memo.trim()) ? 'stale' : 'empty');
       lastExportText = lastExportCSV = '';
       $('#resultCard').classList.remove('show');
       $('#resultCard').textContent = '';
       $('#resultPlaceholder').style.display = '';
+    },
+
+    setResultState(state) {
+      const node = $('#resultState');
+      node.dataset.i18n = 'work.result_' + state;
+      node.textContent = t(node.dataset.i18n);
+      node.classList.toggle('is-stale', state === 'stale');
     },
 
     syncForm() {
@@ -2433,6 +2483,7 @@
 
   function actionPrintResult() {
     if (!lastExportText) actionCalculate();
+    if (!lastExportText) return;
     window.print();
   }
 
@@ -2452,12 +2503,12 @@
 
     const agg = aggregate(Store.queue);
     const allRows = [
-      ...agg.sB.map(([k, v]) => [t('r.tag_bolt'), k, String(v)]),
-      ...agg.sN.map(([k, v]) => [t('r.tag_nut'),  k, String(v)]),
-      ...agg.sG.map(([k, v]) => [t('r.tag_gsk'),  k, String(v)]),
+      ...agg.sB.map(([k, v]) => [t('r.tag_bolt'), k, `${v} ${t('x.unit_ea')}`]),
+      ...agg.sN.map(([k, v]) => [t('r.tag_nut'),  k, `${v} ${t('x.unit_ea')}`]),
+      ...agg.sG.map(([k, v]) => [t('r.tag_gsk'),  k, `${v} ${t('x.unit_sheet')}`]),
       ...agg.sU.map(([k, v]) => {
         const p = UBOLT_PITCH[parseInt(k, 10)];
-        return [t('r.tag_ub'), k + (p ? ` (C-C ${p}mm)` : ''), String(v)];
+        return [t('r.tag_ub'), k + (p ? ` (C-C ${p}mm)` : ''), `${v} ${t('x.unit_set')}`];
       }),
     ];
 
@@ -2902,9 +2953,10 @@
     document.documentElement.setAttribute('data-theme', mode);
     // Theme is intentionally NOT persisted — only language setting is saved.
     const btn = $('#btnTheme');
-    btn.textContent = mode === 'dark' ? '☀️' : mode === 'light' ? '🌙' : '🌗';
+    btn.replaceChildren(icon('theme'));
     const modeName = mode === 'auto' ? t('t.theme_auto') : mode === 'dark' ? t('t.theme_dark') : t('t.theme_light');
     btn.title = t('pick.theme_title', { mode: modeName });
+    btn.setAttribute('aria-label', btn.title);
   }
   function actionToggleTheme() {
     const cur = document.documentElement.getAttribute('data-theme') || 'auto';
@@ -2947,18 +2999,38 @@
   }
 
   const REDUCE_MOTION_QUERY = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function selectMaterial(bodyId, focusTab = false) {
+    const selected = document.getElementById(bodyId);
+    if (!selected || !selected.classList.contains('material-panel')) return;
+    $$('.material-tab').forEach(tab => {
+      const active = tab.getAttribute('aria-controls') === bodyId;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+      const panel = document.getElementById(tab.getAttribute('aria-controls'));
+      panel.hidden = !active;
+      panel.inert = !active;
+      if (active && focusTab) tab.focus({ preventScroll: true });
+    });
+  }
+
   function getTutorialAccordionBodyIds() {
     return $$('.acc-body').map(body => body.id).filter(Boolean);
   }
   function setAccordionExpanded(bodyId, shouldOpen) {
     if (!bodyId) return;
     const body = document.getElementById(bodyId);
+    if (body?.classList.contains('material-panel')) {
+      if (shouldOpen) selectMaterial(bodyId);
+      return;
+    }
     const head = getAccordionHead(bodyId);
     if (!body || !head) return;
     head.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
     if (shouldOpen) {
       body.removeAttribute('aria-hidden');
       body.removeAttribute('inert');
+      const panel = body.closest('.material-panel');
+      if (panel) selectMaterial(panel.id);
     } else {
       body.setAttribute('aria-hidden', 'true');
       body.setAttribute('inert', '');
@@ -2981,18 +3053,17 @@
   }
   function syncTutorialAccordion(bodyIds, activeBodyId) {
     if (!activeBodyId) return;
-    bodyIds.forEach(bodyId => {
-      setAccordionExpanded(bodyId, !!activeBodyId && bodyId === activeBodyId);
-    });
+    bodyIds.forEach(bodyId => setAccordionExpanded(bodyId, bodyId === activeBodyId));
+    setAccordionExpanded(activeBodyId, true);
   }
   function getAccordionHead(bodyId) {
     if (!bodyId) return null;
-    return document.querySelector(`.acc-head[aria-controls="${bodyId}"]`);
+    return document.querySelector(`[data-action="acc-toggle"][aria-controls="${bodyId}"], .material-tab[aria-controls="${bodyId}"]`);
   }
   function resolveStepAccordionBodyId(step, target) {
     if (step && step.accordionBodyId) return step.accordionBodyId;
     if (!target || !(target instanceof Element)) return null;
-    const parentAccordion = target.closest('.acc-body');
+    const parentAccordion = target.closest('.acc-body, .material-panel');
     return parentAccordion && parentAccordion.id ? parentAccordion.id : null;
   }
   const TOUR_STEPS = [
@@ -3014,6 +3085,7 @@
     activeAccordionHead: null,
     accordionBodyIds: [],
     savedAccordionState: null,
+    savedMaterial: null,
     panelPositionTimer: null,
     isOpen() {
       const overlay = $('#quickTourOverlay');
@@ -3066,6 +3138,7 @@
       this.index = 0;
       this.accordionBodyIds = getTutorialAccordionBodyIds();
       this.savedAccordionState = getAccordionStateSnapshot(this.accordionBodyIds);
+      this.savedMaterial = $('.material-tab[aria-selected="true"]').getAttribute('aria-controls');
       this.clearTarget();
       this.clearAccordionHeadHighlight();
       overlay.hidden = false;
@@ -3079,6 +3152,8 @@
       this.clearTarget();
       this.clearAccordionHeadHighlight();
       restoreAccordionStateSnapshot(this.accordionBodyIds, this.savedAccordionState);
+      selectMaterial(this.savedMaterial);
+      this.savedMaterial = null;
       this.accordionBodyIds = [];
       this.savedAccordionState = null;
       this.clearPanelPositionTimer();
@@ -3094,11 +3169,13 @@
       overlay.hidden = true;
       overlay.setAttribute('aria-hidden', 'true');
       this.index = 0;
+      $('#btnHelpTutorial').focus({ preventScroll: true });
     },
     render() {
       const step = TOUR_STEPS[this.index];
       if (!step) return;
-      const target = $(step.selector);
+      const target = step.selector === '#resultCard' && !$('#resultCard').classList.contains('show')
+        ? $('#resultPlaceholder') : $(step.selector);
       const activeAccordionBodyId = resolveStepAccordionBodyId(step, target);
       syncTutorialAccordion(this.accordionBodyIds, activeAccordionBodyId);
       this.clearTarget();
@@ -3188,11 +3265,14 @@
 
   /** ----- Action router (event delegation) ----- */
   const actions = {
+    'material-select':   (tab) => selectMaterial(tab.getAttribute('aria-controls'), true),
     'find-flange':       () => findFlange(),
     'search-pick':       (el2) => {
       const r = el2.dataset.rating, s = parseInt(el2.dataset.size, 10);
       $('#rating').value = r; View.populateSizeSelect($('#size'), r);
       $('#size').value = s;
+      selectMaterial('accBodyFlange');
+      setAccordionExpanded('accBodyFind', false);
       smoothScrollIntoView($('#size'), { block: 'center' });
       $('#size').focus();
       toast(t('t.applied', { r, s }));
@@ -3275,6 +3355,7 @@
     'skip-tutorial':     () => {
       try { localStorage.setItem(TUTORIAL_KEY, 'true'); } catch (e) {}
       ModalCtl.close($('#tutorialModal'));
+      selectMaterial('accBodyFlange');
       $('#rating').focus({ preventScroll: true });
     },
     'cart-calculate':    () => { ModalCtl.close($('#cartModal')); actionCalculate(); },
@@ -3292,14 +3373,7 @@
       const body = document.getElementById(el2.getAttribute('aria-controls'));
       if (!body) return;
       const willOpen = el2.getAttribute('aria-expanded') !== 'true';
-      el2.setAttribute('aria-expanded', String(willOpen));
-      if (willOpen) {
-        body.removeAttribute('aria-hidden');
-        body.removeAttribute('inert');
-      } else {
-        body.setAttribute('aria-hidden', 'true');
-        body.setAttribute('inert', '');
-      }
+      setAccordionExpanded(body.id, willOpen);
       // Focus the first input when opening for accessibility
       if (willOpen) {
         const first = body.querySelector('input, select, textarea');
@@ -3433,6 +3507,17 @@
         if (e.key === 'ArrowLeft') { e.preventDefault(); TourCtl.prev(); return; }
       }
 
+      const materialTab = e.target.closest('.material-tab');
+      if (materialTab && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) {
+        e.preventDefault();
+        const tabs = $$('.material-tab');
+        const index = tabs.indexOf(materialTab);
+        const next = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 :
+          (index + (['ArrowLeft', 'ArrowUp'].includes(e.key) ? -1 : 1) + tabs.length) % tabs.length;
+        selectMaterial(tabs[next].getAttribute('aria-controls'), true);
+        return;
+      }
+
       // Global keyboard shortcuts (skip when typing in textarea/select)
       const tag = (e.target.tagName || '').toLowerCase();
       const inEditable = tag === 'textarea' || tag === 'select' || (tag === 'input' && e.target.type === 'text');
@@ -3461,34 +3546,18 @@
         if (!inEditable) { e.preventDefault(); actions.redo(); } return;
       }
 
-      // Enter in flange/gasket/ubolt/gas area → add
-      // Guard: acc-head 버튼 자체에 포커스된 경우 Enter는 toggle 동작에 위임
-      if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !inEditable) {
-        if (e.target.classList.contains('acc-head')) return;
-        if (e.target.closest('.measure-help-btn')) return;
-        const card = e.target.closest('.card');
-        if (card) {
-          // Only trigger if the accordion body is open (not inert/hidden)
-          const body = card.querySelector('.acc-body');
-          if (body && body.hasAttribute('inert')) return;
-          if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); return; }
-          if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); return; }
-          if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); return; }
-          if (card.querySelector('[data-action="add-gas-bolt"]')) { e.preventDefault(); actionAddGasPipeBolt(); return; }
-          if (card.querySelector('[data-action="find-flange"]')) { e.preventDefault(); findFlange(); return; }
-        }
-      }
-      // Also allow Enter directly on number inputs to trigger their card's add action
-      if (e.key === 'Enter' && inNumber) {
-        const card = e.target.closest('.card');
-        if (card) {
-          const body = card.querySelector('.acc-body');
-          if (body && body.hasAttribute('inert')) return;
-          if (card.querySelector('[data-action="add-bolt"]')) { e.preventDefault(); actionAddBolt(); }
-          else if (card.querySelector('[data-action="add-gasket"]')) { e.preventDefault(); actionAddGasket(); }
-          else if (card.querySelector('[data-action="add-ubolt"]')) { e.preventDefault(); actionAddUbolt(); }
-          else if (card.querySelector('[data-action="add-gas-bolt"]')) { e.preventDefault(); actionAddGasPipeBolt(); }
-          else if (card.querySelector('[data-action="find-flange"]')) { e.preventDefault(); findFlange(); }
+      // Native buttons keep their own Enter behavior; numeric inputs submit only their active panel.
+      if (e.key === 'Enter' && inNumber && !e.ctrlKey && !e.metaKey) {
+        const panel = e.target.closest('.material-panel:not([hidden])');
+        if (panel) {
+          e.preventDefault();
+          if (e.target.id === 'searchOD') findFlange();
+          else ({
+            accBodyFlange: actionAddBolt,
+            accBodyGasket: actionAddGasket,
+            accBodyUbolt: actionAddUbolt,
+            accBodyGasPipe: actionAddGasPipeBolt
+          })[panel.id]();
         }
       }
 

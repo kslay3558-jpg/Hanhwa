@@ -33,10 +33,10 @@
             --shadow-lg: 0 4px 16px rgba(15, 23, 42, 0.05);
             --shadow-md: 0 2px 6px rgba(15, 23, 42, 0.04);
             --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-            --radius-xl: 16px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --radius-sm: 12px;
+            --radius-xl: 10px;
+            --radius-lg: 8px;
+            --radius-md: 8px;
+            --radius-sm: 6px;
             --motion: 180ms cubic-bezier(.4, 0, .2, 1);
             --stage-height: clamp(430px, 64vw, 620px);
             --diagonal-rotation: 0deg;
@@ -113,7 +113,7 @@
             margin: 16px 24px 0;
             padding: 4px;
             border: 1px solid var(--line);
-            border-radius: 16px;
+            border-radius: 8px;
             background: var(--surface-soft);
         }
 
@@ -125,7 +125,7 @@
             justify-content: center;
             min-height: 44px;
             padding: 8px 12px;
-            border-radius: 12px;
+            border-radius: 6px;
             color: var(--text-sub);
             font-size: 14px;
             font-weight: 700;
@@ -754,6 +754,46 @@
             *, *::before, *::after {
                 transition: none !important;
             }
+
+            .app-shell, .panel, .meta-card, .field-body, .button { box-shadow: none; }
+            .calc-stage, .note-card, .toast { border-radius: 8px; }
+            .status-pill, .legend-item, .unit-chip, .eyebrow { border-radius: 6px; }
+            .button, .field-body { border-radius: 6px; }
+            .status-dot, .status-pill.ready .status-dot { box-shadow: none; }
+            .svg-main-triangle { fill: var(--primary-soft); stroke: var(--text-sub); stroke-width: 3; }
+            .svg-segment.is-active { filter: none; }
+            .field-state {
+                font-size: calc(11px / var(--diagram-scale));
+                line-height: 1.5;
+                color: var(--text-sub);
+                padding-inline: 4px;
+            }
+            .field-card.is-calc .field-body {
+                background: var(--surface-strong);
+                border-color: var(--line-strong);
+                border-style: dashed;
+            }
+            .field-card.is-calc .field-accent, .legend-swatch.calc { background: var(--text-soft); }
+            .field-list { display: grid; }
+            .field-list:empty { display: none; }
+            .diagram-symbols { display: none; fill: var(--text); font-size: 24px; font-weight: 700; }
+            .field-symbol { color: var(--primary-strong); margin-right: 6px; }
+            @media (max-width: 600px) {
+                .calc-stage { aspect-ratio: 600 / 340; }
+                .triangle-svg { inset: 6px; }
+                .diagram-symbols { display: block; }
+                .field-list {
+                    display: grid;
+                    gap: 14px;
+                    margin: 16px 14px;
+                    --diagram-scale: 1;
+                }
+                .field-list .field-card { width: 100%; transform: none; margin: 0; }
+                .field-list .field-name { font-size: 14px; }
+                .field-list .field-state { font-size: 12px; }
+                .field-list .floating-input { text-align: left; padding-inline: 12px; }
+                .field-list .unit-chip { font-size: 12px; }
+            }
         }
     </style>
 </head>
@@ -820,10 +860,16 @@
                         <line x1="90" y1="308" x2="390" y2="308" class="svg-dim-line"></line>
                         <line x1="104" y1="48" x2="405" y2="278" class="svg-dim-line"></line>
 
-                        <foreignObject x="4" y="128" width="132" height="92" class="svg-foreign-input">
+                        <g class="diagram-symbols" aria-hidden="true">
+                            <text x="24" y="182">H</text>
+                            <text x="226" y="352">B</text>
+                            <text x="237" y="148">C</text>
+                            <text x="400" y="300">θ</text>
+                        </g>
+                        <foreignObject x="4" y="128" width="132" height="110" class="svg-foreign-input">
                             <div xmlns="http://www.w3.org/1999/xhtml" class="field-card" id="wrap-height" data-field="h">
                                 <div class="field-label-row">
-                                    <span class="field-name">높이</span>
+                                    <span class="field-name"><b class="field-symbol">H</b>높이</span>
                                     <span class="unit-chip">mm</span>
                                 </div>
                                 <label class="field-body" for="inp-h">
@@ -833,10 +879,10 @@
                             </div>
                         </foreignObject>
 
-                        <foreignObject x="155" y="318" width="162" height="92" class="svg-foreign-input">
+                        <foreignObject x="155" y="318" width="162" height="110" class="svg-foreign-input">
                             <div xmlns="http://www.w3.org/1999/xhtml" class="field-card" id="wrap-base" data-field="b">
                                 <div class="field-label-row">
-                                    <span class="field-name">밑변</span>
+                                    <span class="field-name"><b class="field-symbol">B</b>밑변</span>
                                     <span class="unit-chip">mm</span>
                                 </div>
                                 <label class="field-body" for="inp-b">
@@ -846,10 +892,10 @@
                             </div>
                         </foreignObject>
 
-                        <foreignObject x="195" y="88" width="160" height="92" class="svg-foreign-input">
+                        <foreignObject x="195" y="88" width="160" height="110" class="svg-foreign-input">
                             <div xmlns="http://www.w3.org/1999/xhtml" class="field-card diagonal" id="wrap-hypo" data-field="hyp">
                                 <div class="field-label-row">
-                                    <span class="field-name">대각선</span>
+                                    <span class="field-name"><b class="field-symbol">C</b>대각선</span>
                                     <span class="unit-chip">mm</span>
                                 </div>
                                 <label class="field-body" for="inp-hyp">
@@ -859,10 +905,10 @@
                             </div>
                         </foreignObject>
 
-                        <foreignObject x="398" y="248" width="152" height="92" class="svg-foreign-input">
+                        <foreignObject x="398" y="248" width="152" height="110" class="svg-foreign-input">
                             <div xmlns="http://www.w3.org/1999/xhtml" class="field-card angle-card" id="wrap-angle" data-field="a">
                                 <div class="field-label-row">
-                                    <span class="field-name">각도</span>
+                                    <span class="field-name"><b class="field-symbol">θ</b>각도</span>
                                     <span class="unit-chip">°</span>
                                 </div>
                                 <label class="field-body" for="inp-a">
@@ -873,6 +919,8 @@
                         </foreignObject>
                     </svg>
                 </div>
+
+                <div id="field-list" class="field-list" role="group" aria-label="치수 입력 및 계산 결과"></div>
 
                 <div class="stage-footer">
                     <div class="legend">
@@ -948,6 +996,37 @@
             }
         };
 
+        const fieldList = document.getElementById('field-list');
+        const compactDiagram = window.matchMedia('(max-width: 600px)');
+        const fieldHomes = new Map();
+        Object.entries(fields).forEach(([key, meta]) => {
+            fieldHomes.set(meta.wrapper, meta.wrapper.parentElement);
+            const stateLabel = document.createElement('span');
+            stateLabel.id = `state-${key}`;
+            stateLabel.className = 'field-state';
+            meta.wrapper.appendChild(stateLabel);
+            meta.stateLabel = stateLabel;
+            meta.input.setAttribute('aria-describedby', stateLabel.id);
+        });
+        function updateFieldPlacement() {
+            const focused = document.activeElement;
+            // Move the original controls; values and solver listeners have a single owner.
+            Object.values(fields).forEach(({ wrapper }) => {
+                const destination = compactDiagram.matches ? fieldList : fieldHomes.get(wrapper);
+                if (wrapper.parentElement !== destination) destination.appendChild(wrapper);
+            });
+            diagram.setAttribute('viewBox', compactDiagram.matches ? '0 30 480 350' : '0 0 600 440');
+            diagram.setAttribute('aria-label', compactDiagram.matches
+                ? '직각삼각형: H 높이, B 밑변, C 대각선, θ 각도. 아래 목록에서 치수를 입력하세요.'
+                : '직각삼각형 계산기 입력 도형 — 높이·밑변·대각선·각도 입력칸이 포함된 인터랙티브 SVG');
+            if (focused instanceof HTMLInputElement && (fieldList.contains(focused) || diagram.contains(focused))) {
+                focused.focus({ preventScroll: true });
+            }
+            updateDiagramScale();
+        }
+        compactDiagram.addEventListener('change', updateFieldPlacement);
+        updateFieldPlacement();
+
         const statusText = document.getElementById('status-text');
         const statusPill = document.getElementById('status-pill');
         const toast = document.getElementById('toast');
@@ -1018,6 +1097,7 @@
             Object.entries(fields).forEach(([key, meta]) => {
                 const isUser = userInputs.includes(key) && meta.input.value !== '';
                 const isCalc = !isUser && meta.input.value !== '';
+                meta.stateLabel.textContent = isUser ? '직접 입력' : isCalc ? '자동 계산 · 수정 가능' : '입력 대기';
                 meta.wrapper.classList.toggle('is-user', isUser);
                 meta.wrapper.classList.toggle('is-calc', isCalc);
                 meta.wrapper.classList.toggle('is-active', activeKey === key || document.activeElement === meta.input);

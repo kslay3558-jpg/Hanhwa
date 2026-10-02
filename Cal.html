@@ -48,9 +48,9 @@
       --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
       --shadow-md: 0 2px 6px rgba(15, 23, 42, 0.04);
       --shadow-lg: 0 4px 16px rgba(15, 23, 42, 0.05);
-      --radius-xl: 12px;
-      --radius-2xl: 16px;
-      --radius-3xl: 16px;
+      --radius-xl: 6px;
+      --radius-2xl: 8px;
+      --radius-3xl: 10px;
       --surface: #ffffff;
       --surface-solid: #ffffff;
       --surface-muted: rgba(248, 250, 252, 0.78);
@@ -215,7 +215,7 @@
       margin: 16px 24px 0;
       padding: 4px;
       border: 1px solid var(--slate-200);
-      border-radius: 16px;
+      border-radius: 8px;
       background: var(--surface-muted);
     }
 
@@ -227,7 +227,7 @@
       justify-content: center;
       min-height: 44px;
       padding: 8px 12px;
-      border-radius: 12px;
+      border-radius: 6px;
       color: var(--slate-600);
       font-size: 14px;
       font-weight: 700;
@@ -1184,6 +1184,67 @@
         transition: none !important;
       }
     }
+    .app-shell, .card, .input, .select, .header-link, .header-lang,
+    .btn, .bottom-home-link { box-shadow: none; }
+    .header-link, .header-lang, .sticky-item { border-radius: 6px; }
+    .guide-callout, .save-badge, .status-badge, .key-badge { border-radius: 6px; }
+    .result-card::after { height: 2px; background: var(--slate-300); }
+    .result-card.bar-blue::after { background: var(--blue-600); }
+    .result-value.red, .sticky-value.red { color: var(--slate-950); }
+    .sticky-item.blue, .sticky-item.green, .sticky-item.red { background: var(--surface-solid); }
+    .notice { background: var(--field-bg-2); border-color: var(--slate-200); }
+    .notice-title, .notice-text { color: var(--slate-700); }
+    .ui-icon {
+      width: 20px; height: 20px; flex: 0 0 20px;
+      fill: none; stroke: currentColor; stroke-width: 1.7;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .dimension-label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .dimension-symbol { font-weight: 800; font-size: 15px; }
+    .dimension-l { color: var(--svg-blue-text); }
+    .dimension-t { color: var(--slate-900); }
+    .dimension-h { color: var(--svg-green-text); }
+    .dimension-unit { margin-left: auto; color: var(--slate-600); font-size: 12px; }
+    .dimension-reference { margin: 0 0 18px; }
+    .dimension-reference .svg-wrap { padding: 0; border-radius: 6px; }
+    .dimension-reference svg { max-height: 225px; }
+    #topGuideSvg .svg-title-text { font-size: 20px; font-weight: 700; }
+    #svgLabelT { fill: var(--slate-900); }
+    #svgStartCenter, #svgEndCenter { display: none; }
+    .form-grid { gap: 14px; }
+    .input, .select { min-height: 48px; padding-block: 10px; }
+    .applied-size {
+      padding: 0 0 12px; background: none; border: 0;
+      border-bottom: 1px solid var(--slate-200); border-radius: 0;
+    }
+    .applied-size-label { color: var(--slate-600); }
+    .applied-size-value { font-size: 18px; color: var(--slate-900); }
+    .dimension-reference figcaption {
+      padding: 8px 0 0; font-size: 12px; color: var(--slate-600);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;
+    }
+    #topGuideSvg > rect { fill: var(--field-bg-2); }
+    #topGuideSvg [stroke="#2563eb"] { stroke: var(--svg-blue-text); }
+    #topGuideSvg [stroke="#059669"] { stroke: var(--svg-green-text); }
+    #topGuideSvg [stroke="#0f172a"] { stroke: var(--slate-900); }
+    #topGuideSvg [fill="#2563eb"] { fill: var(--svg-blue-text); }
+    #topGuideSvg [fill="#059669"] { fill: var(--svg-green-text); }
+    #topGuideSvg [fill="#0f172a"] { fill: var(--slate-900); }
+    .hero-guide .guide-grid { grid-template-columns: 1fr; }
+    details.work-guide, details.tutorial-card { padding: 0; }
+    details.work-guide > summary, details.tutorial-card > summary {
+      padding: 14px 18px; min-height: 52px; cursor: pointer; color: var(--slate-700);
+    }
+    details.work-guide > summary h2, details.tutorial-card > summary h2 {
+      display: inline; font-size: 16px;
+    }
+    details.work-guide > .section-desc, details.work-guide > .steps,
+    details.tutorial-card > .section-desc, details.tutorial-card > .svg-wrap { margin: 0 18px 18px; }
+    @media print {
+      .header-actions, .tool-nav, .button-row, .bottom-home-wrap, .sticky { display: none; }
+      body { padding: 0; }
+      .app-shell, .card { box-shadow: none; break-inside: avoid; }
+    }
   </style>
 </head>
 
@@ -1203,12 +1264,12 @@
             <div id="pageTools" class="header-actions" aria-label="Page tools">
               <label id="langSelectLabel" class="sr-only" for="langSelect">언어 선택</label>
               <select id="langSelect" class="header-lang" aria-label="언어 선택">
-                <option value="ko">🇰🇷 한국어</option>
-                <option value="vi">🇻🇳 Tiếng Việt</option>
-                <option value="id">🇮🇩 Bahasa Indonesia</option>
+                <option value="ko">한국어</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="id">Bahasa Indonesia</option>
               </select>
-              <button id="themeToggle" class="header-link" type="button" aria-label="Toggle theme" title="Toggle theme">🌗</button>
-              <a id="backToMain" class="header-link" href="./index.html" aria-label="Back to main" title="Back to main">🏠</a>
+              <button id="themeToggle" class="header-link" type="button" aria-label="Toggle theme" title="Toggle theme"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M12 4a8 8 0 0 1 0 16" fill="currentColor"/></svg></button>
+              <a id="backToMain" class="header-link" href="./index.html" aria-label="Back to main" title="Back to main"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg></a>
             </div>
           </div>
           <p id="pageSubtitle" class="subtitle">
@@ -1255,7 +1316,7 @@
                   </marker>
                 </defs>
 
-                <rect x="18" y="18" width="344" height="268" rx="24" fill="#f8fafc" />
+                <rect x="18" y="18" width="344" height="268" rx="6" fill="#f8fafc" />
 
                 <path
                   d="M 72 78 L 300 78 M 72 226 L 300 226 M 300 78 L 300 226"
@@ -1354,6 +1415,9 @@
               <p id="errorText" class="error-text"></p>
             </div>
 
+            <figure id="dimensionReference" class="dimension-reference">
+              <figcaption><span>mm · L &gt; 0 · T &gt; 0 · T ≥ L</span><span class="dimension-h">H = √(T² − L²)</span></figcaption>
+            </figure>
             <form class="form-grid" onsubmit="event.preventDefault(); calculate();">
               <div class="field">
                 <label id="pipeSizeLabel" for="pipeSize" class="label">파이프 관경</label>
@@ -1384,7 +1448,7 @@
               </div>
 
               <div class="field">
-                <label id="inputLLabel" for="input_L" class="label">수평 거리</label>
+                <label for="input_L" class="label dimension-label"><span class="dimension-symbol dimension-l">L</span><span id="inputLLabel">수평 거리</span><span class="dimension-unit">mm</span></label>
                 <input
                   id="input_L"
                   class="input"
@@ -1393,13 +1457,14 @@
                   min="0"
                   step="0.1"
                   value="400"
+                  aria-describedby="inputLHelp"
                   oninput="calculate()"
                 />
                 <p id="inputLHelp" class="help">시작 중심점과 도착 중심점 사이의 수평 방향 거리입니다.</p>
               </div>
 
               <div class="field">
-                <label id="inputTLabel" for="input_T" class="label">대각선 거리</label>
+                <label for="input_T" class="label dimension-label"><span class="dimension-symbol dimension-t">T</span><span id="inputTLabel">대각선 거리</span><span class="dimension-unit">mm</span></label>
                 <input
                   id="input_T"
                   class="input"
@@ -1408,6 +1473,7 @@
                   min="0"
                   step="0.1"
                   value="500"
+                  aria-describedby="inputTHelp"
                   oninput="calculate()"
                 />
                 <p id="inputTHelp" class="help">실제 연결되는 중심선 거리입니다. 수평 거리보다 작을 수 없습니다.</p>
@@ -1483,7 +1549,7 @@
 
               <div class="details-grid">
                 <article class="card detail-card">
-                  <p id="detailHLabel" class="detail-label">수직 거리</p>
+                  <p class="detail-label"><span class="dimension-symbol dimension-h">H</span> <span id="detailHLabel">수직 거리</span></p>
                   <p id="detail_H" class="detail-value">0.0 mm</p>
                 </article>
 
@@ -1504,8 +1570,8 @@
               </div>
             </section>
 
-            <section class="card work-guide" aria-labelledby="guideTitle">
-              <h2 id="guideTitle" class="section-title">현장 작업 순서</h2>
+            <details class="card work-guide">
+              <summary><h2 id="guideTitle" class="section-title">현장 작업 순서</h2></summary>
               <p id="workGuideDesc" class="section-desc">처음 사용하는 작업자도 따라 할 수 있도록 순서화했습니다.</p>
 
               <div class="steps">
@@ -1535,19 +1601,15 @@
                   </div>
                 </article>
               </div>
-            </section>
+            </details>
 
-            <section class="card tutorial-card" aria-labelledby="tutorialTitle">
-              <div class="section-head">
-                <div>
-                  <h2 id="tutorialTitle" class="section-title">파이프 마킹 튜토리얼</h2>
-                  <p id="tutorialDesc" class="section-desc">컷백 거리(B)를 이용한 실제 사선 마킹</p>
-                </div>
-              </div>
+            <details class="card tutorial-card">
+              <summary><h2 id="tutorialTitle" class="section-title">파이프 마킹 튜토리얼</h2></summary>
+              <p id="tutorialDesc" class="section-desc">컷백 거리(B)를 이용한 실제 사선 마킹</p>
 
               <div class="svg-wrap">
                 <svg id="tutorialSvg" viewBox="0 0 380 430" role="img" aria-label="파이프 사선 마킹 튜토리얼">
-                  <rect x="20" y="20" width="340" height="386" rx="26" fill="#f8fafc" />
+                  <rect x="20" y="20" width="340" height="386" rx="6" fill="#f8fafc" />
 
                   <circle cx="58" cy="50" r="13" fill="#2563eb" />
                   <text x="58" y="55" text-anchor="middle" fill="white" font-size="12" font-weight="900">1</text>
@@ -1617,11 +1679,11 @@
                   </text>
                 </svg>
               </div>
-            </section>
+            </details>
 
             <div class="bottom-home-wrap">
               <a id="bottomHomeLink" class="bottom-home-link" href="./index.html" aria-label="Back to main" title="Back to main">
-                <span class="bottom-home-link-icon" aria-hidden="true">🏠</span>
+                <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg>
                 <span id="bottomHomeText">메인으로 돌아가기</span>
               </a>
             </div>
@@ -1649,6 +1711,12 @@
   </div>
 
   <script>
+    document.getElementById("dimensionReference").prepend(document.getElementById("topGuideSvg").parentElement);
+    document.getElementById("mainPanel").insertBefore(document.querySelector(".hero-guide"), document.querySelector(".work-guide"));
+    document.querySelector(".form-grid").prepend(
+      document.getElementById("input_L").closest(".field"),
+      document.getElementById("input_T").closest(".field")
+    );
     const STORAGE_KEY = "pipe_miter_calculator_production_v3";
     const THEME_KEY = "pipe_miter_calculator_theme";
     const LANG_KEY = "jis-calc-lang";
@@ -2179,9 +2247,9 @@
       setAttr("mainPanel", "aria-label", t("resultArea"));
       setAttr("stickyPanel", "aria-label", t("stickyAria"));
 
-      setHtml("svgLabelL", `${t("svgHorizontal")} = <tspan id="svg_L">${currentText("svg_L", DEFAULTS.L)}</tspan> mm`);
-      setHtml("svgLabelH", `${t("svgVertical")} = <tspan id="svg_H">300</tspan> mm`);
-      setHtml("svgLabelT", `${t("svgDiagonal")} = <tspan id="svg_T">${currentText("svg_T", DEFAULTS.T)}</tspan> mm`);
+      setHtml("svgLabelL", `L = <tspan id="svg_L">${currentText("svg_L", DEFAULTS.L)}</tspan> mm`);
+      setHtml("svgLabelH", `H = <tspan id="svg_H">300</tspan> mm`);
+      setHtml("svgLabelT", `T = <tspan id="svg_T">${currentText("svg_T", DEFAULTS.T)}</tspan> mm`);
       setText("svgStartCenter", t("svgStartCenter"));
       setText("svgEndCenter", t("svgEndCenter"));
       setHtml("bLabel2", `B = <tspan id="svg_B">${currentText("svg_B", "0.0")}</tspan> mm`);
