@@ -144,7 +144,7 @@
       'nav.material':         '자재 계산',
       'nav.cutting':          '사선 커팅',
       'nav.angle':            '각도 마킹',
-      'work.input_hint':      '필요한 자재의 규격과 수량을 선택하세요.',
+      'work.input_hint':      '자재를 선택하고 규격·입력 수량을 등록하세요.',
       'work.queue_hint':      '추가한 항목을 확인하고 한 번에 집계하세요.',
       'work.result_hint':     '규격별 합계를 확인하고 현장에 공유하세요.',
       'work.session_note':    '작업 내용은 새로고침하거나 다른 도구로 이동하면 초기화됩니다. 결과를 먼저 복사하거나 이미지로 저장하세요.',
@@ -154,6 +154,7 @@
       'work.input_qty':       '입력 수량',
       'work.points':          '개소',
       'work.result_empty':    '자재를 등록하고 명세서를 집계하세요.',
+      'work.result_pending':  '작업 목록의 입력 수량을 바탕으로 필요 자재를 집계하세요.',
       'work.result_ready':    '현재 작업 목록을 반영한 명세서입니다.',
       'work.result_stale':    '작업 목록이나 메모가 변경되었습니다. 다시 집계하세요.',
       'work.print':           '인쇄',
@@ -182,7 +183,7 @@
       // Section labels
       'sec.input':            '자재 입력',
       'sec.queue':            '작업 목록',
-      'sec.result':           '자재 명세서',
+      'sec.result':           '산출 결과',
       'sec.result_aria':      '최종 집계 결과',
       // Card 1: find flange
       'card.find':            '플랜지 사이즈 역산',
@@ -324,7 +325,7 @@
       'r.detail_toggle':      '상세 내역 보기',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(핏치 미상)',
-      'r.memo_title':         '📝 추가 메모',
+      'r.memo_title':         '작업 메모',
       'r.notice_pre':         '※ 자동 합산됨',
       'r.notice_total':       ' · 총 {n} 개 항목 / 너트는 규격(M)별 독립 집계 / 더블너트는 ×2',
       // Floating bar
@@ -515,7 +516,7 @@
       'nav.material':         'Vật tư',
       'nav.cutting':          'Cắt xiên',
       'nav.angle':            'Đánh dấu góc',
-      'work.input_hint':      'Chọn quy cách và số lượng vật tư cần dùng.',
+      'work.input_hint':      'Chọn vật tư, quy cách và số lượng rồi thêm vào danh sách.',
       'work.queue_hint':      'Kiểm tra các mục đã thêm rồi tổng hợp.',
       'work.result_hint':     'Kiểm tra tổng theo quy cách và chia sẻ.',
       'work.session_note':    'Tải lại trang hoặc chuyển công cụ sẽ xóa công việc hiện tại. Hãy sao chép hoặc lưu ảnh kết quả trước.',
@@ -525,6 +526,7 @@
       'work.input_qty':       'Số lượng nhập',
       'work.points':          'điểm',
       'work.result_empty':    'Thêm vật tư rồi tổng hợp bảng kê.',
+      'work.result_pending':  'Tổng hợp vật tư cần dùng từ số lượng đã nhập trong danh sách.',
       'work.result_ready':    'Bảng kê phản ánh danh sách hiện tại.',
       'work.result_stale':    'Danh sách hoặc ghi chú đã thay đổi. Hãy tổng hợp lại.',
       'work.print':           'In',
@@ -685,7 +687,7 @@
       'r.detail_toggle':      'Xem chi tiết',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(không có pitch)',
-      'r.memo_title':         '📝 Ghi chú thêm',
+      'r.memo_title':         'Ghi chú',
       'r.notice_pre':         '※ Đã tự động cộng dồn',
       'r.notice_total':       ' · Tổng {n} mục / Đai ốc tính riêng theo cỡ (M) / Đai ốc đôi ×2',
       'fb.queue':             'Hàng chờ',
@@ -867,7 +869,7 @@
       'nav.material':         'Material',
       'nav.cutting':          'Potong miring',
       'nav.angle':            'Penandaan sudut',
-      'work.input_hint':      'Pilih spesifikasi dan jumlah material.',
+      'work.input_hint':      'Pilih material, spesifikasi, dan jumlah lalu tambahkan ke daftar.',
       'work.queue_hint':      'Periksa item yang ditambahkan lalu rekap.',
       'work.result_hint':     'Periksa total per spesifikasi dan bagikan.',
       'work.session_note':    'Memuat ulang atau berpindah alat akan menghapus pekerjaan saat ini. Salin atau simpan gambar hasil terlebih dahulu.',
@@ -877,6 +879,7 @@
       'work.input_qty':       'Jumlah input',
       'work.points':          'titik',
       'work.result_empty':    'Tambahkan material lalu rekap daftar kebutuhan.',
+      'work.result_pending':  'Rekap kebutuhan material dari jumlah input dalam daftar.',
       'work.result_ready':    'Daftar kebutuhan sesuai item saat ini.',
       'work.result_stale':    'Daftar atau catatan berubah. Rekap ulang untuk memperbarui.',
       'work.print':           'Cetak',
@@ -1037,7 +1040,7 @@
       'r.detail_toggle':      'Lihat detail',
       'r.cc_pitch':           '(C-C: {p}mm)',
       'r.cc_unknown':         '(pitch tdk diketahui)',
-      'r.memo_title':         '📝 Catatan tambahan',
+      'r.memo_title':         'Catatan pekerjaan',
       'r.notice_pre':         '※ Otomatis dijumlah',
       'r.notice_total':       ' · Total {n} item / Mur dihitung terpisah per ukuran (M) / Mur ganda ×2',
       'fb.queue':             'Antrean',
@@ -2018,7 +2021,8 @@
     /** Reset result view to placeholder. */
     resetResult() {
       const hadResult = $('#resultCard').classList.contains('show') || $('#resultState').classList.contains('is-stale');
-      this.setResultState(hadResult && (Store.queue.length || Store.memo.trim()) ? 'stale' : 'empty');
+      const hasInput = Store.queue.length || Store.memo.trim();
+      this.setResultState(hasInput ? (hadResult ? 'stale' : 'pending') : 'empty');
       lastExportText = lastExportCSV = '';
       $('#resultCard').classList.remove('show');
       $('#resultCard').textContent = '';

@@ -754,46 +754,46 @@
             *, *::before, *::after {
                 transition: none !important;
             }
+        }
 
-            .app-shell, .panel, .meta-card, .field-body, .button { box-shadow: none; }
-            .calc-stage, .note-card, .toast { border-radius: 8px; }
-            .status-pill, .legend-item, .unit-chip, .eyebrow { border-radius: 6px; }
-            .button, .field-body { border-radius: 6px; }
-            .status-dot, .status-pill.ready .status-dot { box-shadow: none; }
-            .svg-main-triangle { fill: var(--primary-soft); stroke: var(--text-sub); stroke-width: 3; }
-            .svg-segment.is-active { filter: none; }
-            .field-state {
-                font-size: calc(11px / var(--diagram-scale));
-                line-height: 1.5;
-                color: var(--text-sub);
-                padding-inline: 4px;
+        .app-shell, .panel, .meta-card, .field-body, .button { box-shadow: none; }
+        .calc-stage, .note-card, .toast { border-radius: 8px; }
+        .status-pill, .legend-item, .unit-chip, .eyebrow { border-radius: 6px; }
+        .button, .field-body { border-radius: 6px; }
+        .status-dot, .status-pill.ready .status-dot { box-shadow: none; }
+        .svg-main-triangle { fill: var(--primary-soft); stroke: var(--text-sub); stroke-width: 3; }
+        .svg-segment.is-active { filter: none; }
+        .field-state {
+            font-size: calc(11px / var(--diagram-scale));
+            line-height: 1.5;
+            color: var(--text-sub);
+            padding-inline: 4px;
+        }
+        .field-card.is-calc .field-body {
+            background: var(--surface-strong);
+            border-color: var(--line-strong);
+            border-style: dashed;
+        }
+        .field-card.is-calc .field-accent, .legend-swatch.calc { background: var(--text-soft); }
+        .field-list { display: grid; }
+        .field-list:empty { display: none; }
+        .diagram-symbols { display: none; fill: var(--text); font-size: 24px; font-weight: 700; }
+        .field-symbol { color: var(--primary-strong); margin-right: 6px; }
+        @media (max-width: 600px) {
+            .calc-stage { aspect-ratio: 600 / 340; }
+            .triangle-svg { inset: 6px; }
+            .diagram-symbols { display: block; }
+            .field-list {
+                display: grid;
+                gap: 14px;
+                margin: 16px 14px;
+                --diagram-scale: 1;
             }
-            .field-card.is-calc .field-body {
-                background: var(--surface-strong);
-                border-color: var(--line-strong);
-                border-style: dashed;
-            }
-            .field-card.is-calc .field-accent, .legend-swatch.calc { background: var(--text-soft); }
-            .field-list { display: grid; }
-            .field-list:empty { display: none; }
-            .diagram-symbols { display: none; fill: var(--text); font-size: 24px; font-weight: 700; }
-            .field-symbol { color: var(--primary-strong); margin-right: 6px; }
-            @media (max-width: 600px) {
-                .calc-stage { aspect-ratio: 600 / 340; }
-                .triangle-svg { inset: 6px; }
-                .diagram-symbols { display: block; }
-                .field-list {
-                    display: grid;
-                    gap: 14px;
-                    margin: 16px 14px;
-                    --diagram-scale: 1;
-                }
-                .field-list .field-card { width: 100%; transform: none; margin: 0; }
-                .field-list .field-name { font-size: 14px; }
-                .field-list .field-state { font-size: 12px; }
-                .field-list .floating-input { text-align: left; padding-inline: 12px; }
-                .field-list .unit-chip { font-size: 12px; }
-            }
+            .field-list .field-card { width: 100%; transform: none; margin: 0; }
+            .field-list .field-name { font-size: 14px; }
+            .field-list .field-state { font-size: 12px; }
+            .field-list .floating-input { text-align: left; padding-inline: 12px; }
+            .field-list .unit-chip { font-size: 12px; }
         }
     </style>
 </head>
